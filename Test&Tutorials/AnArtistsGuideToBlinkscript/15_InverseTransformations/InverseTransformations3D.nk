@@ -1,0 +1,178 @@
+set cut_paste_input [stack 0]
+version 12.2 v1
+push $cut_paste_input
+Camera2 {
+ translate {{curve x1 -3.61574173 x100 4.021763802} {curve x1 1.328431845 x100 0.9841157794} {curve x1 4.694727898 x100 4.483808994}}
+ rotate {{curve x1 -6.277982463 x100 -3.207973581} {curve x1 -22.60000996 x100 36.77119766} {curve x1 0 x100 -5.399300824}}
+ focal 16
+ vaperture 13.824
+ name Camera3
+ selected true
+ xpos 10174
+ ypos 71
+}
+Dot {
+ name Dot16
+ selected true
+ xpos 10198
+ ypos 364
+}
+CheckerBoard2 {
+ inputs 0
+ centerlinewidth 0
+ name CheckerBoard7
+ selected true
+ xpos 10322
+ ypos -3
+}
+set N5145b800 [stack 0]
+Cube {
+ uniform_scale 10
+ name Cube3
+ selected true
+ xpos 10469
+ ypos 108
+}
+push $N5145b800
+Sphere {
+ translate {0 0 -3.579999924}
+ uniform_scale 2
+ name Sphere3
+ selected true
+ xpos 10322
+ ypos 114
+}
+Scene {
+ inputs 2
+ name Scene3
+ selected true
+ xpos 10332
+ ypos 195
+}
+push 0
+add_layer {P P.red P.green P.blue P.alpha}
+add_layer {N N.red N.green N.blue N.alpha}
+ScanlineRender {
+ inputs 3
+ conservative_shader_sampling false
+ motion_vectors_type distance
+ output_shader_vectors true
+ P_channel P
+ N_channel N
+ name ScanlineRender3
+ selected true
+ xpos 10322
+ ypos 360
+}
+Dot {
+ name Dot17
+ selected true
+ xpos 10356
+ ypos 431
+}
+set N5145a400 [stack 0]
+Dot {
+ name Dot18
+ selected true
+ xpos 10600
+ ypos 431
+}
+set N5145a000 [stack 0]
+Shuffle2 {
+ fromInput1 {{0} B}
+ in1 N
+ fromInput2 {{0} B}
+ mappings "4 N.red 0 0 rgba.red 0 0 N.green 0 1 rgba.green 0 1 N.blue 0 2 rgba.blue 0 2 N.alpha 0 3 rgba.alpha 0 3"
+ name Shuffle5
+ label "\[value in1]"
+ selected true
+ xpos 10566
+ ypos 551
+}
+push $N5145a400
+Dot {
+ name Dot19
+ selected true
+ xpos 10356
+ ypos 569
+}
+push $N5145a000
+Dot {
+ name Dot20
+ selected true
+ xpos 10701
+ ypos 431
+}
+Shuffle2 {
+ fromInput1 {{0} B}
+ in1 P
+ fromInput2 {{0} B}
+ mappings "4 P.red 0 0 rgba.red 0 0 P.green 0 1 rgba.green 0 1 P.blue 0 2 rgba.blue 0 2 P.alpha 0 3 rgba.alpha 0 3"
+ name Shuffle6
+ label "\[value in1]"
+ selected true
+ xpos 10667
+ ypos 550
+}
+Dot {
+ name Dot21
+ selected true
+ xpos 10701
+ ypos 847
+}
+CheckerBoard2 {
+ inputs 0
+ name CheckerBoard8
+ selected true
+ xpos 10210
+ ypos 609
+}
+BlinkScript {
+ inputs 2
+ recompileCount 84
+ ProgramGroup 1
+ KernelDescription "2 \"PosProjKernel\" iterate pixelWise 3bc97d944f595bf45ca34171b8c9bc1c481c125004e10534ebcb0c78bfda0500 3 \"projectionImage\" Read Random \"src\" Read Point \"dst\" Write Random 7 \"matrixInput\" Float 16 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA== \"axisMatrixInput\" Float 16 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA== \"iterations\" Int 1 AAAAAA== \"invert\" Bool 1 AA== \"focal\" Float 1 AAAAAA== \"haperture\" Float 1 AAAAAA== \"vaperture\" Float 1 AAAAAA== 7 \"matrixInput\" 16 1 \"axisMatrixInput\" 16 1 \"iterations\" 1 1 \"invert\" 1 1 \"focal\" 1 1 \"haperture\" 1 1 \"vaperture\" 1 1 4 \"output\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA== \"outputTemp\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA== \"outputTempLoop\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA== \"resolution\" Int 2 1 AAAAAAAAAAA="
+ kernelSource "inline float4 matrixTransform(float4 image, float4x4 matrix)\{\n\n    float4 matrixTransformsOutput;\n\n    matrixTransformsOutput.x = image.x * matrix\[0]\[0] + image.y * matrix\[0]\[1] + image.z * matrix\[0]\[2] + matrix\[0]\[3];\n    matrixTransformsOutput.y = image.x * matrix\[1]\[0] + image.y * matrix\[1]\[1] + image.z * matrix\[1]\[2] + matrix\[1]\[3];\n    matrixTransformsOutput.z = image.x * matrix\[2]\[0] + image.y * matrix\[2]\[1] + image.z * matrix\[2]\[2] + matrix\[2]\[3];\n    matrixTransformsOutput.w = image.x * matrix\[3]\[0] + image.y * matrix\[3]\[1] + image.z * matrix\[3]\[2] + matrix\[3]\[3];\n\n\n    return matrixTransformsOutput;\n\n\}\n\ninline float4 matrixToScreenspace(float4 image, float focal, float haperture, float vaperture, int2 resolution)\{\n\n    image.x = 0.5f - ((image.x) * (focal/haperture))/image.z;\n    image.y = 0.5f - ((image.y) * (focal/vaperture))/image.z;\n    image.z = 0.0f;\n\n    image.x = max(0.0f, min(image.x, 1.0f) )*resolution.x;\n    image.y = max(0.0f, min(image.y, 1.0f) )*resolution.y;\n\n    return image;\n\n\n\}\n\n\n\nkernel PosProjKernel : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRandom, eEdgeClamped> projectionImage;\n  Image<eRead, eAccessPoint, eEdgeClamped> src; // the input image\n  \n  Image<eWrite, eAccessRandom> dst; // the output image\n\n  param:\n    // This parameter is made available to the user.\n    float4x4 matrixInput;\n\n    float4x4 axisMatrixInput;\n\n    int iterations;\n\n    bool invert;\n\n    float focal;\n    float haperture;\n    float vaperture; \n\n\n  local:\n    // This local variable is not exposed to the user.\n\n    float4 output;\n    float4 outputTemp;\n    float4 outputTempLoop;\n\n    int2 resolution;\n\n  // In define(), parameters can be given labels and default values.\n  void define() \{\n    \n  \}\n\n  // The init() function is run before any calls to process().\n  // Local variables can be initialized here.\n  void init() \{\n    \n    resolution.x = src.bounds.width();\n    resolution.y = src.bounds.height();\n\n  \}\n\n  void process(int2 pos) \{\n    \n    float4x4 matrix = matrixInput;\n    \n    matrix = invert ?  matrix.invert() : matrix;    \n\n    // Write the result to the output image\n\n    output = matrixTransform(src(), matrix);\n    outputTemp = matrixTransform(output, axisMatrixInput);\n\n    output = matrixToScreenspace(output, focal, haperture, vaperture, resolution);\n    outputTemp = matrixToScreenspace(outputTemp, focal, haperture, vaperture, resolution);\n    \n    for(int i = 0; i < iterations; i++)\{      \n\n      \n\n\n      float ratio = i/float(iterations);\n\n      outputTempLoop = output + (outputTemp-output)*ratio;   \n\n      dst(outputTempLoop.x,outputTempLoop.y) += projectionImage(pos.x, pos.y)/iterations;\n\n\n    \}\n\n\n\n    \n\n    \n\n  \}\n\};\n"
+ useGPUIfAvailable false
+ rebuild ""
+ PosProjKernel_matrixInput {
+     {{parent.Camera3.world_matrix} {parent.Camera3.world_matrix} {parent.Camera3.world_matrix} {parent.Camera3.world_matrix}}
+     {{parent.Camera3.world_matrix} {parent.Camera3.world_matrix} {parent.Camera3.world_matrix} {parent.Camera3.world_matrix}}
+     {{parent.Camera3.world_matrix} {parent.Camera3.world_matrix} {parent.Camera3.world_matrix} {parent.Camera3.world_matrix}}
+     {{parent.Camera3.world_matrix} {parent.Camera3.world_matrix} {parent.Camera3.world_matrix} {parent.Camera3.world_matrix}}
+   }
+ PosProjKernel_axisMatrixInput {
+     {{parent.Axis2.world_matrix} {parent.Axis2.world_matrix} {parent.Axis2.world_matrix} {parent.Axis2.world_matrix}}
+     {{parent.Axis2.world_matrix} {parent.Axis2.world_matrix} {parent.Axis2.world_matrix} {parent.Axis2.world_matrix}}
+     {{parent.Axis2.world_matrix} {parent.Axis2.world_matrix} {parent.Axis2.world_matrix} {parent.Axis2.world_matrix}}
+     {{parent.Axis2.world_matrix} {parent.Axis2.world_matrix} {parent.Axis2.world_matrix} {parent.Axis2.world_matrix}}
+   }
+ PosProjKernel_iterations 240
+ PosProjKernel_invert true
+ PosProjKernel_focal {{parent.Camera3.focal(reference_frame)}}
+ PosProjKernel_haperture {{parent.Camera3.haperture}}
+ PosProjKernel_vaperture {{parent.Camera3.vaperture}}
+ rebuild_finalise ""
+ name BlinkScript7
+ selected true
+ xpos 10210
+ ypos 837
+ addUserKnob {20 User}
+ addUserKnob {3 reference_frame}
+ reference_frame 1
+}
+Unpremult {
+ name Unpremult2
+ selected true
+ xpos 10210
+ ypos 875
+}
+Axis2 {
+ inputs 0
+ rotate {0 15 0}
+ pivot {0 0 -8}
+ name Axis2
+ selected true
+ xpos 10789
+ ypos 715
+}

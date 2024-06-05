@@ -1,0 +1,22 @@
+set cut_paste_input [stack 0]
+version 12.2 v1
+push 0
+push 0
+push $cut_paste_input
+BlinkScript {
+ inputs 3
+ recompileCount 53
+ ProgramGroup 1
+ KernelDescription "2 \"GodRaysSTMapKernel\" iterate pixelWise c41d6372ab26e89ea506ff153b0b04ac90970352ad410a60815bbb4e377b992f 4 \"src\" Read Random \"STMap\" Read Point \"STMapB\" Read Point \"dst\" Write Point 4 \"count\" Int 1 AAAAAA== \"fromColour\" Float 4 AAAAAAAAAAAAAAAAAAAAAA== \"toColour\" Float 4 AAAAAAAAAAAAAAAAAAAAAA== \"gamma\" Float 4 AAAAAAAAAAAAAAAAAAAAAA== 4 \"count\" 1 1 \"fromColour\" 4 1 \"toColour\" 4 1 \"gamma\" 4 1 4 \"srcconstEdgeColor\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA== \"UV\" Float 2 1 AAAAAAAAAAA= \"resolution\" Int 2 1 AAAAAAAAAAA= \"output\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA=="
+ kernelSource "\nkernel GodRaysSTMapKernel : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRandom, eEdgeConstant> src; // the input image\n  Image<eRead, eAccessPoint, eEdgeClamped> STMap;\n  Image<eRead, eAccessPoint, eEdgeClamped> STMapB;\n  \n  Image<eWrite> dst; // the output image\n\n  param:\n    // This parameter is made available to the user.\n        \n    int count;\n    float4 fromColour;\n    float4 toColour;\n    float4 gamma;\n\n  local:\n    // This local variable is not exposed to the user.\n    float2 UV;\n    int2 resolution;\n    float4 output;\n\n  // In define(), parameters can be given labels and default values.\n  void define() \{\n    \n  \}\n\n  // The init() function is run before any calls to process().\n  // Local variables can be initialized here.\n  void init() \{\n    \n    resolution.x = src.bounds.width();\n    resolution.y = src.bounds.height();\n\n  \}\n\n  void process(int2 pos) \{\n    \n    for(int i = 0; i < count; i++)\{\n\n\n      UV.x = (STMap().x+(STMapB().x-STMap().x)*(float(i)/count)  )    *resolution.x-.5f;\n      UV.y = (STMap().y+(STMapB().y-STMap().y)*(float(i)/count)  )    *resolution.y-.5f;\n\n      \n\n\n      output += bilinear(src, UV.x, UV.y)*  pow((fromColour+(toColour-fromColour)*(float(i)/count)), (float4(1.0f)/gamma));\n\n    \}\n\n      output = output/count;\n    // Write the result to the output image\n    dst() = output;\n  \}\n\};\n"
+ rebuild ""
+ GodRaysSTMapKernel_count 10
+ GodRaysSTMapKernel_fromColour 1
+ GodRaysSTMapKernel_toColour 1
+ GodRaysSTMapKernel_gamma 1
+ rebuild_finalise ""
+ name BlinkScript3
+ selected true
+ xpos -764
+ ypos -106
+}

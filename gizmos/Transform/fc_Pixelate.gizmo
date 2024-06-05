@@ -1,0 +1,546 @@
+set cut_paste_input [stack 0]
+version 15.0 v1
+push $cut_paste_input
+Group {
+ name fc_Pixelate
+ tile_color 0xff7a2bff
+ selected true
+ xpos 298
+ ypos 135
+ addUserKnob {20 pixelate l Pixelate}
+ addUserKnob {4 pixelpattern l "Pixel Pattern" t "Switch between standard LCD pixel layout and TV CRT layout" M {LCD "TV CRT" "" "" "" ""}}
+ addUserKnob {4 pixel_setup l "Pixel Setup" M {simple RGB "" "" "" "" ""}}
+ addUserKnob {14 pixelgap l "Pixel Gap" t "Gap between pixels on X-axis. Can be split up to adjust gap on X and Y axis individually." R 0 100}
+ pixelgap 1
+ addUserKnob {14 pixelsize l "Pixel Size" t "Size of pixels, can be split up to adjust size in X and Y axis " R 0 100}
+ pixelsize 1
+ addUserKnob {3 pixeldivide l "Divide Pixels" t "Can be used to devide existing pixels into smaller pixels. "}
+ addUserKnob {6 expvalues l "Exponential Gap/Size *Use with Caution*" t "process Gap and Size values exponential to get linear zoom motion.\nWARNING! Large values can crash nuke, set Gap & Size to 1 before using." +STARTLINE}
+ addUserKnob {26 _3 l "" +STARTLINE T " "}
+ addUserKnob {26 "" l "motion blur"}
+ addUserKnob {41 blur_type l "blur type" T VectorBlur1.blur_type}
+ addUserKnob {41 scale l "motion amount" T VectorBlur1.scale}
+ addUserKnob {41 motion_falloff l "motion falloff" T VectorBlur1.motion_falloff}
+ addUserKnob {41 offset l "shutter offset" T VectorBlur1.offset}
+ addUserKnob {26 "" l " "}
+ addUserKnob {41 soft_lines l "soft lines" T VectorBlur1.soft_lines}
+ addUserKnob {41 blur_inside l "blur inside" -STARTLINE T VectorBlur1.blur_inside}
+ addUserKnob {41 normalize -STARTLINE T VectorBlur1.normalize}
+ addUserKnob {26 _2 l "" +STARTLINE T " "}
+ addUserKnob {26 ""}
+ addUserKnob {20 halftone l "Halftone Print" n 1}
+ halftone 0
+ addUserKnob {6 halftonecheck l Enable +STARTLINE}
+ addUserKnob {4 print l "Print Setup" M {B/W CMY}}
+ print CMY
+ addUserKnob {26 _6_1 l "" -STARTLINE T "   "}
+ addUserKnob {6 viewhalftone l "Effect only" -STARTLINE}
+ addUserKnob {41 blackpoint T Grade2.blackpoint}
+ addUserKnob {41 whitepoint T Grade2.whitepoint}
+ addUserKnob {6 clamp_halftone l "Clamp halftone" +STARTLINE}
+ clamp_halftone true
+ addUserKnob {6 invert l "Invert Mask" -STARTLINE}
+ addUserKnob {26 _4 l "Image controls" t "Grade controls for image before merge with halftone effect."}
+ addUserKnob {41 white l gain T Grade3.white}
+ addUserKnob {41 black l lift T Grade3.black}
+ addUserKnob {41 multiply T Grade3.multiply}
+ addUserKnob {41 gamma T Grade3.gamma}
+ addUserKnob {41 saturation T Saturation3.saturation}
+ addUserKnob {26 _5 l "" +STARTLINE T " "}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {26 ""}
+ addUserKnob {26 _6 l "" +STARTLINE T "\nCreated by Guy Frutiger 2022\nguyfrutiger.com\n\n"}
+}
+ Input {
+  inputs 0
+  name Img
+  xpos 308
+  ypos -220
+ }
+ Crop {
+  box {0 0 {format.width} {format.height}}
+  crop false
+  name Crop2
+  xpos 308
+  ypos -68
+ }
+set N99554400 [stack 0]
+ Dot {
+  name Dot11
+  xpos 488
+  ypos -64
+ }
+ Transform {
+  scale {{"Blinkscript1.Pixelate_gap_x < 1 ? 1 : Blinkscript1.Pixelate_gap_x"} {"Blinkscript1.Pixelate_gap_y < 1 ? 1 : Blinkscript1.Pixelate_gap_y"}}
+  center {{format.width/2} {format.height/2}}
+  name Transform2
+  xpos 454
+  ypos 3303
+ }
+ Dot {
+  name Dot1
+  xpos 488
+  ypos 3438
+ }
+push $N99554400
+ Invert {
+  channels rgba
+  name Invert1
+  xpos 308
+  ypos 10
+  disable {{1-parent.halftonecheck}}
+ }
+ BlinkScript {
+  recompileCount 239
+  ProgramGroup 1
+  KernelDescription "2 \"Pixelate\" iterate pixelWise 946c1d10bd6593a6715daba079cc200b860935ad26441e5d8d5a601aedbf74a5 2 \"src\" Read Random \"dst\" Write Point 6 \"gap_x\" Float 1 AACAPw== \"gap_y\" Float 1 AACAPw== \"size_x\" Float 1 AACAPw== \"size_y\" Float 1 AACAPw== \"Switch\" Bool 1 AA== \"pixel_gap\" Float 1 AACAPw== 6 \"gapx\" 1 1 \"gapy\" 1 1 \"sizex\" 1 1 \"sizey\" 1 1 \"Switch\" 1 1 \"pixelgap\" 1 1 4 \"output\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA== \"output2\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA== \"centerx\" Float 1 1 AAAAAA== \"centery\" Float 1 1 AAAAAA=="
+  kernelSource "\nkernel Pixelate : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRandom, eEdgeClamped> src; // the input image\n  Image<eWrite> dst; // the output image\n\n  param:\n    // This parameter is made available to the user.\n\n    float gapx;\n    float gapy;\n    float sizex;\n    float sizey;\n    bool Switch;\n    float pixelgap;\n\n\n  local:\n    // This local variable is not exposed to the user.\n\n    float4 output;\n    float4 output2;\n    float centerx;\n    float centery;\n    \n\n\n  // In define(), parameters can be given labels and default values.\n  void define() \{\n    defineParam(gapx, \"gap_x\", 1.0f);\n    defineParam(gapy, \"gap_y\", 1.0f);\n    defineParam(sizex, \"size_x\", 1.0f);\n    defineParam(sizey,\"size_y\", 1.0f);\n    defineParam(Switch, \"Switch\", false);\n    defineParam(pixelgap, \"pixel_gap\", 1.0f);\n\n  \}\n\n  // The init() function is run before any calls to process().\n  // Local variables can be initialized here.\n  void init(int2 pos) \{\n\n    // getting the center of the source          \n    centerx = src.bounds.x2 / 2.0f;  \n    centery = src.bounds.y2 / 2.0f;\n    \n  \}\n\n  void process(int2 pos) \{\n    \n    // converting float values into integers for pixel accuracy\n    int gapxint = Switch == true ? int(gapx*2): int(gapx);\n    int gapyint = Switch == true ? int(gapy*2): int(gapy);\n    int pixelgapint = pixelgap < 1 ? 1 : int(pixelgap);\n    int cxint = int(centerx);\n    int cyint = int(centery);\n    int sizexint = sizex < 1 ? 1 : int(sizex);\n    int sizeyint = sizey < 1 ? 1 : int(sizey);\n    \n\n    //with each loop 1 row & colum gets added to pixels, loop runs until user defined size is reached\n    for(int i = 0; i<sizexint; i+= pixelgapint)\n    \{\n      for(int j = 0; j<sizeyint; j+= pixelgapint)\n      \{\n        //All pixels are black apart from  every nth (n = user \"gap\") pixel\n        if (((pos.x-cxint)+((gapxint-sizexint)/2)+i)%gapxint==0&&((pos.y-cyint)+((gapyint-sizeyint)/2)+j)%gapyint==0)\n        \{\n            \n            output = bilinear(src, ((pos.x)+i-(sizexint/2)), ((pos.y)+j-(sizeyint/2)));\n            \{\n               \n          \}    \n        \}\n      \}\n    \}\n    //second loop for CRT ofset\n    for(int i = 0; i<sizexint; i+= pixelgapint)\n    \{\n      for(int j = 0; j<sizeyint; j+= pixelgapint)\n      \{\n        //adjusted offset to fit CRT pattern\n        if (((pos.x-cxint)+((gapxint-sizexint)+(sizexint/2))+i)%gapxint==0&&((pos.y-cyint)+((gapyint-sizeyint)+(sizeyint/2))+j)%gapyint==0)\n        \{\n            \n            output2 = bilinear(src, ((pos.x)+i-(sizexint/2)), ((pos.y)+j-(sizeyint/2)));\n            \{\n               \n          \}    \n        \}\n      \}\n    \}\n\n    // Write the result to the output image, max operation to get rid of overlapping pixel problems\n    dst() = Switch == true ? max(output2, output) : output;\n  \}\n\};"
+  rebuild ""
+  Pixelate_gap_x {{"expvalues > 0 ? exp(parent.pixelgap.w) : parent.pixelgap.w"}}
+  Pixelate_gap_y {{"expvalues > 0 ? exp(parent.pixelgap.h) : parent.pixelgap.h"}}
+  Pixelate_size_x {{"expvalues > 0 ? exp(parent.pixelsize.w) : parent.pixelsize.w"}}
+  Pixelate_size_y {{"expvalues > 0 ? exp(parent.pixelsize.h) : parent.pixelsize.h"}}
+  Pixelate_Switch {{parent.pixelpattern}}
+  Pixelate_pixel_gap {{parent.pixeldivide}}
+  rebuild_finalise ""
+  name Blinkscript1
+  xpos 308
+  ypos 92
+  disable {{"(Blinkscript1.Pixelate_gap_x+Blinkscript1.Pixelate_gap_y)/2 <=1 ? 1 : 0"}}
+ }
+set N99555800 [stack 0]
+ Dot {
+  name Dot10
+  xpos 187
+  ypos 101
+ }
+set N99555c00 [stack 0]
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.red 0 0 black -1 -1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 rgba.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle3
+  xpos 153
+  ypos 344
+ }
+ Transform {
+  translate {{int(-parent.Blinkscript1.Pixelate_size_x-1)} 0}
+  center {960 540}
+  name Transform3
+  xpos 153
+  ypos 431
+ }
+ Dot {
+  name Dot13
+  xpos 187
+  ypos 532
+ }
+push 0
+push $N99555c00
+ Dot {
+  name Dot8
+  xpos 49
+  ypos 101
+ }
+set N8cd20c00 [stack 0]
+ Dot {
+  name Dot6
+  xpos -96
+  ypos 101
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 rgba.red 0 0 black -1 -1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 rgba.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle1
+  xpos -130
+  ypos 348
+ }
+ Transform {
+  translate {{int(parent.Blinkscript1.Pixelate_size_x+1)} 0}
+  center {960 540}
+  name Transform1
+  xpos -130
+  ypos 416
+ }
+ Dot {
+  name Dot12
+  xpos -96
+  ypos 532
+ }
+push $N8cd20c00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 rgba.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle2
+  xpos 15
+  ypos 342
+ }
+ Merge2 {
+  inputs 3+1
+  operation plus
+  name Merge2
+  xpos 14
+  ypos 528
+ }
+ Dot {
+  name Dot14
+  xpos 48
+  ypos 675
+ }
+push $N99555800
+ Switch {
+  inputs 2
+  which {{parent.pixel_setup}}
+  name Switch2
+  xpos 308
+  ypos 671
+  disable {{"(Blinkscript1.Pixelate_gap_x+Blinkscript1.Pixelate_gap_y)/2 <=1 ? 1 : 0"}}
+ }
+ Dot {
+  name Dot15
+  xpos 342
+  ypos 960
+ }
+set N5e3ed000 [stack 0]
+ Dot {
+  name Dot2
+  xpos -680
+  ypos 960
+ }
+ Blur {
+  channels rgba
+  size {{Blinkscript1.Pixelate_size_x} {Blinkscript1.Pixelate_size_y}}
+  name Blur2
+  xpos -714
+  ypos 1031
+ }
+ Saturation {
+  saturation 0
+  name Saturation1
+  xpos -714
+  ypos 1083
+ }
+ Grade {
+  channels rgba
+  blackpoint 0.05
+  whitepoint 0.2
+  name Grade2
+  xpos -714
+  ypos 1143
+ }
+ Clamp {
+  channels rgba
+  name Clamp1
+  xpos -714
+  ypos 1184
+  disable {{1-parent.clamp_halftone}}
+ }
+ Invert {
+  name Invert2
+  xpos -714
+  ypos 1283
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 rgba.red 0 0 rgba.alpha 0 3"
+  name Shuffle4
+  label "\[python \{nuke.thisNode().knob(\"in\").value().upper()\}] to \[python \{nuke.thisNode().knob(\"out\").value().upper()\}]"
+  xpos -714
+  ypos 1364
+ }
+ Invert {
+  channels alpha
+  name Invert3
+  xpos -714
+  ypos 1443
+ }
+set N6a291000 [stack 0]
+ Dot {
+  name Dot17
+  xpos -680
+  ypos 1535
+ }
+set N6a291400 [stack 0]
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.red 0 0 rgba.alpha 0 3 rgba.alpha 0 3 black -1 -1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2"
+  name Shuffle5
+  xpos -714
+  ypos 1650
+ }
+ Transform {
+  translate {2 2}
+  center {960 540}
+  name Transform4
+  xpos -714
+  ypos 2036
+ }
+ Dot {
+  name Dot18
+  xpos -680
+  ypos 2253
+ }
+push 0
+push $N6a291400
+ Dot {
+  name Dot19
+  xpos -818
+  ypos 1535
+ }
+set N8ccaa400 [stack 0]
+ Dot {
+  name Dot20
+  xpos -963
+  ypos 1535
+ }
+set N8ccaa800 [stack 0]
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 rgba.red 0 0 black -1 -1 rgba.green 0 1 rgba.alpha 0 3 rgba.alpha 0 3 black -1 -1 rgba.blue 0 2"
+  name Shuffle6
+  xpos -997
+  ypos 1653
+ }
+ Transform {
+  translate {{-parent.Transform4.translate.x} {-parent.Transform4.translate.y}}
+  center {960 540}
+  name Transform5
+  xpos -997
+  ypos 1867
+ }
+ Dot {
+  name Dot21
+  xpos -963
+  ypos 2253
+ }
+push $N8ccaa400
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.alpha 0 3 rgba.alpha 0 3 black -1 -1 rgba.red 0 0 black -1 -1 rgba.blue 0 2 rgba.green 0 1 rgba.green 0 1"
+  name Shuffle7
+  xpos -852
+  ypos 1647
+ }
+ Merge2 {
+  inputs 3+1
+  operation plus
+  name Merge3
+  xpos -852
+  ypos 2249
+ }
+ Dot {
+  name Dot3
+  xpos -818
+  ypos 2422
+ }
+set Nc406c000 [stack 0]
+push $N8ccaa800
+ Dot {
+  name Dot7
+  xpos -1315
+  ypos 1535
+ }
+ Switch {
+  inputs 2
+  which {{parent.print}}
+  name Switch4
+  xpos -1349
+  ypos 2418
+ }
+ Dot {
+  name Dot22
+  xpos -1315
+  ypos 3319
+ }
+push $N99554400
+ Dot {
+  name Dot5
+  xpos -233
+  ypos -64
+ }
+set Nc406d000 [stack 0]
+ Dot {
+  name Dot25
+  xpos -1180
+  ypos -64
+ }
+ Expression {
+  expr0 1
+  expr1 1
+  expr2 1
+  expr3 1
+  name Expression1
+  xpos -1214
+  ypos 3151
+ }
+ Input {
+  inputs 0
+  name halftone_mask
+  xpos -1031
+  ypos 2776
+  number 1
+ }
+ NoOp {
+  name Input_Check
+  xpos -1031
+  ypos 2827
+  addUserKnob {20 User}
+  addUserKnob {7 alpha l "" +STARTLINE}
+  alpha {{"1-(\[string first \".alpha\" \[channels \[input this 0]]]>-1)" x1001 0}}
+ }
+ Dot {
+  name Dot9
+  xpos -997
+  ypos 2867
+ }
+push $Nc406d000
+ Blur {
+  channels rgba
+  size {{Blinkscript1.Pixelate_size_x} {Blinkscript1.Pixelate_size_y}}
+  name Blur3
+  xpos -267
+  ypos 1937
+ }
+ Grade {
+  name Grade3
+  xpos -267
+  ypos 2031
+ }
+ Saturation {
+  name Saturation3
+  xpos -267
+  ypos 2080
+ }
+ Saturation {
+  saturation 0
+  name Saturation2
+  xpos -267
+  ypos 2154
+  disable {{parent.print}}
+ }
+ Clamp {
+  channels rgba
+  maximum_enable false
+  name Clamp2
+  xpos -267
+  ypos 2232
+ }
+ Dot {
+  name Dot16
+  xpos -233
+  ypos 2670
+ }
+push $Nc406c000
+push $N6a291000
+ Dot {
+  name Dot23
+  xpos -484
+  ypos 1453
+ }
+ Dot {
+  name Dot24
+  xpos -484
+  ypos 2564
+ }
+ Switch {
+  inputs 2
+  which {{parent.print}}
+  name Switch5
+  xpos -852
+  ypos 2560
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  Achannels {rgba.red rgba.green rgba.blue -rgba.alpha}
+  Bchannels {rgba.red rgba.green rgba.blue -rgba.alpha}
+  output {rgba.red rgba.green rgba.blue -rgba.alpha}
+  name Merge4
+  xpos -852
+  ypos 2666
+ }
+ ChannelMerge {
+  inputs 2
+  operation multiply
+  name ChannelMerge1
+  xpos -852
+  ypos 2851
+  disable {{parent.Input_Check.alpha}}
+ }
+ Premult {
+  name Premult2
+  xpos -852
+  ypos 2949
+ }
+set N5cbd5400 [stack 0]
+ Merge2 {
+  inputs 2
+  operation under
+  name Merge1
+  xpos -852
+  ypos 3151
+ }
+ Switch {
+  inputs 2
+  which {{parent.viewhalftone}}
+  name Switch3
+  xpos -852
+  ypos 3315
+ }
+ Dot {
+  name Dot4
+  xpos -818
+  ypos 3373
+ }
+push $N5e3ed000
+ Switch {
+  inputs 2
+  which {{parent.halftonecheck}}
+  name Switch1
+  xpos 308
+  ypos 3371
+ }
+ MotionBlur2D {
+  inputs 2
+  name MotionBlur2D1
+  xpos 308
+  ypos 3434
+  disable {{"VectorBlur1.scale == 0 ? 1 : 0"}}
+ }
+ VectorBlur2 {
+  channels rgba
+  uv motion
+  name VectorBlur1
+  xpos 308
+  ypos 3506
+  disable {{"VectorBlur1.scale == 0 ? 1 : 0"}}
+ }
+ Crop {
+  box {0 0 {format.width x1042 1918.670044} {format.height x1042 1078.73999}}
+  crop false
+  name Crop6
+  xpos 308
+  ypos 3778
+ }
+ Output {
+  name Output1
+  xpos 308
+  ypos 4029
+ }
+push $N5cbd5400
+push $N99555800
+ Viewer {
+  inputs 2
+  frame_range 1010-1055
+  colour_sample_bbox {-0.459374994 -0.2989583313 -0.4583333433 -0.2979166806}
+  name Viewer1
+  xpos 2407
+  ypos 1384
+ }
+end_group

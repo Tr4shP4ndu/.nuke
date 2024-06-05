@@ -1,0 +1,185 @@
+set cut_paste_input [stack 0]
+version 14.0 v4
+push $cut_paste_input
+Ramp {
+p0 {342 396}
+p1 {375 1045}
+name Ramp2
+selected true
+xpos -23169
+ypos 26913
+postage_stamp true
+}
+Dot {
+name Dot528
+selected true
+xpos -23135
+ypos 26996
+}
+Constant {
+inputs 0
+channels rgb
+format "1920 1080 0 0 1920 1080 1 HD_1080"
+name Constant16
+selected true
+xpos -23463
+ypos 26448
+}
+Noise {
+size 11
+zoffset {{frame/20 x39 1.46}}
+center {400 266.5}
+name Noise11
+selected true
+xpos -23463
+ypos 26539
+}
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3"
+name Shuffle78
+selected true
+xpos -23463
+ypos 26585
+}
+Blur {
+size 3.4
+name Blur38
+selected true
+xpos -23463
+ypos 26642
+}
+set Na87f0400 [stack 0]
+Matrix {
+matrix {
+    {0 0 0}
+    {-1 1 0}
+    {0 0 0}
+  }
+name Matrix5
+selected true
+xpos -23556
+ypos 26732
+}
+set Na87f1400 [stack 0]
+Dot {
+name Dot529
+selected true
+xpos -23522
+ypos 26910
+}
+push $Na87f0400
+Matrix {
+matrix {
+    {0 -1 0}
+    {0 0 0}
+    {0 1 0}
+  }
+name Matrix7
+selected true
+xpos -23329
+ypos 26729
+}
+set Na87f1c00 [stack 0]
+Copy {
+inputs 2
+from0 rgba.red
+to0 rgba.red
+name Copy46
+selected true
+xpos -23329
+ypos 26901
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy47
+selected true
+xpos -23329
+ypos 26987
+}
+Premult {
+name Premult38
+selected true
+xpos -23329
+ypos 27039
+}
+Dot {
+name Dot530
+selected true
+xpos -23295
+ypos 27075
+}
+set Na881ec00 [stack 0]
+Dot {
+name Dot531
+label "since the uv-vectors are still\nin the usual \[R,G,B] channels we\ncan perform our usual image\noperations to mask them"
+note_font_size 25
+selected true
+xpos -23765
+ypos 27075
+}
+push $Na87f0400
+Dot {
+name Dot527
+label "change things like\nx/y size for \"noisiness\"\nand\nz offset for animation speed"
+note_font_size 25
+selected true
+xpos -23220
+ypos 26651
+}
+push $Na87f1400
+Dot {
+name Dot534
+label "\n\nhorizontal differences\n(vertical edges)"
+note_font_size 25
+selected true
+xpos -23795
+ypos 26741
+}
+push $Na87f1c00
+Dot {
+name Dot533
+label "vertical differences\n(horizontal edges)"
+note_font_size 25
+selected true
+xpos -23227
+ypos 26738
+}
+push $Na881ec00
+CheckerBoard2 {
+inputs 0
+name CheckerBoard1
+selected true
+xpos -23004
+ypos 26929
+}
+Copy {
+inputs 2
+from0 rgba.red
+to0 forward.u
+from1 rgba.green
+to1 forward.v
+name Copy48
+selected true
+xpos -23004
+ypos 27060
+}
+IDistort {
+uv forward
+uv_scale 100
+name IDistort9
+selected true
+xpos -23004
+ypos 27138
+}
+Dot {
+name Dot532
+label "you can use the 'Multiply' knob\nto change the magnitude"
+note_font_size 25
+selected true
+xpos -22970
+ypos 27226
+}

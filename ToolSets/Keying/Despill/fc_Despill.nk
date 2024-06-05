@@ -1,0 +1,2236 @@
+set cut_paste_input [stack 0]
+version 15.0 v1
+StickyNote {
+ inputs 0
+ name StickyNote1
+ tile_color 0xff
+ label "Sample screen colour(s) from fg or create \na cleant plate from the denoise pipe."
+ note_font "Verdana Bold"
+ note_font_size 15
+ selected true
+ xpos -1157
+ ypos 2164
+}
+Dot {
+ inputs 0
+ name Dot16
+ tile_color 0xff0000ff
+ label SCREEN
+ note_font "Verdana Bold"
+ note_font_size 15
+ selected true
+ xpos -996
+ ypos 2226
+}
+Dot {
+ name Dot18
+ selected true
+ xpos -996
+ ypos 2346
+}
+add_layer {screen_colour screen_colour.red screen_colour.green screen_colour.blue screen_colour.alpha}
+Shuffle2 {
+ fromInput1 {{0} B}
+ out1 screen_colour
+ fromInput2 {{0} B}
+ mappings "4 rgba.red 0 0 screen_colour.red 0 0 rgba.green 0 1 screen_colour.green 0 1 rgba.blue 0 2 screen_colour.blue 0 2 rgba.alpha 0 3 screen_colour.alpha 0 3"
+ name Shuffle1
+ selected true
+ xpos -920
+ ypos 2343
+}
+Dot {
+ name Dot23
+ selected true
+ xpos -886
+ ypos 2468
+}
+Dot {
+ inputs 0
+ name Dot19
+ tile_color 0xff0000ff
+ label FG_DENOISE
+ note_font "Verdana Bold"
+ note_font_size 15
+ selected true
+ xpos -351
+ ypos 2226
+}
+Dot {
+ name Dot22
+ selected true
+ xpos -351
+ ypos 2346
+}
+add_layer {fg_denoise_plate fg_denoise_plate.red fg_denoise_plate.green fg_denoise_plate.blue fg_denoise_plate.alpha}
+Shuffle2 {
+ fromInput1 {{0} B}
+ out1 fg_denoise_plate
+ fromInput2 {{0} B}
+ mappings "4 rgba.red 0 0 fg_denoise_plate.red 0 0 rgba.green 0 1 fg_denoise_plate.green 0 1 rgba.blue 0 2 fg_denoise_plate.blue 0 2 rgba.alpha 0 3 fg_denoise_plate.alpha 0 3"
+ name Shuffle2
+ selected true
+ xpos -480
+ ypos 2343
+}
+push $cut_paste_input
+Dot {
+ name Dot20
+ tile_color 0xff0000ff
+ label FG
+ note_font "Verdana Bold"
+ note_font_size 15
+ selected true
+ xpos -666
+ ypos 2226
+}
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 rgba.alpha
+ channels fg_denoise_plate
+ name Copy2
+ selected true
+ xpos -700
+ ypos 2331
+}
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 rgba.alpha
+ channels screen_colour
+ name Copy3
+ selected true
+ xpos -700
+ ypos 2453
+}
+Dot {
+ name Dot24
+ selected true
+ xpos -666
+ ypos 2586
+}
+set Nb3e03000 [stack 0]
+Dot {
+ name Dot25
+ selected true
+ xpos -446
+ ypos 2586
+}
+Dot {
+ name Dot26
+ selected true
+ xpos -446
+ ypos 2922
+}
+set Nb3e03800 [stack 0]
+Dot {
+ name Dot27
+ selected true
+ xpos -446
+ ypos 3138
+}
+push $Nb3e03000
+Dot {
+ name Dot28
+ tile_color 0xff
+ label DESPILL
+ note_font "Verdana Bold"
+ note_font_size 15
+ selected true
+ xpos -666
+ ypos 2682
+}
+add_layer {fg_plate fg_plate.red fg_plate.green fg_plate.blue fg_plate.alpha}
+Group {
+ name fc_Despill
+ selected true
+ xpos -700
+ ypos 2799
+ addUserKnob {20 User}
+ addUserKnob {18 despill_colour l "despill colour" R 0 4}
+ despill_colour {0 0 1}
+ addUserKnob {6 despill_colour_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {26 _1 l "" +STARTLINE}
+ addUserKnob {18 despill_bias l "despill bias"}
+ despill_bias {0.5 0.5 0.5}
+ addUserKnob {6 despill_bias_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {7 balance t "The Balance control can be used to adjust the weighting of secondary channels in the despill operation.\n\nAll common despill algorithms can be achieved with values on this slider.\n\naverage = 0.5\n\nThis control behaves in the same way as the keylight screen balance"}
+ balance 0.9
+ addUserKnob {7 limit t "Adjust the colour range affected by despill, a limit of less than 1 will affect a greated range, whilst a limit of more than 1 will reduce the range.\n\nThis control behaves in same way as the DespillMadness fine tune." R 0.5 1.5}
+ limit 0.75
+ addUserKnob {7 strength t "A multiply control to adjust the mix or strength of the despill applied.\n\nThis control behaves in the same way as the keylight screen gain." R 0 2}
+ strength 1
+ addUserKnob {26 _2 l "" +STARTLINE}
+ addUserKnob {18 restore_luminance l luminance t "When set to 1, this control is restoring the luminance liost in the despill. THis can also be thought of as a target coliur for your screen and manipulating the colour channel will allow you to get a spill colour and luminance suitable for your shot." R -1 2}
+ restore_luminance {2.9 1.9 2.1}
+ addUserKnob {6 restore_luminance_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ restore_luminance_panelDropped true
+ addUserKnob {4 luminance_math l "" +STARTLINE M {"Rec 709" "Ccir 601" Average Maximum ""}}
+ addUserKnob {26 _3 l "" +STARTLINE}
+ addUserKnob {6 black_clamp l "black clamp" +STARTLINE}
+ addUserKnob {26 _4 l "" +STARTLINE}
+ addUserKnob {41 in l "in 1" T Shuffle2.in}
+ addUserKnob {41 in_2 l "in 1" T Shuffle5.in}
+ addUserKnob {41 in_1 l "in 1" T Shuffle9.in}
+ addUserKnob {41 in_4 l "in 1" T Shuffle13.in}
+ addUserKnob {41 in_3 l "in 1" T Shuffle17.in}
+ addUserKnob {41 in_5 l "in 1" T Shuffle21.in}
+}
+ StickyNote {
+  inputs 0
+  name StickyNote1
+  label "StrongestColour.which == 0 ? -parent.despill_colour.r*clamp(1/red_value,0,1000000):\nStrongestColour.which == 1 ? -parent.despill_colour.r*clamp(1/green_value,0,1000000):\nStrongestColour.which == 2 ? -parent.despill_colour.r*clamp(1/blue_value,0,1000000):\n0\n\nStrongestColour.which == 0 ? -parent.despill_colour.g*clamp(1/red_value,0,1000000):\nStrongestColour.which == 1 ? -parent.despill_colour.g*clamp(1/green_value,0,1000000):\nStrongestColour.which == 2 ? -parent.despill_colour.g*clamp(1/blue_value,0,1000000):\n0\n\nStrongestColour.which == 0 ? -parent.despill_colour.b*clamp(1/red_value,0,1000000):\nStrongestColour.which == 1 ? -parent.despill_colour.b*clamp(1/green_value,0,1000000):\nStrongestColour.which == 2 ? -parent.despill_colour.b*clamp(1/blue_value,0,1000000):\n0"
+  xpos -2040
+  ypos 561
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote2
+  label "StrongestColour.which == 0 ? -parent.despill_colour.r*clamp(1/red_value,0,1000000):\nStrongestColour.which == 1 ? -parent.despill_colour.r*clamp(1/green_value,0,1000000):\nStrongestColour.which == 2 ? -parent.despill_colour.r*clamp(1/blue_value,0,1000000):\n0\n\nStrongestColour.which == 0 ? -parent.despill_colour.g*clamp(1/red_value,0,1000000):\nStrongestColour.which == 1 ? -parent.despill_colour.g*clamp(1/green_value,0,1000000):\nStrongestColour.which == 2 ? -parent.despill_colour.g*clamp(1/blue_value,0,1000000):\n0\n\nStrongestColour.which == 0 ? -parent.despill_colour.b*clamp(1/red_value,0,1000000):\nStrongestColour.which == 1 ? -parent.despill_colour.b*clamp(1/green_value,0,1000000):\nStrongestColour.which == 2 ? -parent.despill_colour.b*clamp(1/blue_value,0,1000000):\n0"
+  xpos -3662
+  ypos 552
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote3
+  label "StrongestColour.which == 0 ? -parent.despill_colour.r*clamp(1/red_value,0,1000000):\nStrongestColour.which == 1 ? -parent.despill_colour.r*clamp(1/green_value,0,1000000):\nStrongestColour.which == 2 ? -parent.despill_colour.r*clamp(1/blue_value,0,1000000):\n0\n\nStrongestColour.which == 0 ? -parent.despill_colour.g*clamp(1/red_value,0,1000000):\nStrongestColour.which == 1 ? -parent.despill_colour.g*clamp(1/green_value,0,1000000):\nStrongestColour.which == 2 ? -parent.despill_colour.g*clamp(1/blue_value,0,1000000):\n0\n\nStrongestColour.which == 0 ? -parent.despill_colour.b*clamp(1/red_value,0,1000000):\nStrongestColour.which == 1 ? -parent.despill_colour.b*clamp(1/green_value,0,1000000):\nStrongestColour.which == 2 ? -parent.despill_colour.b*clamp(1/blue_value,0,1000000):\n0"
+  xpos -5312
+  ypos 553
+ }
+ Input {
+  inputs 0
+  name Input1
+  xpos -208
+  ypos -465
+ }
+ Dot {
+  name Dot1
+  xpos -174
+  ypos -222
+ }
+set N90c6800 [stack 0]
+ Dot {
+  name Dot2
+  xpos -1876
+  ypos -219
+ }
+set N90c6c00 [stack 0]
+ Dot {
+  name Dot18
+  xpos -3498
+  ypos -228
+ }
+set Nb3a63400 [stack 0]
+ Dot {
+  name Dot33
+  xpos -5148
+  ypos -227
+ }
+set Nbc374c00 [stack 0]
+ Dot {
+  name Dot47
+  xpos -6686
+  ypos -227
+ }
+set Nbafd0800 [stack 0]
+ Dot {
+  name Dot63
+  xpos -8258
+  ypos -227
+ }
+set Nb3ae8000 [stack 0]
+ Dot {
+  name Dot78
+  xpos -9796
+  ypos -227
+ }
+ Shuffle {
+  name Shuffle21
+  label "\[value in]"
+  xpos -9830
+  ypos -39
+ }
+ Dot {
+  name Dot79
+  xpos -9796
+  ypos 106
+ }
+set Nb9282000 [stack 0]
+ Dot {
+  name Dot80
+  xpos -9576
+  ypos 106
+ }
+set Nb9282400 [stack 0]
+ Dot {
+  name Dot81
+  xpos -8696
+  ypos 106
+ }
+push $Nb9282400
+ Grade {
+  whitepoint {{parent.despill_bias} {parent.despill_bias} {parent.despill_bias} {parent.despill_bias}}
+  name bias5
+  xpos -9610
+  ypos 223
+ }
+ Dot {
+  name Dot82
+  xpos -9576
+  ypos 349
+ }
+set Nb9283000 [stack 0]
+ Dot {
+  name Dot83
+  xpos -9356
+  ypos 349
+ }
+ Expression {
+  temp_name0 redweight
+  temp_expr0 ((b*parent.balance)+(g*(1-parent.balance)))
+  temp_name1 greenweight
+  temp_expr1 ((b*parent.balance)+(r*(1-parent.balance)))
+  temp_name2 blueweight
+  temp_expr2 ((g*parent.balance)+(r*(1-parent.balance)))
+  expr0 clamp(r-(redweight*parent.limit),0,1000000)
+  expr1 clamp(r-(greenweight*parent.limit),0,1000000)
+  expr2 clamp(r-(blueweight*parent.limit),0,1000000)
+  name ClampedKey5
+  xpos -9390
+  ypos 391
+ }
+ Dot {
+  name Dot84
+  xpos -9356
+  ypos 443
+ }
+set Nb9283c00 [stack 0]
+ Dot {
+  name Dot85
+  xpos -9024
+  ypos 443
+ }
+set Nb92bc000 [stack 0]
+ Shuffle {
+  red blue
+  green blue
+  alpha blue
+  name Shuffle22
+  label "\[value in]"
+  xpos -8950
+  ypos 529
+ }
+push $Nb92bc000
+ Shuffle {
+  red green
+  blue green
+  alpha green
+  name Shuffle23
+  label "\[value in]"
+  xpos -9060
+  ypos 532
+ }
+push $Nb92bc000
+ Shuffle {
+  green red
+  blue red
+  alpha red
+  name Shuffle24
+  label "\[value in]"
+  xpos -9170
+  ypos 532
+ }
+ Switch {
+  inputs 3
+  which {{StrongestColour.which}}
+  name Switch6
+  xpos -9060
+  ypos 610
+ }
+ Dot {
+  name Dot86
+  xpos -9026
+  ypos 733
+ }
+push $Nb9283c00
+ Grade {
+  add {{parent.StrongestColour.red} {parent.StrongestColour.green} {parent.StrongestColour.blue} 0}
+  name KeylightOffset5
+  xpos -9390
+  ypos 559
+  addUserKnob {20 User}
+  addUserKnob {7 red_value}
+  red_value {{parent.despill_colour.r-(((parent.despill_colour.b*parent.balance)+(parent.despill_colour.g*(1-parent.balance)))*parent.limit)}}
+  addUserKnob {7 green_value}
+  green_value {{parent.despill_colour.g-(((parent.despill_colour.b*parent.balance)+(parent.despill_colour.r*(1-parent.balance)))*parent.limit)}}
+  addUserKnob {7 blue_value}
+  blue_value {{parent.despill_colour.b-(((parent.despill_colour.g*parent.balance)+(parent.despill_colour.r*(1-parent.balance)))*parent.limit)}}
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge21
+  xpos -9390
+  ypos 727
+ }
+ Dot {
+  name Dot87
+  xpos -9356
+  ypos 802
+ }
+push $Nb9283000
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge22
+  xpos -9610
+  ypos 799
+ }
+ Grade {
+  whitepoint {{parent.despill_bias} {parent.despill_bias} {parent.despill_bias} {parent.despill_bias}}
+  reverse true
+  name Grade6
+  xpos -9610
+  ypos 871
+ }
+ Dot {
+  name Dot88
+  xpos -9576
+  ypos 970
+ }
+push $Nb9282000
+ MergeExpression {
+  inputs 2
+  expr0 Br+(Ar-Br)*parent.strength
+  expr1 Bg+(Ag-Bg)*parent.strength
+  expr2 Bb+(Ab-Bb)*parent.strength
+  name MergeExpression6
+  xpos -9830
+  ypos 967
+ }
+ Dot {
+  name Dot89
+  xpos -9796
+  ypos 1138
+ }
+set N7b31400 [stack 0]
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge23
+  xpos -8730
+  ypos 1135
+ }
+ Dot {
+  name Dot90
+  xpos -8696
+  ypos 1186
+ }
+set N7b31c00 [stack 0]
+ Saturation {
+  mode Maximum
+  name Saturation21
+  xpos -8510
+  ypos 1231
+ }
+push $N7b31c00
+ Saturation {
+  mode Average
+  name Saturation22
+  xpos -8620
+  ypos 1231
+ }
+push $N7b31c00
+ Saturation {
+  mode "Ccir 601"
+  name Saturation23
+  xpos -8840
+  ypos 1231
+ }
+push $N7b31c00
+ Saturation {
+  name Saturation24
+  xpos -8950
+  ypos 1231
+ }
+ Switch {
+  inputs 4
+  which {{parent.luminance_math}}
+  name SwitchMaths5
+  xpos -8730
+  ypos 1327
+ }
+ Multiply {
+  value {{parent.restore_luminance} {parent.restore_luminance} {parent.restore_luminance} {parent.restore_luminance}}
+  name Multiply6
+  xpos -8730
+  ypos 1393
+ }
+ Dot {
+  name Dot91
+  xpos -8696
+  ypos 1474
+ }
+push $N7b31400
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge24
+  xpos -9830
+  ypos 1471
+ }
+ Clamp {
+  name Clamp6
+  xpos -9830
+  ypos 1633
+  disable {{!parent.black_clamp}}
+ }
+ Dot {
+  name Dot92
+  xpos -9796
+  ypos 2634
+ }
+push $Nb3ae8000
+ Shuffle {
+  name Shuffle17
+  label "\[value in]"
+  xpos -8292
+  ypos -39
+ }
+ Dot {
+  name Dot64
+  xpos -8258
+  ypos 106
+ }
+set Nb3ae8800 [stack 0]
+ Dot {
+  name Dot65
+  xpos -8038
+  ypos 106
+ }
+set Nb3ae8c00 [stack 0]
+ Dot {
+  name Dot66
+  xpos -7158
+  ypos 106
+ }
+push $Nb3ae8c00
+ Grade {
+  whitepoint {{parent.despill_bias} {parent.despill_bias} {parent.despill_bias} {parent.despill_bias}}
+  name bias4
+  xpos -8072
+  ypos 223
+ }
+ Dot {
+  name Dot67
+  xpos -8038
+  ypos 349
+ }
+set Nb3ae9800 [stack 0]
+ Dot {
+  name Dot68
+  xpos -7818
+  ypos 349
+ }
+ Expression {
+  temp_name0 redweight
+  temp_expr0 ((b*parent.balance)+(g*(1-parent.balance)))
+  temp_name1 greenweight
+  temp_expr1 ((b*parent.balance)+(r*(1-parent.balance)))
+  temp_name2 blueweight
+  temp_expr2 ((g*parent.balance)+(r*(1-parent.balance)))
+  expr0 clamp(r-(redweight*parent.limit),0,1000000)
+  expr1 clamp(r-(greenweight*parent.limit),0,1000000)
+  expr2 clamp(r-(blueweight*parent.limit),0,1000000)
+  name ClampedKey4
+  xpos -7852
+  ypos 391
+ }
+ Dot {
+  name Dot69
+  xpos -7818
+  ypos 443
+ }
+set N79b20400 [stack 0]
+ Dot {
+  name Dot70
+  xpos -7486
+  ypos 443
+ }
+set N79b20800 [stack 0]
+ Shuffle {
+  red blue
+  green blue
+  alpha blue
+  name Shuffle18
+  label "\[value in]"
+  xpos -7412
+  ypos 529
+ }
+push $N79b20800
+ Shuffle {
+  red green
+  blue green
+  alpha green
+  name Shuffle19
+  label "\[value in]"
+  xpos -7522
+  ypos 532
+ }
+push $N79b20800
+ Shuffle {
+  green red
+  blue red
+  alpha red
+  name Shuffle20
+  label "\[value in]"
+  xpos -7632
+  ypos 532
+ }
+ Switch {
+  inputs 3
+  which {{StrongestColour.which}}
+  name Switch5
+  xpos -7522
+  ypos 610
+ }
+ Dot {
+  name Dot71
+  xpos -7488
+  ypos 733
+ }
+push $N79b20400
+ Grade {
+  add {{parent.StrongestColour.red} {parent.StrongestColour.green} {parent.StrongestColour.blue} 0}
+  name KeylightOffset4
+  xpos -7852
+  ypos 559
+  addUserKnob {20 User}
+  addUserKnob {7 red_value}
+  red_value {{parent.despill_colour.r-(((parent.despill_colour.b*parent.balance)+(parent.despill_colour.g*(1-parent.balance)))*parent.limit)}}
+  addUserKnob {7 green_value}
+  green_value {{parent.despill_colour.g-(((parent.despill_colour.b*parent.balance)+(parent.despill_colour.r*(1-parent.balance)))*parent.limit)}}
+  addUserKnob {7 blue_value}
+  blue_value {{parent.despill_colour.b-(((parent.despill_colour.g*parent.balance)+(parent.despill_colour.r*(1-parent.balance)))*parent.limit)}}
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge17
+  xpos -7852
+  ypos 727
+ }
+ Dot {
+  name Dot72
+  xpos -7818
+  ypos 802
+ }
+push $Nb3ae9800
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge18
+  xpos -8072
+  ypos 799
+ }
+ Grade {
+  whitepoint {{parent.despill_bias} {parent.despill_bias} {parent.despill_bias} {parent.despill_bias}}
+  reverse true
+  name Grade5
+  xpos -8072
+  ypos 871
+ }
+ Dot {
+  name Dot73
+  xpos -8038
+  ypos 970
+ }
+push $Nb3ae8800
+ MergeExpression {
+  inputs 2
+  expr0 Br+(Ar-Br)*parent.strength
+  expr1 Bg+(Ag-Bg)*parent.strength
+  expr2 Bb+(Ab-Bb)*parent.strength
+  name MergeExpression5
+  xpos -8292
+  ypos 967
+ }
+ Dot {
+  name Dot74
+  xpos -8258
+  ypos 1138
+ }
+set N79983c00 [stack 0]
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge19
+  xpos -7192
+  ypos 1135
+ }
+ Dot {
+  name Dot75
+  xpos -7158
+  ypos 1186
+ }
+set N69d0400 [stack 0]
+ Saturation {
+  mode Maximum
+  name Saturation17
+  xpos -6972
+  ypos 1231
+ }
+push $N69d0400
+ Saturation {
+  mode Average
+  name Saturation18
+  xpos -7082
+  ypos 1231
+ }
+push $N69d0400
+ Saturation {
+  mode "Ccir 601"
+  name Saturation19
+  xpos -7302
+  ypos 1231
+ }
+push $N69d0400
+ Saturation {
+  name Saturation20
+  xpos -7412
+  ypos 1231
+ }
+ Switch {
+  inputs 4
+  which {{parent.luminance_math}}
+  name SwitchMaths4
+  xpos -7192
+  ypos 1327
+ }
+ Multiply {
+  value {{parent.restore_luminance} {parent.restore_luminance} {parent.restore_luminance} {parent.restore_luminance}}
+  name Multiply5
+  xpos -7192
+  ypos 1393
+ }
+ Dot {
+  name Dot76
+  xpos -7158
+  ypos 1474
+ }
+push $N79983c00
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge20
+  xpos -8292
+  ypos 1471
+ }
+ Clamp {
+  name Clamp5
+  xpos -8292
+  ypos 1633
+  disable {{!parent.black_clamp}}
+ }
+ Dot {
+  name Dot77
+  xpos -8256
+  ypos 2418
+ }
+push $Nbafd0800
+ Shuffle {
+  in screen_colour
+  name Shuffle13
+  label "\[value in]"
+  xpos -6720
+  ypos -39
+ }
+ Dot {
+  name Dot49
+  xpos -6686
+  ypos 106
+ }
+set Nbafd1000 [stack 0]
+ Dot {
+  name Dot50
+  xpos -6466
+  ypos 106
+ }
+set Nbafd1400 [stack 0]
+ Dot {
+  name Dot51
+  xpos -5586
+  ypos 106
+ }
+push $Nbafd1400
+ Grade {
+  whitepoint {{parent.despill_bias} {parent.despill_bias} {parent.despill_bias} {parent.despill_bias}}
+  name bias3
+  xpos -6500
+  ypos 223
+ }
+ Dot {
+  name Dot52
+  xpos -6466
+  ypos 349
+ }
+set Nb900a000 [stack 0]
+ Dot {
+  name Dot53
+  xpos -6246
+  ypos 349
+ }
+ Expression {
+  temp_name0 redweight
+  temp_expr0 ((b*parent.balance)+(g*(1-parent.balance)))
+  temp_name1 greenweight
+  temp_expr1 ((b*parent.balance)+(r*(1-parent.balance)))
+  temp_name2 blueweight
+  temp_expr2 ((g*parent.balance)+(r*(1-parent.balance)))
+  expr0 clamp(r-(redweight*parent.limit),0,1000000)
+  expr1 clamp(r-(greenweight*parent.limit),0,1000000)
+  expr2 clamp(r-(blueweight*parent.limit),0,1000000)
+  name ClampedKey3
+  xpos -6280
+  ypos 391
+ }
+ Dot {
+  name Dot54
+  xpos -6246
+  ypos 443
+ }
+set Nb900ac00 [stack 0]
+ Dot {
+  name Dot55
+  xpos -5914
+  ypos 443
+ }
+set Nb900b000 [stack 0]
+ Shuffle {
+  red blue
+  green blue
+  alpha blue
+  name Shuffle14
+  label "\[value in]"
+  xpos -5840
+  ypos 529
+ }
+push $Nb900b000
+ Shuffle {
+  red green
+  blue green
+  alpha green
+  name Shuffle15
+  label "\[value in]"
+  xpos -5950
+  ypos 532
+ }
+push $Nb900b000
+ Shuffle {
+  green red
+  blue red
+  alpha red
+  name Shuffle16
+  label "\[value in]"
+  xpos -6060
+  ypos 532
+ }
+ Switch {
+  inputs 3
+  which {{StrongestColour.which}}
+  name Switch4
+  xpos -5950
+  ypos 610
+ }
+ Dot {
+  name Dot56
+  xpos -5916
+  ypos 733
+ }
+push $Nb900ac00
+ Grade {
+  add {{parent.StrongestColour.red} {parent.StrongestColour.green} {parent.StrongestColour.blue} 0}
+  name KeylightOffset3
+  xpos -6280
+  ypos 559
+  addUserKnob {20 User}
+  addUserKnob {7 red_value}
+  red_value {{parent.despill_colour.r-(((parent.despill_colour.b*parent.balance)+(parent.despill_colour.g*(1-parent.balance)))*parent.limit)}}
+  addUserKnob {7 green_value}
+  green_value {{parent.despill_colour.g-(((parent.despill_colour.b*parent.balance)+(parent.despill_colour.r*(1-parent.balance)))*parent.limit)}}
+  addUserKnob {7 blue_value}
+  blue_value {{parent.despill_colour.b-(((parent.despill_colour.g*parent.balance)+(parent.despill_colour.r*(1-parent.balance)))*parent.limit)}}
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge13
+  xpos -6280
+  ypos 727
+ }
+ Dot {
+  name Dot57
+  xpos -6246
+  ypos 802
+ }
+push $Nb900a000
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge14
+  xpos -6500
+  ypos 799
+ }
+ Grade {
+  whitepoint {{parent.despill_bias} {parent.despill_bias} {parent.despill_bias} {parent.despill_bias}}
+  reverse true
+  name Grade4
+  xpos -6500
+  ypos 871
+ }
+ Dot {
+  name Dot58
+  xpos -6466
+  ypos 970
+ }
+push $Nbafd1000
+ MergeExpression {
+  inputs 2
+  expr0 Br+(Ar-Br)*parent.strength
+  expr1 Bg+(Ag-Bg)*parent.strength
+  expr2 Bb+(Ab-Bb)*parent.strength
+  name MergeExpression4
+  xpos -6720
+  ypos 967
+ }
+ Dot {
+  name Dot59
+  xpos -6686
+  ypos 1138
+ }
+set Nb43b2400 [stack 0]
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge15
+  xpos -5620
+  ypos 1135
+ }
+ Dot {
+  name Dot60
+  xpos -5586
+  ypos 1186
+ }
+set Nb43b2c00 [stack 0]
+ Saturation {
+  mode Maximum
+  name Saturation13
+  xpos -5400
+  ypos 1231
+ }
+push $Nb43b2c00
+ Saturation {
+  mode Average
+  name Saturation14
+  xpos -5510
+  ypos 1231
+ }
+push $Nb43b2c00
+ Saturation {
+  mode "Ccir 601"
+  name Saturation15
+  xpos -5730
+  ypos 1231
+ }
+push $Nb43b2c00
+ Saturation {
+  name Saturation16
+  xpos -5840
+  ypos 1231
+ }
+ Switch {
+  inputs 4
+  which {{parent.luminance_math}}
+  name SwitchMaths3
+  xpos -5620
+  ypos 1327
+ }
+ Multiply {
+  value {{parent.restore_luminance} {parent.restore_luminance} {parent.restore_luminance} {parent.restore_luminance}}
+  name Multiply4
+  xpos -5620
+  ypos 1393
+ }
+ Dot {
+  name Dot61
+  xpos -5586
+  ypos 1474
+ }
+push $Nb43b2400
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge16
+  xpos -6720
+  ypos 1471
+ }
+ Clamp {
+  name Clamp4
+  xpos -6720
+  ypos 1633
+  disable {{!parent.black_clamp}}
+ }
+ Dot {
+  name Dot62
+  xpos -6686
+  ypos 2218
+ }
+push $Nbc374c00
+ Shuffle {
+  in fg_denoise_plate
+  name Shuffle9
+  label "\[value in]"
+  xpos -5182
+  ypos -39
+ }
+ Dot {
+  name Dot34
+  xpos -5148
+  ypos 106
+ }
+set Nbc375400 [stack 0]
+ Dot {
+  name Dot35
+  xpos -4928
+  ypos 106
+ }
+set Nbc375800 [stack 0]
+ Dot {
+  name Dot36
+  xpos -4048
+  ypos 106
+ }
+push $Nbc375800
+ Grade {
+  whitepoint {{parent.despill_bias} {parent.despill_bias} {parent.despill_bias} {parent.despill_bias}}
+  name bias2
+  xpos -4962
+  ypos 223
+ }
+ Dot {
+  name Dot37
+  xpos -4928
+  ypos 349
+ }
+set Nb45e4400 [stack 0]
+ Dot {
+  name Dot38
+  xpos -4708
+  ypos 349
+ }
+ Expression {
+  temp_name0 redweight
+  temp_expr0 ((b*parent.balance)+(g*(1-parent.balance)))
+  temp_name1 greenweight
+  temp_expr1 ((b*parent.balance)+(r*(1-parent.balance)))
+  temp_name2 blueweight
+  temp_expr2 ((g*parent.balance)+(r*(1-parent.balance)))
+  expr0 clamp(r-(redweight*parent.limit),0,1000000)
+  expr1 clamp(r-(greenweight*parent.limit),0,1000000)
+  expr2 clamp(r-(blueweight*parent.limit),0,1000000)
+  name ClampedKey2
+  xpos -4742
+  ypos 391
+ }
+ Dot {
+  name Dot39
+  xpos -4708
+  ypos 443
+ }
+set Nb45e5000 [stack 0]
+ Dot {
+  name Dot40
+  xpos -4376
+  ypos 443
+ }
+set Nb45e5400 [stack 0]
+ Shuffle {
+  red blue
+  green blue
+  alpha blue
+  name Shuffle10
+  label "\[value in]"
+  xpos -4302
+  ypos 529
+ }
+push $Nb45e5400
+ Shuffle {
+  red green
+  blue green
+  alpha green
+  name Shuffle11
+  label "\[value in]"
+  xpos -4412
+  ypos 532
+ }
+push $Nb45e5400
+ Shuffle {
+  green red
+  blue red
+  alpha red
+  name Shuffle12
+  label "\[value in]"
+  xpos -4522
+  ypos 532
+ }
+ Switch {
+  inputs 3
+  which {{StrongestColour.which}}
+  name Switch3
+  xpos -4412
+  ypos 610
+ }
+ Dot {
+  name Dot41
+  xpos -4378
+  ypos 733
+ }
+push $Nb45e5000
+ Grade {
+  add {{parent.StrongestColour.red} {parent.StrongestColour.green} {parent.StrongestColour.blue} 0}
+  name KeylightOffset2
+  xpos -4742
+  ypos 559
+  addUserKnob {20 User}
+  addUserKnob {7 red_value}
+  red_value {{parent.despill_colour.r-(((parent.despill_colour.b*parent.balance)+(parent.despill_colour.g*(1-parent.balance)))*parent.limit)}}
+  addUserKnob {7 green_value}
+  green_value {{parent.despill_colour.g-(((parent.despill_colour.b*parent.balance)+(parent.despill_colour.r*(1-parent.balance)))*parent.limit)}}
+  addUserKnob {7 blue_value}
+  blue_value {{parent.despill_colour.b-(((parent.despill_colour.g*parent.balance)+(parent.despill_colour.r*(1-parent.balance)))*parent.limit)}}
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge9
+  xpos -4742
+  ypos 727
+ }
+ Dot {
+  name Dot42
+  xpos -4708
+  ypos 802
+ }
+push $Nb45e4400
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge10
+  xpos -4962
+  ypos 799
+ }
+ Grade {
+  whitepoint {{parent.despill_bias} {parent.despill_bias} {parent.despill_bias} {parent.despill_bias}}
+  reverse true
+  name Grade3
+  xpos -4962
+  ypos 871
+ }
+ Dot {
+  name Dot43
+  xpos -4928
+  ypos 970
+ }
+push $Nbc375400
+ MergeExpression {
+  inputs 2
+  expr0 Br+(Ar-Br)*parent.strength
+  expr1 Bg+(Ag-Bg)*parent.strength
+  expr2 Bb+(Ab-Bb)*parent.strength
+  name MergeExpression3
+  xpos -5182
+  ypos 967
+ }
+ Dot {
+  name Dot44
+  xpos -5148
+  ypos 1138
+ }
+set Nb5f1c800 [stack 0]
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge11
+  xpos -4082
+  ypos 1135
+ }
+ Dot {
+  name Dot45
+  xpos -4048
+  ypos 1186
+ }
+set Nb5f1d000 [stack 0]
+ Saturation {
+  mode Maximum
+  name Saturation9
+  xpos -3862
+  ypos 1231
+ }
+push $Nb5f1d000
+ Saturation {
+  mode Average
+  name Saturation10
+  xpos -3972
+  ypos 1231
+ }
+push $Nb5f1d000
+ Saturation {
+  mode "Ccir 601"
+  name Saturation11
+  xpos -4192
+  ypos 1231
+ }
+push $Nb5f1d000
+ Saturation {
+  name Saturation12
+  xpos -4302
+  ypos 1231
+ }
+ Switch {
+  inputs 4
+  which {{parent.luminance_math}}
+  name SwitchMaths2
+  xpos -4082
+  ypos 1327
+ }
+ Multiply {
+  value {{parent.restore_luminance} {parent.restore_luminance} {parent.restore_luminance} {parent.restore_luminance}}
+  name Multiply3
+  xpos -4082
+  ypos 1393
+ }
+ Dot {
+  name Dot46
+  xpos -4048
+  ypos 1474
+ }
+push $Nb5f1c800
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge12
+  xpos -5182
+  ypos 1471
+ }
+ Clamp {
+  name Clamp3
+  xpos -5182
+  ypos 1633
+  disable {{!parent.black_clamp}}
+ }
+ Dot {
+  name Dot48
+  xpos -5148
+  ypos 2026
+ }
+push $Nb3a63400
+ Shuffle {
+  in fg_plate
+  name Shuffle5
+  label "\[value in]"
+  xpos -3532
+  ypos -41
+ }
+ Dot {
+  name Dot19
+  xpos -3498
+  ypos 105
+ }
+set Nb3a63c00 [stack 0]
+ Dot {
+  name Dot20
+  xpos -3278
+  ypos 105
+ }
+set Nb3eb6000 [stack 0]
+ Dot {
+  name Dot21
+  xpos -2398
+  ypos 105
+ }
+push $Nb3eb6000
+ Grade {
+  whitepoint {{parent.despill_bias} {parent.despill_bias} {parent.despill_bias} {parent.despill_bias}}
+  name bias1
+  xpos -3312
+  ypos 222
+ }
+ Dot {
+  name Dot22
+  xpos -3278
+  ypos 348
+ }
+set Nb3eb6c00 [stack 0]
+ Dot {
+  name Dot23
+  xpos -3058
+  ypos 348
+ }
+ Expression {
+  temp_name0 redweight
+  temp_expr0 ((b*parent.balance)+(g*(1-parent.balance)))
+  temp_name1 greenweight
+  temp_expr1 ((b*parent.balance)+(r*(1-parent.balance)))
+  temp_name2 blueweight
+  temp_expr2 ((g*parent.balance)+(r*(1-parent.balance)))
+  expr0 clamp(r-(redweight*parent.limit),0,1000000)
+  expr1 clamp(r-(greenweight*parent.limit),0,1000000)
+  expr2 clamp(r-(blueweight*parent.limit),0,1000000)
+  name ClampedKey1
+  xpos -3092
+  ypos 390
+ }
+ Dot {
+  name Dot24
+  xpos -3058
+  ypos 442
+ }
+set Nb3eb7800 [stack 0]
+ Dot {
+  name Dot25
+  xpos -2726
+  ypos 442
+ }
+set Nb3eb7c00 [stack 0]
+ Shuffle {
+  red blue
+  green blue
+  alpha blue
+  name Shuffle6
+  label "\[value in]"
+  xpos -2652
+  ypos 528
+ }
+push $Nb3eb7c00
+ Shuffle {
+  red green
+  blue green
+  alpha green
+  name Shuffle7
+  label "\[value in]"
+  xpos -2762
+  ypos 531
+ }
+push $Nb3eb7c00
+ Shuffle {
+  green red
+  blue red
+  alpha red
+  name Shuffle8
+  label "\[value in]"
+  xpos -2872
+  ypos 531
+ }
+ Switch {
+  inputs 3
+  which {{StrongestColour.which}}
+  name Switch2
+  xpos -2762
+  ypos 609
+ }
+ Dot {
+  name Dot26
+  xpos -2728
+  ypos 732
+ }
+push $Nb3eb7800
+ Grade {
+  add {{parent.StrongestColour.red} {parent.StrongestColour.green} {parent.StrongestColour.blue} 0}
+  name KeylightOffset1
+  xpos -3092
+  ypos 558
+  addUserKnob {20 User}
+  addUserKnob {7 red_value}
+  red_value {{parent.despill_colour.r-(((parent.despill_colour.b*parent.balance)+(parent.despill_colour.g*(1-parent.balance)))*parent.limit)}}
+  addUserKnob {7 green_value}
+  green_value {{parent.despill_colour.g-(((parent.despill_colour.b*parent.balance)+(parent.despill_colour.r*(1-parent.balance)))*parent.limit)}}
+  addUserKnob {7 blue_value}
+  blue_value {{parent.despill_colour.b-(((parent.despill_colour.g*parent.balance)+(parent.despill_colour.r*(1-parent.balance)))*parent.limit)}}
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge5
+  xpos -3092
+  ypos 726
+ }
+ Dot {
+  name Dot27
+  xpos -3058
+  ypos 801
+ }
+push $Nb3eb6c00
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge6
+  xpos -3312
+  ypos 798
+ }
+ Grade {
+  whitepoint {{parent.despill_bias} {parent.despill_bias} {parent.despill_bias} {parent.despill_bias}}
+  reverse true
+  name Grade2
+  xpos -3312
+  ypos 870
+ }
+ Dot {
+  name Dot28
+  xpos -3278
+  ypos 969
+ }
+push $Nb3a63c00
+ MergeExpression {
+  inputs 2
+  expr0 Br+(Ar-Br)*parent.strength
+  expr1 Bg+(Ag-Bg)*parent.strength
+  expr2 Bb+(Ab-Bb)*parent.strength
+  name MergeExpression2
+  xpos -3532
+  ypos 966
+ }
+ Dot {
+  name Dot29
+  xpos -3498
+  ypos 1137
+ }
+set N8f3b000 [stack 0]
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge7
+  xpos -2432
+  ypos 1134
+ }
+ Dot {
+  name Dot30
+  xpos -2398
+  ypos 1185
+ }
+set N8f3b800 [stack 0]
+ Saturation {
+  mode Maximum
+  name Saturation5
+  xpos -2212
+  ypos 1230
+ }
+push $N8f3b800
+ Saturation {
+  mode Average
+  name Saturation6
+  xpos -2322
+  ypos 1230
+ }
+push $N8f3b800
+ Saturation {
+  mode "Ccir 601"
+  name Saturation7
+  xpos -2542
+  ypos 1230
+ }
+push $N8f3b800
+ Saturation {
+  name Saturation8
+  xpos -2652
+  ypos 1230
+ }
+ Switch {
+  inputs 4
+  which {{parent.luminance_math}}
+  name SwitchMaths1
+  xpos -2432
+  ypos 1326
+ }
+ Multiply {
+  value {{parent.restore_luminance} {parent.restore_luminance} {parent.restore_luminance} {parent.restore_luminance}}
+  name Multiply2
+  xpos -2432
+  ypos 1392
+ }
+ Dot {
+  name Dot31
+  xpos -2398
+  ypos 1473
+ }
+push $N8f3b000
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge8
+  xpos -3532
+  ypos 1470
+ }
+ Clamp {
+  name Clamp2
+  xpos -3532
+  ypos 1632
+  disable {{!parent.black_clamp}}
+ }
+ Dot {
+  name Dot32
+  xpos -3498
+  ypos 1906
+ }
+push $N90c6c00
+ Shuffle {
+  name Shuffle2
+  label "\[value in]"
+  xpos -1910
+  ypos -33
+ }
+ Dot {
+  name Dot3
+  xpos -1876
+  ypos 114
+ }
+set Nb6557800 [stack 0]
+ Dot {
+  name Dot4
+  xpos -1656
+  ypos 114
+ }
+set Nb6557c00 [stack 0]
+ Dot {
+  name Dot13
+  xpos -776
+  ypos 114
+ }
+push $Nb6557c00
+ Grade {
+  whitepoint {{parent.despill_bias} {parent.despill_bias} {parent.despill_bias} {parent.despill_bias}}
+  name bias
+  xpos -1690
+  ypos 231
+ }
+ Dot {
+  name Dot5
+  xpos -1656
+  ypos 357
+ }
+set N4467e400 [stack 0]
+ Dot {
+  name Dot6
+  xpos -1436
+  ypos 357
+ }
+ Expression {
+  temp_name0 redweight
+  temp_expr0 ((b*parent.balance)+(g*(1-parent.balance)))
+  temp_name1 greenweight
+  temp_expr1 ((b*parent.balance)+(r*(1-parent.balance)))
+  temp_name2 blueweight
+  temp_expr2 ((g*parent.balance)+(r*(1-parent.balance)))
+  expr0 clamp(r-(redweight*parent.limit),0,1000000)
+  expr1 clamp(r-(greenweight*parent.limit),0,1000000)
+  expr2 clamp(r-(blueweight*parent.limit),0,1000000)
+  name ClampedKey
+  xpos -1470
+  ypos 399
+ }
+ Dot {
+  name Dot7
+  xpos -1436
+  ypos 451
+ }
+set N4467f000 [stack 0]
+ Dot {
+  name Dot9
+  xpos -1104
+  ypos 451
+ }
+set Nb3b05000 [stack 0]
+ Shuffle {
+  red blue
+  green blue
+  alpha blue
+  name Shuffle4
+  label "\[value in]"
+  xpos -1030
+  ypos 537
+ }
+push $Nb3b05000
+ Shuffle {
+  red green
+  blue green
+  alpha green
+  name Shuffle3
+  label "\[value in]"
+  xpos -1140
+  ypos 540
+ }
+push $Nb3b05000
+ Shuffle {
+  green red
+  blue red
+  alpha red
+  name Shuffle1
+  label "\[value in]"
+  xpos -1250
+  ypos 540
+ }
+ Switch {
+  inputs 3
+  which {{StrongestColour.which}}
+  name Switch1
+  xpos -1140
+  ypos 618
+ }
+ Dot {
+  name Dot8
+  xpos -1106
+  ypos 741
+ }
+push $N4467f000
+ Grade {
+  add {{parent.StrongestColour.red} {parent.StrongestColour.green} {parent.StrongestColour.blue} 0}
+  name KeylightOffset
+  xpos -1470
+  ypos 567
+  addUserKnob {20 User}
+  addUserKnob {7 red_value}
+  red_value {{parent.despill_colour.r-(((parent.despill_colour.b*parent.balance)+(parent.despill_colour.g*(1-parent.balance)))*parent.limit)}}
+  addUserKnob {7 green_value}
+  green_value {{parent.despill_colour.g-(((parent.despill_colour.b*parent.balance)+(parent.despill_colour.r*(1-parent.balance)))*parent.limit)}}
+  addUserKnob {7 blue_value}
+  blue_value {{parent.despill_colour.b-(((parent.despill_colour.g*parent.balance)+(parent.despill_colour.r*(1-parent.balance)))*parent.limit)}}
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge1
+  xpos -1470
+  ypos 735
+ }
+ Dot {
+  name Dot10
+  xpos -1436
+  ypos 810
+ }
+push $N4467e400
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge2
+  xpos -1690
+  ypos 807
+ }
+ Grade {
+  whitepoint {{parent.despill_bias} {parent.despill_bias} {parent.despill_bias} {parent.despill_bias}}
+  reverse true
+  name Grade1
+  xpos -1690
+  ypos 879
+ }
+ Dot {
+  name Dot11
+  xpos -1656
+  ypos 978
+ }
+push $Nb6557800
+ MergeExpression {
+  inputs 2
+  expr0 Br+(Ar-Br)*parent.strength
+  expr1 Bg+(Ag-Bg)*parent.strength
+  expr2 Bb+(Ab-Bb)*parent.strength
+  name MergeExpression1
+  xpos -1910
+  ypos 975
+ }
+ Dot {
+  name Dot12
+  xpos -1876
+  ypos 1146
+ }
+set Nb433ec00 [stack 0]
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge3
+  xpos -810
+  ypos 1143
+ }
+ Dot {
+  name Dot14
+  xpos -776
+  ypos 1194
+ }
+set Nb4b24000 [stack 0]
+ Saturation {
+  mode Maximum
+  name Saturation4
+  xpos -590
+  ypos 1239
+ }
+push $Nb4b24000
+ Saturation {
+  mode Average
+  name Saturation3
+  xpos -700
+  ypos 1239
+ }
+push $Nb4b24000
+ Saturation {
+  mode "Ccir 601"
+  name Saturation2
+  xpos -920
+  ypos 1239
+ }
+push $Nb4b24000
+ Saturation {
+  name Saturation1
+  xpos -1030
+  ypos 1239
+ }
+ Switch {
+  inputs 4
+  which {{parent.luminance_math}}
+  name SwitchMaths
+  xpos -810
+  ypos 1335
+ }
+ Multiply {
+  value {{parent.restore_luminance} {parent.restore_luminance} {parent.restore_luminance} {parent.restore_luminance}}
+  name Multiply1
+  xpos -810
+  ypos 1401
+ }
+ Dot {
+  name Dot15
+  xpos -776
+  ypos 1482
+ }
+push $Nb433ec00
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge4
+  xpos -1910
+  ypos 1479
+ }
+ Clamp {
+  name Clamp1
+  xpos -1910
+  ypos 1641
+  disable {{!parent.black_clamp}}
+ }
+ Dot {
+  name Dot16
+  xpos -1876
+  ypos 1746
+ }
+push $N90c6800
+ NoOp {
+  name StrongestColour
+  xpos -208
+  ypos -57
+  addUserKnob {20 User}
+  addUserKnob {7 red}
+  red {{parent.despill_colour.r}}
+  addUserKnob {7 green}
+  green {{parent.despill_colour.g}}
+  addUserKnob {7 blue}
+  blue {{parent.despill_colour.b}}
+  addUserKnob {3 which}
+  which {{"\[python -execlocal node\\ =\\ nuke.thisNode()\\noffsetred\\ =\\ node\\\['red'\\].value()\\noffsetgreen\\ =\\ node\\\['green'\\].value()\\noffsetblue\\ =\\ node\\\['blue'\\].value()\\n\\nif\\ offsetgreen\\ >=\\ offsetblue\\ and\\ offsetgreen\\ >=\\ offsetred:\\n\\ \\ \\ ret\\ =\\ 1\\nelif\\ offsetblue\\ >=\\ offsetred:\\n\\ \\ \\ ret\\ =\\ 2\\nelse:\\n\\ \\ \\ ret\\ =\\ 0]"}}
+ }
+ Dot {
+  name Dot17
+  xpos -174
+  ypos 450
+ }
+ ShuffleCopy {
+  inputs 2
+  in2 {{{Shuffle2.in}}}
+  out {{{Shuffle2.in}}}
+  name ShuffleCopy1
+  label "\[value in]"
+  xpos -208
+  ypos 1737
+  disable {{!clamp(out)}}
+ }
+ ShuffleCopy {
+  inputs 2
+  in2 {{{Shuffle5.in}}}
+  out {{{Shuffle5.in}}}
+  name ShuffleCopy2
+  label "\[value in]"
+  xpos -208
+  ypos 1905
+  disable {{!clamp(out)}}
+ }
+ ShuffleCopy {
+  inputs 2
+  in2 {{{Shuffle9.in}}}
+  out {{{Shuffle9.in}}}
+  name ShuffleCopy3
+  label "\[value in]"
+  xpos -208
+  ypos 2025
+  disable {{!clamp(out)}}
+ }
+ ShuffleCopy {
+  inputs 2
+  in2 {{{Shuffle13.in}}}
+  out {{{Shuffle13.in}}}
+  name ShuffleCopy4
+  label "\[value in]"
+  xpos -208
+  ypos 2217
+  disable {{!clamp(out)}}
+ }
+ ShuffleCopy {
+  inputs 2
+  in2 {{{Shuffle17.in}}}
+  out {{{Shuffle17.in}}}
+  name ShuffleCopy5
+  label "\[value in]"
+  xpos -208
+  ypos 2409
+  disable {{!clamp(out)}}
+ }
+ ShuffleCopy {
+  inputs 2
+  in2 {{{Shuffle21.in}}}
+  out {{{Shuffle21.in}}}
+  name ShuffleCopy6
+  label "\[value in]"
+  selected true
+  xpos -208
+  ypos 2601
+  disable {{!clamp(out)}}
+ }
+ Output {
+  name Output1
+  xpos -208
+  ypos 3495
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote4
+  label "StrongestColour.which == 0 ? -parent.despill_colour.r*clamp(1/red_value,0,1000000):\nStrongestColour.which == 1 ? -parent.despill_colour.r*clamp(1/green_value,0,1000000):\nStrongestColour.which == 2 ? -parent.despill_colour.r*clamp(1/blue_value,0,1000000):\n0\n\nStrongestColour.which == 0 ? -parent.despill_colour.g*clamp(1/red_value,0,1000000):\nStrongestColour.which == 1 ? -parent.despill_colour.g*clamp(1/green_value,0,1000000):\nStrongestColour.which == 2 ? -parent.despill_colour.g*clamp(1/blue_value,0,1000000):\n0\n\nStrongestColour.which == 0 ? -parent.despill_colour.b*clamp(1/red_value,0,1000000):\nStrongestColour.which == 1 ? -parent.despill_colour.b*clamp(1/green_value,0,1000000):\nStrongestColour.which == 2 ? -parent.despill_colour.b*clamp(1/blue_value,0,1000000):\n0"
+  xpos -6850
+  ypos 553
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote5
+  label "StrongestColour.which == 0 ? -parent.despill_colour.r*clamp(1/red_value,0,1000000):\nStrongestColour.which == 1 ? -parent.despill_colour.r*clamp(1/green_value,0,1000000):\nStrongestColour.which == 2 ? -parent.despill_colour.r*clamp(1/blue_value,0,1000000):\n0\n\nStrongestColour.which == 0 ? -parent.despill_colour.g*clamp(1/red_value,0,1000000):\nStrongestColour.which == 1 ? -parent.despill_colour.g*clamp(1/green_value,0,1000000):\nStrongestColour.which == 2 ? -parent.despill_colour.g*clamp(1/blue_value,0,1000000):\n0\n\nStrongestColour.which == 0 ? -parent.despill_colour.b*clamp(1/red_value,0,1000000):\nStrongestColour.which == 1 ? -parent.despill_colour.b*clamp(1/green_value,0,1000000):\nStrongestColour.which == 2 ? -parent.despill_colour.b*clamp(1/blue_value,0,1000000):\n0"
+  xpos -8422
+  ypos 553
+ }
+ StickyNote {
+  inputs 0
+  name StickyNote6
+  label "StrongestColour.which == 0 ? -parent.despill_colour.r*clamp(1/red_value,0,1000000):\nStrongestColour.which == 1 ? -parent.despill_colour.r*clamp(1/green_value,0,1000000):\nStrongestColour.which == 2 ? -parent.despill_colour.r*clamp(1/blue_value,0,1000000):\n0\n\nStrongestColour.which == 0 ? -parent.despill_colour.g*clamp(1/red_value,0,1000000):\nStrongestColour.which == 1 ? -parent.despill_colour.g*clamp(1/green_value,0,1000000):\nStrongestColour.which == 2 ? -parent.despill_colour.g*clamp(1/blue_value,0,1000000):\n0\n\nStrongestColour.which == 0 ? -parent.despill_colour.b*clamp(1/red_value,0,1000000):\nStrongestColour.which == 1 ? -parent.despill_colour.b*clamp(1/green_value,0,1000000):\nStrongestColour.which == 2 ? -parent.despill_colour.b*clamp(1/blue_value,0,1000000):\n0"
+  xpos -9960
+  ypos 553
+ }
+end_group
+push $Nb3e03800
+Group {
+ inputs 2
+ name RestoreLuminance
+ label "Y: \[value restore_luminance]"
+ selected true
+ xpos -700
+ ypos 2913
+ addUserKnob {20 User l RestoreLuminance}
+ addUserKnob {41 in l "in 1" T Shuffle1.in}
+ addUserKnob {41 in2 l "in 2" T Shuffle1.in2}
+ addUserKnob {26 _1 l "" +STARTLINE}
+ addUserKnob {18 restore_luminance l "restore luminance" R -1 1}
+ restore_luminance 1
+ addUserKnob {4 luminance_math l "" -STARTLINE M {"Rec 709" "Ccir 601" Average Maximum ""}}
+ addUserKnob {6 restore_luminance_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 black_clamp l "black clamp" t "Clamp minimum value to zero on all channels" +STARTLINE}
+ addUserKnob {26 _2 l "" +STARTLINE}
+ addUserKnob {6 output_spill l "output spill layer" +STARTLINE}
+ output_spill true
+ addUserKnob {6 output_spill_matte l "output spill matte layer" +STARTLINE}
+ output_spill_matte true
+}
+ Input {
+  inputs 0
+  name Despill
+  xpos -1030
+  ypos 39
+  number 1
+ }
+ Dot {
+  name Dot1
+  xpos -996
+  ypos 162
+ }
+set Nbc480000 [stack 0]
+ Input {
+  inputs 0
+  name Original
+  xpos -159
+  ypos 25
+ }
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge1
+  xpos -159
+  ypos 159
+ }
+ Shuffle {
+  name Shuffle1
+  label "\[value in]"
+  xpos -159
+  ypos 279
+ }
+ Dot {
+  name Dot2
+  label SPILL
+  note_font "Verdana Bold"
+  note_font_size 15
+  xpos -126
+  ypos 369
+ }
+set Nbc480800 [stack 0]
+add_layer {spill spill.red spill.green spill.blue spill.alpha}
+ Shuffle {
+  out spill
+  name Shuffle4
+  xpos -160
+  ypos 831
+ }
+ Dot {
+  name Dot5
+  xpos -126
+  ypos 930
+ }
+push $Nbc480800
+ Dot {
+  name Dot3
+  xpos -556
+  ypos 369
+ }
+set Nbc480c00 [stack 0]
+ Saturation {
+  saturation 0
+  mode Maximum
+  name Saturation4
+  xpos -370
+  ypos 447
+ }
+push $Nbc480c00
+ Saturation {
+  saturation 0
+  mode Average
+  name Saturation3
+  xpos -480
+  ypos 447
+ }
+push $Nbc480c00
+ Saturation {
+  saturation 0
+  mode "Ccir 601"
+  name Saturation2
+  xpos -700
+  ypos 447
+ }
+push $Nbc480c00
+ Saturation {
+  saturation 0
+  name Saturation1
+  xpos -810
+  ypos 447
+ }
+ Switch {
+  inputs 4
+  which {{parent.luminance_math}}
+  name Switch1
+  xpos -590
+  ypos 519
+ }
+ Dot {
+  name Dot4
+  xpos -556
+  ypos 594
+ }
+set Nb1b98800 [stack 0]
+add_layer {spill_matte spill_matte.red spill_matte.green spill_matte.blue spill_matte.alpha}
+ Shuffle {
+  out spill_matte
+  name Shuffle2
+  xpos -590
+  ypos 687
+ }
+ Shuffle {
+  green red
+  blue red
+  alpha red
+  name Shuffle3
+  xpos -590
+  ypos 759
+ }
+push $Nb1b98800
+ Multiply {
+  value {{parent.restore_luminance} {parent.restore_luminance} {parent.restore_luminance} {parent.restore_luminance}}
+  name Multiply1
+  label "SCREEN COLOUR"
+  xpos -810
+  ypos 579
+ }
+push $Nbc480000
+ Merge2 {
+  inputs 2
+  operation plus
+  also_merge all
+  name Merge2
+  label "RESTORE LUMINANCE"
+  xpos -1030
+  ypos 585
+ }
+ Copy {
+  inputs 2
+  channels spill_matte
+  name Copy1
+  xpos -1030
+  ypos 747
+  disable {{!parent.output_spill_matte}}
+ }
+ Copy {
+  inputs 2
+  channels spill
+  name Copy2
+  xpos -1030
+  ypos 915
+  disable {{!parent.output_spill}}
+ }
+ Output {
+  name Output1
+  xpos -1030
+  ypos 1023
+ }
+end_group
+Group {
+ inputs 2
+ name RestoreNoise
+ label "\[value screen_colour]"
+ selected true
+ xpos -700
+ ypos 3129
+ addUserKnob {20 User l RestoreNoise}
+ addUserKnob {22 knob_changed l INVISIBLE +INVISIBLE T "node = nuke.thisNode()\nknob = nuke.thisKnob()\n\nif knob.name() == 'use_matte':\n   if node\['use_matte'].value() == True:\n      node\['matte_blackpoint'].setEnable(True)\n      node\['matte_whitepoint'].setEnable(True)\n      node\['matte_gammat'].setEnable(True)\n      node\['preview_matte'].setEnable(True)\n\n   if node\['use_matte'].value() == False:\n      node\['matte_blackpoint'].setEnable(False)\n      node\['matte_whitepoint'].setEnable(False)\n      node\['matte_gammat'].setEnable(False)\n      node\['preview_matte'].setEnable(False)" +STARTLINE}
+ addUserKnob {4 screen_colour l "screen colour" M {red green blue}}
+ addUserKnob {26 _1 l "" +STARTLINE}
+ addUserKnob {26 spacer l "adjust restore matte:"}
+ addUserKnob {6 use_matte l "enable restore matte" +STARTLINE}
+ addUserKnob {6 preview_matte l preview +STARTLINE}
+ addUserKnob {7 matte_blackpoint l blackpoint R -1 1}
+ matte_blackpoint 0.5
+ addUserKnob {7 matte_whitepoint l whitepoint R 0 2}
+ matte_whitepoint 1
+ addUserKnob {7 matte_gamma l gamma R 0.2 2}
+ matte_gamma 1
+}
+ Input {
+  inputs 0
+  name Despill
+  xpos -159
+  ypos 63
+ }
+set Nb4451400 [stack 0]
+ Grade {
+  name Grade1
+  xpos 42
+  ypos 159
+ }
+ Input {
+  inputs 0
+  name Original
+  xpos -370
+  ypos 63
+  number 1
+ }
+push $Nb4451400
+ Dot {
+  name Dot1
+  xpos -125
+  ypos 210
+ }
+set Nb63e2000 [stack 0]
+ Merge2 {
+  inputs 2
+  operation minus
+  also_merge all
+  name Merge1
+  xpos -370
+  ypos 207
+ }
+ Dot {
+  name Dot3
+  xpos -336
+  ypos 258
+ }
+set Nb63e2c00 [stack 0]
+ Dot {
+  name Dot2
+  xpos -556
+  ypos 258
+ }
+ Shuffle {
+  in fg_denoise_plate
+  name Shuffle1
+  xpos -590
+  ypos 327
+ }
+set Nb63e2400 [stack 0]
+ Invert {
+  name Invert1
+  xpos 180
+  ypos 321
+ }
+ Dot {
+  name Dot10
+  xpos 332
+  ypos 330
+ }
+ Grade {
+  blackpoint {{parent.matte_blackpoint}}
+  whitepoint {{parent.matte_whitepoint}}
+  gamma {{parent.matte_gamma}}
+  white_clamp true
+  name Grade2
+  xpos 298
+  ypos 375
+ }
+ Dot {
+  name Dot11
+  xpos 332
+  ypos 445
+ }
+set Nb93d0000 [stack 0]
+ Shuffle {
+  red green
+  blue green
+  alpha green
+  name Shuffle4
+  xpos 400
+  ypos 495
+ }
+push $Nb93d0000
+ Shuffle {
+  red green
+  blue green
+  alpha green
+  name Shuffle3
+  xpos 298
+  ypos 493
+ }
+push $Nb93d0000
+ Shuffle {
+  green red
+  blue red
+  alpha red
+  name Shuffle2
+  xpos 195
+  ypos 495
+ }
+ Switch {
+  inputs 3
+  which {{parent.screen_colour}}
+  name ScreenColour
+  xpos 298
+  ypos 589
+ }
+ Clamp {
+  name Clamp1
+  selected true
+  xpos 298
+  ypos 657
+ }
+set N4457d800 [stack 0]
+ Dot {
+  name Dot9
+  xpos 332
+  ypos 1026
+ }
+push $N4457d800
+push $Nb63e2400
+ Dot {
+  name Dot4
+  xpos -556
+  ypos 378
+ }
+push $Nb63e2c00
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge2
+  xpos -370
+  ypos 375
+ }
+ Dot {
+  name Dot6
+  xpos -336
+  ypos 666
+ }
+set N4457c400 [stack 0]
+push $Nb63e2000
+ Dot {
+  name Dot7
+  xpos 104
+  ypos 210
+ }
+ Merge2 {
+  inputs 2+1
+  operation plus
+  name MergeMasked
+  xpos 70
+  ypos 663
+ }
+ Dot {
+  name Dot8
+  xpos 104
+  ypos 906
+ }
+push $Nb63e2000
+push $N4457c400
+ Dot {
+  name Dot5
+  xpos -336
+  ypos 762
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge3
+  xpos -159
+  ypos 759
+ }
+ Switch {
+  inputs 2
+  which {{parent.preview_matte}}
+  name Preview
+  xpos -159
+  ypos 903
+ }
+ Switch {
+  inputs 2
+  which {{use_matte}}
+  name UseMask1
+  xpos -159
+  ypos 1023
+ }
+ Output {
+  name Output1
+  xpos -159
+  ypos 1071
+ }
+end_group

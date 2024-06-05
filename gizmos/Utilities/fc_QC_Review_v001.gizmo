@@ -1,0 +1,3761 @@
+Group {
+ name fc_QC_ReViewer_flw
+ knobChanged "\n\n\ne = nuke.thisNode().knobs()\['extraCtrl'].value()\nv = nuke.thisNode().knobs()\['tc_viewer'].getValue()\ns = nuke.thisNode().knobs()\['size']\nexpUp = nuke.thisNode().knobs()\['expV']\nc = nuke.thisNode().knobs()\['colours']\noddP =nuke.thisNode().knobs()\['pixelBoost']\nside = nuke.thisNode().knobs()\['disableSidebySide'].getValue()\nsat = nuke.thisNode().knobs()\['sat']\nchkb = nuke.thisNode().knobs()\['disableCheckerboard']\n\n\nif e == 1:\n    if v == 0:\n        s.setVisible(False)\n        c.setVisible(False)\n        expUp.setVisible(False)\n        oddP.setVisible(False)\n        sat.setVisible(False)\n        chkb.setVisible(False)\n    elif v == 1:\n        s.setVisible(False)\n        c.setVisible(False)\n        expUp.setVisible(False)\n        oddP.setVisible(False)\n        sat.setVisible(False)\n        chkb.setVisible(False)\n    elif v == 2:\n        s.setVisible(False)\n        c.setVisible(False)\n        expUp.setVisible(True)\n        oddP.setVisible(False)\n        sat.setVisible(False)\n        chkb.setVisible(False)\n    elif v == 3:\n        s.setVisible(False)\n        c.setVisible(False)\n        expUp.setVisible(True)\n        oddP.setVisible(False)\n        sat.setVisible(False)\n        chkb.setVisible(False)\n    elif v == 4:\n        s.setVisible(False)\n        c.setVisible(False)\n        expUp.setVisible(False)\n        oddP.setVisible(False)\n        sat.setVisible(False)\n        chkb.setVisible(False)\n    elif v == 5:\n        s.setVisible(False)\n        c.setVisible(False)\n        expUp.setVisible(False)\n        oddP.setVisible(False)\n        sat.setVisible(True)\n        chkb.setVisible(False)\n    elif v == 6:\n        s.setVisible(False)\n        c.setVisible(False)\n        expUp.setVisible(False)\n        oddP.setVisible(False)\n        sat.setVisible(False)\n        chkb.setVisible(False)\n    elif v == 7:\n        s.setVisible(True)\n        c.setVisible(False)\n        expUp.setVisible(False)\n        oddP.setVisible(False)\n        chkb.setVisible(True)\n        \n    elif v == 8:\n        s.setVisible(False)\n        c.setVisible(True)\n        expUp.setVisible(False)\n        oddP.setVisible(False)\n        chkb.setVisible(False)\n    elif v == 9:\n        s.setVisible(False)\n        c.setVisible(False)\n        expUp.setVisible(False)\n        oddP.setVisible(False)\n        chkb.setVisible(False)\n    elif v == 10:\n        s.setVisible(False)\n        c.setVisible(False)\n        expUp.setVisible(False)\n        oddP.setVisible(True)\n        chkb.setVisible(False)\n    elif v == 11:\n        s.setVisible(False)\n        c.setVisible(False)\n        expUp.setVisible(False)\n        oddP.setVisible(False)\n        chkb.setVisible(False)\nelse:\n    s.setVisible(False)\n    c.setVisible(False)\n    expUp.setVisible(False)\n    oddP.setVisible(False)\n    sat.setVisible(False)\n    chkb.setVisible(False)\n\n\n"
+ tile_color 0x513a00ff
+ label "\nView: \[value tc_viewer]"
+ note_font "Bitstream Vera Sans Bold"
+ note_font_color 0xffb800ff
+ selected true
+ addUserKnob {20 qc_reviewer l "Quality Control"}
+ addUserKnob {6 disableFrame l "Disable Frame Overlay" +INVISIBLE +STARTLINE}
+ disableFrame {{disable_overlay}}
+ addUserKnob {6 disableInput l "Disable Input Name" +INVISIBLE +STARTLINE}
+ disableInput {{disable_overlay}}
+ addUserKnob {26 node_title l "" +STARTLINE T "<font size = 5>QC ReViewer"}
+ addUserKnob {26 made_by l "" t "Credits: \n\nThe expressions used to tech check odd pixels (NaN, negative and infinite) are from the incredible set of expressions made by *Andrea Geremia* and shared it in Nukepedia for the community." +STARTLINE T "<font color = '#eba834'><b>by Filipe Correia                           \n          "}
+ addUserKnob {26 _3 l "" +STARTLINE}
+ addUserKnob {6 merge_face l "<font color = '#399ddb'><b>Merge Face to Plate" t "Merges NR face comp to Plate" +STARTLINE}
+ merge_face true
+ addUserKnob {6 swap_plate l "<font color = '#43eb34'><b>Swap Raw Plate & Comp" t "Quick Swap PLATE & NR/COMP" -STARTLINE}
+ addUserKnob {26 _2 l "" +STARTLINE}
+ addUserKnob {4 tc_viewer l "<b>QC Viewer" t "These are all the tech checks to run in order to archive the excelence in a shot. \n\nThey are sorted by priority so it is a good practice run it by order.\n\n01 - Difference > It show in RED anything is differet from the plate. (Usually, we want to keep as much as possible from the original plate)\n\n02 - Black Levels (Gamma) > It allow us to detecting incoherences.\n\n03 - Shadows (Exposure Up) > see if there is detail in shadows.\n\n04 - Highlights (Exposure Down)  > see if there is detail in highlights.\n\n05 - Luminance\n\n06 - Colour > Useful to be sure the colours match properly, inluding shadows and blacks.\n\n07 - Saturation Limit > it will highligh in yellow anything above the saturation limit.\n\n08 - Noise-Grain > it helps to check the noise-grain pattern and colour. \n\n09 - Edge of Frame > Make sure there is not black lines or artifacts on the frame edges.\n\n10 - 4x4 Edge Frame > Make sure there is not black lines or artifacts on the frame edges.\n\n11 - Negative Pixels > Make sure there is not a single negative value. (Everything should be black)\nNaN Pixels > Make sure there is not a single NaN values. (Everything should be black)\ninf Pixels > Make sure there is not a single infinite values. (Everything should be black)\n\n12 - Alpha Channel > if something is in red means you got values above 1 in your alpha." M {"01 - Difference" "02 - Black Levels (Gamma)" "03 - Shadows (Exposure Up)" "04 - Highlights (Exposure Down)" "05 - Luminance" "06 - Colour" "07 - Saturation Limit" "08 - Noise-Grain" "09 - Edge of Frame" "10 - 4x4 Edge Frame" "11 - Neg-NaN-Inf Pixel Checker" "12 - Alpha Channel" "" "" "" ""}}
+ addUserKnob {6 extraCtrl l "<b>QC Extra Controls" t "Activate to access TC viewer extra controls settings to adjust other parameters from inside nodes. " -STARTLINE +INVISIBLE}
+ extraCtrl true
+ addUserKnob {20 tc_settings l "QC Settings" n 1}
+ addUserKnob {41 expV l "Exposure Value" +HIDDEN T Exposure1.red}
+ addUserKnob {41 sat l Saturation +HIDDEN T Saturation1.saturation}
+ addUserKnob {41 size l "Grain Size" +HIDDEN T Laplacian2.size}
+ addUserKnob {6 disableCheckerboard l "Shows Checkerboard" -STARTLINE +HIDDEN}
+ addUserKnob {4 colours l Colours +HIDDEN M {White Cyan Yellow Magenta}}
+ colours Cyan
+ addUserKnob {7 pixelBoost l "Pixel Booster" +HIDDEN R 0 300}
+ pixelBoost 5
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {6 contact l "<b><font color = '#eba834'>Contact Sheet" +STARTLINE}
+ addUserKnob {6 disableSidebySide l "<b><font color = '#eba834'>Side by Side" -STARTLINE}
+ addUserKnob {6 disableTC l "<b><font color = '#eba834'>QC Disable" -STARTLINE}
+ addUserKnob {6 disable_overlay l "<b><font color = '#eba834'>Overlay" -STARTLINE}
+ addUserKnob {20 run_check l "Run Check"}
+ addUserKnob {26 title l "" +STARTLINE T "<font size = 5>QC ReViewer"}
+ addUserKnob {26 made l "" +STARTLINE T "<font color = '#eba834'><b>by Filipe Correia                           \n          "}
+ addUserKnob {26 _1 l "" +STARTLINE}
+ addUserKnob {22 metadata_inputValues_checker l "<font color = '#eba834'><b>Check Everything" t "This button checks for the following:\n\n1 - Checks for inputs such as PLATE & NR/COMP\n\n2 - Checks for if matching format resolution\n\n3 - Checks for if matching frame ranges\n\n4 - Checks for odd pixels(NEG, NAN, INF)" T "import base64\nimport nuke\n\n\ndef get_inf_sample_range(first_frame_comp, last_frame_comp, odd_pixel, no_odd_pixel):\n    \"\"\" Samples the max and min values of the given frame range and set an average RGB sample into a single value \"\"\"\n\n\n    inf_tool = nuke.toNode('INF_Pixels_CT')\n    min_knob = inf_tool\['minlumapixvalue']\n    max_knob = inf_tool\['maxlumapixvalue']\n\n\n    min_knob.setAnimated()\n    max_knob.setAnimated()\n    \n    nuke.execute(inf_tool, int(first_frame_comp), int(last_frame_comp))\n    \n    inf_values = inf_tool\['inf_pixels_avg'].value()\n    if inf_values > 1:\n        inf = f'<b>INF Pixels:</b> \\n\{odd_pixel\}'\n    else:\n        inf = f'<b>INF Pixels:</b> \\n\{no_odd_pixel\}'\n    return inf\n\n\ndef get_nan_sample_range(first_frame_comp, last_frame_comp, odd_pixel, no_odd_pixel):\n    \"\"\" Samples the max and min values of the given frame range and set an average RGB sample into a single value \"\"\"\n\n\n    nan_tool = nuke.toNode('NAN_Pixels_CT')\n    min_knob = nan_tool\['minlumapixvalue']\n    max_knob = nan_tool\['maxlumapixvalue']\n\n\n    min_knob.setAnimated()\n    max_knob.setAnimated()\n    \n    nuke.execute(nan_tool, int(first_frame_comp), int(last_frame_comp))\n\n\n    nan_values = nan_tool\['nan_pixels_avg'].value()\n    if nan_values > 1:\n        nan = f'<b>NAN Pixels:</b> \\n\{odd_pixel\}'\n    else:\n        nan = f'<b>NAN Pixels:</b> \\n\{no_odd_pixel\}'\n    return nan\n    \ndef get_neg_sample_range(first_frame_comp, last_frame_comp, odd_pixel, no_odd_pixel):\n    \"\"\" Samples the max and min values of the given frame range and set an average RGB sample into a single value \"\"\"\n\n\n    neg_tool = nuke.toNode('Neg_Pixels_CT')\n    min_knob = neg_tool\['minlumapixvalue']\n    max_knob = neg_tool\['maxlumapixvalue']\n\n\n    min_knob.setAnimated()\n    max_knob.setAnimated()\n\n\n    nuke.execute(neg_tool, int(first_frame_comp), int(last_frame_comp))\n    neg_values = neg_tool\['neg_pixels_avg'].value()\n    if neg_values > 1:\n        neg = f'<b>NEG Pixels: </b>\\n\{odd_pixel\}'\n    else:\n        neg = f'<b>NEG Pixels:</b> \\n\{no_odd_pixel\}'\n    return neg\n\n\ndef check_frame_range(comp_range, plate_range):\n    \"\"\" Checks Plate and Comp frame ranges are matching \"\"\"\n\n\n    convert_plate = plate_range\[1] - plate_range\[0] + 1\n    convert_comp = comp_range\[1] - comp_range\[0] + 1\n    \n    if convert_comp == convert_plate:\n        range_check = f'<b>Inputs Ranges:</b>\\n<font color=\"#228B22\">are matching frame ranges!</font>\{convert_plate\} - \{convert_comp\}'\n    else:\n        range_check = f'<b>Inputs Ranges:</b> \\n<font color=\"#B22222\">do not match frame ranges!</font>\{convert_plate\} - \{convert_comp\}'\n    \n    return range_check\n\n\ndef get_format_tuple(node):\n    return node.format().width(), node.format().height(), node.format().pixelAspect()\n\n\ndef check_res(read):\n    if get_format_tuple(read.input(0)) != get_format_tuple(read.input(1)):\n        format_input = f'Resolution: NR_precomp:<font color=\"#B22222\">\{get_format_tuple(read.input(0))\}</font> & Plate:<font color=\"##B22222\">\{get_format_tuple(read.input(1))\}</font> Format MissMatching!'\n    else:\n        format_input = f'<b>Resolution: </b>\\nNR_precomp:<font color=\"#228B22\">\{get_format_tuple(read.input(0))\}</font> & Plate:<font color=\"#228B22\">\{get_format_tuple(read.input(1))\}</font> Format Matching!'\n    return format_input\n  \ndef check_inputs(read):\n    \"\"\" Checks if there are connected inputs and if format is matching \"\"\"\n    if read.input(0) is None:\n        input_connect = '<b>PRECOMP_NR_COMP: </b>\\n<font color=\"#B22222\">No PRECOMP/NR/COMP Connected!</font>'\n    if read.input(1) is None:\n        input_connect = '<b>RAW_PLATE: </b>\\n<font color=\"#B22222\">No Plate Connected!</font>' \n    else:\n        input_connect = '<b>Inputs:</b> \\n<font color=\"#228B22\">Both inputs are connected</font>' \n        \n    return input_connect\n    \ndef start():\n    \"\"\" let's do this! \"\"\"\n    read_input = nuke.thisNode()\n    \n    # read_input_comp = read_input.input(0)\n    # comp = read_input_comp\['first'].value(), read_input_comp\['last'].value()\n    # read_input_plate = read_input.input(1)\n    # plate = read_input_plate\['first'].value(), read_input_plate\['last'].value()\n    \n    read_input_comp = nuke.toNode('FrameRange15') # Fetches Comp frame range node\n    first_frame_comp = read_input_comp\['first_frame'].value()\n    last_frame_comp = read_input_comp\['last_frame'].value()\n    comp = first_frame_comp, last_frame_comp\n\n\n    read_input_plate = nuke.toNode('FrameRange1') # Fetches Plate frame range node\n    first_frame_plate = read_input_plate\['first_frame'].value()\n    last_frame_plate = read_input_plate\['last_frame'].value()\n    plate = first_frame_plate, last_frame_plate\n    \n    odd_pixel = '<font color=\"#B22222\">There are odd pixels!</font>'\n    no_odd_pixel = '<font color=\"#228B22\">No visible odd pixels!</font>'\n    \n    \"\"\"Start functions and obtain values\"\"\"\n    input_connect = check_inputs(read = read_input)\n    res = check_res(read = read_input)\n    check_range = check_frame_range(comp_range = comp, plate_range = plate)\n    neg = get_neg_sample_range(first_frame_comp = first_frame_comp, last_frame_comp = last_frame_comp, odd_pixel = odd_pixel, no_odd_pixel = no_odd_pixel)\n    nan = get_nan_sample_range(first_frame_comp = first_frame_comp, last_frame_comp = last_frame_comp, odd_pixel = odd_pixel, no_odd_pixel = no_odd_pixel)\n    inf = get_inf_sample_range(first_frame_comp = first_frame_comp, last_frame_comp = last_frame_comp, odd_pixel = odd_pixel, no_odd_pixel = no_odd_pixel)\n    nuke.message(f'<center>\{input_connect\} \\n \{res\} \\n\{check_range\} \\n\{neg\} \\n\{nan\} \\n\{inf\}')\n    read_input\['input_text'].setValue(f'<center>\{input_connect\}')\n    read_input\['res_text'].setValue(f'<center>\{res\}')\n    read_input\['range_text'].setValue(f'<center>\{check_range\}')\n    read_input\['neg_text'].setValue(f'<center>\{neg\}')\n    read_input\['nan_text'].setValue(f'<center>\{nan\}')\n    read_input\['inf_text'].setValue(f'<center>\{inf\}')\n    \n\n\nstart()" +STARTLINE}
+ addUserKnob {22 render_mov l "<font color = '#eba834'><b>Render MOV" t "Renders MOV:\n\n1 - MOV of the contact sheet after running 'Check Everyhting' \n\n2 - MOV sequence of the QC Viewer after running 'Check Everyhting'" -STARTLINE T "import base64\nimport nuke\n\n\nread_input = nuke.thisNode()\ncontact_sheet_write = 'contact_sheet_write'\nreview_sequence_write = 'review_sequence_write'\n\n\n\ndef review_sequence_write_mov(contact_sheet_write,read_input):\n    if not nuke.exists(review_sequence_write):\n        print(f\"Node \{contact_sheet_write\} does not exist.\")\n        return\n    read_input = nuke.toNode('FrameRange14')\n    \n    rsw = nuke.toNode(review_sequence_write)\n\n\n    first_frame = read_input\['first_frame'].value()\n    last_frame = read_input\['last_frame'].value()\n    \n    nuke.execute(rsw, int(first_frame), int(last_frame))\n\n\ndef contact_sheet_write_mov(contact_sheet_write,read_input):\n    # if not nuke.exists(contact_sheet_write):\n    #     print(f\"Node \{contact_sheet_write\} does not exist.\")\n    #     return\n    # read_input = nuke.toNode('FrameRange15')\n    \n    # csw = nuke.toNode(contact_sheet_write)\n\n\n    # first_frame = read_input\['first_frame'].value()\n    # last_frame = read_input\['last_frame'].value()\n    \n    # nuke.execute(csw, int(first_frame), int(last_frame))\n    \n    review_sequence_write_mov(review_sequence_write, read_input)\n    \n\n\ndef start(read_input):\n    \"\"\"let's do this!\"\"\"\n\n\n    contact_sheet_write_mov(contact_sheet_write, read_input)\n    \n    \nstart(read_input)\n\n"}
+ addUserKnob {26 _4 l "" +STARTLINE}
+ addUserKnob {26 input_text l "" +STARTLINE T "<center><b>Inputs:</b> \n<font color=\"#228B22\"></font>"}
+ addUserKnob {26 res_text l "" +STARTLINE T "<center><b>Resolution: NR_precomp:<font color=\"#B22222\"></font> & Plate:<font color=\"##B22222\"></font>"}
+ addUserKnob {26 range_text l "" +STARTLINE T "<center><b>Inputs Ranges:</b>\n<font color=\"#228B22\"></font>"}
+ addUserKnob {26 neg_text l "" +STARTLINE T "<center><b>NEG Pixels: </b>\n<font color=\"#B22222\"></font>"}
+ addUserKnob {26 nan_text l "" +STARTLINE T "<center><b>NAN Pixels:</b> \n<font color=\"#228B22\"></font>"}
+ addUserKnob {26 inf_text l "" +STARTLINE T "<center><b>INF Pixels:</b> \n<font color=\"#228B22\"></font>"}
+ addUserKnob {20 info l Info}
+ addUserKnob {26 title_1 l "" +STARTLINE T "<font size = 5>QC ReViewer"}
+ addUserKnob {26 made_1 l "" +STARTLINE T "<font color = '#eba834'><b>by Filipe Correia                           "}
+ addUserKnob {26 _5 l "" +STARTLINE}
+ addUserKnob {26 info_1 l "" +STARTLINE T "This is a Quality Control tool which will help you with tech checks. The tool contains \"Quality Control\" Tab for manual viewing in the QC Viewer Pulldown Choice and \"Run Check\" Tab for running python script.\n\n1 - Connect RAW Plate & Precomp NR Comp.\n\n2 - Use Quality Control tab for manual viewing:\n              - Use the dropdown menu to run the tech checks  (I do recomend do it by order)\n              - Toggle the process RAW Plate in any moment to compare it agaisnt your comp\n              - Toggle between merging Comp to RAW Plate or Solo it\n\n3 - Use Run Check:\n              - Button: Will check for inputs, matching frame ranges and resolution, and checks for odd pixels such as NEG, NAN and INF pixels. \n              - Button: Renders two MOV files: one contact sheet with all the QC Viewer options and another that runs the QC Viewer options in sequence.\n\n"}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode1
+  tile_color 0x1e1e1eff
+  label <center>Difference
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 40
+  xpos -1419
+  ypos -17042
+  appearance Border
+  border_width 20
+  bdwidth 861
+  bdheight 606
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode10
+  tile_color 0x1e1e1eff
+  label "<center> Alpha Check "
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 42
+  xpos -1444
+  ypos -10481
+  appearance Border
+  border_width 20
+  bdwidth 919
+  bdheight 243
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode11
+  tile_color 0x1e1e1eff
+  label "<center> Neg/NaN/Inf Pixels Check"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 42
+  xpos -1447
+  ypos -12696
+  appearance Border
+  border_width 20
+  bdwidth 921
+  bdheight 2051
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode12
+  tile_color 0x1e1e1eff
+  label "<center> 4x4 Edge Frame"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 42
+  xpos -1447
+  ypos -13007
+  appearance Border
+  border_width 20
+  bdwidth 919
+  bdheight 243
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode14
+  tile_color 0x1e1e1eff
+  label "<center>Plate & Comp"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 42
+  xpos -593
+  ypos -10072
+  appearance Border
+  border_width 20
+  bdwidth 534
+  bdheight 652
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode2
+  tile_color 0x1e1e1eff
+  label "<center>Black Levels"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 40
+  xpos -1427
+  ypos -16378
+  appearance Border
+  border_width 20
+  bdwidth 876
+  bdheight 232
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode3
+  tile_color 0x1e1e1eff
+  label "<center> Luminance"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 42
+  xpos -1425
+  ypos -15477
+  appearance Border
+  border_width 20
+  bdwidth 886
+  bdheight 265
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode4
+  tile_color 0x1e1e1eff
+  label "<center> Saturation Boost"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 42
+  xpos -1432
+  ypos -15162
+  appearance Border
+  border_width 20
+  bdwidth 903
+  bdheight 262
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode5
+  tile_color 0x1e1e1eff
+  label "<center> Saturation Limit"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 42
+  xpos -1435
+  ypos -14868
+  appearance Border
+  border_width 20
+  bdwidth 906
+  bdheight 316
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode6
+  tile_color 0x1e1e1eff
+  label "<center> Highlights Check (Exposure Down)"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 42
+  xpos -1425
+  ypos -15791
+  appearance Border
+  border_width 20
+  bdwidth 882
+  bdheight 261
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode7
+  tile_color 0x1e1e1eff
+  label "<center> Shadows Check (Exposure up)"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 42
+  xpos -1425
+  ypos -16088
+  appearance Border
+  border_width 20
+  bdwidth 876
+  bdheight 250
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode8
+  tile_color 0x1e1e1eff
+  label "<center> Noise-Grain Check"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 42
+  xpos -1432
+  ypos -14514
+  appearance Border
+  border_width 20
+  bdwidth 905
+  bdheight 617
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode9
+  tile_color 0x1e1e1eff
+  label "<center> Edge of the Frame Check"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 42
+  xpos -1439
+  ypos -13822
+  appearance Border
+  border_width 20
+  bdwidth 910
+  bdheight 750
+ }
+ Input {
+  inputs 0
+  name RAW_PLATE
+  label "(input \[value number])"
+  xpos -341
+  ypos -17610
+  number 1
+ }
+ FrameRange {
+  first_frame {{input1.first_frame}}
+  last_frame {{input1.last_frame}}
+  time ""
+  name FrameRange1
+  xpos -341
+  ypos -17535
+ }
+ Dot {
+  name Dot1
+  xpos -307
+  ypos -17300
+ }
+set N4590f900 [stack 0]
+ Dot {
+  name Dot19
+  xpos -1410
+  ypos -17304
+ }
+set N4590f200 [stack 0]
+ Dot {
+  name Dot22
+  xpos -1410
+  ypos -17109
+ }
+ Input {
+  inputs 0
+  name PRECOMP_NR_COMP
+  label "(input \[value number])"
+  xpos -1795
+  ypos -17602
+ }
+ FrameRange {
+  first_frame {{input0.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange15
+  xpos -1795
+  ypos -17544
+ }
+ set C4590dd00 [stack 0]
+ Remove {
+  operation keep
+  channels rgba
+  name Remove1
+  label "\[value channels]"
+  xpos -1795
+  ypos -17464
+ }
+ Dot {
+  name Dot17
+  xpos -1761
+  ypos -17378
+ }
+set N4590cf00 [stack 0]
+push $N4590cf00
+ Dot {
+  name Dot18
+  xpos -2093
+  ypos -17378
+ }
+ Dot {
+  name Dot21
+  xpos -2093
+  ypos -17193
+ }
+push $N4590f200
+ Dot {
+  name Dot20
+  xpos -1981
+  ypos -17304
+ }
+ Merge2 {
+  inputs 2
+  name Merge1
+  xpos -2015
+  ypos -17197
+ }
+ Switch {
+  inputs 2
+  which {{!merge_face}}
+  name Switch2
+  xpos -1795
+  ypos -17197
+ }
+ Switch {
+  inputs 2
+  which {{swap_plate}}
+  name Switch1
+  xpos -1795
+  ypos -17113
+ }
+ Dot {
+  name Dot5
+  xpos -1761
+  ypos -16948
+ }
+set N4583dd00 [stack 0]
+ Dot {
+  name Dot8
+  xpos -1761
+  ypos -16236
+ }
+set N4583d600 [stack 0]
+ Dot {
+  name Dot10
+  xpos -1761
+  ypos -15936
+ }
+set N4583cf00 [stack 0]
+ Dot {
+  name Dot9
+  xpos -1761
+  ypos -15650
+ }
+set N4583c800 [stack 0]
+ Dot {
+  name Dot11
+  xpos -1761
+  ypos -15335
+ }
+set N4583c100 [stack 0]
+ Dot {
+  name Dot12
+  xpos -1761
+  ypos -15023
+ }
+set N46607900 [stack 0]
+ Dot {
+  name Dot13
+  xpos -1761
+  ypos -14678
+ }
+set N46607200 [stack 0]
+ Dot {
+  name Dot15
+  xpos -1761
+  ypos -14390
+ }
+set N46606b00 [stack 0]
+ Dot {
+  name Dot29
+  xpos -1761
+  ypos -13702
+ }
+set N46606400 [stack 0]
+ Dot {
+  name Dot85
+  xpos -1761
+  ypos -12938
+ }
+set N46605d00 [stack 0]
+ Dot {
+  name Dot30
+  xpos -1761
+  ypos -12546
+ }
+set N46605600 [stack 0]
+ Dot {
+  name Dot31
+  xpos -1761
+  ypos -11971
+ }
+set N46604f00 [stack 0]
+ Dot {
+  name Dot32
+  xpos -1764
+  ypos -11308
+ }
+set N46604800 [stack 0]
+ Dot {
+  name Dot33
+  xpos -1764
+  ypos -10337
+ }
+set N46604100 [stack 0]
+ Expression {
+  expr0 a
+  expr1 a>1?0:a
+  expr2 a>1?0:a
+  expr3 a>1?0:a
+  name Expression1
+  label "check alpha"
+  xpos -1049
+  ypos -10347
+ }
+ Dot {
+  name Dot48
+  xpos -426
+  ypos -10337
+ }
+set N46557200 [stack 0]
+ Dot {
+  name Dot75
+  xpos 41
+  ypos -10337
+ }
+ Group {
+  name Text_thumbnail11
+  xpos 7
+  ypos -10272
+  addUserKnob {20 User}
+  addUserKnob {41 message T Text5.message}
+  addUserKnob {26 _1 l "" +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos 829
+   ypos 166
+  }
+  Remove {
+   operation keep
+   channels rgb
+   name Remove2
+   xpos 829
+   ypos 206
+  }
+  Expression {
+   expr3 1
+   name Expression4
+   label "alpha = 1"
+   xpos 829
+   ypos 256
+  }
+  Reformat {
+   type "to box"
+   box_width 1950
+   box_height 1080
+   box_fixed true
+   resize none
+   black_outside true
+   pbb true
+   name Reformat1
+   xpos 829
+   ypos 339
+  }
+  Text2 {
+   font_size_toolbar 100
+   font_width_toolbar 100
+   font_height_toolbar 100
+   message Alpha
+   old_message {{65 108 112 104 97}
+     }
+   box {0 0 1950 1050}
+   xjustify center
+   transforms {{0 2}
+     }
+   cursor_position 5
+   font {{ Open Sans : Extrabold Italic : open-sans/OpenSans-ExtraBoldItalic.ttf : 0 }}
+   center {975 540}
+   cursor_initialised true
+   autofit_bbox false
+   initial_cursor_position {{975 540}
+     }
+   group_animations {{0} imported: 0 selected: items: "root transform/"}
+   animation_layers {{1 11 975 540 0 0 1 1 0 0 0 0}
+     }
+   name Text5
+   selected true
+   xpos 829
+   ypos 397
+  }
+  Reformat {
+   type "to box"
+   box_width 2048
+   name Reformat12
+   label "\[value box_width]"
+   xpos 829
+   ypos 488
+  }
+  Crop {
+   box {0 0 2048 1134}
+   name Crop2
+   xpos 829
+   ypos 581
+  }
+  Output {
+   name Output1
+   xpos 829
+   ypos 681
+  }
+ end_group
+ Dot {
+  name Dot76
+  xpos 216
+  ypos -10268
+ }
+set N45e2c800 [stack 0]
+ FrameRange {
+  first_frame {{input1.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange13
+  xpos 246
+  ypos -10284
+ }
+ Text2 {
+  font_size_toolbar 35
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _]          NR_Cleanup "
+  old_message {{102 114 97 109 101 32 50 32 32 32 32 32 32 32 32 32 32 32 102 112 115 32 32 32 32 32 32 32 32 32 32 116 105 109 101 99 111 100 101 32 91 116 105 109 101 99 111 100 101 93 32 32 32 32 32 32 32 32 32 32 81 67 32 84 111 111 108 32 118 48 49 51 32 32 32 32 32 32 32 32 32 32 78 82 95 67 108 101 97 110 117 112 32}
+    }
+  old_expression_markers {{6 6 17 16 60 71}
+    }
+  box {{input1.width/120} {input1.width/120} {input1.width-input1.width/120} {input1.height-input1.width/120}}
+  xjustify center
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 35 1 35 2 35 3 35 4 35 5 35 6 35 7 35 8 35 9 35 10 35 11 35 12 35 13 35 14 35 15 35 16 35 17 35 18 35 19 35 20 35 21 35 22 35 23 35 24 35 25 35 26 35 27 35 28 35 29 35 30 35 31 35 32 35 33 35 34 35 35 35 36 35 37 35 38 35 39 35 40 35 41 35 42 35 43 35 44 35 45 35 46 35 47 35 48 35 49 35 50 35 51 35 52 35 53 35 54 35 55 35 56 35 57 35 58 35 59 35 60 35 61 35 62 35 63 35 64 35 65 35 66 35 67 35 68 35 69 35 70 35 71 35 72 35 73 35 74 35 75 35 76 35 77 35 78 35 79 35 80 35 81 35 82 35 83 35 84 35 85 35 86 35 87 35 88 35 89 35 90 35 91 35 92 35}
+    }
+  cursor_position 178
+  font {{ Open Sans : Light : open-sans/OpenSans-Light.ttf : 0 }}
+  global_font_scale {{input1.width/2480}}
+  font_size 35
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{0 2160}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  color 0.75
+  enable_background true
+  name burnin4
+  label "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _] "
+  xpos 339
+  ypos -10278
+  disable {{disableFrame}}
+ }
+ Dot {
+  name Dot112
+  xpos 452
+  ypos -10268
+ }
+push $N46604800
+ Expression {
+  expr0 isinf(r)?1000:0
+  expr1 isinf(g)?1000:0
+  expr2 isinf(b)?1000:0
+  expr3 isinf(a)?1000:0
+  name INF
+  tile_color 0xff
+  note_font "Bitstream Vera Sans Bold"
+  xpos -1292
+  ypos -11312
+ }
+set N48736b00 [stack 0]
+ Dot {
+  name Dot88
+  xpos -1258
+  ypos -11251
+ }
+set N48736400 [stack 0]
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.alpha 0 3 black -1 -1 rgba.red 0 0 black -1 -1 rgba.green 0 1 rgba.alpha 0 3 rgba.blue 0 2"
+  name Shuffle10
+  xpos -1154
+  ypos -11178
+ }
+push $N48736400
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.alpha 0 3 black -1 -1 rgba.red 0 0 black -1 -1 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2"
+  name Shuffle11
+  xpos -1327
+  ypos -11178
+ }
+push 0
+push $N48736400
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.alpha 0 3 black -1 -1 rgba.red 0 0 black -1 -1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2"
+  name Shuffle12
+  xpos -1239
+  ypos -11179
+ }
+push $N48736400
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.alpha 0 3 rgba.red 0 0 rgba.blue 0 2 black -1 -1 rgba.red 0 0 black -1 -1 rgba.green 0 1"
+  name Shuffle13
+  xpos -1416
+  ypos -11179
+ }
+ Merge2 {
+  inputs 4+1
+  name Merge8
+  xpos -1287
+  ypos -11100
+ }
+set N48734100 [stack 0]
+ Remove {
+  channels rgb
+  name Remove2
+  xpos -1287
+  ypos -11052
+ }
+ Dot {
+  name Dot78
+  xpos -1253
+  ypos -10939
+ }
+set N4830b200 [stack 0]
+ Text2 {
+  font_size_toolbar 100
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message True
+  old_message {{84 114 117 101}
+    }
+  box {105 {parent.Text7.box.y} {width} {height}}
+  yjustify center
+  transforms {{0 2}
+    }
+  cursor_position 4
+  font {{ Open Sans : Extrabold Italic : open-sans/OpenSans-ExtraBoldItalic.ttf : 0 }}
+  global_font_scale 0.5
+  center {960 540}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{960 540}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 960 540 0 0 1 1 0 0 0 0}
+    }
+  color {1 0.721568644 0 1}
+  color_panelDropped true
+  background_color {1 0.721568644 0 1}
+  name Text12
+  label "\[value message]"
+  xpos -1339
+  ypos -10896
+ }
+push $N4830b200
+ Text2 {
+  font_size_toolbar 100
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message False
+  old_message {{70 97 108 115 101}
+    }
+  box {{parent.Text12.box.x} {parent.Text12.box.y} {width} {height}}
+  yjustify center
+  transforms {{0 2}
+    }
+  cursor_position 5
+  font {{ Open Sans : Extrabold Italic : open-sans/OpenSans-ExtraBoldItalic.ttf : 0 }}
+  global_font_scale 0.5
+  center {960 540}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{960 540}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 960 540 0 0 1 1 0 0 0 0}
+    }
+  color {1 1 1 1}
+  color_panelDropped true
+  name Text9
+  label "\[value message]"
+  xpos -1229
+  ypos -10896
+ }
+ Switch {
+  inputs 2
+  which {{"parent.INF_Pixels_CT.inf_pixels_avg > 1"}}
+  name Switch9
+  xpos -1285
+  ypos -10837
+ }
+ Dot {
+  name Dot86
+  xpos -1251
+  ypos -10742
+ }
+push $N46604f00
+ Expression {
+  expr0 isnan(r)?1000:0
+  expr1 isnan(g)?1000:0
+  expr2 isnan(b)?1000:0
+  expr3 isnan(a)?1000:0
+  name NAN
+  tile_color 0xff
+  note_font "Bitstream Vera Sans Bold"
+  xpos -1136
+  ypos -11975
+ }
+set N46eb3200 [stack 0]
+ Dot {
+  name Dot90
+  xpos -1102
+  ypos -11935
+ }
+set N46eb2b00 [stack 0]
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3 black -1 -1 rgba.red 0 0 rgba.alpha 0 3 rgba.green 0 1"
+  name Shuffle21
+  xpos -998
+  ypos -11862
+ }
+push $N46eb2b00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.alpha 0 3 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1"
+  name Shuffle22
+  xpos -1171
+  ypos -11862
+ }
+push 0
+push $N46eb2b00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3 rgba.blue 0 2 rgba.green 0 1 black -1 -1 rgba.red 0 0"
+  name Shuffle23
+  xpos -1083
+  ypos -11863
+ }
+push $N46eb2b00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.alpha 0 3 black -1 -1 rgba.blue 0 2 rgba.red 0 0 rgba.green 0 1 black -1 -1 rgba.red 0 0"
+  name Shuffle24
+  xpos -1260
+  ypos -11863
+ }
+ Merge2 {
+  inputs 4+1
+  name Merge10
+  xpos -1131
+  ypos -11784
+ }
+ Dot {
+  name Dot89
+  xpos -1097
+  ypos -11683
+ }
+set N46eb0100 [stack 0]
+ Remove {
+  channels rgb
+  name Remove3
+  xpos -1131
+  ypos -11647
+ }
+ Dot {
+  name Dot92
+  xpos -1097
+  ypos -11602
+ }
+set N47203200 [stack 0]
+ Text2 {
+  font_size_toolbar 100
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message True
+  old_message {{84 114 117 101}
+    }
+  box {150 {parent.Text6.box.y} {width} {height}}
+  yjustify center
+  transforms {{0 2}
+    }
+  cursor_position 4
+  font {{ Open Sans : Extrabold Italic : open-sans/OpenSans-ExtraBoldItalic.ttf : 0 }}
+  global_font_scale 0.5
+  center {960 540}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{960 540}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 960 540 0 0 1 1 0 0 0 0}
+    }
+  color {1 0.721568644 0 1}
+  color_panelDropped true
+  background_color {1 0.721568644 0 1}
+  name Text10
+  label "\[value message]"
+  xpos -1183
+  ypos -11559
+ }
+push $N47203200
+ Text2 {
+  font_size_toolbar 100
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message False
+  old_message {{70 97 108 115 101}
+    }
+  box {{parent.Text10.box.x} {parent.Text10.box.y} {width} {height}}
+  yjustify center
+  transforms {{0 2}
+    }
+  cursor_position 5
+  font {{ Open Sans : Extrabold Italic : open-sans/OpenSans-ExtraBoldItalic.ttf : 0 }}
+  global_font_scale 0.5
+  center {960 540}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{960 540}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 960 540 0 0 1 1 0 0 0 0}
+    }
+  color {1 1 1 1}
+  color_panelDropped true
+  name Text11
+  label "\[value message]"
+  xpos -1073
+  ypos -11559
+ }
+ Switch {
+  inputs 2
+  which {{"parent.NAN_Pixels_CT.nan_pixels_avg > 1"}}
+  name Switch10
+  xpos -1129
+  ypos -11500
+ }
+ Dot {
+  name Dot93
+  xpos -1095
+  ypos -11405
+ }
+ Dot {
+  name Dot94
+  xpos -1038
+  ypos -11405
+ }
+ Dot {
+  name Dot95
+  xpos -1041
+  ypos -10812
+ }
+push $N46605600
+ Expression {
+  expr0 "r < 0 ? 1000 : 0"
+  expr1 "g < 0 ? 1000 : 0"
+  expr2 "b < 0 ? 1000 : 0"
+  expr3 "a < 0 ? 1000 : 0"
+  name NEGATIVE
+  tile_color 0xff
+  note_font "Bitstream Vera Sans Bold"
+  xpos -818
+  ypos -12550
+ }
+set N43ec7200 [stack 0]
+ Dot {
+  name Dot87
+  xpos -784
+  ypos -12505
+ }
+set N43ec6b00 [stack 0]
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3 rgba.alpha 0 3 rgba.red 0 0"
+  name Shuffle9
+  xpos -682
+  ypos -12432
+ }
+push $N43ec6b00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.alpha 0 3 black -1 -1 rgba.blue 0 2 rgba.green 0 1 rgba.red 0 0 black -1 -1 rgba.green 0 1"
+  name Shuffle14
+  xpos -856
+  ypos -12433
+ }
+push 0
+push $N43ec6b00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3 rgba.blue 0 2 rgba.red 0 0"
+  name Shuffle15
+  xpos -769
+  ypos -12432
+ }
+push $N43ec6b00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.alpha 0 3 black -1 -1 rgba.blue 0 2 rgba.red 0 0 rgba.red 0 0 black -1 -1 rgba.green 0 1"
+  name Shuffle16
+  xpos -943
+  ypos -12434
+ }
+ Merge2 {
+  inputs 4+1
+  name Merge7
+  xpos -813
+  ypos -12354
+ }
+ Dot {
+  name Dot99
+  xpos -779
+  ypos -12279
+ }
+set N43ec4100 [stack 0]
+ Remove {
+  channels rgb
+  name Remove4
+  xpos -990
+  ypos -12283
+ }
+ Dot {
+  name Dot96
+  xpos -956
+  ypos -12238
+ }
+set N43d47200 [stack 0]
+ Text2 {
+  font_size_toolbar 100
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message True
+  old_message {{84 114 117 101}
+    }
+  box {150 {parent.Text5.box.y} {width} {height}}
+  yjustify center
+  transforms {{0 2}
+    }
+  cursor_position 4
+  font {{ Open Sans : Extrabold Italic : open-sans/OpenSans-ExtraBoldItalic.ttf : 0 }}
+  global_font_scale 0.5
+  center {960 540}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{960 540}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 960 540 0 0 1 1 0 0 0 0}
+    }
+  color {1 0.721568644 0 1}
+  color_panelDropped true
+  background_color {1 0.721568644 0 1}
+  name Text13
+  label "\[value message]"
+  xpos -1042
+  ypos -12195
+ }
+push $N43d47200
+ Text2 {
+  font_size_toolbar 100
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message False
+  old_message {{70 97 108 115 101}
+    }
+  box {{parent.Text13.box.x} {parent.Text13.box.y} {width} {height}}
+  yjustify center
+  transforms {{0 2}
+    }
+  cursor_position 5
+  font {{ Open Sans : Extrabold Italic : open-sans/OpenSans-ExtraBoldItalic.ttf : 0 }}
+  global_font_scale 0.5
+  center {960 540}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{960 540}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 960 540 0 0 1 1 0 0 0 0}
+    }
+  color {1 1 1 1}
+  color_panelDropped true
+  name Text14
+  label "\[value message]"
+  xpos -932
+  ypos -12195
+ }
+ Switch {
+  inputs 2
+  which {{"parent.Neg_Pixels_CT.neg_pixels_avg > 1"}}
+  name Switch11
+  xpos -988
+  ypos -12136
+ }
+ Dot {
+  name Dot97
+  xpos -954
+  ypos -12041
+ }
+ Dot {
+  name Dot98
+  xpos -897
+  ypos -12041
+ }
+ Dot {
+  name Dot100
+  xpos -897
+  ypos -10892
+ }
+push $N48734100
+push $N46eb0100
+push $N43ec4100
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge9
+  xpos -813
+  ypos -11687
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge11
+  xpos -816
+  ypos -11100
+ }
+ Blur {
+  channels rgba
+  size {{pixelBoost}}
+  name Blur1
+  label "\[value size]"
+  xpos -816
+  ypos -11051
+ }
+ Text2 {
+  font_size_toolbar 100
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "Neg - "
+  old_message {{78 101 103 32 45 32}
+    }
+  box {0 150 {width} {height}}
+  yjustify center
+  transforms {{0 2}
+    }
+  cursor_position 6
+  font {{ Open Sans : Extrabold : open-sans/OpenSans-ExtraBold.ttf : 0 }}
+  global_font_scale 0.5
+  center {960 540}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{960 540}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 960 540 0 0 1 1 0 0 0 0}
+    }
+  color {1 0 0 1}
+  color_panelDropped true
+  name Text5
+  label "\[value message]"
+  xpos -816
+  ypos -10958
+ }
+ Merge2 {
+  inputs 2
+  name Merge14
+  xpos -816
+  ypos -10896
+ }
+ Text2 {
+  font_size_toolbar 100
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "NaN - "
+  old_message {{78 97 78 32 45 32}
+    }
+  box {0 0 {width} {height}}
+  yjustify center
+  transforms {{0 2}
+    }
+  cursor_position 6
+  font {{ Open Sans : Extrabold : open-sans/OpenSans-ExtraBold.ttf : 0 }}
+  global_font_scale 0.5
+  center {960 540}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{960 540}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 960 540 0 0 1 1 0 0 0 0}
+    }
+  color {0 1 0 1}
+  color_panelDropped true
+  name Text6
+  label "\[value message]"
+  xpos -816
+  ypos -10854
+ }
+ Merge2 {
+  inputs 2
+  name Merge13
+  xpos -816
+  ypos -10816
+ }
+ Text2 {
+  font_size_toolbar 100
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "Inf - "
+  old_message {{73 110 102 32 45 32}
+    }
+  box {0 -150 {width} {height}}
+  yjustify center
+  transforms {{0 2}
+    }
+  cursor_position 6
+  font {{ Open Sans : Extrabold Italic : open-sans/OpenSans-ExtraBoldItalic.ttf : 0 }}
+  global_font_scale 0.5
+  center {960 540}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{960 540}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 960 540 0 0 1 1 0 0 0 0}
+    }
+  color {0 0 1 1}
+  color_panelDropped true
+  name Text7
+  label "\[value message]"
+  xpos -816
+  ypos -10790
+ }
+ Merge2 {
+  inputs 2
+  name Merge12
+  xpos -816
+  ypos -10746
+ }
+ Dot {
+  name Dot91
+  xpos -782
+  ypos -10720
+ }
+ Dot {
+  name Dot47
+  xpos -426
+  ypos -10720
+ }
+set N451b6b00 [stack 0]
+ Dot {
+  name Dot73
+  xpos 29
+  ypos -10720
+ }
+ Group {
+  name Text_thumbnail10
+  xpos -5
+  ypos -10655
+  addUserKnob {20 User}
+  addUserKnob {41 message T Text5.message}
+  addUserKnob {26 _1 l "" +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos 829
+   ypos 166
+  }
+  Remove {
+   operation keep
+   channels rgb
+   name Remove2
+   xpos 829
+   ypos 206
+  }
+  Expression {
+   expr3 1
+   name Expression4
+   label "alpha = 1"
+   xpos 829
+   ypos 256
+  }
+  Reformat {
+   type "to box"
+   box_width 1950
+   box_height 1080
+   box_fixed true
+   resize none
+   black_outside true
+   pbb true
+   name Reformat1
+   xpos 829
+   ypos 339
+  }
+  Text2 {
+   font_size_toolbar 100
+   font_width_toolbar 100
+   font_height_toolbar 100
+   message "Neg/NaN/Inf Pixels"
+   old_message {{78 101 103 47 78 97 78 47 73 110 102 32 80 105 120 101 108 115}
+     }
+   box {0 0 1950 1050}
+   xjustify center
+   transforms {{0 2}
+     }
+   font {{ Open Sans : Extrabold Italic : open-sans/OpenSans-ExtraBoldItalic.ttf : 0 }}
+   center {975 540}
+   cursor_initialised true
+   autofit_bbox false
+   initial_cursor_position {{975 540}
+     }
+   group_animations {{0} imported: 0 selected: items: "root transform/"}
+   animation_layers {{1 11 975 540 0 0 1 1 0 0 0 0}
+     }
+   name Text5
+   selected true
+   xpos 829
+   ypos 397
+  }
+  Reformat {
+   type "to box"
+   box_width 2048
+   name Reformat12
+   label "\[value box_width]"
+   xpos 829
+   ypos 488
+  }
+  Crop {
+   box {0 0 2048 1134}
+   name Crop2
+   xpos 829
+   ypos 581
+  }
+  Output {
+   name Output1
+   xpos 829
+   ypos 681
+  }
+ end_group
+ Dot {
+  name Dot74
+  xpos 216
+  ypos -10651
+ }
+set N44710100 [stack 0]
+ FrameRange {
+  first_frame {{input1.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange12
+  xpos 251
+  ypos -10667
+ }
+ Text2 {
+  font_size_toolbar 35
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _]          NR_Cleanup "
+  old_message {{102 114 97 109 101 32 50 32 32 32 32 32 32 32 32 32 32 32 102 112 115 32 32 32 32 32 32 32 32 32 32 116 105 109 101 99 111 100 101 32 91 116 105 109 101 99 111 100 101 93 32 32 32 32 32 32 32 32 32 32 81 67 32 84 111 111 108 32 118 48 49 51 32 32 32 32 32 32 32 32 32 32 78 82 95 67 108 101 97 110 117 112 32}
+    }
+  old_expression_markers {{6 6 17 16 60 71}
+    }
+  box {{input1.width/120} {input1.width/120} {input1.width-input1.width/120} {input1.height-input1.width/120}}
+  xjustify center
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 35 1 35 2 35 3 35 4 35 5 35 6 35 7 35 8 35 9 35 10 35 11 35 12 35 13 35 14 35 15 35 16 35 17 35 18 35 19 35 20 35 21 35 22 35 23 35 24 35 25 35 26 35 27 35 28 35 29 35 30 35 31 35 32 35 33 35 34 35 35 35 36 35 37 35 38 35 39 35 40 35 41 35 42 35 43 35 44 35 45 35 46 35 47 35 48 35 49 35 50 35 51 35 52 35 53 35 54 35 55 35 56 35 57 35 58 35 59 35 60 35 61 35 62 35 63 35 64 35 65 35 66 35 67 35 68 35 69 35 70 35 71 35 72 35 73 35 74 35 75 35 76 35 77 35 78 35 79 35 80 35 81 35 82 35 83 35 84 35 85 35 86 35 87 35 88 35 89 35 90 35 91 35 92 35}
+    }
+  cursor_position 178
+  font {{ Open Sans : Light : open-sans/OpenSans-Light.ttf : 0 }}
+  global_font_scale {{input1.width/2480}}
+  font_size 35
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{0 2160}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  color 0.75
+  enable_background true
+  name burnin5
+  label "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _] "
+  xpos 352
+  ypos -10661
+  disable {{disableFrame}}
+ }
+ Dot {
+  name Dot111
+  xpos 452
+  ypos -10651
+ }
+push $N46605d00
+ Dot {
+  name Dot80
+  xpos -1167
+  ypos -12938
+ }
+set N4453c800 [stack 0]
+ Dot {
+  name Dot81
+  xpos -1167
+  ypos -12897
+ }
+set N4453c100 [stack 0]
+ Dot {
+  name Dot82
+  xpos -1167
+  ypos -12854
+ }
+set N444a3900 [stack 0]
+ Dot {
+  name Dot83
+  xpos -1167
+  ypos -12816
+ }
+ Crop {
+  box {0 0 {width/2 896} {height/2 522}}
+  name Crop2
+  xpos -1111
+  ypos -12820
+ }
+ Transform {
+  translate {{parent.Crop5.box.x} {parent.Crop5.box.y}}
+  center {{width} {height}}
+  name Transform4
+  xpos -963
+  ypos -12820
+ }
+push $N444a3900
+ Crop {
+  box {0 {height/2 510} {width/2 262} {height 1080}}
+  name Crop3
+  xpos -1108
+  ypos -12858
+ }
+ Transform {
+  translate {{parent.Crop4.box.x} {-parent.Crop4.box.t}}
+  center {{width} {height}}
+  name Transform3
+  xpos -960
+  ypos -12858
+ }
+push $N4453c100
+ Crop {
+  box {{width/2} 0 {width} {height/2}}
+  name Crop4
+  xpos -1111
+  ypos -12901
+ }
+ Transform {
+  translate {{-parent.Crop3.box.r} {parent.Crop3.box.y}}
+  center {{width} {height}}
+  name Transform2
+  xpos -962
+  ypos -12901
+ }
+push $N4453c800
+ Crop {
+  box {{width/2 960} {height/2 540} {width 3070} {height 1086}}
+  name Crop5
+  xpos -1111
+  ypos -12942
+ }
+ Transform {
+  translate {{-parent.Crop2.box.r} {-parent.Crop2.box.t}}
+  center {{width} {height}}
+  name Transform5
+  xpos -961
+  ypos -12942
+ }
+ Dot {
+  name Dot84
+  xpos -795
+  ypos -12938
+ }
+ Merge2 {
+  inputs 2
+  name Merge3
+  xpos -829
+  ypos -12900
+ }
+ Merge2 {
+  inputs 2
+  name Merge5
+  xpos -829
+  ypos -12858
+ }
+ Merge2 {
+  inputs 2
+  name Merge6
+  xpos -829
+  ypos -12820
+ }
+ Dot {
+  name Dot46
+  xpos -426
+  ypos -12816
+ }
+set N455c1600 [stack 0]
+ Dot {
+  name Dot71
+  xpos 26
+  ypos -12816
+ }
+ Group {
+  name Text_thumbnail9
+  xpos -8
+  ypos -12751
+  addUserKnob {20 User}
+  addUserKnob {41 message T Text5.message}
+  addUserKnob {26 _1 l "" +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos 829
+   ypos 166
+  }
+  Remove {
+   operation keep
+   channels rgb
+   name Remove2
+   xpos 829
+   ypos 206
+  }
+  Expression {
+   expr3 1
+   name Expression4
+   label "alpha = 1"
+   xpos 829
+   ypos 256
+  }
+  Reformat {
+   type "to box"
+   box_width 1950
+   box_height 1080
+   box_fixed true
+   resize none
+   black_outside true
+   pbb true
+   name Reformat1
+   xpos 829
+   ypos 339
+  }
+  Text2 {
+   font_size_toolbar 100
+   font_width_toolbar 100
+   font_height_toolbar 100
+   message "4x4 Edge Frame"
+   old_message {{52 120 52 32 69 100 103 101 32 70 114 97 109 101}
+     }
+   box {0 0 1950 1050}
+   xjustify center
+   transforms {{0 2}
+     }
+   cursor_position 14
+   font {{ Open Sans : Extrabold Italic : open-sans/OpenSans-ExtraBoldItalic.ttf : 0 }}
+   center {975 540}
+   cursor_initialised true
+   autofit_bbox false
+   initial_cursor_position {{975 540}
+     }
+   group_animations {{0} imported: 0 selected: items: "root transform/"}
+   animation_layers {{1 11 975 540 0 0 1 1 0 0 0 0}
+     }
+   name Text5
+   selected true
+   xpos 829
+   ypos 397
+  }
+  Reformat {
+   type "to box"
+   box_width 2048
+   name Reformat12
+   label "\[value box_width]"
+   xpos 829
+   ypos 488
+  }
+  Crop {
+   box {0 0 2048 1134}
+   name Crop2
+   xpos 829
+   ypos 581
+  }
+  Output {
+   name Output1
+   xpos 829
+   ypos 681
+  }
+ end_group
+ Dot {
+  name Dot72
+  xpos 216
+  ypos -12747
+ }
+set N448deb00 [stack 0]
+ FrameRange {
+  first_frame {{input1.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange11
+  xpos 261
+  ypos -12763
+ }
+ Text2 {
+  font_size_toolbar 35
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _]          NR_Cleanup "
+  old_message {{102 114 97 109 101 32 50 32 32 32 32 32 32 32 32 32 32 32 102 112 115 32 32 32 32 32 32 32 32 32 32 116 105 109 101 99 111 100 101 32 91 116 105 109 101 99 111 100 101 93 32 32 32 32 32 32 32 32 32 32 81 67 32 84 111 111 108 32 118 48 49 51 32 32 32 32 32 32 32 32 32 32 78 82 95 67 108 101 97 110 117 112 32}
+    }
+  old_expression_markers {{6 6 17 16 60 71}
+    }
+  box {{input1.width/120} {input1.width/120} {input1.width-input1.width/120} {input1.height-input1.width/120}}
+  xjustify center
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 35 1 35 2 35 3 35 4 35 5 35 6 35 7 35 8 35 9 35 10 35 11 35 12 35 13 35 14 35 15 35 16 35 17 35 18 35 19 35 20 35 21 35 22 35 23 35 24 35 25 35 26 35 27 35 28 35 29 35 30 35 31 35 32 35 33 35 34 35 35 35 36 35 37 35 38 35 39 35 40 35 41 35 42 35 43 35 44 35 45 35 46 35 47 35 48 35 49 35 50 35 51 35 52 35 53 35 54 35 55 35 56 35 57 35 58 35 59 35 60 35 61 35 62 35 63 35 64 35 65 35 66 35 67 35 68 35 69 35 70 35 71 35 72 35 73 35 74 35 75 35 76 35 77 35 78 35 79 35 80 35 81 35 82 35 83 35 84 35 85 35 86 35 87 35 88 35 89 35 90 35 91 35 92 35}
+    }
+  cursor_position 178
+  font {{ Open Sans : Light : open-sans/OpenSans-Light.ttf : 0 }}
+  global_font_scale {{input1.width/2480}}
+  font_size 35
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{0 2160}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  color 0.75
+  enable_background true
+  name burnin6
+  label "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _] "
+  xpos 359
+  ypos -12757
+  disable {{disableFrame}}
+ }
+ Dot {
+  name Dot110
+  xpos 452
+  ypos -12747
+ }
+push $N46606400
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 white -1 -1 rgba.alpha 0 3"
+  name Shuffle5
+  xpos -1380
+  ypos -13706
+ }
+set N44c83200 [stack 0]
+ Dot {
+  name Dot23
+  xpos -1197
+  ypos -13703
+ }
+set N44c82b00 [stack 0]
+ Dot {
+  name Dot24
+  xpos -1074
+  ypos -13703
+ }
+set N44c82400 [stack 0]
+ Dot {
+  name Dot25
+  xpos -946
+  ypos -13703
+ }
+set N44c81d00 [stack 0]
+ Dot {
+  name Dot26
+  xpos -797
+  ypos -13703
+ }
+set N44c81600 [stack 0]
+ Dot {
+  name Dot27
+  xpos -652
+  ypos -13703
+ }
+ Expression {
+  expr0 0.5
+  expr1 0.5
+  expr2 0.5
+  name Expression3
+  xpos -686
+  ypos -13484
+ }
+push $N44c81600
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 white -1 -1 rgba.red 0 0 black -1 -1 rgba.green 0 1 white -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3"
+  name Shuffle4
+  xpos -831
+  ypos -13551
+ }
+push $N44c81d00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 white -1 -1 rgba.red 0 0 white -1 -1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3"
+  name Shuffle3
+  xpos -980
+  ypos -13594
+ }
+push $N44c82400
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.red 0 0 white -1 -1 rgba.green 0 1 white -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3"
+  name Shuffle7
+  xpos -1108
+  ypos -13548
+ }
+push $N44c82b00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 white -1 -1 rgba.red 0 0 white -1 -1 rgba.green 0 1 white -1 -1 rgba.blue 0 2 white -1 -1 rgba.alpha 0 3"
+  name Shuffle8
+  xpos -1231
+  ypos -13463
+ }
+ Switch {
+  inputs 5
+  which {{colours}}
+  name Switch3
+  xpos -980
+  ypos -13199
+ }
+push $N44c83200
+ Transform {
+  scale 0.9
+  center {{width/2} {height/2}}
+  name Transform1
+  label "\[value filter]"
+  xpos -1380
+  ypos -13397
+ }
+ Dot {
+  name Dot28
+  xpos -1346
+  ypos -13129
+ }
+ Merge2 {
+  inputs 2
+  operation under
+  name Merge4
+  xpos -980
+  ypos -13132
+ }
+ Dot {
+  name Dot45
+  xpos -426
+  ypos -13128
+ }
+set N44298800 [stack 0]
+ Dot {
+  name Dot69
+  xpos 8
+  ypos -13128
+ }
+ Group {
+  name Text_thumbnail8
+  xpos -26
+  ypos -13063
+  addUserKnob {20 User}
+  addUserKnob {41 message T Text5.message}
+  addUserKnob {26 _1 l "" +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos 829
+   ypos 166
+  }
+  Remove {
+   operation keep
+   channels rgb
+   name Remove2
+   xpos 829
+   ypos 206
+  }
+  Expression {
+   expr3 1
+   name Expression4
+   label "alpha = 1"
+   xpos 829
+   ypos 256
+  }
+  Reformat {
+   type "to box"
+   box_width 1950
+   box_height 1080
+   box_fixed true
+   resize none
+   black_outside true
+   pbb true
+   name Reformat1
+   xpos 829
+   ypos 339
+  }
+  Text2 {
+   font_size_toolbar 100
+   font_width_toolbar 100
+   font_height_toolbar 100
+   message "Edge Frame Check"
+   old_message {{69 100 103 101 32 70 114 97 109 101 32 67 104 101 99 107}
+     }
+   box {0 0 1950 1050}
+   xjustify center
+   transforms {{0 2}
+     }
+   cursor_position 16
+   font {{ Open Sans : Extrabold Italic : open-sans/OpenSans-ExtraBoldItalic.ttf : 0 }}
+   center {975 540}
+   cursor_initialised true
+   autofit_bbox false
+   initial_cursor_position {{975 540}
+     }
+   group_animations {{0} imported: 0 selected: items: "root transform/"}
+   animation_layers {{1 11 975 540 0 0 1 1 0 0 0 0}
+     }
+   name Text5
+   selected true
+   xpos 829
+   ypos 397
+  }
+  Reformat {
+   type "to box"
+   box_width 2048
+   name Reformat12
+   label "\[value box_width]"
+   xpos 829
+   ypos 488
+  }
+  Crop {
+   box {0 0 2048 1134}
+   name Crop2
+   xpos 829
+   ypos 581
+  }
+  Output {
+   name Output1
+   xpos 829
+   ypos 681
+  }
+ end_group
+ Dot {
+  name Dot70
+  xpos 216
+  ypos -13059
+ }
+set N40a51d00 [stack 0]
+ FrameRange {
+  first_frame {{input1.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange10
+  xpos 251
+  ypos -13075
+ }
+ Text2 {
+  font_size_toolbar 35
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _]          NR_Cleanup "
+  old_message {{102 114 97 109 101 32 50 32 32 32 32 32 32 32 32 32 32 32 102 112 115 32 32 32 32 32 32 32 32 32 32 116 105 109 101 99 111 100 101 32 91 116 105 109 101 99 111 100 101 93 32 32 32 32 32 32 32 32 32 32 81 67 32 84 111 111 108 32 118 48 49 51 32 32 32 32 32 32 32 32 32 32 78 82 95 67 108 101 97 110 117 112 32}
+    }
+  old_expression_markers {{6 6 17 16 60 71}
+    }
+  box {{input1.width/120} {input1.width/120} {input1.width-input1.width/120} {input1.height-input1.width/120}}
+  xjustify center
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 35 1 35 2 35 3 35 4 35 5 35 6 35 7 35 8 35 9 35 10 35 11 35 12 35 13 35 14 35 15 35 16 35 17 35 18 35 19 35 20 35 21 35 22 35 23 35 24 35 25 35 26 35 27 35 28 35 29 35 30 35 31 35 32 35 33 35 34 35 35 35 36 35 37 35 38 35 39 35 40 35 41 35 42 35 43 35 44 35 45 35 46 35 47 35 48 35 49 35 50 35 51 35 52 35 53 35 54 35 55 35 56 35 57 35 58 35 59 35 60 35 61 35 62 35 63 35 64 35 65 35 66 35 67 35 68 35 69 35 70 35 71 35 72 35 73 35 74 35 75 35 76 35 77 35 78 35 79 35 80 35 81 35 82 35 83 35 84 35 85 35 86 35 87 35 88 35 89 35 90 35 91 35 92 35}
+    }
+  cursor_position 178
+  font {{ Open Sans : Light : open-sans/OpenSans-Light.ttf : 0 }}
+  global_font_scale {{input1.width/2480}}
+  font_size 35
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{0 2160}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  color 0.75
+  enable_background true
+  name burnin7
+  label "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _] "
+  xpos 346
+  ypos -13069
+  disable {{disableFrame}}
+ }
+ Dot {
+  name Dot109
+  xpos 452
+  ypos -13059
+ }
+push $N46606b00
+ Dot {
+  name Dot14
+  xpos -961
+  ypos -14390
+ }
+set N4082e400 [stack 0]
+ Dot {
+  name Dot49
+  xpos -736
+  ypos -14390
+ }
+ CheckerBoard2 {
+  inputs 0
+  format "3840 2160 0 0 3840 2160 1 UHD_4K"
+  boxsize 100
+  color0 0
+  color1 1
+  color2 0
+  color3 1
+  linecolor 0
+  centerlinewidth 0
+  name CheckerBoard1
+  xpos -1149
+  ypos -14301
+ }
+push $N4590f900
+ Dot {
+  name Dot4
+  xpos -307
+  ypos -16811
+ }
+set N40fa2400 [stack 0]
+ Dot {
+  name Dot16
+  xpos -307
+  ypos -14274
+ }
+set N40fa1d00 [stack 0]
+ Laplacian {
+  channels rgb
+  name Laplacian2
+  xpos -821
+  ypos -14278
+ }
+push $N4082e400
+ Laplacian {
+  channels rgb
+  size 2.1
+  name Laplacian1
+  xpos -995
+  ypos -14339
+ }
+ Keymix {
+  inputs 3
+  channels rgb
+  maskChannel rgba.red
+  name Keymix_checkboard1
+  xpos -995
+  ypos -14278
+  disable {{!disableCheckerboard}}
+ }
+ Multiply {
+  channels rgb
+  value 10
+  name Multiply1
+  xpos -995
+  ypos -14230
+ }
+ Gamma {
+  channels rgb
+  value 4
+  name Gamma2
+  xpos -995
+  ypos -14181
+ }
+ Saturation {
+  saturation 4
+  name Saturation3
+  xpos -995
+  ypos -14139
+ }
+ Clamp {
+  channels rgb
+  name Clamp1
+  xpos -995
+  ypos -14094
+ }
+ Dot {
+  name Dot41
+  xpos -961
+  ypos -13945
+ }
+ CopyBBox {
+  inputs 2
+  name CopyBBox1
+  xpos -770
+  ypos -13949
+ }
+ Dot {
+  name Dot44
+  xpos -426
+  ypos -13945
+ }
+set N41c2eb00 [stack 0]
+ Dot {
+  name Dot67
+  xpos 57
+  ypos -13945
+ }
+ Group {
+  name Text_thumbnail7
+  xpos 23
+  ypos -13880
+  addUserKnob {20 User}
+  addUserKnob {41 message T Text5.message}
+  addUserKnob {26 _1 l "" +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos 829
+   ypos 166
+  }
+  Remove {
+   operation keep
+   channels rgb
+   name Remove2
+   xpos 829
+   ypos 206
+  }
+  Expression {
+   expr3 1
+   name Expression4
+   label "alpha = 1"
+   xpos 829
+   ypos 256
+  }
+  Reformat {
+   type "to box"
+   box_width 1950
+   box_height 1080
+   box_fixed true
+   resize none
+   black_outside true
+   pbb true
+   name Reformat1
+   xpos 829
+   ypos 339
+  }
+  Text2 {
+   font_size_toolbar 100
+   font_width_toolbar 100
+   font_height_toolbar 100
+   message "Noise-Grain Check"
+   old_message {{78 111 105 115 101 45 71 114 97 105 110 32 67 104 101 99 107}
+     }
+   box {0 0 1950 1050}
+   xjustify center
+   transforms {{0 2}
+     }
+   cursor_position 17
+   font {{ Open Sans : Extrabold Italic : open-sans/OpenSans-ExtraBoldItalic.ttf : 0 }}
+   center {975 540}
+   cursor_initialised true
+   autofit_bbox false
+   initial_cursor_position {{975 540}
+     }
+   group_animations {{0} imported: 0 selected: items: "root transform/"}
+   animation_layers {{1 11 975 540 0 0 1 1 0 0 0 0}
+     }
+   name Text5
+   selected true
+   xpos 829
+   ypos 397
+  }
+  Reformat {
+   type "to box"
+   box_width 2048
+   name Reformat12
+   label "\[value box_width]"
+   xpos 829
+   ypos 488
+  }
+  Crop {
+   box {0 0 2048 1134}
+   name Crop2
+   xpos 829
+   ypos 581
+  }
+  Output {
+   name Output1
+   xpos 829
+   ypos 681
+  }
+ end_group
+ Dot {
+  name Dot68
+  xpos 216
+  ypos -13876
+ }
+set N42198100 [stack 0]
+ FrameRange {
+  first_frame {{input1.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange9
+  xpos 247
+  ypos -13892
+ }
+ Text2 {
+  font_size_toolbar 35
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _]          NR_Cleanup "
+  old_message {{102 114 97 109 101 32 50 32 32 32 32 32 32 32 32 32 32 32 102 112 115 32 32 32 32 32 32 32 32 32 32 116 105 109 101 99 111 100 101 32 91 116 105 109 101 99 111 100 101 93 32 32 32 32 32 32 32 32 32 32 81 67 32 84 111 111 108 32 118 48 49 51 32 32 32 32 32 32 32 32 32 32 78 82 95 67 108 101 97 110 117 112 32}
+    }
+  old_expression_markers {{6 6 17 16 60 71}
+    }
+  box {{input1.width/120} {input1.width/120} {input1.width-input1.width/120} {input1.height-input1.width/120}}
+  xjustify center
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 35 1 35 2 35 3 35 4 35 5 35 6 35 7 35 8 35 9 35 10 35 11 35 12 35 13 35 14 35 15 35 16 35 17 35 18 35 19 35 20 35 21 35 22 35 23 35 24 35 25 35 26 35 27 35 28 35 29 35 30 35 31 35 32 35 33 35 34 35 35 35 36 35 37 35 38 35 39 35 40 35 41 35 42 35 43 35 44 35 45 35 46 35 47 35 48 35 49 35 50 35 51 35 52 35 53 35 54 35 55 35 56 35 57 35 58 35 59 35 60 35 61 35 62 35 63 35 64 35 65 35 66 35 67 35 68 35 69 35 70 35 71 35 72 35 73 35 74 35 75 35 76 35 77 35 78 35 79 35 80 35 81 35 82 35 83 35 84 35 85 35 86 35 87 35 88 35 89 35 90 35 91 35 92 35}
+    }
+  cursor_position 178
+  font {{ Open Sans : Light : open-sans/OpenSans-Light.ttf : 0 }}
+  global_font_scale {{input1.width/2480}}
+  font_size 35
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{0 2160}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  color 0.75
+  enable_background true
+  name burnin8
+  label "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _] "
+  xpos 351
+  ypos -13886
+  disable {{disableFrame}}
+ }
+ Dot {
+  name Dot108
+  xpos 452
+  ypos -13876
+ }
+push $N46607200
+ Colorspace {
+  colorspace_out HSL
+  name Colorspace1
+  xpos -1183
+  ypos -14688
+ }
+ Shuffle {
+  red green
+  blue green
+  alpha black
+  name Shuffle2
+  xpos -1036
+  ypos -14682
+ }
+ Expression {
+  expr0 g>1?1:0.05
+  expr1 g>1?1:0.05
+  expr2 0.05
+  name Expression2
+  xpos -878
+  ypos -14682
+ }
+ Dot {
+  name Dot43
+  xpos -426
+  ypos -14678
+ }
+set N4160b200 [stack 0]
+ Dot {
+  name Dot65
+  xpos 57
+  ypos -14678
+ }
+ Group {
+  name Text_thumbnail6
+  xpos 23
+  ypos -14613
+  addUserKnob {20 User}
+  addUserKnob {41 message T Text5.message}
+  addUserKnob {26 _1 l "" +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos 829
+   ypos 166
+  }
+  Remove {
+   operation keep
+   channels rgb
+   name Remove2
+   xpos 829
+   ypos 206
+  }
+  Expression {
+   expr3 1
+   name Expression4
+   label "alpha = 1"
+   xpos 829
+   ypos 256
+  }
+  Reformat {
+   type "to box"
+   box_width 1950
+   box_height 1080
+   box_fixed true
+   resize none
+   black_outside true
+   pbb true
+   name Reformat1
+   xpos 829
+   ypos 339
+  }
+  Text2 {
+   font_size_toolbar 100
+   font_width_toolbar 100
+   font_height_toolbar 100
+   message "Saturation Limit"
+   old_message {{83 97 116 117 114 97 116 105 111 110 32 76 105 109 105 116}
+     }
+   box {0 0 1950 1050}
+   xjustify center
+   transforms {{0 2}
+     }
+   cursor_position 16
+   font {{ Open Sans : Extrabold Italic : open-sans/OpenSans-ExtraBoldItalic.ttf : 0 }}
+   center {975 540}
+   cursor_initialised true
+   autofit_bbox false
+   initial_cursor_position {{975 540}
+     }
+   group_animations {{0} imported: 0 selected: items: "root transform/"}
+   animation_layers {{1 11 975 540 0 0 1 1 0 0 0 0}
+     }
+   name Text5
+   selected true
+   xpos 829
+   ypos 397
+  }
+  Reformat {
+   type "to box"
+   box_width 2048
+   name Reformat12
+   label "\[value box_width]"
+   xpos 829
+   ypos 488
+  }
+  Crop {
+   box {0 0 2048 1134}
+   name Crop2
+   xpos 829
+   ypos 581
+  }
+  Output {
+   name Output1
+   xpos 829
+   ypos 681
+  }
+ end_group
+ Dot {
+  name Dot66
+  xpos 216
+  ypos -14609
+ }
+set N43270800 [stack 0]
+ FrameRange {
+  first_frame {{input1.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange8
+  xpos 260
+  ypos -14625
+ }
+ Text2 {
+  font_size_toolbar 35
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _]          NR_Cleanup "
+  old_message {{102 114 97 109 101 32 50 32 32 32 32 32 32 32 32 32 32 32 102 112 115 32 32 32 32 32 32 32 32 32 32 116 105 109 101 99 111 100 101 32 91 116 105 109 101 99 111 100 101 93 32 32 32 32 32 32 32 32 32 32 81 67 32 84 111 111 108 32 118 48 49 51 32 32 32 32 32 32 32 32 32 32 78 82 95 67 108 101 97 110 117 112 32}
+    }
+  old_expression_markers {{6 6 17 16 60 71}
+    }
+  box {{input1.width/120} {input1.width/120} {input1.width-input1.width/120} {input1.height-input1.width/120}}
+  xjustify center
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 35 1 35 2 35 3 35 4 35 5 35 6 35 7 35 8 35 9 35 10 35 11 35 12 35 13 35 14 35 15 35 16 35 17 35 18 35 19 35 20 35 21 35 22 35 23 35 24 35 25 35 26 35 27 35 28 35 29 35 30 35 31 35 32 35 33 35 34 35 35 35 36 35 37 35 38 35 39 35 40 35 41 35 42 35 43 35 44 35 45 35 46 35 47 35 48 35 49 35 50 35 51 35 52 35 53 35 54 35 55 35 56 35 57 35 58 35 59 35 60 35 61 35 62 35 63 35 64 35 65 35 66 35 67 35 68 35 69 35 70 35 71 35 72 35 73 35 74 35 75 35 76 35 77 35 78 35 79 35 80 35 81 35 82 35 83 35 84 35 85 35 86 35 87 35 88 35 89 35 90 35 91 35 92 35}
+    }
+  cursor_position 178
+  font {{ Open Sans : Light : open-sans/OpenSans-Light.ttf : 0 }}
+  global_font_scale {{input1.width/2480}}
+  font_size 35
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{0 2160}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  color 0.75
+  enable_background true
+  name burnin9
+  label "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _] "
+  xpos 354
+  ypos -14619
+  disable {{disableFrame}}
+ }
+ Dot {
+  name Dot107
+  xpos 452
+  ypos -14609
+ }
+push $N46607900
+ Saturation {
+  saturation 3
+  name Saturation1
+  label boost
+  xpos -1010
+  ypos -15033
+ }
+ Dot {
+  name Dot42
+  xpos -426
+  ypos -15023
+ }
+set N430c0800 [stack 0]
+ Dot {
+  name Dot63
+  xpos 69
+  ypos -15023
+ }
+ Group {
+  name Text_thumbnail5
+  xpos 35
+  ypos -14958
+  addUserKnob {20 User}
+  addUserKnob {41 message T Text5.message}
+  addUserKnob {26 _1 l "" +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos 829
+   ypos 166
+  }
+  Remove {
+   operation keep
+   channels rgb
+   name Remove2
+   xpos 829
+   ypos 206
+  }
+  Expression {
+   expr3 1
+   name Expression4
+   label "alpha = 1"
+   xpos 829
+   ypos 256
+  }
+  Reformat {
+   type "to box"
+   box_width 1950
+   box_height 1080
+   box_fixed true
+   resize none
+   black_outside true
+   pbb true
+   name Reformat1
+   xpos 829
+   ypos 339
+  }
+  Text2 {
+   font_size_toolbar 100
+   font_width_toolbar 100
+   font_height_toolbar 100
+   message "Saturation Boost"
+   old_message {{83 97 116 117 114 97 116 105 111 110 32 66 111 111 115 116}
+     }
+   box {0 0 1950 1050}
+   xjustify center
+   transforms {{0 2}
+     }
+   cursor_position 16
+   font {{ Open Sans : Extrabold Italic : open-sans/OpenSans-ExtraBoldItalic.ttf : 0 }}
+   center {975 540}
+   cursor_initialised true
+   autofit_bbox false
+   initial_cursor_position {{975 540}
+     }
+   group_animations {{0} imported: 0 selected: items: "root transform/"}
+   animation_layers {{1 11 975 540 0 0 1 1 0 0 0 0}
+     }
+   name Text5
+   selected true
+   xpos 829
+   ypos 397
+  }
+  Reformat {
+   type "to box"
+   box_width 2048
+   name Reformat12
+   label "\[value box_width]"
+   xpos 829
+   ypos 488
+  }
+  Crop {
+   box {0 0 2048 1134}
+   name Crop2
+   xpos 829
+   ypos 581
+  }
+  Output {
+   name Output1
+   xpos 829
+   ypos 681
+  }
+ end_group
+ Dot {
+  name Dot64
+  xpos 216
+  ypos -14954
+ }
+set N41e0dd00 [stack 0]
+ FrameRange {
+  first_frame {{input1.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange7
+  xpos 260
+  ypos -14970
+ }
+ Text2 {
+  font_size_toolbar 35
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _]          NR_Cleanup "
+  old_message {{102 114 97 109 101 32 50 32 32 32 32 32 32 32 32 32 32 32 102 112 115 32 32 32 32 32 32 32 32 32 32 116 105 109 101 99 111 100 101 32 91 116 105 109 101 99 111 100 101 93 32 32 32 32 32 32 32 32 32 32 81 67 32 84 111 111 108 32 118 48 49 51 32 32 32 32 32 32 32 32 32 32 78 82 95 67 108 101 97 110 117 112 32}
+    }
+  old_expression_markers {{6 6 17 16 60 71}
+    }
+  box {{input1.width/120} {input1.width/120} {input1.width-input1.width/120} {input1.height-input1.width/120}}
+  xjustify center
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 35 1 35 2 35 3 35 4 35 5 35 6 35 7 35 8 35 9 35 10 35 11 35 12 35 13 35 14 35 15 35 16 35 17 35 18 35 19 35 20 35 21 35 22 35 23 35 24 35 25 35 26 35 27 35 28 35 29 35 30 35 31 35 32 35 33 35 34 35 35 35 36 35 37 35 38 35 39 35 40 35 41 35 42 35 43 35 44 35 45 35 46 35 47 35 48 35 49 35 50 35 51 35 52 35 53 35 54 35 55 35 56 35 57 35 58 35 59 35 60 35 61 35 62 35 63 35 64 35 65 35 66 35 67 35 68 35 69 35 70 35 71 35 72 35 73 35 74 35 75 35 76 35 77 35 78 35 79 35 80 35 81 35 82 35 83 35 84 35 85 35 86 35 87 35 88 35 89 35 90 35 91 35 92 35}
+    }
+  cursor_position 178
+  font {{ Open Sans : Light : open-sans/OpenSans-Light.ttf : 0 }}
+  global_font_scale {{input1.width/2480}}
+  font_size 35
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{0 2160}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  color 0.75
+  enable_background true
+  name burnin10
+  label "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _] "
+  xpos 352
+  ypos -14964
+  disable {{disableFrame}}
+ }
+ Dot {
+  name Dot106
+  xpos 452
+  ypos -14954
+ }
+push $N4583c100
+ Saturation {
+  saturation 0
+  name Saturation2
+  label desaturate
+  xpos -1035
+  ypos -15345
+ }
+ Dot {
+  name Dot40
+  xpos -426
+  ypos -15335
+ }
+set N41d1dd00 [stack 0]
+ Dot {
+  name Dot61
+  xpos 70
+  ypos -15335
+ }
+ Group {
+  name Text_thumbnail4
+  xpos 36
+  ypos -15270
+  addUserKnob {20 User}
+  addUserKnob {41 message T Text5.message}
+  addUserKnob {26 _1 l "" +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos 829
+   ypos 166
+  }
+  Remove {
+   operation keep
+   channels rgb
+   name Remove2
+   xpos 829
+   ypos 206
+  }
+  Expression {
+   expr3 1
+   name Expression4
+   label "alpha = 1"
+   xpos 829
+   ypos 256
+  }
+  Reformat {
+   type "to box"
+   box_width 1950
+   box_height 1080
+   box_fixed true
+   resize none
+   black_outside true
+   pbb true
+   name Reformat1
+   xpos 829
+   ypos 339
+  }
+  Text2 {
+   font_size_toolbar 100
+   font_width_toolbar 100
+   font_height_toolbar 100
+   message Luminance
+   old_message {{76 117 109 105 110 97 110 99 101}
+     }
+   box {0 0 1950 1050}
+   xjustify center
+   transforms {{0 2}
+     }
+   cursor_position 9
+   font {{ Open Sans : Extrabold Italic : open-sans/OpenSans-ExtraBoldItalic.ttf : 0 }}
+   center {975 540}
+   cursor_initialised true
+   autofit_bbox false
+   initial_cursor_position {{975 540}
+     }
+   group_animations {{0} imported: 0 selected: items: "root transform/"}
+   animation_layers {{1 11 975 540 0 0 1 1 0 0 0 0}
+     }
+   name Text5
+   selected true
+   xpos 829
+   ypos 397
+  }
+  Reformat {
+   type "to box"
+   box_width 2048
+   name Reformat12
+   label "\[value box_width]"
+   xpos 829
+   ypos 488
+  }
+  Crop {
+   box {0 0 2048 1134}
+   name Crop2
+   xpos 829
+   ypos 581
+  }
+  Output {
+   name Output1
+   xpos 829
+   ypos 681
+  }
+ end_group
+ Dot {
+  name Dot62
+  xpos 216
+  ypos -15266
+ }
+set N42d9b200 [stack 0]
+ FrameRange {
+  first_frame {{input1.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange6
+  xpos 262
+  ypos -15282
+ }
+ Text2 {
+  font_size_toolbar 35
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _]          NR_Cleanup "
+  old_message {{102 114 97 109 101 32 50 32 32 32 32 32 32 32 32 32 32 32 102 112 115 32 32 32 32 32 32 32 32 32 32 116 105 109 101 99 111 100 101 32 91 116 105 109 101 99 111 100 101 93 32 32 32 32 32 32 32 32 32 32 81 67 32 84 111 111 108 32 118 48 49 51 32 32 32 32 32 32 32 32 32 32 78 82 95 67 108 101 97 110 117 112 32}
+    }
+  old_expression_markers {{6 6 17 16 60 71}
+    }
+  box {{input1.width/120} {input1.width/120} {input1.width-input1.width/120} {input1.height-input1.width/120}}
+  xjustify center
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 35 1 35 2 35 3 35 4 35 5 35 6 35 7 35 8 35 9 35 10 35 11 35 12 35 13 35 14 35 15 35 16 35 17 35 18 35 19 35 20 35 21 35 22 35 23 35 24 35 25 35 26 35 27 35 28 35 29 35 30 35 31 35 32 35 33 35 34 35 35 35 36 35 37 35 38 35 39 35 40 35 41 35 42 35 43 35 44 35 45 35 46 35 47 35 48 35 49 35 50 35 51 35 52 35 53 35 54 35 55 35 56 35 57 35 58 35 59 35 60 35 61 35 62 35 63 35 64 35 65 35 66 35 67 35 68 35 69 35 70 35 71 35 72 35 73 35 74 35 75 35 76 35 77 35 78 35 79 35 80 35 81 35 82 35 83 35 84 35 85 35 86 35 87 35 88 35 89 35 90 35 91 35 92 35}
+    }
+  cursor_position 178
+  font {{ Open Sans : Light : open-sans/OpenSans-Light.ttf : 0 }}
+  global_font_scale {{input1.width/2480}}
+  font_size 35
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{0 2160}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  color 0.75
+  enable_background true
+  name burnin11
+  label "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _] "
+  xpos 356
+  ypos -15276
+  disable {{disableFrame}}
+ }
+ Dot {
+  name Dot105
+  xpos 452
+  ypos -15266
+ }
+push $N4583c800
+ EXPTool {
+  mode Stops
+  red {{-parent.Exposure1.red}}
+  green {{-parent.Exposure1.green}}
+  blue {{-parent.Exposure1.blue}}
+  name Exposure2
+  label down
+  xpos -1009
+  ypos -15660
+ }
+ Dot {
+  name Dot39
+  xpos -426
+  ypos -15650
+ }
+set N415e6b00 [stack 0]
+ Dot {
+  name Dot59
+  xpos 75
+  ypos -15650
+ }
+ Group {
+  name Text_thumbnail3
+  xpos 41
+  ypos -15585
+  addUserKnob {20 User}
+  addUserKnob {41 message T Text5.message}
+  addUserKnob {26 _1 l "" +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos 829
+   ypos 166
+  }
+  Remove {
+   operation keep
+   channels rgb
+   name Remove2
+   xpos 829
+   ypos 206
+  }
+  Expression {
+   expr3 1
+   name Expression4
+   label "alpha = 1"
+   xpos 829
+   ypos 256
+  }
+  Reformat {
+   type "to box"
+   box_width 1950
+   box_height 1080
+   box_fixed true
+   resize none
+   black_outside true
+   pbb true
+   name Reformat1
+   xpos 829
+   ypos 339
+  }
+  Text2 {
+   font_size_toolbar 100
+   font_width_toolbar 100
+   font_height_toolbar 100
+   message "Highlights check"
+   old_message {{72 105 103 104 108 105 103 104 116 115 32 99 104 101 99 107}
+     }
+   box {0 0 1950 1050}
+   xjustify center
+   transforms {{0 2}
+     }
+   cursor_position 16
+   font {{ Open Sans : Extrabold Italic : open-sans/OpenSans-ExtraBoldItalic.ttf : 0 }}
+   center {975 540}
+   cursor_initialised true
+   autofit_bbox false
+   initial_cursor_position {{975 540}
+     }
+   group_animations {{0} imported: 0 selected: items: "root transform/"}
+   animation_layers {{1 11 975 540 0 0 1 1 0 0 0 0}
+     }
+   name Text5
+   selected true
+   xpos 829
+   ypos 397
+  }
+  Reformat {
+   type "to box"
+   box_width 2048
+   name Reformat12
+   label "\[value box_width]"
+   xpos 829
+   ypos 488
+  }
+  Crop {
+   box {0 0 2048 1134}
+   name Crop2
+   xpos 829
+   ypos 581
+  }
+  Output {
+   name Output1
+   xpos 829
+   ypos 681
+  }
+ end_group
+ Dot {
+  name Dot60
+  xpos 216
+  ypos -15581
+ }
+set N42760100 [stack 0]
+ FrameRange {
+  first_frame {{input1.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange5
+  xpos 256
+  ypos -15597
+ }
+ Text2 {
+  font_size_toolbar 35
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _]          NR_Cleanup "
+  old_message {{102 114 97 109 101 32 50 32 32 32 32 32 32 32 32 32 32 32 102 112 115 32 32 32 32 32 32 32 32 32 32 116 105 109 101 99 111 100 101 32 91 116 105 109 101 99 111 100 101 93 32 32 32 32 32 32 32 32 32 32 81 67 32 84 111 111 108 32 118 48 49 51 32 32 32 32 32 32 32 32 32 32 78 82 95 67 108 101 97 110 117 112 32}
+    }
+  old_expression_markers {{6 6 17 16 60 71}
+    }
+  box {{input1.width/120} {input1.width/120} {input1.width-input1.width/120} {input1.height-input1.width/120}}
+  xjustify center
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 35 1 35 2 35 3 35 4 35 5 35 6 35 7 35 8 35 9 35 10 35 11 35 12 35 13 35 14 35 15 35 16 35 17 35 18 35 19 35 20 35 21 35 22 35 23 35 24 35 25 35 26 35 27 35 28 35 29 35 30 35 31 35 32 35 33 35 34 35 35 35 36 35 37 35 38 35 39 35 40 35 41 35 42 35 43 35 44 35 45 35 46 35 47 35 48 35 49 35 50 35 51 35 52 35 53 35 54 35 55 35 56 35 57 35 58 35 59 35 60 35 61 35 62 35 63 35 64 35 65 35 66 35 67 35 68 35 69 35 70 35 71 35 72 35 73 35 74 35 75 35 76 35 77 35 78 35 79 35 80 35 81 35 82 35 83 35 84 35 85 35 86 35 87 35 88 35 89 35 90 35 91 35 92 35}
+    }
+  cursor_position 178
+  font {{ Open Sans : Light : open-sans/OpenSans-Light.ttf : 0 }}
+  global_font_scale {{input1.width/2480}}
+  font_size 35
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{0 2160}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  color 0.75
+  enable_background true
+  name burnin12
+  label "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _] "
+  xpos 354
+  ypos -15591
+  disable {{disableFrame}}
+ }
+ Dot {
+  name Dot104
+  xpos 452
+  ypos -15581
+ }
+push $N4583cf00
+ EXPTool {
+  mode Stops
+  red 5
+  green 5
+  blue 5
+  name Exposure1
+  label up
+  xpos -1008
+  ypos -15946
+ }
+ Dot {
+  name Dot38
+  xpos -426
+  ypos -15936
+ }
+set N40b43900 [stack 0]
+ Dot {
+  name Dot57
+  xpos 74
+  ypos -15936
+ }
+ Group {
+  name Text_thumbnail1
+  xpos 40
+  ypos -15871
+  addUserKnob {20 User}
+  addUserKnob {41 message T Text5.message}
+  addUserKnob {26 _1 l "" +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos 829
+   ypos 166
+  }
+  Remove {
+   operation keep
+   channels rgb
+   name Remove2
+   xpos 829
+   ypos 206
+  }
+  Expression {
+   expr3 1
+   name Expression4
+   label "alpha = 1"
+   xpos 829
+   ypos 256
+  }
+  Reformat {
+   type "to box"
+   box_width 1950
+   box_height 1080
+   box_fixed true
+   resize none
+   black_outside true
+   pbb true
+   name Reformat1
+   xpos 829
+   ypos 339
+  }
+  Text2 {
+   font_size_toolbar 100
+   font_width_toolbar 100
+   font_height_toolbar 100
+   message "Shadows Check"
+   old_message {{83 104 97 100 111 119 115 32 67 104 101 99 107}
+     }
+   box {0 0 1950 1050}
+   xjustify center
+   transforms {{0 2}
+     }
+   cursor_position 13
+   font {{ Open Sans : Extrabold Italic : open-sans/OpenSans-ExtraBoldItalic.ttf : 0 }}
+   center {975 540}
+   cursor_initialised true
+   autofit_bbox false
+   initial_cursor_position {{975 540}
+     }
+   group_animations {{0} imported: 0 selected: items: "root transform/"}
+   animation_layers {{1 11 975 540 0 0 1 1 0 0 0 0}
+     }
+   name Text5
+   selected true
+   xpos 829
+   ypos 397
+  }
+  Reformat {
+   type "to box"
+   box_width 2048
+   name Reformat12
+   label "\[value box_width]"
+   xpos 829
+   ypos 488
+  }
+  Crop {
+   box {0 0 2048 1134}
+   name Crop2
+   xpos 829
+   ypos 581
+  }
+  Output {
+   name Output1
+   xpos 829
+   ypos 681
+  }
+ end_group
+ Dot {
+  name Dot58
+  xpos 216
+  ypos -15867
+ }
+set N3f720f00 [stack 0]
+ FrameRange {
+  first_frame {{input1.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange4
+  xpos 260
+  ypos -15883
+ }
+ Text2 {
+  font_size_toolbar 35
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _]          NR_Cleanup "
+  old_message {{102 114 97 109 101 32 50 32 32 32 32 32 32 32 32 32 32 32 102 112 115 32 32 32 32 32 32 32 32 32 32 116 105 109 101 99 111 100 101 32 91 116 105 109 101 99 111 100 101 93 32 32 32 32 32 32 32 32 32 32 81 67 32 84 111 111 108 32 118 48 49 51 32 32 32 32 32 32 32 32 32 32 78 82 95 67 108 101 97 110 117 112 32}
+    }
+  old_expression_markers {{6 6 17 16 60 71}
+    }
+  box {{input1.width/120} {input1.width/120} {input1.width-input1.width/120} {input1.height-input1.width/120}}
+  xjustify center
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 35 1 35 2 35 3 35 4 35 5 35 6 35 7 35 8 35 9 35 10 35 11 35 12 35 13 35 14 35 15 35 16 35 17 35 18 35 19 35 20 35 21 35 22 35 23 35 24 35 25 35 26 35 27 35 28 35 29 35 30 35 31 35 32 35 33 35 34 35 35 35 36 35 37 35 38 35 39 35 40 35 41 35 42 35 43 35 44 35 45 35 46 35 47 35 48 35 49 35 50 35 51 35 52 35 53 35 54 35 55 35 56 35 57 35 58 35 59 35 60 35 61 35 62 35 63 35 64 35 65 35 66 35 67 35 68 35 69 35 70 35 71 35 72 35 73 35 74 35 75 35 76 35 77 35 78 35 79 35 80 35 81 35 82 35 83 35 84 35 85 35 86 35 87 35 88 35 89 35 90 35 91 35 92 35}
+    }
+  cursor_position 178
+  font {{ Open Sans : Light : open-sans/OpenSans-Light.ttf : 0 }}
+  global_font_scale {{input1.width/2480}}
+  font_size 35
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{0 2160}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  color 0.75
+  enable_background true
+  name burnin13
+  label "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _] "
+  xpos 352
+  ypos -15877
+  disable {{disableFrame}}
+ }
+ Dot {
+  name Dot103
+  xpos 452
+  ypos -15867
+ }
+push $N4583d600
+ Gamma {
+  channels rgb
+  value 4
+  name Gamma1
+  label "check blacks"
+  xpos -1015
+  ypos -16246
+ }
+ Dot {
+  name Dot36
+  xpos -426
+  ypos -16236
+ }
+set N3f620800 [stack 0]
+ Dot {
+  name Dot55
+  xpos 71
+  ypos -16236
+ }
+ Group {
+  name Text_thumbnail2
+  xpos 37
+  ypos -16171
+  addUserKnob {20 User}
+  addUserKnob {41 message T Text5.message}
+  addUserKnob {26 _1 l "" +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos 829
+   ypos 166
+  }
+  Remove {
+   operation keep
+   channels rgb
+   name Remove2
+   xpos 829
+   ypos 206
+  }
+  Expression {
+   expr3 1
+   name Expression4
+   label "alpha = 1"
+   xpos 829
+   ypos 256
+  }
+  Reformat {
+   type "to box"
+   box_width 1950
+   box_height 1080
+   box_fixed true
+   resize none
+   black_outside true
+   pbb true
+   name Reformat1
+   xpos 829
+   ypos 339
+  }
+  Text2 {
+   font_size_toolbar 100
+   font_width_toolbar 100
+   font_height_toolbar 100
+   message "Black Levels"
+   old_message {{66 108 97 99 107 32 76 101 118 101 108 115}
+     }
+   box {0 0 1950 1050}
+   xjustify center
+   transforms {{0 2}
+     }
+   cursor_position 12
+   font {{ Open Sans : Extrabold Italic : open-sans/OpenSans-ExtraBoldItalic.ttf : 0 }}
+   center {975 540}
+   cursor_initialised true
+   autofit_bbox false
+   initial_cursor_position {{975 540}
+     }
+   group_animations {{0} imported: 0 selected: items: "root transform/"}
+   animation_layers {{1 11 975 540 0 0 1 1 0 0 0 0}
+     }
+   name Text5
+   selected true
+   xpos 829
+   ypos 396
+  }
+  Reformat {
+   type "to box"
+   box_width 2048
+   name Reformat12
+   label "\[value box_width]"
+   xpos 829
+   ypos 488
+  }
+  Crop {
+   box {0 0 2048 1134}
+   name Crop2
+   xpos 829
+   ypos 581
+  }
+  Output {
+   name Output1
+   xpos 829
+   ypos 681
+  }
+ end_group
+ Dot {
+  name Dot56
+  xpos 216
+  ypos -16167
+ }
+set N3e425d00 [stack 0]
+ FrameRange {
+  first_frame {{input1.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange3
+  xpos 254
+  ypos -16183
+ }
+ Text2 {
+  font_size_toolbar 35
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _]          NR_Cleanup "
+  old_message {{102 114 97 109 101 32 50 32 32 32 32 32 32 32 32 32 32 32 102 112 115 32 32 32 32 32 32 32 32 32 32 116 105 109 101 99 111 100 101 32 91 116 105 109 101 99 111 100 101 93 32 32 32 32 32 32 32 32 32 32 81 67 32 84 111 111 108 32 118 48 49 51 32 32 32 32 32 32 32 32 32 32 78 82 95 67 108 101 97 110 117 112 32}
+    }
+  old_expression_markers {{6 6 17 16 60 71}
+    }
+  box {{input1.width/120} {input1.width/120} {input1.width-input1.width/120} {input1.height-input1.width/120}}
+  xjustify center
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 35 1 35 2 35 3 35 4 35 5 35 6 35 7 35 8 35 9 35 10 35 11 35 12 35 13 35 14 35 15 35 16 35 17 35 18 35 19 35 20 35 21 35 22 35 23 35 24 35 25 35 26 35 27 35 28 35 29 35 30 35 31 35 32 35 33 35 34 35 35 35 36 35 37 35 38 35 39 35 40 35 41 35 42 35 43 35 44 35 45 35 46 35 47 35 48 35 49 35 50 35 51 35 52 35 53 35 54 35 55 35 56 35 57 35 58 35 59 35 60 35 61 35 62 35 63 35 64 35 65 35 66 35 67 35 68 35 69 35 70 35 71 35 72 35 73 35 74 35 75 35 76 35 77 35 78 35 79 35 80 35 81 35 82 35 83 35 84 35 85 35 86 35 87 35 88 35 89 35 90 35 91 35 92 35}
+    }
+  cursor_position 178
+  font {{ Open Sans : Light : open-sans/OpenSans-Light.ttf : 0 }}
+  global_font_scale {{input1.width/2480}}
+  font_size 35
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{0 2160}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  color 0.75
+  enable_background true
+  name burnin14
+  label "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _] "
+  xpos 346
+  ypos -16177
+  disable {{disableFrame}}
+ }
+ Dot {
+  name Dot102
+  xpos 452
+  ypos -16167
+ }
+push $N4583dd00
+ Dot {
+  name Dot6
+  xpos -1005
+  ypos -16948
+ }
+ Dot {
+  name Dot7
+  xpos -1005
+  ypos -16718
+ }
+set N3db59d00 [stack 0]
+push $N40fa2400
+ Dot {
+  name Dot37
+  xpos -821
+  ypos -16811
+ }
+set N3db59600 [stack 0]
+ Difference {
+  inputs 2
+  gain 100
+  name Difference1
+  xpos -855
+  ypos -16728
+ }
+ Dot {
+  name Dot2
+  xpos -821
+  ypos -16587
+ }
+push $N3db59600
+ Dot {
+  name Dot3
+  xpos -1185
+  ypos -16811
+ }
+ Shuffle {
+  red white
+  green black
+  blue black
+  alpha white
+  name Shuffle6
+  xpos -1219
+  ypos -16591
+ }
+push $N3db59d00
+ Keymix {
+  inputs 3
+  channels rgba
+  name Keymix1
+  xpos -1039
+  ypos -16591
+ }
+ Dot {
+  name Dot35
+  xpos -1005
+  ypos -16518
+ }
+ Dot {
+  name Dot34
+  xpos -426
+  ypos -16518
+ }
+set N4059e400 [stack 0]
+ Dot {
+  name Dot53
+  xpos 70
+  ypos -16518
+ }
+ Group {
+  name Text_thumbnail
+  xpos 36
+  ypos -16453
+  addUserKnob {20 User}
+  addUserKnob {41 message T Text5.message}
+  addUserKnob {26 _1 l "" +STARTLINE}
+ }
+  Input {
+   inputs 0
+   name Input1
+   xpos 829
+   ypos 166
+  }
+  Remove {
+   operation keep
+   channels rgb
+   name Remove2
+   xpos 829
+   ypos 206
+  }
+  Expression {
+   expr3 1
+   name Expression4
+   label "alpha = 1"
+   xpos 829
+   ypos 256
+  }
+  Reformat {
+   type "to box"
+   box_width 1950
+   box_height 1080
+   box_fixed true
+   resize none
+   black_outside true
+   pbb true
+   name Reformat1
+   xpos 829
+   ypos 339
+  }
+  Text2 {
+   font_size_toolbar 100
+   font_width_toolbar 100
+   font_height_toolbar 100
+   message Difference
+   old_message {{68 105 102 102 101 114 101 110 99 101}
+     }
+   box {0 0 1950 1050}
+   xjustify center
+   transforms {{0 2}
+     }
+   cursor_position 10
+   font {{ Open Sans : Extrabold : open-sans/OpenSans-ExtraBold.ttf : 0 }}
+   center {975 540}
+   cursor_initialised true
+   autofit_bbox false
+   initial_cursor_position {{975 540}
+     }
+   group_animations {{0} imported: 0 selected: items: "root transform/"}
+   animation_layers {{1 11 975 540 0 0 1 1 0 0 0 0}
+     }
+   name Text5
+   selected true
+   xpos 829
+   ypos 397
+  }
+  Reformat {
+   type "to box"
+   box_width 2048
+   name Reformat12
+   label "\[value box_width]"
+   xpos 829
+   ypos 488
+  }
+  Crop {
+   box {0 0 2048 1134}
+   name Crop2
+   xpos 829
+   ypos 581
+  }
+  Output {
+   name Output1
+   xpos 829
+   ypos 681
+  }
+ end_group
+ Dot {
+  name Dot54
+  xpos 216
+  ypos -16449
+ }
+set N40273900 [stack 0]
+ FrameRange {
+  first_frame {{input1.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange2
+  xpos 256
+  ypos -16465
+ }
+ Text2 {
+  font_size_toolbar 35
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _]          NR_Cleanup "
+  old_message {{102 114 97 109 101 32 49 32 32 32 32 32 32 32 32 32 32 32 102 112 115 32 32 32 32 32 32 32 32 32 32 116 105 109 101 99 111 100 101 32 91 116 105 109 101 99 111 100 101 93 32 32 32 32 32 32 32 32 32 32 81 67 32 84 111 111 108 32 118 48 49 51 32 32 32 32 32 32 32 32 32 32 78 82 95 67 108 101 97 110 117 112 32}
+    }
+  old_expression_markers {{6 6 17 16 60 71}
+    }
+  box {{input1.width/120} {input1.width/120} {input1.width-input1.width/120} {input1.height-input1.width/120}}
+  xjustify center
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 35 1 35 2 35 3 35 4 35 5 35 6 35 7 35 8 35 9 35 10 35 11 35 12 35 13 35 14 35 15 35 16 35 17 35 18 35 19 35 20 35 21 35 22 35 23 35 24 35 25 35 26 35 27 35 28 35 29 35 30 35 31 35 32 35 33 35 34 35 35 35 36 35 37 35 38 35 39 35 40 35 41 35 42 35 43 35 44 35 45 35 46 35 47 35 48 35 49 35 50 35 51 35 52 35 53 35 54 35 55 35 56 35 57 35 58 35 59 35 60 35 61 35 62 35 63 35 64 35 65 35 66 35 67 35 68 35 69 35 70 35 71 35 72 35 73 35 74 35 75 35 76 35 77 35 78 35 79 35 80 35 81 35 82 35 83 35 84 35 85 35 86 35 87 35 88 35 89 35 90 35 91 35 92 35}
+    }
+  cursor_position 178
+  font {{ Open Sans : Light : open-sans/OpenSans-Light.ttf : 0 }}
+  global_font_scale {{input1.width/2480}}
+  font_size 35
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{0 2160}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  color 0.75
+  enable_background true
+  name burnin15
+  label "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _] "
+  xpos 349
+  ypos -16459
+  disable {{disableFrame}}
+ }
+ Dot {
+  name Dot101
+  xpos 452
+  ypos -16449
+ }
+ AppendClip {
+  inputs 12
+  meta_from_first false
+  time ""
+  name AppendClip1
+  xpos 418
+  ypos -9559
+ }
+ FrameRange {
+  first_frame {{first_frame}}
+  last_frame {{last_frame}}
+  time ""
+  name FrameRange14
+  xpos 418
+  ypos -9318
+ }
+ Write {
+  file "\[value script_directory]/\[value scriptname]_renders/\[value scriptversion]/qc_reviewer_mov/\[value scriptname_with_version]_sequence_review.mov"
+  colorspace "Output - Rec.709"
+  file_type mov
+  mov64_format "mov (QuickTime / MOV)"
+  mov64_codec appr
+  mov64_fps {{root.fps}}
+  mov_h264_codec_profile "High 4:2:0 8-bit"
+  mov64_pixel_format {{0} "yuv420p\tYCbCr 4:2:0 8-bit"}
+  mov64_quality High
+  mov64_fast_start true
+  mov64_write_timecode true
+  mov64_gop_size 12
+  mov64_b_frames 0
+  mov64_bitrate 20000
+  mov64_bitrate_tolerance 4000000
+  mov64_quality_min 1
+  mov64_quality_max 3
+  create_directories true
+  checkHashOnRead false
+  version 41
+  in_colorspace scene_linear
+  out_colorspace scene_linear
+  name review_sequence_write
+  onCreate "exec(\"\"\"\\nfrom pathlib import Path\\nimport re\\nimport nuke\\nimport os\\n\\ndef build_lang_context(script_name):\\n    split_name = os.path.basename(script_name).split(\"_\")\\n\\n    context = \{\}\\n\\n    context\[\"show\"] = split_name\[0]\\n    context\[\"episode\"] = split_name\[1]\\n    context\[\"part\"] = split_name\[2]\\n    context\[\"shot\"] = split_name\[3]\\n    context\[\"language\"] = split_name\[4]\\n\\n    return context\\n\\ndef get_highest_folder_name(directory):\\n    folder_names = \[name for name in os.listdir(directory) if os.path.isdir(os.path.join(directory, name))]\\n    if not folder_names:\\n        return None\\n    highest_folder = max(folder_names, key=lambda x: int(x\[1:]))\\n    return highest_folder\\n\\n\\n\\ncontext = build_lang_context((nuke.root().name()))\\n \\naudio_tree = str(Path(\"/Volumes\") / \"pipeline\" / \"shows\" / context\[\"show\"] / \"publish\" / \"episode\" / context\[\"episode\"] / \"part\" / context\[\"part\"] / \"shot\" / context\[\"shot\"] / \"language\" / context\[\"language\"] / \"AUDIO\")\\naudio_file_tree = str(Path(audio_tree) / get_highest_folder_name(audio_tree) / \"audio\")\\naudio_file = os.listdir(audio_file_tree)\\nlatest_shot_lang_audio = str(Path(audio_file_tree) / audio_file\[0])\\n\\n#print(latest_shot_lang_audio)\\nnuke.thisNode().knob(\"mov64_audiofile\").setValue(latest_shot_lang_audio)\\n\"\"\")"
+  xpos 418
+  ypos -9150
+  addUserKnob {20 FlwlsPipeline}
+  addUserKnob {1 script_directory}
+  script_directory "\[python nuke.script_directory()]"
+  addUserKnob {1 scriptname_with_version}
+  scriptname_with_version "\[basename \[file rootname \[value root.name]]]"
+  addUserKnob {1 scriptname}
+  scriptname "\[regsub -all \{_v\\d+\} \[value scriptname_with_version] \"\"]"
+  addUserKnob {1 scriptversion}
+  scriptversion "\[regexp -inline \{v\\d+\} \[value root.name]]"
+  addUserKnob {1 render_type}
+  render_type review_mov
+ }
+push $N45e2c800
+push $N44710100
+push $N448deb00
+push $N40a51d00
+push $N42198100
+push $N43270800
+push $N41e0dd00
+push $N42d9b200
+push $N42760100
+push $N3f720f00
+push $N3e425d00
+push $N40273900
+ ContactSheet {
+  inputs 12
+  rows 4
+  columns 3
+  gap 10
+  center true
+  roworder TopBottom
+  startframe 1
+  endframe 1
+  name ContactSheet2
+  xpos 182
+  ypos -10135
+ }
+ Reformat {
+  format "1920 1080 0 0 1920 1080 1 HD_1080"
+  resize fit
+  name Reformat1
+  xpos 182
+  ypos -10001
+ }
+set N40145d00 [stack 0]
+ Shuffle {
+  red white
+  green white
+  blue white
+  alpha white
+  name Shuffle1
+  xpos 351
+  ypos -9995
+ }
+ Multiply {
+  channels rgb
+  value 0.05
+  name Multiply2
+  xpos 351
+  ypos -9847
+ }
+push $N40145d00
+ Merge2 {
+  inputs 2
+  operation under
+  mix 0.6
+  name Merge2
+  xpos 182
+  ypos -9847
+ }
+ Dot {
+  name Dot79
+  xpos 216
+  ypos -9506
+ }
+set N3ec9b900 [stack 0]
+push $N40fa1d00
+ Text2 {
+  font_size_toolbar 35
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _]          Plate "
+  old_message {{102 114 97 109 101 32 50 32 32 32 32 32 32 32 32 32 32 50 52 32 102 112 115 32 32 32 32 32 32 32 32 32 32 116 105 109 101 99 111 100 101 32 48 49 58 48 49 58 49 53 58 48 57 32 32 32 32 32 32 32 32 32 32 81 67 32 84 111 111 108 32 118 48 49 51 32 32 32 32 32 32 32 32 32 32 80 108 97 116 101 32}
+    }
+  old_expression_markers {{6 6 17 18 42 52 63 74}
+    }
+  box {{input1.width/120} {input1.width/120} {input1.width-input1.width/120} {input1.height-input1.width/120}}
+  xjustify center
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 35 1 35 2 35 3 35 4 35 5 35 6 35 7 35 8 35 9 35 10 35 11 35 12 35 13 35 14 35 15 35 16 35 17 35 18 35 19 35 20 35 21 35 22 35 23 35 24 35 25 35 26 35 27 35 28 35 29 35 30 35 31 35 32 35 33 35 34 35 35 35 36 35 37 35 38 35 39 35 40 35 41 35 42 35 43 35 44 35 45 35 46 35 47 35 48 35 49 35 50 35 51 35 52 35 53 35 54 35 55 35 56 35 57 35 58 35 59 35 60 35 61 35 62 35 63 35 64 35 65 35 66 35 67 35 68 35 69 35 70 35 71 35 72 35 73 35 74 35 75 35 76 35 77 35 78 35 79 35 80 35 81 35 82 35 83 35 84 35 85 35 86 35 87 35 88 35 89 35 90 35}
+    }
+  cursor_position 173
+  font {{ Open Sans : Light : open-sans/OpenSans-Light.ttf : 0 }}
+  global_font_scale {{input1.width/2480}}
+  font_size 35
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{0 2160}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  color 0.75
+  enable_background true
+  name burnin1
+  label "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _] "
+  xpos -344
+  ypos -9785
+  disable {{disableFrame}}
+ }
+push $N46604100
+ Dot {
+  name Dot50
+  xpos -1764
+  ypos -9839
+ }
+ Text2 {
+  font_size_toolbar 35
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _]          Plate "
+  old_message {{102 114 97 109 101 32 50 32 32 32 32 32 32 32 32 32 32 32 102 112 115 32 32 32 32 32 32 32 32 32 32 116 105 109 101 99 111 100 101 32 91 116 105 109 101 99 111 100 101 93 32 32 32 32 32 32 32 32 32 32 81 67 32 84 111 111 108 32 118 48 49 51 32 32 32 32 32 32 32 32 32 32 80 108 97 116 101 32}
+    }
+  old_expression_markers {{6 6 17 16 60 71}
+    }
+  box {{input1.width/120} {input1.width/120} {input1.width-input1.width/120} {input1.height-input1.width/120}}
+  xjustify center
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 35 1 35 2 35 3 35 4 35 5 35 6 35 7 35 8 35 9 35 10 35 11 35 12 35 13 35 14 35 15 35 16 35 17 35 18 35 19 35 20 35 21 35 22 35 23 35 24 35 25 35 26 35 27 35 28 35 29 35 30 35 31 35 32 35 33 35 34 35 35 35 36 35 37 35 38 35 39 35 40 35 41 35 42 35 43 35 44 35 45 35 46 35 47 35 48 35 49 35 50 35 51 35 52 35 53 35 54 35 55 35 56 35 57 35 58 35 59 35 60 35 61 35 62 35 63 35 64 35 65 35 66 35 67 35 68 35 69 35 70 35 71 35 72 35 73 35 74 35 75 35 76 35 77 35 78 35 79 35 80 35 81 35 82 35 83 35 84 35 85 35 86 35 87 35}
+    }
+  cursor_position 173
+  font {{ Open Sans : Light : open-sans/OpenSans-Light.ttf : 0 }}
+  global_font_scale {{input1.width/2480}}
+  font_size 35
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{0 2160}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  color 0.75
+  enable_background true
+  name burnin3
+  label "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _] "
+  xpos -699
+  ypos -9849
+  disable {{disableFrame x1 1}}
+ }
+push $N46557200
+push $N451b6b00
+push $N455c1600
+push $N44298800
+push $N41c2eb00
+push $N4160b200
+push $N430c0800
+push $N41d1dd00
+push $N415e6b00
+push $N40b43900
+push $N3f620800
+push $N4059e400
+ Switch {
+  inputs 12
+  which {{tc_viewer}}
+  name Switch4
+  xpos -460
+  ypos -10029
+ }
+set N412fa400 [stack 0]
+ Text2 {
+  font_size_toolbar 35
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _]          Plate "
+  old_message {{102 114 97 109 101 32 50 32 32 32 32 32 32 32 32 32 32 32 102 112 115 32 32 32 32 32 32 32 32 32 32 116 105 109 101 99 111 100 101 32 91 116 105 109 101 99 111 100 101 93 32 32 32 32 32 32 32 32 32 32 81 67 32 84 111 111 108 32 118 48 49 51 32 32 32 32 32 32 32 32 32 32 80 108 97 116 101 32}
+    }
+  old_expression_markers {{6 6 17 16 60 71}
+    }
+  box {{input1.width/120} {input1.width/120} {input1.width-input1.width/120} {input1.height-input1.width/120}}
+  xjustify center
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 35 1 35 2 35 3 35 4 35 5 35 6 35 7 35 8 35 9 35 10 35 11 35 12 35 13 35 14 35 15 35 16 35 17 35 18 35 19 35 20 35 21 35 22 35 23 35 24 35 25 35 26 35 27 35 28 35 29 35 30 35 31 35 32 35 33 35 34 35 35 35 36 35 37 35 38 35 39 35 40 35 41 35 42 35 43 35 44 35 45 35 46 35 47 35 48 35 49 35 50 35 51 35 52 35 53 35 54 35 55 35 56 35 57 35 58 35 59 35 60 35 61 35 62 35 63 35 64 35 65 35 66 35 67 35 68 35 69 35 70 35 71 35 72 35 73 35 74 35 75 35 76 35 77 35 78 35 79 35 80 35 81 35 82 35 83 35 84 35 85 35 86 35 87 35}
+    }
+  cursor_position 173
+  font {{ Open Sans : Light : open-sans/OpenSans-Light.ttf : 0 }}
+  global_font_scale {{input1.width/2480}}
+  font_size 35
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{0 2160}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  color 0.75
+  enable_background true
+  name burnin2
+  label "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _] "
+  xpos -570
+  ypos -10035
+  disable {{disableFrame}}
+ }
+ Dot {
+  name Dot77
+  xpos -536
+  ypos -9887
+ }
+push $N412fa400
+ Text2 {
+  font_size_toolbar 35
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _]          NR_Cleanup "
+  old_message {{102 114 97 109 101 32 50 32 32 32 32 32 32 32 32 32 32 32 102 112 115 32 32 32 32 32 32 32 32 32 32 116 105 109 101 99 111 100 101 32 91 116 105 109 101 99 111 100 101 93 32 32 32 32 32 32 32 32 32 32 81 67 32 84 111 111 108 32 118 48 49 51 32 32 32 32 32 32 32 32 32 32 78 82 95 67 108 101 97 110 117 112 32}
+    }
+  old_expression_markers {{6 6 17 16 60 71}
+    }
+  box {{input1.width/120} {input1.width/120} {input1.width-input1.width/120} {input1.height-input1.width/120}}
+  xjustify center
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 35 1 35 2 35 3 35 4 35 5 35 6 35 7 35 8 35 9 35 10 35 11 35 12 35 13 35 14 35 15 35 16 35 17 35 18 35 19 35 20 35 21 35 22 35 23 35 24 35 25 35 26 35 27 35 28 35 29 35 30 35 31 35 32 35 33 35 34 35 35 35 36 35 37 35 38 35 39 35 40 35 41 35 42 35 43 35 44 35 45 35 46 35 47 35 48 35 49 35 50 35 51 35 52 35 53 35 54 35 55 35 56 35 57 35 58 35 59 35 60 35 61 35 62 35 63 35 64 35 65 35 66 35 67 35 68 35 69 35 70 35 71 35 72 35 73 35 74 35 75 35 76 35 77 35 78 35 79 35 80 35 81 35 82 35 83 35 84 35 85 35 86 35 87 35 88 35 89 35 90 35 91 35 92 35}
+    }
+  cursor_position 178
+  font {{ Open Sans : Light : open-sans/OpenSans-Light.ttf : 0 }}
+  global_font_scale {{input1.width/2480}}
+  font_size 35
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{0 2160}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  color 0.75
+  enable_background true
+  name burnin
+  label "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _] "
+  xpos -460
+  ypos -9954
+  disable {{disableFrame}}
+ }
+ Switch {
+  inputs 2
+  which {{swap_plate}}
+  name Switch8
+  xpos -460
+  ypos -9891
+ }
+ Switch {
+  inputs 2
+  which {{disableTC}}
+  name Switch5
+  xpos -460
+  ypos -9843
+ }
+ Dot {
+  name Dot51
+  xpos -426
+  ypos -9659
+ }
+set N3fc5c100 [stack 0]
+ ContactSheet {
+  inputs 2
+  width {{(width*2)+100}}
+  height {{height+200}}
+  rows 1
+  columns 2
+  gap 50
+  center true
+  name ContactSheet1
+  xpos -344
+  ypos -9663
+ }
+push $N3fc5c100
+ Dot {
+  name Dot52
+  xpos -426
+  ypos -9588
+ }
+ Switch {
+  inputs 2
+  which {{disableSidebySide}}
+  name Switch6
+  xpos -344
+  ypos -9592
+ }
+ Switch {
+  inputs 2
+  which {{contact}}
+  name Switch7
+  xpos -344
+  ypos -9510
+ }
+ Output {
+  name Output1
+  xpos -344
+  ypos -9132
+ }
+ Viewer {
+  frame_range 1-1100
+  fps 23.97602463
+  viewerProcess "sRGB (ACES)"
+  name Viewer1
+  xpos -2790
+  ypos -17434
+  hide_input true
+ }
+push $N3ec9b900
+clone $C4590dd00 {
+  xpos 182
+  ypos -9320
+  selected false
+ }
+ Write {
+  file "\[value script_directory]/\[value scriptname]_renders/\[value scriptversion]/qc_reviewer_mov/\[value scriptname_with_version]_contact_sheet.mov"
+  colorspace "Output - Rec.709"
+  file_type mov
+  mov64_format "mov (QuickTime / MOV)"
+  mov64_codec appr
+  mov64_fps {{root.fps}}
+  mov_h264_codec_profile "High 4:2:0 8-bit"
+  mov64_pixel_format {{0} "yuv420p\tYCbCr 4:2:0 8-bit"}
+  mov64_quality High
+  mov64_fast_start true
+  mov64_write_timecode true
+  mov64_gop_size 12
+  mov64_b_frames 0
+  mov64_bitrate 20000
+  mov64_bitrate_tolerance 4000000
+  mov64_quality_min 1
+  mov64_quality_max 3
+  create_directories true
+  checkHashOnRead false
+  version 41
+  in_colorspace scene_linear
+  out_colorspace scene_linear
+  name contact_sheet_write
+  onCreate "exec(\"\"\"\\nfrom pathlib import Path\\nimport re\\nimport nuke\\nimport os\\n\\ndef build_lang_context(script_name):\\n    split_name = os.path.basename(script_name).split(\"_\")\\n\\n    context = \{\}\\n\\n    context\[\"show\"] = split_name\[0]\\n    context\[\"episode\"] = split_name\[1]\\n    context\[\"part\"] = split_name\[2]\\n    context\[\"shot\"] = split_name\[3]\\n    context\[\"language\"] = split_name\[4]\\n\\n    return context\\n\\ndef get_highest_folder_name(directory):\\n    folder_names = \[name for name in os.listdir(directory) if os.path.isdir(os.path.join(directory, name))]\\n    if not folder_names:\\n        return None\\n    highest_folder = max(folder_names, key=lambda x: int(x\[1:]))\\n    return highest_folder\\n\\n\\n\\ncontext = build_lang_context((nuke.root().name()))\\n \\naudio_tree = str(Path(\"/Volumes\") / \"pipeline\" / \"shows\" / context\[\"show\"] / \"publish\" / \"episode\" / context\[\"episode\"] / \"part\" / context\[\"part\"] / \"shot\" / context\[\"shot\"] / \"language\" / context\[\"language\"] / \"AUDIO\")\\naudio_file_tree = str(Path(audio_tree) / get_highest_folder_name(audio_tree) / \"audio\")\\naudio_file = os.listdir(audio_file_tree)\\nlatest_shot_lang_audio = str(Path(audio_file_tree) / audio_file\[0])\\n\\n#print(latest_shot_lang_audio)\\nnuke.thisNode().knob(\"mov64_audiofile\").setValue(latest_shot_lang_audio)\\n\"\"\")"
+  xpos 182
+  ypos -9149
+  addUserKnob {20 FlwlsPipeline}
+  addUserKnob {1 script_directory}
+  script_directory "\[python nuke.script_directory()]"
+  addUserKnob {1 scriptname_with_version}
+  scriptname_with_version "\[basename \[file rootname \[value root.name]]]"
+  addUserKnob {1 scriptname}
+  scriptname "\[regsub -all \{_v\\d+\} \[value scriptname_with_version] \"\"]"
+  addUserKnob {1 scriptversion}
+  scriptversion "\[regexp -inline \{v\\d+\} \[value root.name]]"
+  addUserKnob {1 render_type}
+  render_type review_mov
+ }
+push $N43ec7200
+ Crop {
+  box {0 0 {width} {height}}
+  name Crop6
+  xpos -657
+  ypos -12550
+ }
+ CurveTool {
+  operation "Max Luma Pixel"
+  channels {rgba.red rgba.green rgba.blue -rgba.alpha}
+  ROI {0 0 {width} {height}}
+  name Neg_Pixels_CT
+  xpos -657
+  ypos -12509
+  addUserKnob {20 User}
+  addUserKnob {7 neg_pixels_avg l "Neg Pixels AVG" R 0 1000}
+  neg_pixels_avg {{"(parent.Neg_Pixels_CT.maxlumapixvalue.r + parent.Neg_Pixels_CT.maxlumapixvalue.g + parent.Neg_Pixels_CT.maxlumapixvalue.b)/3"}}
+ }
+push $N46eb3200
+ Crop {
+  box {0 0 {width} {height}}
+  name Crop1
+  xpos -1041
+  ypos -11975
+ }
+ CurveTool {
+  operation "Max Luma Pixel"
+  channels {rgba.red rgba.green rgba.blue -rgba.alpha}
+  ROI {0 0 {width} {height}}
+  name NAN_Pixels_CT
+  xpos -1041
+  ypos -11934
+  addUserKnob {20 User}
+  addUserKnob {7 nan_pixels_avg l "NAN Pixels AVG" R 0 1000}
+  nan_pixels_avg {{"(parent.NAN_Pixels_CT.maxlumapixvalue.r + parent.NAN_Pixels_CT.maxlumapixvalue.g + parent.NAN_Pixels_CT.maxlumapixvalue.b)/3"}}
+ }
+push $N48736b00
+ Crop {
+  box {0 0 {width} {height}}
+  name Crop7
+  xpos -1147
+  ypos -11312
+ }
+ CurveTool {
+  operation "Max Luma Pixel"
+  channels {rgba.red rgba.green rgba.blue -rgba.alpha}
+  ROI {0 0 {width} {height}}
+  name INF_Pixels_CT
+  xpos -1147
+  ypos -11268
+  addUserKnob {20 User}
+  addUserKnob {7 inf_pixels_avg l "INF Pixels AVG" R 0 1000}
+  inf_pixels_avg {{"(parent.INF_Pixels_CT.maxlumapixvalue.r + parent.INF_Pixels_CT.maxlumapixvalue.g + parent.INF_Pixels_CT.maxlumapixvalue.b)/3"}}
+ }
+end_group

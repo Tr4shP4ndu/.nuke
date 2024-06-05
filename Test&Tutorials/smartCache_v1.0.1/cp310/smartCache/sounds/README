@@ -1,0 +1,7 @@
+Sounds
+======
+This folder contains sounds to play when smartCache finished rendering.
+
+You can put custom .wav files into this folder and they will show up in
+smartCache's settings window. In the 'render finished sound' drop down menu
+you can then select your custom sounds.

@@ -1,0 +1,17 @@
+set cut_paste_input [stack 0]
+version 12.2 v1
+push 0
+push $cut_paste_input
+BlinkScript {
+ inputs 2
+ recompileCount 21
+ ProgramGroup 1
+ KernelDescription "2 \"BlankKernel\" iterate pixelWise 6dd055f1eaa5275437de70fe6379c6058ca0dfb545c30d8ddd2a86b38297b6f4 3 \"src\" Read Random \"STMap\" Read Point \"dst\" Write Point 0 0 3 \"srcconstEdgeColor\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA== \"UV\" Float 2 1 AAAAAAAAAAA= \"resolution\" Int 2 1 AAAAAAAAAAA="
+ kernelSource "\nkernel BlankKernel : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRandom, eEdgeConstant> src; // the input image\n  Image<eRead, eAccessPoint, eEdgeClamped> STMap;\n  Image<eWrite> dst; // the output image\n\n  param:\n    // This parameter is made available to the user.\n    \n    \n\n  local:\n    // This local variable is not exposed to the user.\n    float2 UV;\n    int2 resolution;\n\n  // In define(), parameters can be given labels and default values.\n  void define() \{\n    \n  \}\n\n  // The init() function is run before any calls to process().\n  // Local variables can be initialized here.\n  void init() \{\n    \n    resolution.x = src.bounds.width();\n    resolution.y = src.bounds.height();\n\n  \}\n\n  void process(int2 pos) \{\n    \n    UV.x = STMap().x*resolution.x-.5f;\n    UV.y = STMap().y*resolution.y-.5f;\n\n    // Write the result to the output image\n    dst() = bilinear(src, UV.x, UV.y);\n  \}\n\};\n"
+ rebuild ""
+ rebuild_finalise ""
+ name BlinkScript3
+ selected true
+ xpos -765
+ ypos -105
+}

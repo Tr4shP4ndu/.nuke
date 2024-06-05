@@ -1,0 +1,340 @@
+set cut_paste_input [stack 0]
+version 14.0 v4
+BackdropNode {
+inputs 0
+name BackdropNode153
+tile_color 0x191919ff
+label "<center>HighFrequency Patcher"
+note_font "Verdana Bold"
+note_font_size 42
+selected true
+xpos -28061
+ypos 7434
+bdwidth 1145
+bdheight 1760
+}
+BackdropNode {
+inputs 0
+name BackdropNode154
+tile_color 0x6ac6a8ff
+label "High\n\[Texture]"
+note_font_size 42
+selected true
+xpos -27777
+ypos 7975
+bdwidth 456
+bdheight 427
+}
+BackdropNode {
+inputs 0
+name BackdropNode155
+tile_color 0x3e8236ff
+label "Paint Details"
+note_font_size 42
+selected true
+xpos -27583
+ypos 8055
+bdwidth 247
+bdheight 142
+z_order 1
+}
+BackdropNode {
+inputs 0
+name BackdropNode156
+tile_color 0xe8e8eff
+label CONTROLS
+note_font_size 42
+selected true
+xpos -27374
+ypos 7675
+bdwidth 258
+bdheight 261
+z_order 1
+}
+BackdropNode {
+inputs 0
+name BackdropNode157
+tile_color 0x388e8e00
+label Tracker
+note_font_size 42
+selected true
+xpos -27590
+ypos 8454
+bdwidth 255
+bdheight 144
+z_order 1
+}
+BackdropNode {
+inputs 0
+name BackdropNode158
+tile_color 0xbababaff
+label "On - Off"
+note_font_size 42
+selected true
+xpos -27360
+ypos 8929
+bdwidth 254
+bdheight 182
+z_order 1
+}
+BackdropNode {
+inputs 0
+name BackdropNode159
+tile_color 0x71a9c6ff
+label "Low\n\[Texture]"
+note_font_size 42
+selected true
+xpos -28008
+ypos 7976
+bdwidth 189
+bdheight 621
+z_order 1
+}
+push $cut_paste_input
+NoOp {
+name Patch_Control3
+tile_color 0xff0404ff
+selected true
+xpos -27279
+ypos 7810
+addUserKnob {20 User}
+addUserKnob {26 BlurSize_Detail l "BlurSize Detail" T ""}
+addUserKnob {7 detail_size l Detail_Size R 0 100}
+detail_size 20
+addUserKnob {26 ""}
+addUserKnob {26 Switch_FrameHold_LivePaint l "Switch - FrameHold or LivePaint" T ""}
+addUserKnob {3 first_frame l Frame_Hold}
+first_frame 1001
+addUserKnob {7 framehold_livepaint l "Switch - FH_0 or LP_1"}
+addUserKnob {26 ""}
+addUserKnob {26 Patch_Opacity -STARTLINE T ""}
+addUserKnob {7 defocus_slider l Defocus_Slider}
+addUserKnob {7 switch l Switch}
+addUserKnob {7 merge_mix l Merge_Mix}
+merge_mix 1
+}
+Dot {
+name Dot558
+selected true
+xpos -27245
+ypos 7884
+}
+StickyNote {
+inputs 0
+name StickyNote20
+tile_color 0x8ccc80ff
+label "1001 - "
+note_font_size 30
+selected true
+xpos -28014
+ypos 7601
+}
+Dot {
+inputs 0
+name Dot559
+selected true
+xpos -27210
+ypos 9000
+}
+Dot {
+inputs 0
+name Dot560
+selected true
+xpos -27463
+ypos 7586
+}
+Remove {
+channels alpha
+name Remove10
+selected true
+xpos -27497
+ypos 7664
+}
+Dot {
+name Dot561
+selected true
+xpos -27463
+ypos 7787
+}
+set Na4c93c00 [stack 0]
+Dot {
+name Dot562
+selected true
+xpos -27946
+ypos 7787
+}
+Blur {
+size {{parent.Patch_Control3.detail_size}}
+name Blur46
+selected true
+xpos -27980
+ypos 7848
+}
+Dot {
+name Dot563
+selected true
+xpos -27946
+ypos 7932
+}
+set Na4cae800 [stack 0]
+Dot {
+name Dot564
+selected true
+xpos -27946
+ypos 8634
+}
+push $Na4cae800
+push $Na4c93c00
+Merge2 {
+inputs 2
+operation from
+name Merge166
+selected true
+xpos -27497
+ypos 7928
+}
+RotoPaint {
+outputMask rgba.alpha
+curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 2097664}
+    {t x44f00000 x44870000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}
+    {layer Skin
+     {f 2097664}
+     {t x44f00000 x44870000}
+     {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}}
+    {layer Hair
+     {f 2097664}
+     {t x44f00000 x44870000}
+     {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}}}}}}
+toolbox {selectAll {
+  { selectAll src 3 str 1 ssx 1 ssy 1 sf 1 }
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone opc 0.3 src 1 stx 29.8005 sty 16.6001 str 1 ssx 1 ssy 1 sf 1 sb 1 ltn 1080 ltm 1080 tt 19 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 ltn 1080 ltm 1080 tt 20 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+toolbar_brush_hardness 0.200000003
+toolbar_lifetime_type single
+toolbar_lifetime_start 1080
+toolbar_lifetime_end 1080
+toolbar_paint_source "bg 1"
+toolbar_source_transform_scale {1 1}
+toolbar_source_transform_center {1920 1080}
+colorOverlay {0 0 0 0}
+paint_source foreground
+lifetime_start 1080
+lifetime_end 1080
+view {}
+motionblur_on true
+brush_spacing 0.05000000075
+brush_hardness 0.200000003
+source_black_outside true
+name RotoPaint17
+selected true
+xpos -27497
+ypos 8131
+}
+Dot {
+name Dot565
+selected true
+xpos -27463
+ypos 8200
+}
+set Na4caf800 [stack 0]
+push $Na4caf800
+Dot {
+name Dot566
+selected true
+xpos -27674
+ypos 8200
+}
+FrameHold {
+firstFrame {{parent.Patch_Control3.knob.first_frame}}
+name FrameHold18
+selected true
+xpos -27708
+ypos 8280
+addUserKnob {20 Set_This_Frame l SetThisFrame}
+addUserKnob {22 SetThisFrame -STARTLINE T "node = nuke.thisNode()\nnode\['first_frame'].setValue(nuke.frame()) "}
+}
+Dot {
+name Dot567
+selected true
+xpos -27674
+ypos 8383
+}
+Switch {
+inputs 2
+which {{parent.Patch_Control3.framehold_livepaint}}
+name Switch7
+selected true
+xpos -27497
+ypos 8379
+}
+Merge2 {
+inputs 2
+operation plus
+bbox A
+name Merge167
+selected true
+xpos -27497
+ypos 8630
+}
+Defocus {
+defocus {{parent.Patch_Control3.defocus_slider}}
+name Defocus2
+selected true
+xpos -27497
+ypos 8732
+}
+Premult {
+name Premult41
+selected true
+xpos -27497
+ypos 8853
+}
+Dot {
+name Dot568
+selected true
+xpos -27463
+ypos 9056
+}
+Switch {
+inputs 2
+which {{parent.Patch_Control3.switch}}
+name Switch8
+selected true
+xpos -27244
+ypos 9052
+}
+Dot {
+name Dot569
+selected true
+xpos -27210
+ypos 9130
+}
+push 0
+Merge2 {
+inputs 2
+bbox B
+mix {{parent.Patch_Control3.merge_mix}}
+name Merge168
+selected true
+xpos -27029
+ypos 9127
+}

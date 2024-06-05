@@ -1,0 +1,622 @@
+Group {
+inputs 3
+name AutoMorph_Masked_flw
+tile_color 0x513a00ff
+note_font "Bitstream Vera Sans Bold"
+note_font_color 0xffb800ff
+selected true
+addUserKnob {20 user l User}
+addUserKnob {26 _3 l "" +STARTLINE T "<font color = '#eba834'><b>Morph Settings"}
+addUserKnob {7 morph l Morph/Warp t "Morph/Warp: Intensity amount of morph/warp from image 0 towards image 1."}
+morph 1
+addUserKnob {7 mix_dissolve l "Mix Dissolve" t "Mix Dissolve: It's linked to the morph/wrap sliders by default. This dissolves from image 0 to image 1. \nTo unlink - right-click and choose \"no animation\""}
+addUserKnob {6 disable_bbox_copy l "Bbox Copy" t "Bbox Copy: Enables and disables CopyBbox&Blackoutside nodes from transfering from Comp to Plate" +STARTLINE}
+addUserKnob {26 _1 l "" +STARTLINE}
+addUserKnob {26 vector_gen_text l "" +STARTLINE T "<font color = '#eba834'><b>Vector Generator Settings"}
+addUserKnob {20 settings_vector l Settings n 1}
+settings_vector 0
+addUserKnob {26 "" l "Local GPU:" T ""}
+addUserKnob {26 gpuName l "" -STARTLINE T "NVIDIA A10G"}
+addUserKnob {41 motionEstimation l Motion T VectorGenerator1.motionEstimation}
+addUserKnob {41 useGPUIfAvailable l "Use GPU if available" -STARTLINE T VectorGenerator1.useGPUIfAvailable}
+addUserKnob {7 vector_detail l "Vector Detail" t "Use this to adjust the density of the calculated motion vector field. Higher details capture finer movements, but take will longer to calculate." R 0.01 1}
+vector_detail 1
+addUserKnob {7 vector_strength l Strength}
+vector_strength 1.5
+addUserKnob {20 endGroup n -1}
+addUserKnob {26 _2 l "" +STARTLINE}
+addUserKnob {26 mask_text l "" +STARTLINE T "<font color = '#eba834'><b>Mask Settings"}
+addUserKnob {41 invertMask l "Invert Morph Mask" t "Invert Morph Mask: Flips the in/out of your morph masking. " T Keymix1.invertMask}
+addUserKnob {6 output_morph_mask l "Output Morph Mask" -STARTLINE}
+output_morph_mask true
+addUserKnob {6 fringe_switch l Fringe -STARTLINE}
+fringe_switch true
+}
+BackdropNode {
+inputs 0
+name BackdropNode7
+tile_color 0x5b664800
+label "<center> MASK"
+note_font "Bitstream Vera Sans Bold"
+note_font_size 100
+xpos -3279
+ypos 468
+appearance Border
+border_width 20
+bdwidth 2334
+bdheight 3158
+z_order -1
+}
+BackdropNode {
+inputs 0
+name BackdropNode1
+tile_color 0x40674000
+label "<center> Prevents nodes downstream from asking for fractional or multiple frames"
+note_font "Bitstream Vera Sans Bold"
+note_font_size 42
+xpos 1060
+ypos -1152
+appearance Border
+border_width 20
+bdwidth 1531
+bdheight 201
+}
+BackdropNode {
+inputs 0
+name BackdropNode2
+tile_color 0x282828ff
+label "<center> FrameHold"
+note_font "Bitstream Vera Sans Bold"
+note_font_size 42
+xpos 1371
+ypos -730
+appearance Border
+border_width 20
+bdwidth 776
+bdheight 440
+}
+BackdropNode {
+inputs 0
+name BackdropNode5
+tile_color 0xb8872a00
+label "<center>Warp Strength"
+note_font "Bitstream Vera Sans Bold"
+note_font_size 20
+xpos -1929
+ypos 1984
+appearance Border
+border_width 20
+bdwidth 282
+bdheight 188
+}
+BackdropNode {
+inputs 0
+name BackdropNode6
+tile_color 0x44415100
+label "<center>Mix Strength"
+note_font "Bitstream Vera Sans Bold"
+note_font_size 20
+xpos -2611
+ypos 2494
+appearance Border
+border_width 20
+bdwidth 282
+bdheight 188
+}
+BackdropNode {
+inputs 0
+name BackdropNode8
+tile_color 0x1e2228ff
+label <center>FrameHold/Increment
+note_font "Bitstream Vera Sans Bold"
+note_font_size 100
+xpos 767
+ypos 1210
+appearance Border
+border_width 20
+bdwidth 1262
+bdheight 2083
+}
+BackdropNode {
+inputs 0
+name BackdropNode10
+tile_color 0x201a3400
+label "<center> Mask Driven Morph"
+note_font "Bitstream Vera Sans Bold"
+note_font_size 42
+xpos 1573
+ypos 2035
+appearance Border
+border_width 20
+bdwidth 422
+bdheight 1215
+z_order 1
+}
+Input {
+inputs 0
+name MASK
+label "(input \[value number])"
+xpos -2520
+ypos 733
+number 2
+}
+add_layer {morph_mask morph_mask.a}
+Shuffle2 {
+fromInput1 {{0} B}
+out1 morph_mask
+fromInput2 {{0} B}
+mappings "1 rgba.alpha 0 3 morph_mask.a 0 0"
+name Shuffle3
+xpos -2520
+ypos 931
+}
+Dot {
+name Dot37
+xpos -2484
+ypos 1934
+}
+set Nc64f2400 [stack 0]
+Multiply {
+value {{parent.mix_dissolve}}
+name Multiply2
+xpos -2518
+ypos 2581
+disable {{"1-\[exists parent.input2]"}}
+}
+Dot {
+name Dot41
+xpos -2484
+ypos 2923
+}
+set Nc64f0f00 [stack 0]
+Dot {
+name Dot54
+xpos -2484
+ypos 3414
+}
+push $Nc64f0f00
+Dot {
+name Dot35
+xpos 1784
+ypos 2923
+}
+push $Nc64f2400
+Dot {
+name Dot38
+xpos -1805
+ypos 1932
+}
+Multiply {
+value {{parent.morph}}
+name Multiply1
+xpos -1839
+ypos 2113
+disable {{"1-\[exists parent.input2]"}}
+}
+Dot {
+name Dot39
+xpos -1805
+ypos 2194
+}
+set Nc64da400 [stack 0]
+Invert {
+mix {{invertMask}}
+name Invert1
+xpos -1839
+ypos 2321
+disable {{"1-\[exists input2]"}}
+}
+Dot {
+name Dot40
+xpos -1805
+ypos 2468
+}
+Input {
+inputs 0
+name A
+label "(input \[value number])"
+xpos 1104
+ypos -1398
+}
+Dot {
+name Dot68
+xpos 1138
+ypos -1304
+}
+set Nc64d8800 [stack 0]
+Input {
+inputs 0
+name B
+label "(input \[value number])"
+xpos 2422
+ypos -1408
+number 1
+}
+CopyBBox {
+inputs 2
+name CopyBBox1
+xpos 2422
+ypos -1308
+disable {{disable_bbox_copy}}
+}
+BlackOutside {
+name BlackOutside1
+xpos 2422
+ypos -1272
+disable {{disable_bbox_copy}}
+}
+Dot {
+name Dot17
+xpos 2456
+ypos -1194
+}
+NoTimeBlur {
+rounding floor
+single false
+name NoTimeBlur1
+xpos 2422
+ypos -1029
+}
+Dot {
+name Dot13
+xpos 2456
+ypos -694
+}
+Dot {
+name Dot18
+xpos 1962
+ypos -694
+}
+FrameHold {
+firstFrame {{t//2+1}}
+name FrameHold2
+label "PLATE/DNS - \[frame]"
+xpos 1928
+ypos -618
+disable {{"type_switch > 0"}}
+}
+Text2 {
+font_size_toolbar 100
+font_width_toolbar 100
+font_height_toolbar 100
+message "PLATE/DNS - \[frame]"
+old_message {{80 76 65 84 69 47 68 78 83 32 45 32 49 48 50 57}
+  }
+old_expression_markers {{12 15}
+  }
+box {0 0 4096 1716}
+xjustify center
+yjustify center
+transforms {{0 2}
+  }
+center {2048 858}
+cursor_initialised true
+autofit_bbox false
+initial_cursor_position {{2048 858}
+  }
+group_animations {{0} imported: 0 selected: items: "root transform/"}
+animation_layers {{1 11 2048 858 0 0 1 1 0 0 0 0}
+  }
+name Text4
+label "PLATE/DNS - \[frame]"
+xpos 1928
+ypos -502
+disable true
+}
+Dot {
+name Dot14
+label "\[frame]"
+xpos 1962
+ypos -371
+}
+push $Nc64d8800
+Dot {
+name Dot16
+xpos 1138
+ypos -1194
+}
+NoTimeBlur {
+rounding floor
+single false
+name NoTimeBlur
+xpos 1104
+ypos -1029
+}
+Dot {
+name Dot1
+xpos 1138
+ypos -694
+}
+Dot {
+name Dot8
+xpos 1592
+ypos -694
+}
+FrameHold {
+firstFrame {{t//2+1}}
+name FrameHold1
+label "Precomp/NR - \[frame]"
+xpos 1558
+ypos -619
+disable {{"type_switch > 0"}}
+}
+Text2 {
+font_size_toolbar 100
+font_width_toolbar 100
+font_height_toolbar 100
+message "Precomp/NR - \[frame]"
+old_message {{80 114 101 99 111 109 112 47 78 82 32 45 32 49 48 51 48}
+  }
+old_expression_markers {{13 16}
+  }
+box {0 0 4096 1716}
+xjustify center
+yjustify center
+transforms {{0 2}
+  }
+center {2048 858}
+cursor_initialised true
+autofit_bbox false
+initial_cursor_position {{2048 858}
+  }
+group_animations {{0} imported: 0 selected: items: "root transform/"}
+animation_layers {{1 11 2048 858 0 0 1 1 0 0 0 0}
+  }
+name Text2
+label "Precomp/NR - \[frame]"
+xpos 1558
+ypos -502
+disable true
+}
+Dot {
+name Dot4
+label "\[frame]"
+xpos 1592
+ypos -371
+}
+Switch {
+inputs 2
+which {{(frame-1000)%2}}
+name Switch1
+label "\[frame]"
+xpos 1753
+ypos -381
+disable {{"type_switch > 0"}}
+}
+Dot {
+name Dot20
+tile_color 0xcccccc00
+xpos 1787
+ypos -103
+}
+VectorGenerator {
+motionEstimation Regularized
+vectorDetailReg {{vector_detail}}
+strengthReg {{vector_strength}}
+name VectorGenerator1
+xpos 1753
+ypos 33
+}
+Dot {
+name Dot43
+xpos 1787
+ypos 607
+}
+Dot {
+name Dot26
+xpos 1787
+ypos 1290
+}
+set Nc6453200 [stack 0]
+Dot {
+name Dot28
+xpos 1894
+ypos 1290
+}
+FrameHold {
+firstFrame {{(t*2)-1}}
+name FrameHold4
+label "\[frame]"
+xpos 1860
+ypos 1407
+}
+Dot {
+name Dot57
+xpos 1894
+ypos 1738
+}
+set Nc6451d00 [stack 0]
+Copy {
+inputs 2
+from0 morph_mask.a
+to0 morph_mask.a
+name Copy4
+xpos 1860
+ypos 2458
+disable {{"1-\[exists parent.input2]"}}
+}
+Premult {
+channels forward
+alpha morph_mask.a
+name Premult1
+xpos 1860
+ypos 2568
+disable {{"1-\[exists parent.input2]"}}
+}
+IDistort {
+uv forward
+uv_scale -1
+name IDistort4
+xpos 1860
+ypos 2692
+disable {{"1-\[exists parent.input2]"}}
+}
+Dot {
+name Dot33
+xpos 1894
+ypos 3022
+}
+push $Nc64da400
+push $Nc6453200
+Dot {
+name Dot27
+xpos 1674
+ypos 1290
+}
+FrameHold {
+firstFrame {{t*2}}
+name FrameHold3
+label "\[frame]"
+xpos 1640
+ypos 1404
+}
+Dot {
+name Dot58
+xpos 1675
+ypos 1811
+}
+set Nc641eb00 [stack 0]
+Copy {
+inputs 2
+from0 morph_mask.a
+to0 morph_mask.a
+name Copy3
+xpos 1640
+ypos 2184
+disable {{"1-\[exists parent.input2]"}}
+}
+Premult {
+channels forward
+alpha morph_mask.a
+name Premult2
+xpos 1640
+ypos 2568
+disable {{"1-\[exists parent.input2]"}}
+}
+IDistort {
+uv forward
+uv_scale -1
+name IDistort3
+xpos 1640
+ypos 2689
+disable {{"1-\[exists parent.input2]"}}
+}
+Dot {
+name Dot34
+xpos 1674
+ypos 3022
+}
+Keymix {
+inputs 3
+invertMask true
+bbox B
+name Keymix1
+xpos 1750
+ypos 3012
+disable {{"1-\[exists parent.input2]"}}
+}
+Dot {
+name Dot53
+tile_color 0xcccccc00
+xpos 1784
+ypos 3103
+}
+Copy {
+inputs 2
+from0 morph_mask.a
+to0 morph_mask.a
+name Copy7
+xpos 1750
+ypos 3404
+disable {{fringe_switch}}
+}
+Remove {
+channels morph_mask
+name Remove1
+xpos 1750
+ypos 3475
+disable {{parent.output_morph_mask}}
+}
+push $Nc6451d00
+Dot {
+name Dot60
+xpos 1112
+ypos 1738
+}
+IDistort {
+uv forward
+uv_scale {{-(1-(morph))}}
+name IDistort5
+xpos 1078
+ypos 2696
+disable {{"\[exists parent.input2]"}}
+}
+Dot {
+name Dot56
+xpos 1112
+ypos 3022
+}
+push $Nc641eb00
+Dot {
+name Dot59
+xpos 892
+ypos 1811
+}
+IDistort {
+uv forward
+uv_scale {{-(morph)}}
+name IDistort6
+xpos 858
+ypos 2694
+disable {{"\[exists parent.input2]"}}
+}
+BlackOutside {
+name BlackOutside2
+xpos 858
+ypos 2774
+}
+Dot {
+name Dot55
+xpos 892
+ypos 3022
+}
+Dissolve {
+inputs 2
+channels {{{Keymix1.channels}}}
+which {{mix_dissolve}}
+name Dissolve4
+label "channels from Keymix1"
+xpos 968
+ypos 3006
+disable {{"\[exists parent.input2]"}}
+}
+Dot {
+name Dot67
+tile_color 0xcccccc00
+xpos 1002
+ypos 3103
+}
+Dot {
+name Dot69
+xpos 1002
+ypos 3541
+}
+Switch {
+inputs 2
+which {{"\[exists parent.input2]"}}
+name Switch8
+label "\[value which]"
+xpos 1750
+ypos 3531
+}
+Dot {
+name Dot49
+xpos 1784
+ypos 3801
+}
+Output {
+name Output1
+xpos 1750
+ypos 4471
+}
+end_group

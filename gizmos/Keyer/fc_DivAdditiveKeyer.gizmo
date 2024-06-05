@@ -1,0 +1,298 @@
+set cut_paste_input [stack 0]
+version 15.0 v1
+Dot {
+ inputs 0
+ name Dot16
+ tile_color 0xff0000ff
+ label BG
+ note_font "Verdana Bold"
+ note_font_size 15
+ selected true
+ xpos -234
+ ypos 436
+}
+Dot {
+ inputs 0
+ name Dot18
+ tile_color 0xff0000ff
+ label "DESPILLED SCREEN"
+ note_font "Verdana Bold"
+ note_font_size 15
+ selected true
+ xpos -116
+ ypos 474
+}
+push $cut_paste_input
+Dot {
+ name Dot19
+ tile_color 0xff0000ff
+ label "DESPILLED FG DENOISED"
+ note_font "Verdana Bold"
+ note_font_size 15
+ selected true
+ xpos -6
+ ypos 601
+}
+Group {
+ inputs 3
+ name fc_DivAdditiveKeyer
+ tile_color 0xff00ff
+ selected true
+ xpos -268
+ ypos 592
+ addUserKnob {20 User}
+ addUserKnob {4 output t "Choose the output type, either a comp using the bg input or output the multiplicative image before it is merger. This is for conveinience in stereo minicomp scrimpts making it possible to create a precomped layer that can be plused over the bg. Remember to inlcude a log conversion on the bh before merging and after merging if this was enabled." M {"bg comp" "multiplicative image" ""}}
+ addUserKnob {4 maths M {lin log ""}}
+ maths log
+ addUserKnob {26 _1 l "" +STARTLINE}
+ addUserKnob {4 screen l "screen type" M {pick input ""}}
+ screen input
+ addUserKnob {6 screencolour_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {18 screencolour l colour R 0 4}
+ screencolour {0 0 0}
+ addUserKnob {26 _2 l "" +STARTLINE}
+ addUserKnob {7 saturation R 0 4}
+ saturation 0.25
+ addUserKnob {7 contrast R 0 5}
+ contrast 1
+ addUserKnob {7 balance R -1 1}
+ addUserKnob {18 tint R 0 2}
+ tint 1
+ addUserKnob {6 tint_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {26 _3 l "" +STARTLINE}
+ addUserKnob {7 limitdarks l darks}
+ addUserKnob {7 limitlights l lights}
+}
+ Input {
+  inputs 0
+  name FG
+  xpos -41
+  ypos 46
+ }
+ AddChannels {
+  channels rgb
+  name AddChannels3
+  xpos -41
+  ypos 118
+ }
+ Dot {
+  name Dot1
+  xpos -6
+  ypos 263
+ }
+set Nbc3c8000 [stack 0]
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.red 0 0 black -1 -1 rgba.green 0 1 black -1 -1 rgba.alpha 0 3"
+  name Shuffle1
+  xpos -370
+  ypos 260
+ }
+set Nbc3c9400 [stack 0]
+ Dot {
+  name Dot3
+  xpos -446
+  ypos 263
+ }
+ Dot {
+  name Dot4
+  xpos -446
+  ypos 1074
+ }
+set Nb6af4400 [stack 0]
+ Dot {
+  name Dot7
+  xpos -446
+  ypos 1146
+ }
+push $Nb6af4400
+push $Nbc3c8000
+ Log2Lin {
+  operation lin2log
+  name Log2Lin1
+  xpos -41
+  ypos 406
+  dope_sheet true
+ }
+ set C44537c00 [stack 0]
+ Dot {
+  name Dot5
+  xpos -6
+  ypos 692
+ }
+set Nb6af5000 [stack 0]
+ Dot {
+  inputs 0
+  name Dot6
+  label BLACK
+  note_font "Verdana Bold"
+  note_font_size 15
+  xpos 194
+  ypos 522
+ }
+ Merge2 {
+  inputs 2
+  operation difference
+  name Merge2
+  xpos 160
+  ypos 689
+ }
+ Expression {
+  temp_name0 mono
+  temp_expr0 (r*.3)+(g*.59)+(b*.11)
+  expr0 0
+  expr1 0
+  expr2 0
+  expr3 mono
+  name monochrome
+  xpos 160
+  ypos 975
+ }
+push $Nb6af5000
+ Input {
+  inputs 0
+  name SCREEN
+  xpos -590
+  ypos 39
+  number 1
+ }
+ AddChannels {
+  channels rgb
+  name AddChannels2
+  xpos -590
+  ypos 111
+ }
+ Dot {
+  name Dot2
+  xpos -556
+  ypos 450
+ }
+push $Nbc3c9400
+ Add {
+  value {{parent.screencolour} {parent.screencolour} {parent.screencolour} {parent.screencolour}}
+  name Add1
+  xpos -370
+  ypos 326
+ }
+ Switch {
+  inputs 2
+  which {{parent.screen}}
+  name SwitchScreenType
+  xpos -370
+  ypos 447
+ }
+clone $C44537c00 {
+  xpos -370
+  ypos 548
+  selected false
+ }
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge1
+  xpos -370
+  ypos 687
+ }
+ Saturation {
+  saturation {{parent.saturation}}
+  name Saturation1
+  xpos -370
+  ypos 759
+ }
+ Multiply {
+  value {{parent.contrast}}
+  name contrast
+  xpos -370
+  ypos 825
+ }
+ Multiply {
+  value {{parent.tint} {parent.tint} {parent.tint} {parent.tint}}
+  name tint
+  xpos -370
+  ypos 897
+ }
+ Add {
+  inputs 1+1
+  value {{parent.balance}}
+  name balance
+  xpos -370
+  ypos 969
+ }
+ Merge2 {
+  inputs 2
+  operation max
+  mix {{parent.limitdarks}}
+  name Merge3
+  xpos -370
+  ypos 1071
+ }
+ Merge2 {
+  inputs 2
+  operation min
+  mix {{parent.limitlights}}
+  name Merge4
+  xpos -370
+  ypos 1143
+ }
+ Dot {
+  name Dot8
+  xpos -336
+  ypos 1242
+ }
+set Nb4aba400 [stack 0]
+ Dot {
+  name Dot9
+  xpos -336
+  ypos 1434
+ }
+push $Nb4aba400
+ Input {
+  inputs 0
+  name BG
+  xpos -810
+  ypos 45
+  number 2
+ }
+ AddChannels {
+  channels rgb
+  name AddChannels1
+  xpos -810
+  ypos 111
+ }
+clone $C44537c00 {
+  xpos -810
+  ypos 399
+  selected false
+ }
+clone $C44537c00 {
+  xpos -810
+  ypos 471
+  selected false
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge5
+  xpos -810
+  ypos 1239
+ }
+ Log2Lin {
+  name Log2Lin2
+  selected true
+  xpos -810
+  ypos 1335
+ }
+ Switch {
+  inputs 2
+  which {{parent.output}}
+  name SwitchOutput
+  xpos -810
+  ypos 1431
+ }
+ Output {
+  name Output1
+  xpos -810
+  ypos 1551
+ }
+end_group

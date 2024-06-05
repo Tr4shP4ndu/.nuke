@@ -1,0 +1,207 @@
+set cut_paste_input [stack 0]
+version 15.0 v1
+NoOp {
+ inputs 0
+ name Doppelganger3
+ tile_color 0x9c0000ff
+ label "\n\[knob Name]\n\n-"
+ note_font "Verdana Bold"
+ note_font_size 15
+ note_font_color 0x94dcfeff
+ selected true
+ xpos -2680
+ ypos 434
+ hide_input true
+ addUserKnob {20 TG}
+ addUserKnob {26 ""}
+ addUserKnob {26 Divider l "<font color=\"lightblue\">Name" -STARTLINE}
+ addUserKnob {1 Name l "" t "Type the name of the node you want to connect to in here" +STARTLINE}
+ Name SHOTCAM
+ addUserKnob {22 Connect l "<font color=\"lightblue\">Connect" -STARTLINE T "THIS = nuke.thisNode()\nPARENT = THIS\['Name'].getValue()\nE = nuke.exists(PARENT)\n\nif E == True:\n    v = nuke.toNode(PARENT)\n    THIS.setInput(0,v)\n    firstInput = THIS.input(0) \n    colour = firstInput\['tile_color'].getValue()\n    if firstInput is not None:\n        THIS\['tile_color'].setValue(int(colour)) \n    else: \n        pass\n    \nelse:\n    pass\n    nuke.message('There is no node named that')\n    \n\nnukescripts.clear_selection_recursive() \n\n\n"}
+ addUserKnob {26 ""}
+ addUserKnob {22 Find l "<font color=\"lightblue\">Find Connected" t "This will show you the node Doppelganger is connected to" -STARTLINE T "THIS = nuke.thisNode()\nPARENT = THIS.knob('Name').getValue()\nE = nuke.exists(PARENT)\n\nif E == True:\n    v = nuke.toNode(PARENT)\n    nuke.zoom( 2, \[ v.xpos(), v.ypos() ])\nelse:\n    pass\n    nuke.message('Cannot find that node')\n    \n\nnukescripts.clear_selection_recursive() \n\n"}
+ addUserKnob {22 ConnectAll l "<font color=\"lightblue\">Connect all Doppelgangers" t "This will connect all Doppelgangers in your script. Handy if you have pasted a large script" -STARTLINE T "for s in nuke.allNodes():\n    classTypes = \['NoOp']\n    for n in classTypes:\n        if n in s.Class():\n            try:\n                s\['Connect'].execute()\n            except:\n                pass"}
+ addUserKnob {26 ""}
+ addUserKnob {20 Help}
+ addUserKnob {26 ""}
+ addUserKnob {26 Tip l :?: T "Doppelganger acts as a bridge between your Read nodes and your script\n\nUse this instead of duplicating a camera or geo or a plate over and over\n\nJust type in the name of the node and press connect\n\nAs a tip, add a NoOp underneath your Plate and call it 'Plate'. This will then make it easier to remember\n\nAny questions contact Thomas Greenhalgh\ntomgreenhalgh125@gmail.com\n"}
+ addUserKnob {26 ""}
+}
+Dot {
+ name Dot18
+ selected true
+ xpos -2646
+ ypos 594
+}
+Constant {
+ inputs 0
+ color {1 0 0 1}
+ color_panelDropped true
+ name Constant1
+ selected true
+ xpos -2460
+ ypos 279
+}
+Dot {
+ name Dot16
+ label Import
+ note_font "Verdana Bold"
+ note_font_size 20
+ selected true
+ xpos -2426
+ ypos 378
+}
+Sphere {
+ name Sphere1
+ selected true
+ xpos -2460
+ ypos 437
+}
+Dot {
+ name Dot19
+ label Cones
+ note_font "Verdana Bold"
+ note_font_size 20
+ selected true
+ xpos -2426
+ ypos 498
+}
+push 0
+ScanlineRender {
+ inputs 3
+ conservative_shader_sampling false
+ motion_vectors_type distance
+ name ScanlineRender1
+ selected true
+ xpos -2460
+ ypos 591
+}
+Dot {
+ name Dot22
+ label "LENS DISTORTION"
+ note_font "Verdana Bold"
+ note_font_size 20
+ selected true
+ xpos -2426
+ ypos 666
+}
+Group {
+ name fc_Depth_Normaliser
+ selected true
+ xpos -2460
+ ypos 711
+ addUserKnob {20 User}
+ addUserKnob {4 depthConv l "Depth Conversion:" M {"1/z to real" "real to 1/z" ""}}
+ addUserKnob {16 depthclamp l DepthClamp}
+ depthclamp 1000
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos -587
+  ypos -57
+ }
+ Dot {
+  name Dot1
+  xpos -553
+  ypos -6
+ }
+set Nde010400 [stack 0]
+ Dot {
+  name Dot2
+  xpos -666
+  ypos -6
+ }
+ Expression {
+  channel3 depth
+  expr3 "z > 0 ? 1/z : 100000000"
+  mix_luminance 0.35
+  name ConvertDepth
+  label "1/z to real"
+  xpos -700
+  ypos 33
+ }
+ Dot {
+  name Dot3
+  xpos -666
+  ypos 114
+ }
+push $Nde010400
+ Dot {
+  name Dot5
+  xpos -446
+  ypos -6
+ }
+ Expression {
+  channel3 depth
+  expr3 "z < 100000000 ? 1/z : 0"
+  mix_luminance 0.35
+  name ConvertDepth1
+  label "real to 1/z"
+  xpos -480
+  ypos 33
+ }
+ Dot {
+  name Dot4
+  xpos -446
+  ypos 114
+ }
+ Switch {
+  inputs 2
+  which {{parent.depthConv}}
+  name Switch1
+  xpos -587
+  ypos 111
+ }
+ Clamp {
+  maximum {{parent.depthclamp}}
+  name Clamp1
+  xpos -587
+  ypos 153
+ }
+ Output {
+  name Output1
+  xpos -587
+  ypos 259
+ }
+end_group
+Dot {
+ name Dot20
+ selected true
+ xpos -2426
+ ypos 738
+}
+NoOp {
+ inputs 0
+ name Doppelganger
+ tile_color 0x9454ff
+ label "\n\[knob Name]\n\n-"
+ note_font "Verdana Bold"
+ note_font_size 15
+ note_font_color 0x94dcfeff
+ selected true
+ xpos -2168
+ ypos 467
+ hide_input true
+ addUserKnob {20 TG}
+ addUserKnob {26 ""}
+ addUserKnob {26 Divider l "<font color=\"lightblue\">Name" -STARTLINE}
+ addUserKnob {1 Name l "" t "Type the name of the node you want to connect to in here" +STARTLINE}
+ Name PLATE
+ addUserKnob {22 Connect l "<font color=\"lightblue\">Connect" -STARTLINE T "THIS = nuke.thisNode()\nPARENT = THIS\['Name'].getValue()\nE = nuke.exists(PARENT)\n\nif E == True:\n    v = nuke.toNode(PARENT)\n    THIS.setInput(0,v)\n    firstInput = THIS.input(0) \n    colour = firstInput\['tile_color'].getValue()\n    if firstInput is not None:\n        THIS\['tile_color'].setValue(int(colour)) \n    else: \n        pass\n    \nelse:\n    pass\n    nuke.message('There is no node named that')\n    \n\nnukescripts.clear_selection_recursive() \n\n\n"}
+ addUserKnob {26 ""}
+ addUserKnob {22 Find l "<font color=\"lightblue\">Find Connected" t "This will show you the node Doppelganger is connected to" -STARTLINE T "THIS = nuke.thisNode()\nPARENT = THIS.knob('Name').getValue()\nE = nuke.exists(PARENT)\n\nif E == True:\n    v = nuke.toNode(PARENT)\n    nuke.zoom( 2, \[ v.xpos(), v.ypos() ])\nelse:\n    pass\n    nuke.message('Cannot find that node')\n    \n\nnukescripts.clear_selection_recursive() \n\n"}
+ addUserKnob {22 ConnectAll l "<font color=\"lightblue\">Connect all Doppelgangers" t "This will connect all Doppelgangers in your script. Handy if you have pasted a large script" -STARTLINE T "for s in nuke.allNodes():\n    classTypes = \['NoOp']\n    for n in classTypes:\n        if n in s.Class():\n            try:\n                s\['Connect'].execute()\n            except:\n                pass"}
+ addUserKnob {26 ""}
+ addUserKnob {20 Help}
+ addUserKnob {26 ""}
+ addUserKnob {26 Tip l :?: T "Doppelganger acts as a bridge between your Read nodes and your script\n\nUse this instead of duplicating a camera or geo or a plate over and over\n\nJust type in the name of the node and press connect\n\nAs a tip, add a NoOp underneath your Plate and call it 'Plate'. This will then make it easier to remember\n\nAny questions contact Thomas Greenhalgh\ntomgreenhalgh125@gmail.com\n"}
+ addUserKnob {26 ""}
+}
+Merge2 {
+ inputs 2
+ name Merge1
+ selected true
+ xpos -2168
+ ypos 735
+}

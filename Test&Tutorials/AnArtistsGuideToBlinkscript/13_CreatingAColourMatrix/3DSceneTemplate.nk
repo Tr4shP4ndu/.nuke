@@ -1,0 +1,115 @@
+set cut_paste_input [stack 0]
+version 12.2 v1
+push $cut_paste_input
+Camera2 {
+ translate {-3.61574173 1.328431845 4.694727898}
+ rotate {-6.277982463 -22.60000996 0}
+ focal 16
+ name Camera1
+ selected true
+ xpos 579
+ ypos -391
+}
+Dot {
+ name Dot1
+ selected true
+ xpos 603
+ ypos -98
+}
+CheckerBoard2 {
+ inputs 0
+ centerlinewidth 0
+ name CheckerBoard1
+ selected true
+ xpos 727
+ ypos -465
+}
+set N1f9000 [stack 0]
+Cube {
+ uniform_scale 10
+ name Cube1
+ selected true
+ xpos 874
+ ypos -354
+}
+push $N1f9000
+Sphere {
+ translate {0 0 -3.579999924}
+ uniform_scale 2
+ name Sphere1
+ selected true
+ xpos 727
+ ypos -348
+}
+Scene {
+ inputs 2
+ name Scene1
+ selected true
+ xpos 737
+ ypos -267
+}
+push 0
+add_layer {P P.red P.green P.blue P.alpha}
+add_layer {N N.red N.green N.blue N.alpha}
+ScanlineRender {
+ inputs 3
+ conservative_shader_sampling false
+ motion_vectors_type distance
+ output_shader_vectors true
+ P_channel P
+ N_channel N
+ name ScanlineRender1
+ selected true
+ xpos 727
+ ypos -102
+}
+Dot {
+ name Dot2
+ selected true
+ xpos 761
+ ypos -31
+}
+set N2f6c6c00 [stack 0]
+Dot {
+ name Dot5
+ selected true
+ xpos 761
+ ypos 107
+}
+push $N2f6c6c00
+Dot {
+ name Dot3
+ selected true
+ xpos 1005
+ ypos -31
+}
+set N2f6c6800 [stack 0]
+Shuffle2 {
+ fromInput1 {{0} B}
+ in1 N
+ fromInput2 {{0} B}
+ mappings "4 N.red 0 0 rgba.red 0 0 N.green 0 1 rgba.green 0 1 N.blue 0 2 rgba.blue 0 2 N.alpha 0 3 rgba.alpha 0 3"
+ name Shuffle1
+ label "\[value in1]"
+ selected true
+ xpos 971
+ ypos 89
+}
+push $N2f6c6800
+Dot {
+ name Dot4
+ selected true
+ xpos 1106
+ ypos -31
+}
+Shuffle2 {
+ fromInput1 {{0} B}
+ in1 P
+ fromInput2 {{0} B}
+ mappings "4 P.red 0 0 rgba.red 0 0 P.green 0 1 rgba.green 0 1 P.blue 0 2 rgba.blue 0 2 P.alpha 0 3 rgba.alpha 0 3"
+ name Shuffle2
+ label "\[value in1]"
+ selected true
+ xpos 1072
+ ypos 88
+}

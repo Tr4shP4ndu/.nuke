@@ -1,0 +1,155 @@
+set cut_paste_input [stack 0]
+version 12.2 v1
+push $cut_paste_input
+Camera2 {
+translate {{curve x1 -3.61574173 x100 4.021763802} {curve x1 1.328431845 x100 0.9841157794} {curve x1 4.694727898 x100 4.483808994}}
+rotate {{curve x1 -6.277982463 x100 -3.207973581} {curve x1 -22.60000996 x100 36.77119766} {curve x1 0 x100 -5.399300824}}
+focal 16
+vaperture 13.824
+name Camera2
+selected true
+xpos 6692
+ypos -120
+}
+Dot {
+name Dot6
+selected true
+xpos 6716
+ypos 173
+}
+CheckerBoard2 {
+inputs 0
+centerlinewidth 0
+name CheckerBoard3
+selected true
+xpos 6840
+ypos -194
+}
+set Nb8d8e400 [stack 0]
+Cube {
+uniform_scale 10
+name Cube2
+selected true
+xpos 6987
+ypos -83
+}
+push $Nb8d8e400
+Sphere {
+translate {0 0 -3.579999924}
+uniform_scale 2
+name Sphere2
+selected true
+xpos 6840
+ypos -77
+}
+Scene {
+inputs 2
+name Scene2
+selected true
+xpos 6850
+ypos 4
+}
+push 0
+add_layer {P P.red P.green P.blue P.alpha}
+add_layer {N N.red N.green N.blue N.alpha}
+ScanlineRender {
+inputs 3
+conservative_shader_sampling false
+motion_vectors_type distance
+output_shader_vectors true
+P_channel P
+N_channel N
+name ScanlineRender2
+selected true
+xpos 6840
+ypos 169
+}
+Dot {
+name Dot7
+selected true
+xpos 6874
+ypos 240
+}
+set Nb8d8d000 [stack 0]
+Dot {
+name Dot8
+selected true
+xpos 6874
+ypos 378
+}
+push $Nb8d8d000
+Dot {
+name Dot9
+selected true
+xpos 7118
+ypos 240
+}
+set Nb8d8c800 [stack 0]
+Shuffle2 {
+fromInput1 {{0} B}
+in1 N
+fromInput2 {{0} B}
+mappings "4 N.red 0 0 rgba.red 0 0 N.green 0 1 rgba.green 0 1 N.blue 0 2 rgba.blue 0 2 N.alpha 0 3 rgba.alpha 0 3"
+name Shuffle3
+label "\[value in1]"
+selected true
+xpos 7084
+ypos 360
+}
+push $Nb8d8c800
+Dot {
+name Dot10
+selected true
+xpos 7219
+ypos 240
+}
+Shuffle2 {
+fromInput1 {{0} B}
+in1 P
+fromInput2 {{0} B}
+mappings "4 P.red 0 0 rgba.red 0 0 P.green 0 1 rgba.green 0 1 P.blue 0 2 rgba.blue 0 2 P.alpha 0 3 rgba.alpha 0 3"
+name Shuffle4
+label "\[value in1]"
+selected true
+xpos 7185
+ypos 359
+}
+Dot {
+name Dot11
+selected true
+xpos 7219
+ypos 656
+}
+CheckerBoard2 {
+inputs 0
+name CheckerBoard4
+selected true
+xpos 6728
+ypos 418
+}
+BlinkScript {
+inputs 2
+recompileCount 31
+ProgramGroup 1
+KernelDescription "2 \"FourByFourColourMatrixKernel\" iterate pixelWise d5278ff7c5f1a870becdb0ee3673b370e80b4fbafde1ab93a550ea1bbb20a90e 3 \"projectionImage\" Read Random \"src\" Read Point \"dst\" Write Point 5 \"matrixInput\" Float 16 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA== \"invert\" Bool 1 AA== \"focal\" Float 1 AAAAAA== \"haperture\" Float 1 AAAAAA== \"vaperture\" Float 1 AAAAAA== 5 \"matrixInput\" 16 1 \"invert\" 1 1 \"focal\" 1 1 \"haperture\" 1 1 \"vaperture\" 1 1 2 \"output\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA== \"resolution\" Int 2 1 AAAAAAAAAAA="
+kernelSource "inline float4 matrixTransform(float4 image, float4x4 matrix)\{\n\n    float4 matrixTransformsOutput;\n\n    matrixTransformsOutput.x = image.x * matrix\[0]\[0] + image.y * matrix\[0]\[1] + image.z * matrix\[0]\[2] + matrix\[0]\[3];\n    matrixTransformsOutput.y = image.x * matrix\[1]\[0] + image.y * matrix\[1]\[1] + image.z * matrix\[1]\[2] + matrix\[1]\[3];\n    matrixTransformsOutput.z = image.x * matrix\[2]\[0] + image.y * matrix\[2]\[1] + image.z * matrix\[2]\[2] + matrix\[2]\[3];\n    matrixTransformsOutput.w = image.x * matrix\[3]\[0] + image.y * matrix\[3]\[1] + image.z * matrix\[3]\[2] + matrix\[3]\[3];\n\n\n    return matrixTransformsOutput;\n\n\}\n\n\n\nkernel FourByFourColourMatrixKernel : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRandom, eEdgeClamped> projectionImage;\n  Image<eRead, eAccessPoint, eEdgeClamped> src; // the input image\n  \n  Image<eWrite> dst; // the output image\n\n  param:\n    // This parameter is made available to the user.\n    float4x4 matrixInput;\n    bool invert;\n\n    float focal;\n    float haperture;\n    float vaperture; \n\n\n  local:\n    // This local variable is not exposed to the user.\n\n    float4 output;\n    int2 resolution;\n\n  // In define(), parameters can be given labels and default values.\n  void define() \{\n    \n  \}\n\n  // The init() function is run before any calls to process().\n  // Local variables can be initialized here.\n  void init() \{\n    \n    resolution.x = src.bounds.width();\n    resolution.y = src.bounds.height();\n\n  \}\n\n  void process() \{\n    \n    float4x4 matrix = matrixInput;\n    \n    matrix = invert ?  matrix.invert() : matrix;    \n\n    // Write the result to the output image\n\n    output = matrixTransform(src(), matrix);\n\n    output.x = 0.5f - ((output.x) * (focal/haperture))/output.z;\n    output.y = 0.5f - ((output.y) * (focal/vaperture))/output.z;\n    output.z = 0.0f;\n\n    \n\n    dst() = bilinear(projectionImage,output.x*resolution.x,output.y*resolution.y);\n  \}\n\};\n"
+rebuild ""
+FourByFourColourMatrixKernel_matrixInput {
+    {{parent.Camera2.world_matrix(reference_frame)} {parent.Camera2.world_matrix(reference_frame)} {parent.Camera2.world_matrix(reference_frame)} {parent.Camera2.world_matrix(reference_frame)}}
+    {{parent.Camera2.world_matrix(reference_frame)} {parent.Camera2.world_matrix(reference_frame)} {parent.Camera2.world_matrix(reference_frame)} {parent.Camera2.world_matrix(reference_frame)}}
+    {{parent.Camera2.world_matrix(reference_frame)} {parent.Camera2.world_matrix(reference_frame)} {parent.Camera2.world_matrix(reference_frame)} {parent.Camera2.world_matrix(reference_frame)}}
+    {{parent.Camera2.world_matrix(reference_frame)} {parent.Camera2.world_matrix(reference_frame)} {parent.Camera2.world_matrix(reference_frame)} {parent.Camera2.world_matrix(reference_frame)}}
+  }
+FourByFourColourMatrixKernel_invert true
+FourByFourColourMatrixKernel_focal {{parent.Camera2.focal(reference_frame)}}
+FourByFourColourMatrixKernel_haperture {{parent.Camera2.haperture(reference_frame)}}
+FourByFourColourMatrixKernel_vaperture {{parent.Camera2.vaperture(reference_frame)}}
+rebuild_finalise ""
+name BlinkScript2
+selected true
+xpos 6728
+ypos 646
+addUserKnob {20 User}
+addUserKnob {3 reference_frame}
+reference_frame 1
+}

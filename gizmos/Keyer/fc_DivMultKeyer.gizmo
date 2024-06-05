@@ -1,0 +1,441 @@
+set cut_paste_input [stack 0]
+version 15.0 v1
+Dot {
+ inputs 0
+ name Dot16
+ tile_color 0xff0000ff
+ label BG
+ note_font "Verdana Bold"
+ note_font_size 15
+ selected true
+ xpos -234
+ ypos 436
+}
+Dot {
+ inputs 0
+ name Dot18
+ tile_color 0xff0000ff
+ label "DESPILLED SCREEN"
+ note_font "Verdana Bold"
+ note_font_size 15
+ selected true
+ xpos -116
+ ypos 474
+}
+push $cut_paste_input
+Dot {
+ name Dot19
+ tile_color 0xff0000ff
+ label "DESPILLED FG DENOISED"
+ note_font "Verdana Bold"
+ note_font_size 15
+ selected true
+ xpos -6
+ ypos 601
+}
+Group {
+ inputs 3
+ name fc_DivMultKeyer
+ tile_color 0xff00ff
+ selected true
+ xpos -268
+ ypos 592
+ addUserKnob {20 User l DivMultKeyer t "Created by Alex Webb, 2014"}
+ addUserKnob {4 output t "Choose the output type, either a comp using the bg input or output the multiplicative image before it is merger. This is for conveinience in stereo minicomp scrimpts making it possible to create a precomped layer that can be plused over the bg. Remember to inlcude a log conversion on the bh before merging and after merging if this was enabled." M {"bg comp" "multiplicative image" ""}}
+ addUserKnob {4 maths M {lin log ""}}
+ maths log
+ addUserKnob {26 _1 l "" +STARTLINE}
+ addUserKnob {4 screen l "screen type" M {pick input ""}}
+ screen input
+ addUserKnob {6 screencolour_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {18 screencolour l colour R 0 4}
+ screencolour {0 0 0}
+ addUserKnob {26 _2 l "" +STARTLINE}
+ addUserKnob {7 saturation R 0 4}
+ saturation 0.25
+ addUserKnob {18 gamma R 0 4}
+ gamma 1
+ addUserKnob {6 gamma_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {26 _3 l "" +STARTLINE}
+ addUserKnob {7 lights t "Reduces the strenght of the areas that are brighter than the bg."}
+ addUserKnob {7 darks t "Reduces the strength of the areas that are darker than the bg."}
+ addUserKnob {26 _4 l "" +STARTLINE}
+ addUserKnob {20 ColourLookup l "colour lookup" t "Control the dark and light levels with black and white points." n 1}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {26 _5 l "" +STARTLINE}
+ addUserKnob {20 bgluma l "bg luminance" n 1}
+ addUserKnob {7 limitdarks l "limit darks by bg luminance"}
+ addUserKnob {7 limitlights l "limit lights by bg luminance"}
+ addUserKnob {41 range T Keyer1.range}
+ addUserKnob {20 endGroup_1 n -1}
+ addUserKnob {26 _6 l "" +STARTLINE}
+}
+ Input {
+  inputs 0
+  name BG
+  xpos -835
+  ypos 45
+  number 2
+ }
+ AddChannels {
+  channels rgb
+  name AddChannels1
+  xpos -835
+  ypos 111
+ }
+ Dot {
+  name Dot10
+  xpos -801
+  ypos 282
+ }
+set Nbc734400 [stack 0]
+ Dot {
+  name Dot19
+  xpos -996
+  ypos 282
+ }
+ Dot {
+  name Dot18
+  xpos -996
+  ypos 2058
+ }
+ Input {
+  inputs 0
+  name FG
+  xpos -41
+  ypos 46
+ }
+ AddChannels {
+  channels rgb
+  name AddChannels3
+  xpos -41
+  ypos 118
+ }
+ Dot {
+  name Dot1
+  xpos -7
+  ypos 330
+ }
+set Nb2ca5000 [stack 0]
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.green 0 1 black -1 -1 rgba.red 0 0 black -1 -1 rgba.alpha 0 3 black -1 -1 rgba.blue 0 2"
+  name Shuffle1
+  xpos -370
+  ypos 327
+ }
+set Nb2ca4c00 [stack 0]
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 white -1 -1 rgba.green 0 1 white -1 -1 rgba.red 0 0 white -1 -1 rgba.alpha 0 3 white -1 -1 rgba.blue 0 2"
+  name Shuffle2
+  xpos -480
+  ypos 327
+ }
+ Dot {
+  name Dot22
+  xpos -446
+  ypos 1146
+ }
+set N7b54400 [stack 0]
+ Dot {
+  name Dot25
+  xpos -446
+  ypos 1242
+ }
+set N7b55400 [stack 0]
+ Dot {
+  name Dot26
+  xpos -446
+  ypos 1362
+ }
+set N7b55c00 [stack 0]
+ Dot {
+  name Dot27
+  xpos -446
+  ypos 1434
+ }
+push $N7b55c00
+push $Nbc734400
+ Dot {
+  name Dot11
+  xpos -556
+  ypos 282
+ }
+ Keyer {
+  operation "luminance key"
+  name Keyer1
+  xpos -590
+  ypos 465
+ }
+ Dot {
+  name Dot23
+  xpos -556
+  ypos 1194
+ }
+set N7b54800 [stack 0]
+ Dot {
+  name Dot24
+  xpos -556
+  ypos 1290
+ }
+push $N7b55400
+push $N7b54800
+push $N7b54400
+push $Nb2ca5000
+ Dot {
+  name Dot6
+  xpos -6
+  ypos 594
+ }
+set N20145800 [stack 0]
+ Dot {
+  name Dot7
+  xpos 83
+  ypos 594
+ }
+ Log2Lin {
+  operation lin2log
+  name Log2Lin4
+  xpos 49
+  ypos 639
+ }
+ Dot {
+  name Dot20
+  xpos 83
+  ypos 738
+ }
+push $N20145800
+ Switch {
+  inputs 2
+  which {{parent.maths}}
+  name Switchmaths3
+  xpos -40
+  ypos 735
+ }
+ Dot {
+  name Dot21
+  xpos -6
+  ypos 882
+ }
+ Input {
+  inputs 0
+  name SCREEN
+  xpos -203
+  ypos 63
+  number 1
+ }
+ AddChannels {
+  channels rgb
+  name AddChannels2
+  xpos -203
+  ypos 135
+ }
+ Dot {
+  name Dot2
+  xpos -169
+  ypos 511
+ }
+push $Nb2ca4c00
+ Add {
+  value {{parent.screencolour} {parent.screencolour} {parent.screencolour} {parent.screencolour}}
+  name Add1
+  xpos -370
+  ypos 417
+ }
+ Switch {
+  inputs 2
+  which {{parent.screen}}
+  name Switch1
+  xpos -370
+  ypos 508
+ }
+ Dot {
+  name Dot3
+  xpos -336
+  ypos 594
+ }
+set N20144400 [stack 0]
+ Dot {
+  name Dot4
+  xpos -247
+  ypos 594
+ }
+ Log2Lin {
+  operation lin2log
+  name Log2Lin1
+  xpos -281
+  ypos 639
+ }
+ Dot {
+  name Dot5
+  xpos -247
+  ypos 738
+ }
+push $N20144400
+ Switch {
+  inputs 2
+  which {{parent.maths}}
+  name Switchmaths2
+  xpos -370
+  ypos 735
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge1
+  xpos -370
+  ypos 879
+ }
+ Saturation {
+  saturation {{parent.saturation}}
+  name Saturation1
+  xpos -370
+  ypos 951
+ }
+ Gamma {
+  value {{parent.gamma} {parent.gamma} {parent.gamma} {parent.gamma}}
+  name Gamma1
+  xpos -370
+  ypos 1017
+ }
+ ColorLookup {
+  name ColorLookup1
+  xpos -370
+  ypos 1119
+ }
+ Merge2 {
+  inputs 2+1
+  operation max
+  mix {{parent.limitdarks}}
+  name Merge2
+  xpos -370
+  ypos 1191
+ }
+ Merge2 {
+  inputs 2+1
+  operation min
+  mix {{parent.limitlights}}
+  name Merge3
+  xpos -370
+  ypos 1287
+ }
+ Merge2 {
+  inputs 2
+  operation mask
+  mix {{clamp(1-parent.darks)}}
+  name Merge4
+  xpos -370
+  ypos 1359
+ }
+ Merge2 {
+  inputs 2
+  operation min
+  mix {{clamp(1-parent.lights)}}
+  name Merge6
+  xpos -370
+  ypos 1431
+ }
+ Dot {
+  name Dot8
+  xpos -336
+  ypos 1668
+ }
+set Nb4aba400 [stack 0]
+ Dot {
+  name Dot9
+  xpos -336
+  ypos 1908
+ }
+push $Nb4aba400
+push $Nbc734400
+ Dot {
+  name Dot12
+  xpos -801
+  ypos 594
+ }
+set Nbc735400 [stack 0]
+ Dot {
+  name Dot13
+  xpos -712
+  ypos 594
+ }
+ Log2Lin {
+  operation lin2log
+  name Log2Lin3
+  xpos -746
+  ypos 639
+ }
+ Dot {
+  name Dot14
+  xpos -712
+  ypos 738
+ }
+push $Nbc735400
+ Switch {
+  inputs 2
+  which {{parent.maths}}
+  name Switchmaths
+  xpos -835
+  ypos 735
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge5
+  xpos -835
+  ypos 1665
+ }
+ Dot {
+  name Dot15
+  xpos -801
+  ypos 1722
+ }
+set N2015e400 [stack 0]
+ Dot {
+  name Dot16
+  xpos -712
+  ypos 1722
+ }
+ Log2Lin {
+  name Log2Lin2
+  xpos -746
+  ypos 1767
+ }
+ Dot {
+  name Dot17
+  xpos -712
+  ypos 1836
+ }
+push $N2015e400
+ Switch {
+  inputs 2
+  which {{parent.maths}}
+  name Switchmaths1
+  xpos -835
+  ypos 1833
+ }
+ Switch {
+  inputs 2
+  which {{parent.output}}
+  name SwitchOutput
+  xpos -835
+  ypos 1905
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels rgb
+  name Copy1
+  xpos -835
+  ypos 2043
+ }
+ Output {
+  name Output1
+  xpos -835
+  ypos 2169
+ }
+end_group

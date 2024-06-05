@@ -1,0 +1,4 @@
+If you have issues with compatibility (GPU errors) with the example. 
+This is due to a backwards compatibility issue before/after Nuke 12.1.
+Take the code within the Blinkscript and use this to recompile your own.
+This should solve the problem.

@@ -1,0 +1,59 @@
+#! C:/Program Files/Nuke12.2v6/nuke-12.2.6.dll -nx
+version 12.2 v6
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="-1921" y="575" w="1920" h="1027" maximized="1" screen="2">
+        <splitter orientation="1">
+            <split size="40"/>
+            <dock id="" hideTitles="1" activePageId="Toolbar.1">
+                <page id="Toolbar.1"/>
+            </dock>
+            <split size="1257" stretch="1"/>
+            <splitter orientation="2">
+                <split size="578"/>
+                <dock id="" activePageId="Viewer.1">
+                    <page id="Viewer.1"/>
+                </dock>
+                <split size="407"/>
+                <dock id="" activePageId="DAG.1">
+                    <page id="DAG.1"/>
+                    <page id="Curve Editor.1"/>
+                    <page id="DopeSheet.1"/>
+                </dock>
+            </splitter>
+            <split size="615"/>
+            <dock id="" activePageId="Properties.1">
+                <page id="Properties.1"/>
+                <page id="uk.co.thefoundry.backgroundrenderview.1"/>
+            </dock>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name I:/Library/Learning/Nuke/AnArtistsGuideToBlinkscript/06_MultiChannelMonochromeOperation/MonochromeBlinkscript.nk
+ colorManagement Nuke
+ workingSpaceLUT linear
+ monitorLut sRGB
+ int8Lut sRGB
+ int16Lut sRGB
+ logLut Cineon
+ floatLut linear
+}
+BlinkScript {
+ inputs 0
+ recompileCount 20
+ ProgramGroup 1
+ KernelDescription "2 \"BlankKernel\" iterate pixelWise fe275207e33aa02b669d71d413f145e4eaaf1a04ff8a78bc9763035c3f4ed20d 2 \"src\" Read Point \"dst\" Write Point 5 \"weight\" Float 4 0LNZPlkXNz+Y3ZM9AAAAAA== \"source\" Float 4 AACAPwAAgD8AAIA/AACAPw== \"target\" Float 4 AACAPwAAgD8AAIA/AACAPw== \"multiply\" Float 4 AACAPwAAgD8AAIA/AACAPw== \"use weighted target as source\" Bool 1 AQ== 5 \"weights\" 4 1 \"sourceColour\" 4 1 \"targetColour\" 4 1 \"multiply\" 4 1 \"useWeightedTargets\" 1 1 1 \"output\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA=="
+ kernelSource "\nkernel BlankKernel : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessPoint, eEdgeClamped> src; // the input image\n  Image<eWrite> dst; // the output image\n\n  param:\n    // This parameter is made available to the user.\n\n    float4 weights;\n    float4 sourceColour;\n    float4 targetColour;\n    float4 multiply;\n    bool useWeightedTargets;\n\n  local:\n    // This local variable is not exposed to the user.\n\n    float4 output;\n\n\n  // In define(), parameters can be given labels and default values.\n  void define() \{\n    \n    defineParam(weights, \"weight\", float4(.2126f,.7152f,.0722f,0.0f));\n    defineParam(sourceColour, \"source\", float4(1.0f));\n    defineParam(targetColour, \"target\", float4(1.0f));\n    defineParam(multiply, \"multiply\", float4(1.0f));\n    defineParam(useWeightedTargets, \"use weighted target as source\", true);\n\n  \}\n\n  // The init() function is run before any calls to process().\n  // Local variables can be initialized here.\n  void init() \{\n    \n  \}\n\n  void process() \{\n\n    output = src().x*weights.x+src().y*weights.y+src().z*weights.z;\n\n    if(useWeightedTargets == 1)\{\n\n      sourceColour = targetColour.x*weights.x+targetColour.y*weights.y+targetColour.z*weights.z;\n\n    \}\n\n    output = (output/sourceColour)*targetColour*multiply;\n    \n    \n    // Write the result to the output image\n    dst() = output;\n  \}\n\};\n"
+ rebuild ""
+ BlankKernel_weight {0.2125999928 0.715200007 0.07220000029 0}
+ rebuild_finalise ""
+ name BlinkScript2
+ selected true
+ xpos 56
+ ypos -255
+ addUserKnob {20 User}
+ addUserKnob {6 colour_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+}

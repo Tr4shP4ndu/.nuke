@@ -1,0 +1,2980 @@
+set cut_paste_input [stack 0]
+version 14.0 v4
+push $cut_paste_input
+Group {
+ name GS_Normals
+ tile_color 0x3e1c75ff
+ selected true
+ xpos -570
+ ypos -115
+ addUserKnob {20 NormalUtility}
+ addUserKnob {26 FV l "" +STARTLINE T "\n"}
+ addUserKnob {26 GizmoName l "" +STARTLINE T "<font size=\"6\"><div><span style=\"color:#21618C;\">G</span><span style=\"color:#2874A6;\">S</span><span style=\"color:#2E86C1;\">_</span><span style=\"color:#3498DB;\">n</span><span style=\"color:#5DADE2;\"></span><span style=\"color:#85C1E9;\">o</span><span style=\"color:#AED6F1;\">r</span><span style=\"color:#D6EAF8;\">m</span><span style=\"color:#EBF5FB;\">a</span><span style=\"color:#EBF5FB;\">l</span></span><span style=\"color:#EBF5FB;\">s</span><font size=\"3\"><span style=\"color:#EBF5FB;\">v</span><span style=\"color:#EBF5FB;\">2</span><span style=\"color:#EBF5FB;\">.0"}
+ addUserKnob {26 GG l "" +STARTLINE T "\n"}
+ addUserKnob {6 LumatoNormalConversion t "Disable this checkbox if you want to connect a normal map and rotate only" +STARTLINE}
+ addUserKnob {4 API M {OpenGL DirectX}}
+ addUserKnob {4 Direction M {Bump Hole}}
+ addUserKnob {7 Mult R 0 2}
+ Mult 2
+ addUserKnob {26 Details}
+ addUserKnob {7 weight}
+ addUserKnob {7 size R 0 100}
+ addUserKnob {26 RGBRotateN l "3D Rotate N" t "use rotation Z if you are rotating a Normal map, X and Y if you have a 3D generated Normal"}
+ addUserKnob {41 rotation l rotationX T Expression1.rotation}
+ addUserKnob {41 rotation_1 l rotationY T Expression2.rotation}
+ addUserKnob {41 rotation_2 l rotationZ T Expression3.rotation}
+ addUserKnob {26 Alpha l "Alpha channel"}
+ addUserKnob {6 enableposition l "enable position" t "In alpha channel" +STARTLINE}
+ enableposition true
+ addUserKnob {12 pos l "" -STARTLINE}
+ addUserKnob {20 Animations}
+ addUserKnob {68 enableanim l Animation M {Utility Pepsi Rainbow TennisBall Reflection Buoy "" "" ""}}
+ addUserKnob {41 timespeed T ControlMaster.timespeed}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode1
+  tile_color 0x2d5d72ff
+  label "Utility - Rotate"
+  note_font_size 92
+  xpos -92
+  ypos -315
+  bdwidth 642
+  bdheight 1337
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode2
+  tile_color 0x722424ff
+  label Animations
+  note_font_size 192
+  note_font_color 0xffffffff
+  xpos -2797
+  ypos -61
+  bdwidth 2125
+  bdheight 57
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode3
+  tile_color 0x676e72ff
+  label "<center>Convert luma to Normals"
+  note_font_size 92
+  xpos -247
+  ypos -1917
+  bdwidth 1627
+  bdheight 1375
+ }
+ Constant {
+  inputs 0
+  color {0.003 0.2 0.575 1}
+  color_panelDropped true
+  name Constant1
+  xpos -2050
+  ypos 807
+ }
+ Grade {
+  multiply 2.7
+  name Grade1
+  xpos -2050
+  ypos 879
+ }
+ Input {
+  inputs 0
+  name Input1
+  xpos 108
+  ypos -2183
+ }
+set Nd420c400 [stack 0]
+ Dot {
+  name Dot27
+  xpos 142
+  ypos -1889
+ }
+set Nd420c800 [stack 0]
+ Dot {
+  name Dot39
+  xpos -157
+  ypos -1889
+ }
+ Dot {
+  name Dot38
+  xpos -157
+  ypos -426
+ }
+push $Nd420c800
+ Keyer {
+  input rgba
+  operation "luminance key"
+  name Keyer1
+  xpos 108
+  ypos -1748
+ }
+ Shuffle {
+  green red
+  blue red
+  alpha red
+  name Shuffle22
+  xpos 108
+  ypos -1705
+ }
+set Nd420d800 [stack 0]
+ Multiply {
+  value {{0.5*Mult}}
+  name Multiply2
+  xpos 108
+  ypos -1636
+ }
+ Dot {
+  name Dot36
+  xpos 142
+  ypos -1588
+ }
+set Ne81c2000 [stack 0]
+ Blur {
+  size {{parent.size}}
+  name Blur9
+  xpos 108
+  ypos -1549
+ }
+set Ne81c2400 [stack 0]
+ Dot {
+  name Dot22
+  xpos 142
+  ypos -1472
+ }
+ Dot {
+  name Dot19
+  xpos 141
+  ypos -1382
+ }
+set Ne81c2c00 [stack 0]
+ Dot {
+  name Dot25
+  xpos 251
+  ypos -1382
+ }
+set Ne81c3000 [stack 0]
+ Matrix {
+  matrix {
+      {-2 0 2}
+      {-1 0 1}
+      {-2 0 2}
+    }
+  name Matrix4
+  xpos 217
+  ypos -1328
+ }
+ Dot {
+  name Dot26
+  xpos 251
+  ypos -1196
+ }
+push $Ne81c2c00
+ Matrix {
+  matrix {
+      {2 0 -2}
+      {1 0 -1}
+      {2 0 -2}
+    }
+  name Matrix1
+  xpos 108
+  ypos -1328
+ }
+ Switch {
+  inputs 2
+  which {{Direction}}
+  name Dir
+  xpos 108
+  ypos -1200
+ }
+push $Ne81c3000
+ Dot {
+  name Dot20
+  xpos 378
+  ypos -1382
+ }
+set Nf4b38400 [stack 0]
+ Dot {
+  name Dot24
+  xpos 509
+  ypos -1382
+ }
+ Matrix {
+  matrix {
+      {2 1 2}
+      {0 0 0}
+      {-2 -1 -2}
+    }
+  name Matrix3
+  xpos 475
+  ypos -1326
+ }
+ Dot {
+  name Dot23
+  xpos 509
+  ypos -1188
+ }
+push $Nf4b38400
+ Matrix {
+  matrix {
+      {-2 -1 -2}
+      {0 0 0}
+      {2 1 2}
+    }
+  name Matrix2
+  xpos 345
+  ypos -1329
+ }
+ Switch {
+  inputs 2
+  which {{Direction==0?API:(1-API)}}
+  name API
+  xpos 345
+  ypos -1192
+ }
+ Dot {
+  name Dot21
+  xpos 378
+  ypos -1060
+ }
+ ShuffleCopy {
+  inputs 2
+  red red
+  blue black
+  alpha black
+  name ShuffleCopy1
+  xpos 108
+  ypos -1064
+ }
+ Multiply {
+  value {{(1-weight)*(parent.size/10+1)}}
+  name Multiply4
+  xpos 108
+  ypos -986
+ }
+set N3de9c400 [stack 0]
+ Expression {
+  expr0 max(r,g)==0?0:1
+  expr1 max(r,g)==0?0:1
+  expr2 max(r,g)==0?0:1
+  expr3 max(r,g)==0?0:1
+  name Expression4
+  xpos 371
+  ypos -980
+ }
+push $Ne81c2400
+push $Ne81c2000
+ Dot {
+  name Dot37
+  xpos 776
+  ypos -1588
+ }
+ Merge2 {
+  inputs 2
+  operation from
+  name Details
+  xpos 742
+  ypos -1543
+ }
+ Dot {
+  name Dot28
+  xpos 776
+  ypos -1382
+ }
+set N3de9d400 [stack 0]
+ Dot {
+  name Dot29
+  xpos 886
+  ypos -1382
+ }
+set N3de9d800 [stack 0]
+ Matrix {
+  matrix {
+      {-2 0 2}
+      {-1 0 1}
+      {-2 0 2}
+    }
+  name Matrix5
+  xpos 852
+  ypos -1328
+ }
+ Dot {
+  name Dot30
+  xpos 886
+  ypos -1196
+ }
+push $N3de9d400
+ Matrix {
+  matrix {
+      {2 0 -2}
+      {1 0 -1}
+      {2 0 -2}
+    }
+  name Matrix6
+  xpos 743
+  ypos -1328
+ }
+ Switch {
+  inputs 2
+  which {{Direction}}
+  name Dir1
+  xpos 743
+  ypos -1200
+ }
+push $N3de9d800
+ Dot {
+  name Dot31
+  xpos 1013
+  ypos -1382
+ }
+set N64f98c00 [stack 0]
+ Dot {
+  name Dot32
+  xpos 1144
+  ypos -1382
+ }
+ Matrix {
+  matrix {
+      {2 1 2}
+      {0 0 0}
+      {-2 -1 -2}
+    }
+  name Matrix7
+  xpos 1110
+  ypos -1326
+ }
+ Dot {
+  name Dot33
+  xpos 1144
+  ypos -1188
+ }
+push $N64f98c00
+ Matrix {
+  matrix {
+      {-2 -1 -2}
+      {0 0 0}
+      {2 1 2}
+    }
+  name Matrix8
+  xpos 980
+  ypos -1329
+ }
+ Switch {
+  inputs 2
+  which {{Direction==0?API:(1-API)}}
+  name API1
+  xpos 980
+  ypos -1192
+ }
+ Dot {
+  name Dot34
+  xpos 1013
+  ypos -1060
+ }
+ ShuffleCopy {
+  inputs 2
+  red red
+  blue black
+  alpha black
+  name ShuffleCopy2
+  xpos 743
+  ypos -1064
+ }
+ Multiply {
+  value {{weight}}
+  name Multiply5
+  xpos 743
+  ypos -980
+ }
+ Dot {
+  name Dot35
+  xpos 777
+  ypos -888
+ }
+ Merge2 {
+  inputs 2
+  operation mask
+  name Merge25
+  xpos 371
+  ypos -892
+  disable true
+ }
+push $N3de9c400
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge24
+  xpos 108
+  ypos -892
+ }
+set N653d9800 [stack 0]
+ Expression {
+  temp_name0 magnitude
+  temp_expr0 sqrt(pow(r,2)+pow(g,2)+pow(b,2))
+  expr0 magnitude>1?r/magnitude:r
+  expr1 magnitude>1?g/magnitude:g
+  name Normalize
+  xpos 108
+  ypos -777
+  disable {{1-parent.legalize}}
+ }
+ Expression {
+  temp_name0 pitagora
+  temp_expr0 sqrt((1-(r*r))-(g*g))
+  temp_name1 pitagora2
+  temp_expr1 sqrt(-pow(r,2)-pow(g,2)+1)
+  expr0 r
+  expr1 g
+  expr2 isnan(sqrt(-pow(r,2)-pow(g,2)+1))?0:(sqrt(-pow(r,2)-pow(g,2)+1))
+  name Pitagora
+  xpos 108
+  ypos -720
+ }
+ Switch {
+  inputs 2
+  which {{1-(parent.LumatoNormalConversion)}}
+  name Switch3
+  selected true
+  xpos 108
+  ypos -430
+ }
+ Expression {
+  temp_name0 rot
+  temp_expr0 radians(rotation)
+  temp_name1 sinR
+  temp_expr1 sin(rot)
+  temp_name2 cosR
+  temp_expr2 cos(rot)
+  expr0 r
+  expr1 (cosR*g)+(-sinR*b)
+  expr2 (sinR*g)+(cosR*b)
+  name Expression1
+  xpos 108
+  ypos 67
+  addUserKnob {20 rotation_tab l rotation}
+  addUserKnob {7 rotation R 0 360}
+ }
+ Expression {
+  temp_name0 rot
+  temp_expr0 radians(rotation)
+  temp_name1 sinR
+  temp_expr1 sin(rot)
+  temp_name2 cosR
+  temp_expr2 cos(rot)
+  expr0 (cosR*r)+(0*g)+(-sinR*b)+(0*1)
+  expr1 g
+  expr2 (sinR*r)+(0*g)+(cosR*b)+(0*1)
+  name Expression2
+  xpos 108
+  ypos 101
+  addUserKnob {20 rotation_tab l rotation}
+  addUserKnob {7 rotation R 0 360}
+ }
+ Expression {
+  temp_name0 rot
+  temp_expr0 radians(rotation)
+  temp_name1 sinR
+  temp_expr1 sin(rot)
+  temp_name2 cosR
+  temp_expr2 cos(rot)
+  expr0 (cosR*r)-(sinR*g)
+  expr1 (sinR*r)+(cosR*g)
+  expr2 b
+  name Expression3
+  xpos 108
+  ypos 144
+  addUserKnob {20 rotation_tab l rotation}
+  addUserKnob {7 rotation R 0 360}
+ }
+ Dot {
+  name Dot1
+  xpos 142
+  ypos 447
+ }
+set N8fa61400 [stack 0]
+ Dot {
+  name Dot14
+  xpos -1242
+  ypos 447
+ }
+set N8fa61800 [stack 0]
+ Dot {
+  name Dot5
+  xpos -1482
+  ypos 487
+ }
+set N8fa61c00 [stack 0]
+ Expression {
+  temp_name0 angleMasky
+  temp_expr0 (radians(rotationMasky))
+  temp_name1 angleMaskx
+  temp_expr1 (radians(rotationMaskx))
+  temp_name2 sin1
+  temp_expr2 (sin(angleMask))
+  temp_name3 cos1
+  temp_expr3 (cos(angleMask))
+  expr0 r
+  expr1 g
+  expr2 b
+  expr3 (((cos(angleMasky))*b))+(-(sin(angleMasky))*g)*(((cos(angleMaskx))*b)+(-(sin(angleMaskx))*r))
+  name Expression10
+  xpos -1516
+  ypos 596
+  addUserKnob {20 rotation_tab l rotation}
+  addUserKnob {7 rotationMaskx R 0 360}
+  rotationMaskx {{parent.Control1.time}}
+  addUserKnob {7 rotationMasky R 0 360}
+  rotationMasky {{rotationMaskx+90}}
+ }
+ Shuffle {
+  red alpha
+  green black
+  blue black
+  alpha black
+  name Shuffle2
+  xpos -1516
+  ypos 674
+ }
+ Grade {
+  white 3.12
+  multiply 0.25
+  gamma 0.302
+  black_clamp false
+  white_clamp true
+  name Grade2
+  xpos -1516
+  ypos 736
+ }
+ Dot {
+  name Dot11
+  xpos -1482
+  ypos 825
+ }
+set N65414c00 [stack 0]
+push $N8fa61c00
+ Dot {
+  name Dot4
+  xpos -1634
+  ypos 487
+ }
+set N65415000 [stack 0]
+ Expression {
+  temp_name0 angleMasky
+  temp_expr0 (radians(rotationMasky))
+  temp_name1 angleMaskx
+  temp_expr1 (radians(rotationMaskx))
+  temp_name2 sin1
+  temp_expr2 (sin(angleMask))
+  temp_name3 cos1
+  temp_expr3 (cos(angleMask))
+  expr0 r
+  expr1 g
+  expr2 b
+  expr3 (((cos(angleMasky))*b))+(-(sin(angleMasky))*g)*(((cos(angleMaskx))*b)+(-(sin(angleMaskx))*r))
+  name Expression9
+  xpos -1668
+  ypos 588
+  addUserKnob {20 rotation_tab l rotation}
+  addUserKnob {7 rotationMaskx R 0 360}
+  rotationMaskx {{parent.Control1.time}}
+  addUserKnob {7 rotationMasky R 0 360}
+  rotationMasky {{rotationMaskx-90}}
+ }
+ Shuffle {
+  red black
+  green alpha
+  blue black
+  alpha black
+  name Shuffle7
+  xpos -1668
+  ypos 676
+ }
+ Grade {
+  white 3.12
+  multiply 0.25
+  gamma 0.302
+  black_clamp false
+  white_clamp true
+  name Grade10
+  xpos -1668
+  ypos 756
+ }
+ Merge2 {
+  inputs 2
+  operation screen
+  name Merge1
+  xpos -1675
+  ypos 821
+ }
+set N8d666000 [stack 0]
+ Shuffle {
+  red green
+  blue green
+  alpha green
+  name Shuffle1
+  xpos -1845
+  ypos 821
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge2
+  xpos -1848
+  ypos 879
+ }
+set N8d666800 [stack 0]
+push $N8d666000
+ Merge2 {
+  inputs 2
+  name Merge4
+  xpos -1675
+  ypos 879
+ }
+ Constant {
+  inputs 0
+  color {0.007 0.108 0.006 1}
+  color_panelDropped true
+  name Constant5
+  xpos -3079
+  ypos 1512
+ }
+ Grade {
+  multiply 2.7
+  name Grade17
+  xpos -3079
+  ypos 1584
+ }
+ Grade {
+  white {0.79 0 1.37 1}
+  white_panelDropped true
+  gamma 1.88
+  name Grade18
+  xpos -2993
+  ypos 1615
+ }
+push $N8fa61800
+ Dot {
+  name Dot12
+  xpos -1459
+  ypos 1257
+ }
+set N8d667c00 [stack 0]
+ Dot {
+  name Dot13
+  xpos -1611
+  ypos 1257
+ }
+set N90df2000 [stack 0]
+ Dot {
+  name Dot15
+  xpos -2567
+  ypos 1255
+ }
+set N90df2400 [stack 0]
+ Expression {
+  temp_name0 angleMasky
+  temp_expr0 (radians(rotationMasky))
+  temp_name1 angleMaskx
+  temp_expr1 (radians(rotationMaskx))
+  temp_name2 sin1
+  temp_expr2 (sin(angleMask))
+  temp_name3 cos1
+  temp_expr3 (cos(angleMask))
+  expr0 r
+  expr1 g
+  expr2 b
+  expr3 (((cos(angleMasky))*b))+(-(sin(angleMasky))*g)*(((cos(angleMaskx))*b)+(-(sin(angleMaskx))*r))
+  name Expression19
+  xpos -2601
+  ypos 1364
+  addUserKnob {20 rotation_tab l rotation}
+  addUserKnob {7 rotationMaskx R 0 360}
+  rotationMaskx {{parent.Control3.time}}
+  addUserKnob {7 rotationMasky R 0 360}
+  rotationMasky {{rotationMaskx+90}}
+ }
+ Shuffle {
+  red alpha
+  green black
+  blue black
+  alpha black
+  name Shuffle14
+  xpos -2601
+  ypos 1423
+ }
+ Dilate {
+  size -30
+  name Dilate4
+  xpos -2601
+  ypos 1449
+ }
+ Blur {
+  size 20
+  name Blur4
+  xpos -2601
+  ypos 1491
+ }
+ Grade {
+  white 3.12
+  multiply 0.25
+  gamma 0.302
+  reverse true
+  black_clamp false
+  white_clamp true
+  name Grade19
+  xpos -2601
+  ypos 1538
+ }
+push $N90df2400
+ Dot {
+  name Dot16
+  xpos -2719
+  ypos 1255
+ }
+ Expression {
+  temp_name0 angleMasky
+  temp_expr0 (radians(rotationMasky))
+  temp_name1 angleMaskx
+  temp_expr1 (radians(rotationMaskx))
+  temp_name2 sin1
+  temp_expr2 (sin(angleMask))
+  temp_name3 cos1
+  temp_expr3 (cos(angleMask))
+  expr0 r
+  expr1 g
+  expr2 b
+  expr3 (((cos(angleMasky))*b))+(-(sin(angleMasky))*g)*(((cos(angleMaskx))*b)+(-(sin(angleMaskx))*r))
+  name Expression20
+  xpos -2753
+  ypos 1356
+  addUserKnob {20 rotation_tab l rotation}
+  addUserKnob {7 rotationMaskx R 0 360}
+  rotationMaskx {{parent.Control3.time}}
+  addUserKnob {7 rotationMasky R 0 360}
+  rotationMasky {{rotationMaskx-90}}
+ }
+ Shuffle {
+  red black
+  green alpha
+  blue black
+  alpha black
+  name Shuffle15
+  xpos -2753
+  ypos 1421
+ }
+ Dilate {
+  size -10
+  name Dilate5
+  xpos -2753
+  ypos 1447
+ }
+ Blur {
+  size 22
+  name Blur5
+  xpos -2753
+  ypos 1491
+ }
+ Grade {
+  white {2.76 2.76 2.76 2.76}
+  white_panelDropped true
+  multiply 0.25
+  gamma 0.302
+  gamma_panelDropped true
+  reverse true
+  black_clamp false
+  white_clamp true
+  name Grade20
+  xpos -2753
+  ypos 1538
+ }
+ Merge2 {
+  inputs 2
+  operation screen
+  name Merge13
+  xpos -2753
+  ypos 1602
+ }
+set N90851400 [stack 0]
+ Shuffle {
+  red green
+  blue green
+  alpha green
+  name Shuffle16
+  xpos -2863
+  ypos 1602
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge14
+  xpos -2863
+  ypos 1678
+ }
+set N90851c00 [stack 0]
+push $N90851400
+ Merge2 {
+  inputs 2
+  name Merge15
+  xpos -2753
+  ypos 1678
+ }
+ Grade {
+  black -0.0045
+  white 4
+  gamma 5
+  name Grade21
+  xpos -2987
+  ypos 1779
+ }
+ Group {
+  name Bloom6
+  tile_color 0x7fff
+  note_font_color 0xff0000ff
+  xpos -2987
+  ypos 1842
+  addUserKnob {20 User l Hard_Glow}
+  addUserKnob {41 size l Amount T Main.size}
+  addUserKnob {41 mix T Screen.mix}
+  addUserKnob {26 ""}
+  addUserKnob {41 range T Keyer1.range}
+ }
+  Input {
+   inputs 0
+   name Mask
+   xpos 680
+   ypos -82
+   number 1
+  }
+  Invert {
+   name Invert1
+   xpos 683
+   ypos 59
+  }
+  Dot {
+   name Dot4
+   xpos 714
+   ypos 532
+  }
+  Input {
+   inputs 0
+   name Source
+   xpos -388
+   ypos -206
+  }
+  Dot {
+   name Dot3
+   xpos -354
+   ypos -41
+  }
+set Na685800 [stack 0]
+  Dot {
+   name Dot2
+   xpos 316
+   ypos -41
+  }
+set Na685c00 [stack 0]
+  Dot {
+   name Dot5
+   xpos 520
+   ypos -41
+  }
+push $Na685800
+  Dot {
+   name Dot1
+   xpos -584
+   ypos -41
+  }
+  Keyer {
+   operation "luminance key"
+   name Keyer1
+   xpos -618
+   ypos 17
+  }
+  Blur {
+   size 2.3
+   name Blur1
+   xpos -618
+   ypos 63
+  }
+push $Na685800
+  Copy {
+   inputs 2
+   from0 rgba.alpha
+   to0 rgba.alpha
+   name Copy1
+   xpos -388
+   ypos 63
+  }
+  Premult {
+   name Premult1
+   xpos -388
+   ypos 101
+  }
+  Dot {
+   name Dot7
+   xpos -354
+   ypos 130
+  }
+set N90cf9800 [stack 0]
+  Blur {
+   size 1.75
+   mix 0
+   name Main
+   xpos 190
+   ypos 321
+  }
+push $N90cf9800
+  Blur {
+   size {{parent.Main.size*512}}
+   mix 0.995
+   name Blur16
+   xpos 27
+   ypos 319
+  }
+push $N90cf9800
+  Blur {
+   size {{parent.Main.size*268}}
+   name Blur15
+   xpos -83
+   ypos 319
+  }
+push $N90cf9800
+  Blur {
+   size {{parent.Main.size*4}}
+   mix 0.825
+   name Blur9
+   xpos -852
+   ypos 345
+  }
+push $N90cf9800
+  Blur {
+   size {{parent.Main.size*8}}
+   name Blur10
+   xpos -743
+   ypos 319
+  }
+push $N90cf9800
+  Blur {
+   size {{parent.Main.size*16}}
+   name Blur11
+   xpos -633
+   ypos 319
+  }
+push $N90cf9800
+  Blur {
+   size {{parent.Main.size*32}}
+   name Blur12
+   xpos -523
+   ypos 319
+  }
+push $N90cf9800
+  Blur {
+   size {{parent.Main.size*64}}
+   name Blur13
+   xpos -413
+   ypos 319
+  }
+push 0
+push $N90cf9800
+  Blur {
+   size {{parent.Main.size*128}}
+   name Blur14
+   xpos -193
+   ypos 319
+  }
+push $N90cf9800
+  Blur {
+   size {{parent.Main.size*2}}
+   name Blur7
+   xpos -303
+   ypos 319
+  }
+  Merge2 {
+   inputs 10+1
+   operation screen
+   name Merge11
+   xpos -397
+   ypos 550
+  }
+push $Na685c00
+  Merge2 {
+   inputs 2
+   operation screen
+   name Screen
+   xpos 282
+   ypos 528
+  }
+  Keymix {
+   inputs 3
+   name Keymix1
+   xpos 486
+   ypos 522
+  }
+  Output {
+   name Output1
+   xpos 486
+   ypos 691
+  }
+ end_group
+ Constant {
+  inputs 0
+  color {3 0.002 0 1}
+  color_panelDropped true
+  name Constant4
+  xpos -1942
+  ypos 1557
+ }
+ Grade {
+  white 1.01
+  multiply 0.27
+  gamma 1.48
+  gamma_panelDropped true
+  name Grade16
+  xpos -1942
+  ypos 1680
+ }
+push $N8d667c00
+ Expression {
+  temp_name0 angleMasky
+  temp_expr0 (radians(rotationMasky))
+  temp_name1 angleMaskx
+  temp_expr1 (radians(rotationMaskx))
+  temp_name2 sin1
+  temp_expr2 (sin(angleMask))
+  temp_name3 cos1
+  temp_expr3 (cos(angleMask))
+  expr0 r
+  expr1 g
+  expr2 b
+  expr3 (((cos(angleMasky))*b))+(-(sin(angleMasky))*g)*(((cos(angleMaskx))*b)+(-(sin(angleMaskx))*r))
+  name Expression14
+  xpos -1493
+  ypos 1366
+  addUserKnob {20 rotation_tab l rotation}
+  addUserKnob {7 rotationMaskx R 0 360}
+  rotationMaskx {{parent.Control1.time}}
+  addUserKnob {7 rotationMasky R 0 360}
+  rotationMasky {{rotationMaskx+90}}
+ }
+ Shuffle {
+  red alpha
+  green black
+  blue black
+  alpha black
+  name Shuffle10
+  xpos -1493
+  ypos 1425
+ }
+ Dilate {
+  size -35
+  name Dilate2
+  xpos -1493
+  ypos 1451
+ }
+ Grade {
+  white 3.12
+  multiply 0.21
+  gamma 0.236
+  reverse true
+  black_clamp false
+  white_clamp true
+  name Grade9
+  xpos -1493
+  ypos 1507
+ }
+ Blur {
+  size 20
+  name Blur2
+  xpos -1493
+  ypos 1546
+  disable true
+ }
+push $N90df2000
+ Expression {
+  temp_name0 angleMasky
+  temp_expr0 (radians(rotationMasky))
+  temp_name1 angleMaskx
+  temp_expr1 (radians(rotationMaskx))
+  temp_name2 sin1
+  temp_expr2 (sin(angleMask))
+  temp_name3 cos1
+  temp_expr3 (cos(angleMask))
+  expr0 r
+  expr1 g
+  expr2 b
+  expr3 (((cos(angleMasky))*b))+(-(sin(angleMasky))*g)*(((cos(angleMaskx))*b)+(-(sin(angleMaskx))*r))
+  name Expression18
+  xpos -1645
+  ypos 1358
+  addUserKnob {20 rotation_tab l rotation}
+  addUserKnob {7 rotationMaskx R 0 360}
+  rotationMaskx {{parent.Control1.time}}
+  addUserKnob {7 rotationMasky R 0 360}
+  rotationMasky {{rotationMaskx-90}}
+ }
+ Shuffle {
+  red black
+  green alpha
+  blue black
+  alpha black
+  name Shuffle11
+  xpos -1645
+  ypos 1423
+ }
+ Dilate {
+  size -35
+  name Dilate1
+  xpos -1645
+  ypos 1449
+ }
+ Grade {
+  white {1.4 1.4 1.4 2.76}
+  white_panelDropped true
+  multiply 0.41
+  gamma {0.2 0.2 0.2 0.302}
+  gamma_panelDropped true
+  reverse true
+  black_clamp false
+  white_clamp true
+  name Grade13
+  xpos -1645
+  ypos 1499
+ }
+ Blur {
+  size 22
+  name Blur1
+  xpos -1645
+  ypos 1551
+  disable true
+ }
+ Merge2 {
+  inputs 2
+  operation screen
+  name Merge7
+  xpos -1645
+  ypos 1604
+ }
+set N9097e400 [stack 0]
+ Shuffle {
+  red green
+  blue green
+  alpha green
+  name Shuffle9
+  xpos -1755
+  ypos 1604
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge9
+  xpos -1755
+  ypos 1680
+ }
+set N9097ec00 [stack 0]
+push $N9097e400
+ Merge2 {
+  inputs 2
+  name Merge8
+  xpos -1645
+  ypos 1680
+ }
+push $N9097ec00
+ Constant {
+  inputs 0
+  color {0.003 0.2 0.575 1}
+  color_panelDropped true
+  name Constant3
+  xpos -1291
+  ypos 1520
+ }
+ Grade {
+  multiply 2.7
+  name Grade15
+  xpos -1291
+  ypos 1592
+ }
+ Grade {
+  white {0.15 0 0.8 1}
+  white_panelDropped true
+  gamma 1.14
+  white_clamp true
+  name Grade14
+  xpos -1291
+  ypos 1643
+ }
+push $N9097e400
+ Shuffle {
+  green red
+  blue red
+  alpha red
+  name Shuffle12
+  xpos -1484
+  ypos 1601
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge10
+  xpos -1484
+  ypos 1643
+ }
+ Merge2 {
+  inputs 2
+  operation screen
+  name Merge11
+  xpos -1634
+  ypos 1804
+ }
+ Grade {
+  white 1.88
+  gamma 0.58
+  name Grade12
+  xpos -1634
+  ypos 1896
+ }
+set N909c2c00 [stack 0]
+ Invert {
+  name Invert1
+  xpos -1788
+  ypos 1857
+ }
+ Constant {
+  inputs 0
+  color {1 1 0 1}
+  color_panelDropped true
+  name Constant2
+  xpos -1263
+  ypos 847
+ }
+push $N65414c00
+ Shuffle {
+  green red
+  blue red
+  alpha red
+  name Shuffle8
+  xpos -1396
+  ypos 821
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge5
+  xpos -1396
+  ypos 879
+ }
+push $N8d666800
+ Merge2 {
+  inputs 2
+  operation screen
+  name Merge6
+  xpos -1848
+  ypos 957
+ }
+ Grade {
+  white 1.69
+  name Grade11
+  xpos -1848
+  ypos 1019
+ }
+ Group {
+  name Bloom3
+  tile_color 0x7fff
+  note_font_color 0xff0000ff
+  xpos -1848
+  ypos 1133
+  addUserKnob {20 User l Hard_Glow}
+  addUserKnob {41 size l Amount T Main.size}
+  addUserKnob {41 mix T Screen.mix}
+  addUserKnob {26 ""}
+  addUserKnob {41 range T Keyer1.range}
+ }
+  Input {
+   inputs 0
+   name Mask
+   xpos 680
+   ypos -82
+   number 1
+  }
+  Invert {
+   name Invert1
+   xpos 683
+   ypos 59
+  }
+  Dot {
+   name Dot4
+   xpos 714
+   ypos 532
+  }
+  Input {
+   inputs 0
+   name Source
+   xpos -388
+   ypos -206
+  }
+  Dot {
+   name Dot3
+   xpos -354
+   ypos -41
+  }
+set Nc9c5d800 [stack 0]
+  Dot {
+   name Dot2
+   xpos 316
+   ypos -41
+  }
+set Nc9c5dc00 [stack 0]
+  Dot {
+   name Dot5
+   xpos 520
+   ypos -41
+  }
+push $Nc9c5d800
+  Dot {
+   name Dot1
+   xpos -584
+   ypos -41
+  }
+  Keyer {
+   operation "luminance key"
+   name Keyer1
+   xpos -618
+   ypos 17
+  }
+  Blur {
+   size 2.3
+   name Blur1
+   xpos -618
+   ypos 63
+  }
+push $Nc9c5d800
+  Copy {
+   inputs 2
+   from0 rgba.alpha
+   to0 rgba.alpha
+   name Copy1
+   xpos -388
+   ypos 63
+  }
+  Premult {
+   name Premult1
+   xpos -388
+   ypos 101
+  }
+  Dot {
+   name Dot7
+   xpos -354
+   ypos 130
+  }
+set Nc9c91800 [stack 0]
+  Blur {
+   size 1.75
+   mix 0
+   name Main
+   xpos 190
+   ypos 321
+  }
+push $Nc9c91800
+  Blur {
+   size {{parent.Main.size*512}}
+   mix 0.995
+   name Blur16
+   xpos 27
+   ypos 319
+  }
+push $Nc9c91800
+  Blur {
+   size {{parent.Main.size*268}}
+   name Blur15
+   xpos -83
+   ypos 319
+  }
+push $Nc9c91800
+  Blur {
+   size {{parent.Main.size*4}}
+   mix 0.825
+   name Blur9
+   xpos -852
+   ypos 345
+  }
+push $Nc9c91800
+  Blur {
+   size {{parent.Main.size*8}}
+   name Blur10
+   xpos -743
+   ypos 319
+  }
+push $Nc9c91800
+  Blur {
+   size {{parent.Main.size*16}}
+   name Blur11
+   xpos -633
+   ypos 319
+  }
+push $Nc9c91800
+  Blur {
+   size {{parent.Main.size*32}}
+   name Blur12
+   xpos -523
+   ypos 319
+  }
+push $Nc9c91800
+  Blur {
+   size {{parent.Main.size*64}}
+   name Blur13
+   xpos -413
+   ypos 319
+  }
+push 0
+push $Nc9c91800
+  Blur {
+   size {{parent.Main.size*128}}
+   name Blur14
+   xpos -193
+   ypos 319
+  }
+push $Nc9c91800
+  Blur {
+   size {{parent.Main.size*2}}
+   name Blur7
+   xpos -303
+   ypos 319
+  }
+  Merge2 {
+   inputs 10+1
+   operation screen
+   name Merge11
+   xpos -397
+   ypos 550
+  }
+push $Nc9c5dc00
+  Merge2 {
+   inputs 2
+   operation screen
+   name Screen
+   xpos 282
+   ypos 528
+  }
+  Keymix {
+   inputs 3
+   name Keymix1
+   xpos 486
+   ypos 522
+  }
+  Output {
+   name Output1
+   xpos 486
+   ypos 691
+  }
+ end_group
+set Nc9ea4b00 [stack 0]
+ TimeClip {
+  time ""
+  before loop
+  last 72
+  after loop
+  origlast 163
+  origset true
+  name TimeClip1
+  xpos -1848
+  ypos 2678
+ }
+ Reformat {
+  format "1024 1024 0 0 1024 1024 1 square_1K"
+  name Reformat2
+  xpos -1848
+  ypos 2704
+ }
+push $N909c2c00
+ Grade {
+  channels alpha
+  multiply 2.02
+  gamma 1.44
+  name Grade3
+  xpos -1744
+  ypos 1896
+ }
+set Nc9d3a000 [stack 0]
+ FilterErode {
+  size 16
+  name FilterErode1
+  xpos -1788
+  ypos 1928
+ }
+push $Nc9d3a000
+ FilterErode {
+  size -13
+  name FilterErode2
+  xpos -1738
+  ypos 1948
+ }
+ Merge2 {
+  inputs 2
+  operation stencil
+  name Merge19
+  xpos -1788
+  ypos 2000
+ }
+push $N909c2c00
+push $Nd420c400
+ Dot {
+  name Dot17
+  xpos -1427
+  ypos 1819
+ }
+set Nc9d3b000 [stack 0]
+ Dilate {
+  size -3
+  name Dilate3
+  xpos -1524
+  ypos 1892
+ }
+ Blur {
+  size 22
+  name Blur3
+  xpos -1524
+  ypos 1936
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Shuffle13
+  xpos -1524
+  ypos 1974
+ }
+ Merge2 {
+  inputs 2
+  name Merge12
+  xpos -1634
+  ypos 1974
+ }
+ Merge2 {
+  inputs 2
+  operation stencil
+  mix 0.956
+  name Merge22
+  xpos -1634
+  ypos 2022
+ }
+ Blur {
+  size 20.6
+  name Blur8
+  xpos -1634
+  ypos 2065
+ }
+set Nc9d74800 [stack 0]
+push $Nc9d74800
+ Group {
+  name Bloom4
+  tile_color 0x7fff
+  note_font_color 0xff0000ff
+  xpos -1634
+  ypos 2264
+  addUserKnob {20 User l Hard_Glow}
+  addUserKnob {41 size l Amount T Main.size}
+  addUserKnob {41 mix T Screen.mix}
+  addUserKnob {26 ""}
+  addUserKnob {41 range T Keyer1.range}
+ }
+  Input {
+   inputs 0
+   name Mask
+   xpos 680
+   ypos -82
+   number 1
+  }
+  Invert {
+   name Invert1
+   xpos 683
+   ypos 59
+  }
+  Dot {
+   name Dot4
+   xpos 714
+   ypos 532
+  }
+  Input {
+   inputs 0
+   name Source
+   xpos -388
+   ypos -206
+  }
+  Dot {
+   name Dot3
+   xpos -354
+   ypos -41
+  }
+set Nc9d75c00 [stack 0]
+  Dot {
+   name Dot2
+   xpos 316
+   ypos -41
+  }
+set Nc9da6000 [stack 0]
+  Dot {
+   name Dot5
+   xpos 520
+   ypos -41
+  }
+push $Nc9d75c00
+  Dot {
+   name Dot1
+   xpos -584
+   ypos -41
+  }
+  Keyer {
+   input {-rgba.red rgba.green rgba.blue}
+   operation "luminance key"
+   range {0 0.2525188758 0.2731244161 0.4568129593}
+   name Keyer1
+   xpos -618
+   ypos 2
+  }
+  Blur {
+   size 2.3
+   name Blur1
+   xpos -618
+   ypos 63
+  }
+push $Nc9d75c00
+  Copy {
+   inputs 2
+   from0 rgba.alpha
+   to0 rgba.alpha
+   name Copy1
+   xpos -388
+   ypos 63
+  }
+  Premult {
+   name Premult1
+   xpos -388
+   ypos 101
+  }
+  Dot {
+   name Dot7
+   xpos -354
+   ypos 130
+  }
+set Nc9da7c00 [stack 0]
+  Blur {
+   size 0.14
+   mix 0
+   name Main
+   xpos 190
+   ypos 321
+  }
+push $Nc9da7c00
+  Blur {
+   size {{parent.Main.size*512}}
+   mix 0.995
+   name Blur16
+   xpos 27
+   ypos 319
+  }
+push $Nc9da7c00
+  Blur {
+   size {{parent.Main.size*268}}
+   name Blur15
+   xpos -83
+   ypos 319
+  }
+push $Nc9da7c00
+  Blur {
+   size {{parent.Main.size*4}}
+   mix 0.825
+   name Blur9
+   xpos -852
+   ypos 345
+  }
+push $Nc9da7c00
+  Blur {
+   size {{parent.Main.size*8}}
+   name Blur10
+   xpos -743
+   ypos 319
+  }
+push $Nc9da7c00
+  Blur {
+   size {{parent.Main.size*16}}
+   name Blur11
+   xpos -633
+   ypos 319
+  }
+push $Nc9da7c00
+  Blur {
+   size {{parent.Main.size*32}}
+   name Blur12
+   xpos -523
+   ypos 319
+  }
+push $Nc9da7c00
+  Blur {
+   size {{parent.Main.size*64}}
+   name Blur13
+   xpos -413
+   ypos 319
+  }
+push 0
+push $Nc9da7c00
+  Blur {
+   size {{parent.Main.size*128}}
+   name Blur14
+   xpos -193
+   ypos 319
+  }
+push $Nc9da7c00
+  Blur {
+   size {{parent.Main.size*2}}
+   name Blur7
+   xpos -303
+   ypos 319
+  }
+  Merge2 {
+   inputs 10+1
+   operation screen
+   name Merge11
+   xpos -397
+   ypos 550
+  }
+push $Nc9da6000
+  Merge2 {
+   inputs 2
+   operation screen
+   name Screen
+   xpos 282
+   ypos 528
+  }
+  Keymix {
+   inputs 3
+   name Keymix1
+   xpos 486
+   ypos 522
+  }
+  Output {
+   name Output1
+   xpos 486
+   ypos 691
+  }
+ end_group
+push $Nc9d74800
+ Group {
+  name Bloom8
+  tile_color 0x7fff
+  note_font_color 0xff0000ff
+  xpos -1512
+  ypos 2278
+  addUserKnob {20 User l Hard_Glow}
+  addUserKnob {41 size l Amount T Main.size}
+  addUserKnob {41 mix T Screen.mix}
+  addUserKnob {26 ""}
+  addUserKnob {41 range T Keyer1.range}
+ }
+  Input {
+   inputs 0
+   name Mask
+   xpos 680
+   ypos -82
+   number 1
+  }
+  Invert {
+   name Invert1
+   xpos 683
+   ypos 59
+  }
+  Dot {
+   name Dot4
+   xpos 714
+   ypos 532
+  }
+  Input {
+   inputs 0
+   name Source
+   xpos -388
+   ypos -206
+  }
+  Dot {
+   name Dot3
+   xpos -354
+   ypos -41
+  }
+set N91034800 [stack 0]
+  Dot {
+   name Dot2
+   xpos 316
+   ypos -41
+  }
+set N91034c00 [stack 0]
+  Dot {
+   name Dot5
+   xpos 520
+   ypos -41
+  }
+push $N91034800
+  Dot {
+   name Dot1
+   xpos -584
+   ypos -41
+  }
+  Keyer {
+   input {-rgba.red rgba.green rgba.blue}
+   operation "luminance key"
+   range {0 0.25 0.25 0.4568129593}
+   name Keyer1
+   xpos -618
+   ypos 2
+  }
+  Blur {
+   size 2.3
+   name Blur1
+   xpos -618
+   ypos 63
+  }
+push $N91034800
+  Copy {
+   inputs 2
+   from0 rgba.alpha
+   to0 rgba.alpha
+   name Copy1
+   xpos -388
+   ypos 63
+  }
+  Premult {
+   name Premult1
+   xpos -388
+   ypos 101
+  }
+  Dot {
+   name Dot7
+   xpos -354
+   ypos 130
+  }
+set N91056800 [stack 0]
+  Blur {
+   size 1
+   mix 0
+   name Main
+   xpos 190
+   ypos 321
+  }
+push $N91056800
+  Blur {
+   size {{parent.Main.size*512}}
+   mix 0.995
+   name Blur16
+   xpos 27
+   ypos 319
+  }
+push $N91056800
+  Blur {
+   size {{parent.Main.size*268}}
+   name Blur15
+   xpos -83
+   ypos 319
+  }
+push $N91056800
+  Blur {
+   size {{parent.Main.size*4}}
+   mix 0.825
+   name Blur9
+   xpos -852
+   ypos 345
+  }
+push $N91056800
+  Blur {
+   size {{parent.Main.size*8}}
+   name Blur10
+   xpos -743
+   ypos 319
+  }
+push $N91056800
+  Blur {
+   size {{parent.Main.size*16}}
+   name Blur11
+   xpos -633
+   ypos 319
+  }
+push $N91056800
+  Blur {
+   size {{parent.Main.size*32}}
+   name Blur12
+   xpos -523
+   ypos 319
+  }
+push $N91056800
+  Blur {
+   size {{parent.Main.size*64}}
+   name Blur13
+   xpos -413
+   ypos 319
+  }
+push 0
+push $N91056800
+  Blur {
+   size {{parent.Main.size*128}}
+   name Blur14
+   xpos -193
+   ypos 319
+  }
+push $N91056800
+  Blur {
+   size {{parent.Main.size*2}}
+   name Blur7
+   xpos -303
+   ypos 319
+  }
+  Merge2 {
+   inputs 10+1
+   operation screen
+   name Merge11
+   xpos -397
+   ypos 550
+  }
+push $N91034c00
+  Merge2 {
+   inputs 2
+   operation screen
+   name Screen
+   xpos 282
+   ypos 528
+  }
+  Keymix {
+   inputs 3
+   name Keymix1
+   xpos 486
+   ypos 522
+  }
+set N9108fc00 [stack 0]
+  Output {
+   name Output1
+   xpos 486
+   ypos 691
+  }
+push $N9108fc00
+  Viewer {
+   frame_range 1-463
+   fps 25
+   name Viewer1
+   xpos -278
+   ypos 127
+  }
+ end_group
+ Merge2 {
+  inputs 2
+  operation under
+  name Merge20
+  xpos -1582
+  ypos 2313
+ }
+ Multiply {
+  value {0.856666 0.586666 0.356666 0.6}
+  value_panelDropped true
+  name Multiply3
+  xpos -1582
+  ypos 2377
+ }
+ Merge2 {
+  inputs 2
+  name Merge21
+  xpos -1730
+  ypos 2354
+ }
+ Blur {
+  name Blur7
+  xpos -1730
+  ypos 2428
+ }
+ Grade {
+  white 0.62
+  gamma 1.36
+  white_clamp true
+  mix 0.236
+  name Grade25
+  xpos -1730
+  ypos 2479
+ }
+set N910f3800 [stack 0]
+ TimeClip {
+  time ""
+  before loop
+  last 72
+  after loop
+  origlast 163
+  origset true
+  name TimeClip3
+  xpos -1730
+  ypos 2683
+ }
+ Reformat {
+  format "1024 1024 0 0 1024 1024 1 square_1K"
+  name Reformat3
+  xpos -1730
+  ypos 2709
+ }
+push $N8fa61c00
+ Dot {
+  name Dot6
+  xpos -1014
+  ypos 589
+ }
+set N91148800 [stack 0]
+ Dot {
+  name Dot7
+  xpos -858
+  ypos 589
+ }
+set N91148c00 [stack 0]
+ Dot {
+  name Dot9
+  xpos -745
+  ypos 589
+ }
+set N91149000 [stack 0]
+ Dot {
+  name Dot8
+  xpos -631
+  ypos 589
+ }
+ Expression {
+  temp_name0 angleMasky
+  temp_expr0 (radians(rotationMasky))
+  temp_name1 angleMaskx
+  temp_expr1 (radians(rotationMaskx))
+  temp_name2 sin1
+  temp_expr2 (sin(angleMask))
+  temp_name3 cos1
+  temp_expr3 (cos(angleMask))
+  expr0 r
+  expr1 g
+  expr2 b
+  expr3 (((cos(angleMasky))*(1-b))+(-(sin(angleMasky))*(1-g)))*(((cos(angleMaskx))*(b))+(-(sin(angleMaskx))*r))
+  name Expression17
+  xpos -665
+  ypos 646
+  addUserKnob {20 rotation_tab l rotation}
+  addUserKnob {7 rotationMaskx R 0 360}
+  rotationMaskx {{rotationMasky}}
+  addUserKnob {7 rotationMasky R 0 360}
+  rotationMasky {{Control2.time3}}
+ }
+ Shuffle {
+  red black
+  green alpha
+  blue black
+  alpha black
+  name Shuffle6
+  xpos -665
+  ypos 738
+ }
+ Grade {
+  white 3.12
+  multiply 0.25
+  gamma 0.302
+  black_clamp false
+  white_clamp true
+  name Grade8
+  xpos -665
+  ypos 837
+ }
+ Dot {
+  name Dot10
+  xpos -631
+  ypos 879
+ }
+push $N91149000
+ Expression {
+  temp_name0 angleMasky
+  temp_expr0 (radians(rotationMasky))
+  temp_name1 angleMaskx
+  temp_expr1 (radians(rotationMaskx))
+  temp_name2 sin1
+  temp_expr2 (sin(angleMask))
+  temp_name3 cos1
+  temp_expr3 (cos(angleMask))
+  expr0 r
+  expr1 g
+  expr2 b
+  expr3 (((cos(angleMasky))*(1-b))+(-(sin(angleMasky))*(1-g)))*(((cos(angleMaskx))*(b))+(-(sin(angleMaskx))*r))
+  name Expression16
+  xpos -779
+  ypos 635
+  addUserKnob {20 rotation_tab l rotation}
+  addUserKnob {7 rotationMaskx R 0 360}
+  rotationMaskx {{rotationMasky}}
+  addUserKnob {7 rotationMasky R 0 360}
+  rotationMasky {{Control2.time2}}
+ }
+ Shuffle {
+  red black
+  green black
+  blue alpha
+  alpha black
+  name Shuffle5
+  xpos -779
+  ypos 726
+ }
+ Grade {
+  white 3.12
+  multiply 0.25
+  gamma 0.302
+  black_clamp false
+  white_clamp true
+  name Grade7
+  xpos -779
+  ypos 825
+ }
+push 0
+push $N91148c00
+ Expression {
+  temp_name0 angleMasky
+  temp_expr0 (radians(rotationMasky))
+  temp_name1 angleMaskx
+  temp_expr1 (radians(rotationMaskx))
+  temp_name2 sin1
+  temp_expr2 (sin(angleMask))
+  temp_name3 cos1
+  temp_expr3 (cos(angleMask))
+  expr0 r
+  expr1 g
+  expr2 b
+  expr3 (((cos(angleMasky))*(1-b))+(-(sin(angleMasky))*(1-g)))*(((cos(angleMaskx))*(b))+(-(sin(angleMaskx))*r))
+  name Expression15
+  xpos -892
+  ypos 638
+  addUserKnob {20 rotation_tab l rotation}
+  addUserKnob {7 rotationMaskx R 0 360}
+  rotationMaskx {{rotationMasky}}
+  addUserKnob {7 rotationMasky R 0 360}
+  rotationMasky {{Control2.time1}}
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue black
+  alpha black
+  name Shuffle3
+  xpos -892
+  ypos 718
+ }
+ Multiply {
+  value 0.5
+  name Multiply1
+  xpos -892
+  ypos 744
+ }
+ Grade {
+  white 3.12
+  multiply 0.25
+  gamma 0.302
+  black_clamp false
+  white_clamp true
+  name Grade4
+  xpos -892
+  ypos 814
+ }
+push $N91148800
+ Expression {
+  temp_name0 angleMasky
+  temp_expr0 (radians(rotationMasky))
+  temp_name1 angleMaskx
+  temp_expr1 (radians(rotationMaskx))
+  temp_name2 sin1
+  temp_expr2 (sin(angleMask))
+  temp_name3 cos1
+  temp_expr3 (cos(angleMask))
+  expr0 r
+  expr1 g
+  expr2 b
+  expr3 (((cos(angleMasky))*(1-b))+(-(sin(angleMasky))*(1-g)))*(((cos(angleMaskx))*(b))+(-(sin(angleMaskx))*r))
+  name Expression13
+  xpos -1048
+  ypos 632
+  addUserKnob {20 rotation_tab l rotation}
+  addUserKnob {7 rotationMaskx R 0 360}
+  rotationMaskx {{rotationMasky}}
+  addUserKnob {7 rotationMasky R 0 360}
+  rotationMasky {{parent.Control2.time}}
+ }
+ Shuffle {
+  red alpha
+  green black
+  blue black
+  alpha black
+  name Shuffle4
+  xpos -1048
+  ypos 712
+ }
+ Grade {
+  white 3.54
+  multiply 0.27
+  gamma 0.2
+  black_clamp false
+  white_clamp true
+  name Grade5
+  xpos -1048
+  ypos 806
+ }
+ Merge2 {
+  inputs 4+1
+  operation screen
+  name Merge3
+  xpos -1048
+  ypos 875
+ }
+ Grade {
+  white 1.06
+  gamma 1.39
+  name Grade6
+  xpos -1048
+  ypos 931
+ }
+ Group {
+  name Bloom2
+  tile_color 0x7fff
+  note_font_color 0xff0000ff
+  xpos -1048
+  ypos 1035
+  addUserKnob {20 User l Hard_Glow}
+  addUserKnob {41 size l Amount T Main.size}
+  addUserKnob {41 mix T Screen.mix}
+  addUserKnob {26 ""}
+  addUserKnob {41 range T Keyer1.range}
+ }
+  Input {
+   inputs 0
+   name Mask
+   xpos 680
+   ypos -82
+   number 1
+  }
+  Invert {
+   name Invert1
+   xpos 683
+   ypos 59
+  }
+  Dot {
+   name Dot4
+   xpos 714
+   ypos 532
+  }
+  Input {
+   inputs 0
+   name Source
+   xpos -388
+   ypos -206
+  }
+  Dot {
+   name Dot3
+   xpos -354
+   ypos -41
+  }
+set N911fa800 [stack 0]
+  Dot {
+   name Dot2
+   xpos 316
+   ypos -41
+  }
+set N911fac00 [stack 0]
+  Dot {
+   name Dot5
+   xpos 520
+   ypos -41
+  }
+push $N911fa800
+  Dot {
+   name Dot1
+   xpos -584
+   ypos -41
+  }
+  Keyer {
+   operation "luminance key"
+   name Keyer1
+   xpos -618
+   ypos 17
+  }
+  Blur {
+   size 2.3
+   name Blur1
+   xpos -618
+   ypos 63
+  }
+push $N911fa800
+  Copy {
+   inputs 2
+   from0 rgba.alpha
+   to0 rgba.alpha
+   name Copy1
+   xpos -388
+   ypos 63
+  }
+  Premult {
+   name Premult1
+   xpos -388
+   ypos 101
+  }
+  Dot {
+   name Dot7
+   xpos -354
+   ypos 130
+  }
+set Na41c800 [stack 0]
+  Blur {
+   size 1.75
+   mix 0
+   name Main
+   xpos 190
+   ypos 321
+  }
+push $Na41c800
+  Blur {
+   size {{parent.Main.size*512}}
+   mix 0.995
+   name Blur16
+   xpos 27
+   ypos 319
+  }
+push $Na41c800
+  Blur {
+   size {{parent.Main.size*268}}
+   name Blur15
+   xpos -83
+   ypos 319
+  }
+push $Na41c800
+  Blur {
+   size {{parent.Main.size*4}}
+   mix 0.825
+   name Blur9
+   xpos -852
+   ypos 345
+  }
+push $Na41c800
+  Blur {
+   size {{parent.Main.size*8}}
+   name Blur10
+   xpos -743
+   ypos 319
+  }
+push $Na41c800
+  Blur {
+   size {{parent.Main.size*16}}
+   name Blur11
+   xpos -633
+   ypos 319
+  }
+push $Na41c800
+  Blur {
+   size {{parent.Main.size*32}}
+   name Blur12
+   xpos -523
+   ypos 319
+  }
+push $Na41c800
+  Blur {
+   size {{parent.Main.size*64}}
+   name Blur13
+   xpos -413
+   ypos 319
+  }
+push 0
+push $Na41c800
+  Blur {
+   size {{parent.Main.size*128}}
+   name Blur14
+   xpos -193
+   ypos 319
+  }
+push $Na41c800
+  Blur {
+   size {{parent.Main.size*2}}
+   name Blur7
+   xpos -303
+   ypos 319
+  }
+  Merge2 {
+   inputs 10+1
+   operation screen
+   name Merge11
+   xpos -397
+   ypos 550
+  }
+push $N911fac00
+  Merge2 {
+   inputs 2
+   operation screen
+   name Screen
+   xpos 282
+   ypos 528
+  }
+  Keymix {
+   inputs 3
+   name Keymix1
+   xpos 486
+   ypos 522
+  }
+  Output {
+   name Output1
+   xpos 486
+   ypos 691
+  }
+ end_group
+set Nc9ea5b80 [stack 0]
+ TimeClip {
+  time ""
+  before loop
+  last 163
+  after loop
+  origlast 163
+  origset true
+  name TimeClip2
+  xpos -1048
+  ypos 2675
+ }
+ Reformat {
+  format "1024 1024 0 0 1024 1024 1 square_1K"
+  name Reformat4
+  xpos -1048
+  ypos 2701
+ }
+push $N90851c00
+ Constant {
+  inputs 0
+  color {0.185 0.502 0.393 1}
+  color_panelDropped true
+  name Constant6
+  xpos -2386
+  ypos 1549
+ }
+ Grade {
+  white 1.01
+  multiply 0.67
+  gamma 0.405
+  name Grade22
+  xpos -2386
+  ypos 1641
+ }
+push $N90851400
+ Shuffle {
+  green red
+  blue red
+  alpha red
+  name Shuffle17
+  xpos -2592
+  ypos 1599
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge16
+  xpos -2592
+  ypos 1641
+ }
+ Merge2 {
+  inputs 2
+  operation screen
+  name Merge17
+  xpos -2742
+  ypos 1802
+ }
+ Grade {
+  white 1.88
+  gamma 0.58
+  name Grade23
+  xpos -2742
+  ypos 1894
+ }
+push $Nc9d3b000
+ Dot {
+  name Dot18
+  xpos -2332
+  ypos 1824
+ }
+ Dilate {
+  size 10
+  name Dilate6
+  xpos -2512
+  ypos 1814
+ }
+ Blur {
+  size 22
+  name Blur6
+  xpos -2512
+  ypos 1858
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Shuffle18
+  xpos -2512
+  ypos 1937
+ }
+ Merge2 {
+  inputs 2
+  name Merge18
+  xpos -2739
+  ypos 1969
+ }
+ Clamp {
+  name Clamp3
+  xpos -2739
+  ypos 2026
+ }
+ Grade {
+  white 2.22
+  multiply 1.04
+  add 0.007
+  gamma 0.415
+  white_clamp true
+  name Grade24
+  xpos -2739
+  ypos 2090
+ }
+ Transform {
+  scale 0.7
+  center {1024 778}
+  name Transform3
+  xpos -2739
+  ypos 2142
+  disable true
+ }
+ Group {
+  name Bloom7
+  tile_color 0x7fff
+  note_font_color 0xff0000ff
+  xpos -2739
+  ypos 2227
+  addUserKnob {20 User l Hard_Glow}
+  addUserKnob {41 size l Amount T Main.size}
+  addUserKnob {41 mix T Screen.mix}
+  addUserKnob {26 ""}
+  addUserKnob {41 range T Keyer1.range}
+ }
+  Input {
+   inputs 0
+   name Mask
+   xpos 680
+   ypos -82
+   number 1
+  }
+  Invert {
+   name Invert1
+   xpos 683
+   ypos 59
+  }
+  Dot {
+   name Dot4
+   xpos 714
+   ypos 532
+  }
+  Input {
+   inputs 0
+   name Source
+   xpos -388
+   ypos -206
+  }
+  Dot {
+   name Dot3
+   xpos -354
+   ypos -41
+  }
+set Na513800 [stack 0]
+  Dot {
+   name Dot2
+   xpos 316
+   ypos -41
+  }
+set Na513c00 [stack 0]
+  Dot {
+   name Dot5
+   xpos 520
+   ypos -41
+  }
+push $Na513800
+  Dot {
+   name Dot1
+   xpos -584
+   ypos -41
+  }
+  Keyer {
+   operation "luminance key"
+   range {0 0.08348905331 0.08348905331 0.2351518901}
+   name Keyer1
+   xpos -618
+   ypos 17
+  }
+  Blur {
+   size 2.3
+   name Blur1
+   xpos -618
+   ypos 63
+  }
+push $Na513800
+  Copy {
+   inputs 2
+   from0 rgba.alpha
+   to0 rgba.alpha
+   name Copy1
+   xpos -388
+   ypos 63
+  }
+  Premult {
+   name Premult1
+   xpos -388
+   ypos 101
+  }
+  Dot {
+   name Dot7
+   xpos -354
+   ypos 130
+  }
+set Na541800 [stack 0]
+  Blur {
+   size 1.75
+   mix 0
+   name Main
+   xpos 190
+   ypos 321
+  }
+push $Na541800
+  Blur {
+   size {{parent.Main.size*512}}
+   mix 0.995
+   name Blur16
+   xpos 27
+   ypos 319
+  }
+push $Na541800
+  Blur {
+   size {{parent.Main.size*268}}
+   name Blur15
+   xpos -83
+   ypos 319
+  }
+push $Na541800
+  Blur {
+   size {{parent.Main.size*4}}
+   mix 0.825
+   name Blur9
+   xpos -852
+   ypos 345
+  }
+push $Na541800
+  Blur {
+   size {{parent.Main.size*8}}
+   name Blur10
+   xpos -743
+   ypos 319
+  }
+push $Na541800
+  Blur {
+   size {{parent.Main.size*16}}
+   name Blur11
+   xpos -633
+   ypos 319
+  }
+push $Na541800
+  Blur {
+   size {{parent.Main.size*32}}
+   name Blur12
+   xpos -523
+   ypos 319
+  }
+push $Na541800
+  Blur {
+   size {{parent.Main.size*64}}
+   name Blur13
+   xpos -413
+   ypos 319
+  }
+push 0
+push $Na541800
+  Blur {
+   size {{parent.Main.size*128}}
+   name Blur14
+   xpos -193
+   ypos 319
+  }
+push $Na541800
+  Blur {
+   size {{parent.Main.size*2}}
+   name Blur7
+   xpos -303
+   ypos 319
+  }
+  Merge2 {
+   inputs 10+1
+   operation screen
+   name Merge11
+   xpos -397
+   ypos 550
+  }
+push $Na513c00
+  Merge2 {
+   inputs 2
+   operation screen
+   name Screen
+   xpos 282
+   ypos 528
+  }
+  Keymix {
+   inputs 3
+   name Keymix1
+   xpos 486
+   ypos 522
+  }
+  Output {
+   name Output1
+   xpos 486
+   ypos 691
+  }
+ end_group
+set Nc9ea6100 [stack 0]
+ TimeClip {
+  time ""
+  before loop
+  last 360
+  after loop
+  origlast 163
+  origset true
+  name TimeClip5
+  xpos -2739
+  ypos 2695
+ }
+ Reformat {
+  format "1024 1024 0 0 1024 1024 1 square_1K"
+  name Reformat1
+  xpos -2739
+  ypos 2721
+ }
+ NoOp {
+  inputs 0
+  name Control3
+  note_font "Verdana Bold"
+  note_font_size 22
+  xpos -2719
+  ypos 976
+  addUserKnob {20 User}
+  addUserKnob {7 time R 0 10000}
+  time {{(frame*(1))*ControlMaster.timespeed}}
+ }
+push $N65415000
+ Expression {
+  temp_name0 angleMasky
+  temp_expr0 (radians(rotationMasky))
+  temp_name1 angleMaskx
+  temp_expr1 (radians(rotationMaskx))
+  temp_name2 sin1
+  temp_expr2 (sin(angleMask))
+  temp_name3 cos1
+  temp_expr3 (cos(angleMask))
+  expr0 r
+  expr1 g
+  expr2 b
+  expr3 (((cos(angleMasky))*(1-b))+(-(sin(angleMasky))*g))*(((cos(angleMaskx))*(b))+(-(sin(angleMaskx))*r))
+  name Expression11
+  xpos -2233
+  ypos 517
+  addUserKnob {20 rotation_tab l rotation}
+  addUserKnob {7 rotationMaskx R 0 360}
+  rotationMaskx {{rotationMasky/4}}
+  addUserKnob {7 rotationMasky R 0 360}
+  rotationMasky {{parent.Control1.time}}
+ }
+ Shuffle {
+  red alpha
+  green black
+  blue black
+  alpha black
+  name Shuffle19
+  xpos -2233
+  ypos 613
+ }
+push $N65415000
+ Expression {
+  temp_name0 angleMasky
+  temp_expr0 (radians(rotationMasky))
+  temp_name1 angleMaskx
+  temp_expr1 (radians(rotationMaskx))
+  temp_name2 sin1
+  temp_expr2 (sin(angleMask))
+  temp_name3 cos1
+  temp_expr3 (cos(angleMask))
+  expr0 r
+  expr1 g
+  expr2 b
+  expr3 (((cos(angleMasky))*(1-b))+(-(sin(angleMasky))*g))*(((cos(angleMaskx))*(b))+(-(sin(angleMaskx))*r))
+  name Expression21
+  xpos -2362
+  ypos 510
+  addUserKnob {20 rotation_tab l rotation}
+  addUserKnob {7 rotationMaskx R 0 360}
+  rotationMaskx {{rotationMasky/4}}
+  addUserKnob {7 rotationMasky R 0 360}
+  rotationMasky {{parent.Control1.time-180}}
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  alpha black
+  name Shuffle20
+  xpos -2362
+  ypos 606
+ }
+ Merge2 {
+  inputs 2
+  operation screen
+  name Merge23
+  xpos -2362
+  ypos 675
+ }
+ Transform {
+  scale 0.7
+  center {1024 778}
+  name Transform6
+  xpos -2362
+  ypos 816
+  disable true
+ }
+push $Nc9ea6100
+push $Nc9ea4b00
+push $Nc9ea5b80
+push $N910f3800
+push $N8fa61400
+ Dot {
+  name Dot2
+  xpos 304
+  ypos 447
+ }
+ Expression {
+  temp_name0 angleMasky
+  temp_expr0 (radians(rotationMasky))
+  temp_name1 angleMaskx
+  temp_expr1 (radians(rotationMaskx))
+  temp_name2 sin1
+  temp_expr2 (sin(angleMask))
+  temp_name3 cos1
+  temp_expr3 (cos(angleMask))
+  expr0 r
+  expr1 g
+  expr2 b
+  expr3 (((cos(angleMasky))*(1-(b-1)))+(-(sin(angleMasky))*g))*(((cos(angleMaskx))*(((b))))+(-(sin(angleMaskx))*r))
+  name Expression6
+  xpos 270
+  ypos 678
+  addUserKnob {20 rotation_tab l rotation}
+  addUserKnob {7 rotationMaskx R 0 360}
+  rotationMaskx {{1-((pos.x/width)*180)+90}}
+  addUserKnob {7 rotationMasky R 0 360}
+  rotationMasky {{1-(((pos.y/height)*180)-90)}}
+ }
+ Dot {
+  name Dot3
+  xpos 304
+  ypos 806
+ }
+push $N8fa61400
+ Expression {
+  temp_name0 angleMasky
+  temp_expr0 (radians(rotationMasky))
+  temp_name1 angleMaskx
+  temp_expr1 (radians(rotationMaskx))
+  temp_name2 sin1
+  temp_expr2 (sin(angleMask))
+  temp_name3 cos1
+  temp_expr3 (cos(angleMask))
+  expr0 r
+  expr1 g
+  expr2 b
+  expr3 ((((cos(angleMasky))*b)+(-(sin(angleMasky))*g))*(((cos(angleMaskx))*b)+(-(sin(angleMaskx))*r)))
+  name Expression8
+  xpos 108
+  ypos 678
+  addUserKnob {20 rotation_tab l rotation}
+  addUserKnob {7 rotationMaskx R 0 360}
+  rotationMaskx 82
+  addUserKnob {7 rotationMasky R 0 360}
+  rotationMasky 87
+ }
+ Switch {
+  inputs 2
+  which {{enableposition}}
+  name Switch1
+  xpos 108
+  ypos 802
+ }
+ Switch {
+  inputs 6
+  which {{enableanim}}
+  name Switch2
+  xpos 108
+  ypos 2629
+ }
+ Output {
+  name Output1
+  xpos 108
+  ypos 2979
+ }
+ NoOp {
+  inputs 0
+  name ControlMaster
+  note_font "Verdana Bold"
+  note_font_size 22
+  xpos -2749
+  ypos 227
+  addUserKnob {20 User}
+  addUserKnob {7 timespeed R 0.1 2}
+  timespeed 1
+ }
+ NoOp {
+  inputs 0
+  name Control1
+  note_font "Verdana Bold"
+  note_font_size 22
+  xpos -1613
+  ypos 353
+  addUserKnob {20 User}
+  addUserKnob {7 time R 0 10000}
+  time {{(frame*(5))*ControlMaster.timespeed}}
+ }
+ NoOp {
+  inputs 0
+  name Control2
+  note_font "Verdana Bold"
+  note_font_size 22
+  xpos -875
+  ypos 258
+  addUserKnob {20 User}
+  addUserKnob {7 offset1 R 0 180}
+  offset1 46
+  addUserKnob {7 offset2 R 0 190}
+  addUserKnob {7 offset3 R 0 180}
+  offset3 90
+  addUserKnob {7 time R 0 100000}
+  time {{(frame*(10))*ControlMaster.timespeed}}
+  addUserKnob {7 time1 R 0 10000}
+  time1 {{((frame*(10))-offset1)*ControlMaster.timespeed}}
+  addUserKnob {7 time2 R 0 10000}
+  time2 {{(frame*(5)-offset2)*ControlMaster.timespeed}}
+  addUserKnob {7 time3 R 0 10000}
+  time3 {{(frame*(5)-offset3)*ControlMaster.timespeed}}
+ }
+ Laplacian {
+  inputs 0
+  name Laplacian1
+  xpos 600
+  ypos -1431
+ }
+push $Nd420d800
+push $N653d9800
+ Viewer {
+  inputs 2
+  frame_range 1-100
+  gain 8.6
+  colour_sample_bbox {0.150390625 -0.1328125 0.15234375 -0.130859375}
+  name Viewer1
+  xpos 324
+  ypos -720
+ }
+end_group

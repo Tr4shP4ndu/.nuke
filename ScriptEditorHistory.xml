@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><script>def write_flwls_node_knobs(write_flwls_node):
+    &quot;&quot;&quot;
+    Get information about write node knobs.
+    &quot;&quot;&quot;
+    write_flwls_knobs = {}
+    for knob_name, knob in write_flwls_node.knobs().items():
+        write_flwls_knobs[knob_name] = (knob, knob.value(), type(knob))
+    return write_flwls_knobs
+
+def start(node):
+    write_flwls_knobs = write_flwls_node_knobs(node) 
+    print(type(write_flwls_knobs['datatype_flwls'][0]))
+
+selected_node = nuke.selectedNode()
+if selected_node:
+    start(selected_node)
+else:
+    print(&quot;No node selected.&quot;)
+start(nuke.selectedNode())</script>

@@ -1,0 +1,17 @@
+set cut_paste_input [stack 0]
+version 12.2 v1
+push $cut_paste_input
+BlinkScript {
+ recompileCount 109
+ ProgramGroup 1
+ KernelDescription "2 \"ExponentialBlurKernel\" iterate pixelWise 38b8e7f8e6bcd1590a9554505ef36d122669fc524a230818c358940c5b08c394 2 \"src\" Read Ranged2D \"dst\" Write Point 2 \"scale\" Int 1 AAAAAA== \"exponent\" Float 1 AAAAAA== 2 \"scale\" 1 1 \"exponent\" 1 1 4 \"srcrangeMin\" Int 2 1 AAAAAAAAAAA= \"srcrangeMax\" Int 2 1 AAAAAAAAAAA= \"output\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA== \"normaliser\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA=="
+ kernelSource "\nkernel ConvolveBaseBlurKernel : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRanged2D, eEdgeClamped> src; // the input image\n  Image<eWrite> dst; // the output image\n\n  param:\n\n    \n\n\n  local:\n\n    float4 output;\n    float4 normaliser;\n\n  void define() \{\n\n   \n\n  \}\n\n  void init() \{\n\n    src.setRange(-scale, -scale, scale, scale);\n\n  \}\n\n  void process(int2 pos) \{\n\n    \n\n    for(int X = -scale; X <= scale; X++)\{\n      for(int Y = -scale; Y <= scale; Y++)\{\n\n        \n        output += src(X,Y) * pow((max((scale - (sqrt(pow(X,2) + pow(Y,2)))),0.0f) /scale),exponent) ;\n        normaliser += pow((max((scale - (sqrt(pow(X,2) + pow(Y,2)))),0.0f) /scale),exponent);\n\n        \n      \}\n    \}\n    \n  output = (output)/(normaliser);\n  \n  dst() = output;\n\n  \n  \}\n\};\n"
+ rebuild ""
+ ExponentialBlurKernel_scale 10
+ ExponentialBlurKernel_exponent 2
+ rebuild_finalise ""
+ name BlinkScript2
+ selected true
+ xpos 550
+ ypos 72
+}

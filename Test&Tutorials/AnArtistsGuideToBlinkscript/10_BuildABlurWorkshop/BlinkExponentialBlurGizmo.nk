@@ -1,0 +1,72 @@
+set cut_paste_input [stack 0]
+version 12.2 v1
+push $cut_paste_input
+Group {
+ name ExponentialBlurBlink
+ tile_color 0xcc804eff
+ selected true
+ xpos 550
+ ypos -34
+ addUserKnob {20 ExponentialBlurKernel}
+ addUserKnob {41 "Local GPU: " T BlinkScript7.gpuName}
+ addUserKnob {41 "Use GPU if Available" T BlinkScript7.useGPUIfAvailable}
+ addUserKnob {26 ""}
+ addUserKnob {41 blurSize l "blur size" T BlinkScript7.blurSize}
+ addUserKnob {41 exponent T BlinkScript7.ExponentialBlurKernel_exponent}
+ addUserKnob {41 quality T BlinkScript7.quality}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos 563
+  ypos -86
+ }
+ Reformat {
+  type scale
+  scale {{"BlinkScript7.blurSize > BlinkScript7.quality ? BlinkScript7.quality/BlinkScript7.blurSize : 1"}}
+  filter notch
+  name Reformat1
+  xpos 563
+  ypos -23
+ }
+ BlinkScript {
+  recompileCount 126
+  KernelDescription "2 \"ExponentialBlurKernel\" iterate pixelWise 2859ddc938ef39344a6eef370cf0a744778e6a465487218d7573bc0315657b4f 2 \"src\" Read Ranged2D \"dst\" Write Point 2 \"floatScale\" Float 1 AAAAAA== \"exponent\" Float 1 AAAAAA== 2 \"floatScale\" 1 1 \"exponent\" 1 1 8 \"srcrangeMin\" Int 2 1 AAAAAAAAAAA= \"srcrangeMax\" Int 2 1 AAAAAAAAAAA= \"scale\" Int 1 1 AAAAAA== \"increasedScale\" Int 1 1 AAAAAA== \"output\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA== \"normaliser\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA== \"increasedOutput\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA== \"increasedNormaliser\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA=="
+  kernelSource "\nkernel ExponentialBlurKernel : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRanged2D, eEdgeClamped> src; // the input image\n  Image<eWrite> dst; // the output image\n\n  param:\n\n    float floatScale;\n    float exponent;    \n\n\n  local:\n\n    int scale;\n    int increasedScale;\n\n    float4 output;\n    float4 normaliser;\n\n    float4 increasedOutput;\n    float4 increasedNormaliser;\n\n  void define() \{\n\n   \n\n  \}\n\n  void init() \{\n\n    src.setRange(-increasedScale, -increasedScale, increasedScale, increasedScale);\n    scale = floor(floatScale);\n    increasedScale = ceil(floatScale);\n\n  \}\n\n  void process(int2 pos) \{\n\n    \n\n    for(int X = -scale; X <= scale; X++)\{\n      for(int Y = -scale; Y <= scale; Y++)\{\n\n        \n        output += src(X,Y) * pow((max((scale - (sqrt(pow(X,2) + pow(Y,2)))),0.0f) /scale),exponent) ;\n        normaliser += pow((max((scale - (sqrt(pow(X,2) + pow(Y,2)))),0.0f) /scale),exponent);\n\n        \n      \}\n    \}\n\n    if(scale == 0)\{\n\n      output = src(0,0);\n      normaliser = 1;\n\n    \}\n\n    for(int X = -increasedScale; X <= increasedScale; X++)\{\n      for(int Y = -increasedScale; Y <= increasedScale; Y++)\{\n\n        \n        increasedOutput += src(X,Y) * pow((max((increasedScale - (sqrt(pow(X,2) + pow(Y,2)))),0.0f) /increasedScale),exponent) ;\n        increasedNormaliser += pow((max((increasedScale - (sqrt(pow(X,2) + pow(Y,2)))),0.0f) /increasedScale),exponent);\n\n        \n      \}\n    \}\n\n    if(increasedScale == 0)\{\n\n      increasedOutput = src(0,0);\n      increasedNormaliser = 1;\n\n    \}\n\n    \n  output = (output)/(normaliser);\n  increasedOutput = (increasedOutput)/(increasedNormaliser);\n\n  output = output + (increasedOutput - output)*(floatScale-scale);\n\n  dst() = output;\n\n  \n  \}\n\};\n"
+  rebuild ""
+  ExponentialBlurKernel_floatScale {{"blurSize > quality ? quality : blurSize"}}
+  ExponentialBlurKernel_exponent 1
+  rebuild_finalise ""
+  name BlinkScript7
+  xpos 563
+  ypos 38
+  addUserKnob {20 User}
+  addUserKnob {7 blurSize l "blur size" R 0 100}
+  blurSize 30
+  addUserKnob {7 quality R 0 100}
+  quality 15
+ }
+ Reformat {
+  type "to box"
+  box_width {{Reformat1.input.width}}
+  box_height {{Reformat1.input.height}}
+  box_fixed true
+  filter notch
+  name Reformat2
+  xpos 563
+  ypos 93
+ }
+set N5292e000 [stack 0]
+ Output {
+  name Output1
+  xpos 563
+  ypos 150
+ }
+push $N5292e000
+ Viewer {
+  frame_range 1-100
+  name Viewer1
+  xpos 745
+  ypos 93
+ }
+end_group

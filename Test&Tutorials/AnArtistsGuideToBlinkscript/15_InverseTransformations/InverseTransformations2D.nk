@@ -1,0 +1,73 @@
+set cut_paste_input [stack 0]
+version 12.2 v1
+push $cut_paste_input
+Expression {
+ expr0 (x+.5)/width
+ expr1 (y+.5)/height
+ expr3 1
+ name Expression1
+ label STMap
+ selected true
+ xpos 8475
+ ypos 196
+}
+Transform {
+ rotate 6
+ scale 0.6
+ center {960 540}
+ name Transform2
+ selected true
+ xpos 8475
+ ypos 234
+}
+Dot {
+ name Dot15
+ selected true
+ xpos 8509
+ ypos 357
+}
+set N514c3400 [stack 0]
+CheckerBoard2 {
+ inputs 0
+ name CheckerBoard6
+ selected true
+ xpos 8702
+ ypos 86
+}
+set N514c3000 [stack 0]
+STMap {
+ inputs 2
+ uv rgb
+ name STMap3
+ selected true
+ xpos 8885
+ ypos 347
+}
+push $N514c3400
+push $N514c3000
+BlinkScript {
+ inputs 2
+ recompileCount 37
+ ProgramGroup 1
+ KernelDescription "2 \"BlankKernel\" iterate pixelWise 8400ebcb6a6db9d8e8b2ac359f89e3983b09e6b2b658797a4cb9de3a71830e63 3 \"src\" Read Random \"STMap\" Read Point \"dst\" Write Random 0 0 3 \"srcconstEdgeColor\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA== \"UV\" Float 2 1 AAAAAAAAAAA= \"resolution\" Int 2 1 AAAAAAAAAAA="
+ kernelSource "\nkernel BlankKernel : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRandom, eEdgeConstant> src; // the input image\n  Image<eRead, eAccessPoint, eEdgeClamped> STMap;\n  Image<eWrite, eAccessRandom> dst; // the output image\n\n  param:\n    // This parameter is made available to the user.\n    \n    \n\n  local:\n    // This local variable is not exposed to the user.\n    float2 UV;\n    int2 resolution;\n\n  // In define(), parameters can be given labels and default values.\n  void define() \{\n    \n  \}\n\n  // The init() function is run before any calls to process().\n  // Local variables can be initialized here.\n  void init() \{\n    \n    resolution.x = src.bounds.width();\n    resolution.y = src.bounds.height();\n\n  \}\n\n  void process(int2 pos) \{\n    \n    UV.x = STMap().x*resolution.x-.5f;\n    UV.y = STMap().y*resolution.y-.5f;\n\n    // Write the result to the output image\n    dst(UV.x, UV.y) =  UV.x > 0 || UV.y > 0  ? src(pos.x, pos.y) : float4(0.0f); //bilinear(src, UV.x, UV.y);\n  \}\n\};\n"
+ rebuild ""
+ rebuild_finalise ""
+ name BlinkScript6
+ selected true
+ xpos 8702
+ ypos 347
+}
+Blur {
+ size 1
+ name Blur1
+ selected true
+ xpos 8702
+ ypos 385
+}
+Unpremult {
+ name Unpremult1
+ selected true
+ xpos 8702
+ ypos 423
+}

@@ -1,0 +1,18 @@
+set cut_paste_input [stack 0]
+version 12.2 v1
+BlinkScript {
+ inputs 0
+ recompileCount 26
+ ProgramGroup 1
+ KernelDescription "2 \"BlankKernel\" iterate pixelWise 4c905aec3fccee99b1cae0e21b72c4e896d40471c7e7f83dd6b9bf57af21dbfc 1 \"dst\" Write Point 11 \"boolean\" Bool 1 AA== \"integer\" Int 1 AAAAAA== \"integer2\" Int 2 AAAAAAAAAAA= \"integer3\" Int 3 AAAAAAAAAAAAAAAAAAAAAA== \"integer4\" Int 4 AAAAAAAAAAAAAAAAAAAAAA== \"floating_point\" Float 1 AAAAAA== \"floating_point2\" Float 2 AAAAAAAAAAA= \"floating_point3\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"floating_point4\" Float 4 AAAAAAAAAAAAAAAAAAAAAA== \"three_by_three_matrix\" Float 9 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA \"four_by_four_matrix\" Float 16 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA== 11 \"boolean\" 1 1 \"integer\" 1 1 \"integer2\" 2 1 \"integer3\" 3 1 \"integer4\" 4 1 \"floating_point\" 1 1 \"floating_point2\" 2 1 \"floating_point3\" 3 1 \"floating_point4\" 4 1 \"three_by_three_matrix\" 9 1 \"four_by_four_matrix\" 16 1 0"
+ kernelSource "\nkernel BlankKernel : ImageComputationKernel<ePixelWise>\n\{\n  \n  Image<eWrite> dst; // the output image\n\n  param:\n    // This parameter is made available to the user.\n    bool boolean;\n\n    int integer;\n    int2 integer2;\n    int3 integer3;\n    int4 integer4;\n\n    float floating_point;\n    float2 floating_point2;\n    float3 floating_point3;\n    float4 floating_point4;   \n\n    float3x3 three_by_three_matrix;\n    float4x4 four_by_four_matrix;\n\n    \n\n    \n\n  local:\n    // This local variable is not exposed to the user.\n    recti integer_rectangle(int x1, int y1, int x2, int y2);\n    rectf floating_point_rectangle(float x1, float y1, float x2, float y2);\n\n  // In define(), parameters can be given labels and default values.\n  void define() \{\n    \n  \}\n\n  // The init() function is run before any calls to process().\n  // Local variables can be initialized here.\n  void init() \{\n    \n  \}\n\n  void process() \{\n    \n    // Write the result to the output image\n    \n  \}\n\};\n"
+ useGPUIfAvailable false
+ rebuild ""
+ BlankKernel_boolean true
+ group_BlankKernel_three_by_three_matrix 1
+ rebuild_finalise ""
+ name BlinkScript1
+ selected true
+ xpos -43
+ ypos -108
+}

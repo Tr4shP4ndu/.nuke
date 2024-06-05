@@ -1,0 +1,267 @@
+set cut_paste_input [stack 0]
+version 14.0 v4
+push $cut_paste_input
+add_layer {position position.red position.green position.blue}
+Group {
+name pNoise
+selected true
+xpos -24523
+ypos 7562
+addUserKnob {20 PNoise}
+addUserKnob {41 p_channel l "position data" T POSITION_DATA.in}
+addUserKnob {41 output_channel l output -STARTLINE T _NOISE_OUT_.out}
+addUserKnob {6 unpremultiply +STARTLINE}
+unpremultiply true
+addUserKnob {6 alpha_masking -STARTLINE}
+alpha_masking true
+addUserKnob {26 ""}
+addUserKnob {41 rot_order l "rotation order" T _ROTATE_CTRL.rot_order}
+addUserKnob {41 translate T _ROTATE_CTRL.translate}
+addUserKnob {41 rotate T _ROTATE_CTRL.rotate}
+addUserKnob {41 scaling l scale T _ROTATE_CTRL.scaling}
+addUserKnob {41 uniform_scale l "uniform scale" T _ROTATE_CTRL.uniform_scale}
+addUserKnob {41 skew T _ROTATE_CTRL.skew}
+addUserKnob {18 pivot R -1000 1000}
+pivot {0 0 0}
+addUserKnob {6 pivot_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+addUserKnob {6 pivot_panelDropped_1 l pivot_panelDropped -STARTLINE}
+addUserKnob {26 ""}
+addUserKnob {4 noise_type l "noise type" M {fBm turbulence random "sin wave" checkerboard}}
+addUserKnob {3 octaves}
+addUserKnob {7 lucanarity R 0 10}
+addUserKnob {7 gain}
+addUserKnob {7 gamma R 0.01 1}
+addUserKnob {7 offset R -1 1}
+addUserKnob {13 checker_size}
+}
+Axis2 {
+inputs 0
+uniform_scale 0.74
+pivot_translate {{parent.pivot.r} {parent.pivot.g} {parent.pivot.b}}
+name _ROTATE_CTRL
+xpos 1765
+ypos 486
+}
+Input {
+inputs 0
+name Input1
+xpos 1435
+ypos 345
+}
+Dot {
+name Dot317
+xpos 1469
+ypos 385
+}
+set Na83c2400 [stack 0]
+Dot {
+name Dot326
+xpos 1651
+ypos 385
+}
+Shuffle {
+in position
+in2 rgba
+alpha alpha2
+name POSITION_DATA
+xpos 1617
+ypos 423
+}
+Unpremult {
+name Unpremult5
+xpos 1617
+ypos 456
+disable {{!parent.unpremultiply}}
+}
+Add {
+channels rgb
+value {{-_ROTATE_CTRL.world_matrix.3} {-_ROTATE_CTRL.world_matrix.7} {-_ROTATE_CTRL.world_matrix.11} 0}
+name Translate_Pivot
+xpos 1617
+ypos 495
+}
+Matrix {
+channels rgb
+matrix {
+    {{_ROTATE_CTRL.world_matrix.0} {_ROTATE_CTRL.world_matrix.1} {_ROTATE_CTRL.world_matrix.2}}
+    {{_ROTATE_CTRL.world_matrix.4} {_ROTATE_CTRL.world_matrix.5} {_ROTATE_CTRL.world_matrix.6}}
+    {{_ROTATE_CTRL.world_matrix.8} {_ROTATE_CTRL.world_matrix.9} {_ROTATE_CTRL.world_matrix.10}}
+  }
+name ROTATE_SCALE_SKEW
+xpos 1617
+ypos 539
+}
+Dot {
+name Dot1
+xpos 1651
+ypos 596
+}
+set Na83c3c00 [stack 0]
+Dot {
+name Dot2
+xpos 1854
+ypos 596
+}
+set Na83f4000 [stack 0]
+Dot {
+name Dot3
+xpos 2064
+ypos 596
+}
+Expression {
+temp_name0 LinesR
+temp_expr0 "abs(fmod(r, CheckerSize.x)) > 0.5 ? 1 : 0"
+temp_name1 LinesG
+temp_expr1 "abs(fmod(g, CheckerSize.y)) > 0.5 ? 1 : 0"
+temp_name2 LinesB
+temp_expr2 "abs(fmod(b, CheckerSize.z)) > 0.5 ? 1 : 0"
+temp_name3 Checker
+temp_expr3 "LinesR ^^ LinesG^^ LinesB"
+channel0 rgb
+expr0 Checker
+channel1 none
+channel2 none
+expr3 a
+name CHECKERBOARD
+xpos 2030
+ypos 650
+addUserKnob {20 User}
+addUserKnob {13 CheckerSizer l CheckerSize}
+CheckerSizer {{parent.checker_size} {parent.checker_size} {parent.checker_size}}
+}
+push $Na83f4000
+Expression {
+channel0 {rgba.red rgba.green rgba.blue none}
+expr0 "parent.alpha_masking ? ( a == 0 ? 0 : sin(g)) : sin(g)"
+channel1 {rgba.red rgba.green -rgba.blue none}
+expr3 a
+name SIN_WAVES
+xpos 1820
+ypos 647
+addUserKnob {20 CTRL}
+addUserKnob {3 octaves}
+octaves {{parent.octaves}}
+addUserKnob {7 lucanarity}
+lucanarity {{parent.lucanarity}}
+addUserKnob {7 gain}
+gain {{parent.gain}}
+}
+Multiply {
+value {{parent.gain}}
+name Multiply1
+xpos 1820
+ypos 693
+}
+push $Na83c3c00
+Expression {
+temp_name0 fbm
+temp_expr0 "fBm(r, g, b, octaves, lucanarity, gain)"
+temp_name1 turb
+temp_expr1 "turbulence(r,g,b, octaves. lucamarity, gain)"
+temp_name2 rand
+temp_expr2 random(r,g,b)
+channel0 {rgba.red -rgba.green -rgba.blue none}
+expr0 "parent.alpha_masking ? (a == 0 ? 0 : fbm) :fbm"
+channel1 {rgba.red rgba.green -rgba.blue none}
+expr1 "parent.alpha_masking ? (a == 0 ? 0 : turb) :turb"
+expr2 "parent.alpha_masking ? (a == 0 ? 0 : rand) :rand"
+expr3 a
+name NOISE_FBM
+xpos 1617
+ypos 646
+addUserKnob {20 CTRL}
+addUserKnob {41 octaves T SIN_WAVES.octaves}
+addUserKnob {41 lucanarity T SIN_WAVES.lucanarity}
+addUserKnob {41 gain T SIN_WAVES.gain}
+}
+Dot {
+name Dot6
+xpos 1651
+ypos 701
+}
+set Na83f5800 [stack 0]
+Dot {
+name Dot7
+xpos 1737
+ypos 701
+}
+Shuffle {
+in2 rgba
+red blue
+green blue
+alpha alpha2
+name shuffle_random
+xpos 1703
+ypos 747
+}
+push $Na83f5800
+Shuffle {
+in2 rgba
+red green
+blue green
+alpha alpha2
+name shuffle_turbulence
+xpos 1617
+ypos 747
+}
+push $Na83f5800
+Dot {
+name Dot5
+xpos 1564
+ypos 701
+}
+Shuffle {
+in2 rgba
+green red
+blue red
+alpha alpha2
+name shuffle_fBm
+xpos 1530
+ypos 747
+}
+Switch {
+inputs 5
+which {{parent.noise_type}}
+name NOISE_TYPE
+xpos 1689
+ypos 817
+}
+Add {
+value {{parent.offset}}
+name _OFFSET_
+xpos 1689
+ypos 849
+}
+Gamma {
+value {{parent.gamma}}
+name Gamma1
+xpos 1689
+ypos 885
+}
+Shuffle {
+green red
+blue red
+alpha red
+name USE_RED
+xpos 1689
+ypos 921
+}
+Dot {
+name Dot4
+xpos 1723
+ypos 993
+}
+push $Na83c2400
+ShuffleCopy {
+inputs 2
+out alpha
+name _NOISE_OUT_
+xpos 1435
+ypos 990
+}
+Output {
+name Output1
+xpos 1435
+ypos 1085
+}
+end_group

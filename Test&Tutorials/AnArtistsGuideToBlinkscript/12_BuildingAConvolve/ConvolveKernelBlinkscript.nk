@@ -1,0 +1,19 @@
+set cut_paste_input [stack 0]
+version 12.2 v1
+push 0
+push 0
+push $cut_paste_input
+BlinkScript {
+ inputs 3
+ recompileCount 142
+ ProgramGroup 1
+ KernelDescription "2 \"ConvolveBaseBlurKernel\" iterate pixelWise 412085c29897aa690ff9f7582ec8a8473c12cd9f0a8d9649d012ff7141290e83 4 \"src\" Read Ranged2D \"bokeh\" Read Random \"sizeMask\" Read Point \"dst\" Write Point 2 \"scale\" Float 1 AAAAAA== \"exponent\" Int 1 AAAAAA== 2 \"scale\" 1 1 \"exponent\" 1 1 8 \"srcrangeMin\" Int 2 1 AAAAAAAAAAA= \"srcrangeMax\" Int 2 1 AAAAAAAAAAA= \"bokehconstEdgeColor\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA== \"sizeMaskconstEdgeColor\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA== \"bokehResolution\" Int 2 1 AAAAAAAAAAA= \"output\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA== \"normaliser\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA== \"scaledBokeh\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA=="
+ kernelSource "\nkernel ConvolveKernel : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRanged2D, eEdgeClamped> src; // the input image\n  Image<eRead, eAccessRandom, eEdgeConstant> bokeh;\n  Image<eRead, eAccessPoint, eEdgeConstant> sizeMask;\n  Image<eWrite> dst; // the output image\n\n  param:\n\n    \n\n    float scale;\n    int exponent;\n\n  local:\n\n    int2 bokehResolution;\n\n    float4 output;\n    float4 normaliser;\n\n    float4 scaledBokeh;\n\n  void define() \{\n\n   \n\n  \}\n\n  void init() \{\n\n    src.setRange(-bokehResolution.x, -bokehResolution.y, bokehResolution.x, bokehResolution.y);\n\n    bokehResolution.x = bokeh.bounds.width();\n    bokehResolution.y = bokeh.bounds.height();\n\n  \}\n\n  void process(int2 pos) \{\n\n\n    //scaledBokeh = bilinear(bokeh,pos.x/scale,pos.y/scale);\n    \n  \n\n\n    for(int X = -bokehResolution.x/2*sizeMask().x; X <= bokehResolution.x/2*sizeMask().x; X++)\{\n      for(int Y = -bokehResolution.y/2*sizeMask().x; Y <= bokehResolution.y/2*sizeMask().x; Y++)\{\n\n        \n        output += src(X,Y) * bilinear(bokeh,(X+bokehResolution.x/2*sizeMask().x )/sizeMask().x  ,(Y+bokehResolution.y/2*sizeMask().x )/sizeMask().x) ;\n        normaliser        += bilinear(bokeh,(X+bokehResolution.x/2*sizeMask().x )/sizeMask().x  ,(Y+bokehResolution.y/2*sizeMask().x )/sizeMask().x)  ;\n\n        \n      \}\n    \}\n    \n  output = (output)/(normaliser);\n  \n  dst() = output;\n\n  \n  \}\n\};\n"
+ rebuild ""
+ ConvolveBaseBlurKernel_scale 0.2
+ rebuild_finalise ""
+ name BlinkScript2
+ selected true
+ xpos 550
+ ypos 146
+}

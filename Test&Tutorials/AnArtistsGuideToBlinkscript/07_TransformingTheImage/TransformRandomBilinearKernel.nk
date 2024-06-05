@@ -1,0 +1,15 @@
+set cut_paste_input [stack 0]
+version 12.2 v1
+push $cut_paste_input
+BlinkScript {
+ recompileCount 10
+ ProgramGroup 1
+ KernelDescription "2 \"TransformRandomBilinearKernel\" iterate pixelWise 63b81689e5c38b0db03b579dc8e59b70450a1af753cb860851d3caae47807244 2 \"src\" Read Random \"dst\" Write Point 1 \"offset\" Float 2 AAAAAAAAAAA= 1 \"offset\" 2 1 1 \"srcconstEdgeColor\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA=="
+ kernelSource "\nkernel TransformRandomBilinearKernel : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRandom, eEdgeConstant> src; // the input image\n  Image<eWrite> dst; // the output image\n\n  param:\n    // This parameter is made available to the user.\n\n    float2 offset;\n\n  local:\n    // This local variable is not exposed to the user.\n\n  // In define(), parameters can be given labels and default values.\n  void define() \{\n    \n  \}\n\n  // The init() function is run before any calls to process().\n  // Local variables can be initialized here.\n  void init() \{\n\n    \n \n\n    \n  \}\n\n  void process(int2 pos) \{\n    \n    // Write the result to the output image\n    dst() = bilinear(src,pos.x+offset.x, pos.y+offset.y);\n  \}\n\};\n"
+ rebuild ""
+ rebuild_finalise ""
+ name BlinkScript6
+ selected true
+ xpos -69
+ ypos -210
+}
