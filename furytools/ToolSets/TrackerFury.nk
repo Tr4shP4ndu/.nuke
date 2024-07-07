@@ -1,0 +1,71 @@
+set cut_paste_input [stack 0]
+push 0
+push $cut_paste_input
+Group {
+inputs 2
+name TrackerFury
+selected true
+addUserKnob {20 furytools l TrackerFury}
+addUserKnob {3 fRangeS l "Frame Range Start-End" t "Frame Range start frame"}
+fRangeS 1
+addUserKnob {3 fRangeE l "" t "Frame Range end range" -STARTLINE}
+fRangeE 100
+addUserKnob {22 getRange l "Import Project Range" t "gets current start end frames from Viewer" -STARTLINE T "import nuke\nthis = nuke.thisNode()\nthis\[\"fRangeS\"].setValue(nuke.Root()\[\"first_frame\"].getValue())\nthis\[\"fRangeE\"].setValue(nuke.Root()\[\"last_frame\"].getValue())"}
+addUserKnob {22 setStart l "set start" t "Set the current frame as the start frame for the range" T "import nuke\nthis = nuke.thisNode()\nthis\[\"fRangeS\"].setValue(nuke.frame())\n" +STARTLINE}
+addUserKnob {22 setEnd l "set end" t "Set the current frame as the end frame for the range" -STARTLINE T "import nuke\nthis = nuke.thisNode()\nthis\[\"fRangeE\"].setValue(nuke.frame())"}
+addUserKnob {26 ""}
+addUserKnob {41 in l "motion vector channel" t "Selected the motion vector layer." T Shuffle_mv.in}
+addUserKnob {3 updateInterval t "trackers reference positions are updated\nevery n frames. \nThis is somewhat similar to creating a keyframe on a tracker to update the tracking ref."}
+updateInterval 5
+addUserKnob {6 keyframe l "key only at interval" -STARTLINE}
+keyframe false
+addUserKnob {22 trkFury l Execute T "bvfx_furytools.main(nuke.thisNode(),\"tracker\")" +STARTLINE}
+addUserKnob {4 execution_type l "" t "selected will execute only on the selected trackers " -STARTLINE M {"on selected Trackers" "on all Trackers" ""}}
+execution_type "on all Trackers"
+addUserKnob {26 ""}
+addUserKnob {22 grid_of_trackers l "Create Tracker Grid" t "this will create a tracker grid on your image" T bvfx_furytools.trackerGrid(nuke.thisNode()) +STARTLINE}
+addUserKnob {3 trkgridX l "" t "number of columns" -STARTLINE}
+trkgridX 5
+addUserKnob {3 trkgridY l "" t "number of rows" -STARTLINE}
+trkgridY 5
+addUserKnob {26 ""}
+addUserKnob {26 bvfxsignature l "" +STARTLINE T "TrackerFury<span style=\"color:#aaa;font-family:sans-serif;font-size:8pt\"> v0.0.3 Oct 8 2023 - Revenge of the Motion Vectors<br>by <a href=\"https://github.com/magnoborgo/\" style=\"color:#aaa\">Magno Borgo</a> Boundary Visual Effects</span>\n</div>"}
+addUserKnob {20 help_1 l Help}
+ addUserKnob {26 help_2 l "" +STARTLINE T "<a href=\"https://www.youtube.com/playlist?list=PLs8PKOXTB8CqmAWSHpArfD8v17sgYB7Po\">Examples and Demos on Youtube\n</a><br><br>\nRecommended motion vector channels:<br><br>\n\nSmartVector/RAFT > smartvector_f01_v01<br>\nVectorGenerator > Forward (regularized/forward)<br>\nScanline Render > Ouput \"velocity\" vectors on Forward channel\n"}
+}
+Input {
+ inputs 0
+ name InputMotionVectors
+ xpos 158
+ ypos 132
+ number 1
+}
+Shuffle {
+ in rgb
+ name Shuffle_mv
+ label "\[value in] to \[value out]"
+ xpos 158
+ ypos 251
+}
+CurveTool {
+ avgframes 0
+ ROI {3187.648682 1634.751953 3188.648682 1635.751953}
+ autocropdata {960 540 2880 1620}
+ intensitydata {0 0 0 0}
+ name ct
+ selected true
+ xpos 158
+ ypos 337
+}
+Input {
+ inputs 0
+ name InputTrackerNode
+ xpos -4
+ ypos 136
+}
+Output {
+ name Output1
+ xpos -4
+ ypos 336
+}
+end_group

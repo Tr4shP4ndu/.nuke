@@ -1,0 +1,217 @@
+#! C:/Program Files/Nuke11.2v1/nuke-11.2.1.dll -nx
+version 11.2 v1
+Gizmo {
+ addUserKnob {20 User}
+ addUserKnob {6 wb l wb/Correction +STARTLINE}
+ addUserKnob {18 sourceC l Source}
+ sourceC {1 1 1}
+ addUserKnob {6 sourceC_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 sourceC_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 sourceC_panelDropped_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 sourceC_panelDropped_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 sourceC_panelDropped_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 sourceC_panelDropped_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 sourceC_panelDropped_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 sourceC_panelDropped_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 sourceC_panelDropped_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 sourceC_panelDropped_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 sourceC_panelDropped_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 sourceC_panelDropped_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {18 targetC l Target}
+ targetC {1 1 1}
+ addUserKnob {6 targetC_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 targetC_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 targetC_panelDropped_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 targetC_panelDropped_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 targetC_panelDropped_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 targetC_panelDropped_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 targetC_panelDropped_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 targetC_panelDropped_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 targetC_panelDropped_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 targetC_panelDropped_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 targetC_panelDropped_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 targetC_panelDropped_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 targetC_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 sourceC_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {4 view M {Corrected Compare CalculationArea wbSet "" "" "" "" "" ""}}
+ view CalculationArea
+ addUserKnob {7 quality t "Lower quaility faster calculation"}
+ quality 0.25
+ addUserKnob {3 fra l frameCompare t leftSideFrame}
+ addUserKnob {3 lfra l "" t rightSideFrame -STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {16 aS l areaSize}
+ aS 0.5
+ addUserKnob {41 softness T Radial.softness}
+ addUserKnob {41 go l calculate T CurveTool.go}
+ addUserKnob {26 ""}
+ addUserKnob {12 minmax}
+ addUserKnob {26 ""}
+ addUserKnob {26 about l "" +STARTLINE T "Djordje Ilic \t\tdjordjeilicvfx.com"}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos 305
+  ypos -101
+ }
+set Nb5fd1500 [stack 0]
+ Dot {
+  name Dot1
+  xpos 118
+  ypos -97
+ }
+ EXPTool {
+  red {{"lerp(\[min_curve CurveTool.avalue \[value Input1.first_frame] \[value Input1.last_frame]],parent.minmax.x,\[max_curve CurveTool.avalue \[value Input1.first_frame] \[value Input1.last_frame]],parent.minmax.y,CurveTool.avalue)" x4368 -0.06731814 x7930 -0.2863124624}}
+  green {{red x4368 -0.06731814377 x7930 -0.2863124624}}
+  blue {{green x4368 -0.06731814377 x7930 -0.2863124624}}
+  name Exposure3
+  selected true
+  xpos 84
+  ypos -37
+  addUserKnob {20 User}
+  addUserKnob {12 frex}
+  frex {{"\[value Input1.first_frame]"} 0}
+ }
+ set Cb5fd0e00 [stack 0]
+set Nb5fd0e00 [stack 0]
+ Dot {
+  name Dot7
+  xpos 24
+  ypos -33
+ }
+ Dot {
+  name Dot6
+  xpos 24
+  ypos 146
+ }
+push $Nb5fd1500
+ Radial {
+  invert true
+  area {{lerp(0,0,1,(Input1.width/2),parent.aS) x4367 1303.25 x4430 461.15} {lerp(0,0,1,(Input1.height/2),parent.aS) x4367 1145 x4430 307.855} {lerp(0,Input1.width,1,(Input1.width/2),parent.aS) x4367 2340 x4430 4020} {lerp(0,Input1.height,1,(Input1.height/2),parent.aS) x4367 1806.975 x4430 2620}}
+  softness 0.5
+  color 0
+  name Radial
+  xpos 404
+  ypos -101
+ }
+ Reformat {
+  type scale
+  scale {{parent.quality}}
+  filter Impulse
+  clamp true
+  name Reformat
+  xpos 404
+  ypos -53
+ }
+set Nb5fd0000 [stack 0]
+ Dot {
+  name Dot3
+  xpos 514
+  ypos -49
+ }
+ Dot {
+  name Dot4
+  xpos 514
+  ypos 146
+ }
+push $Nb5fd1500
+ Dot {
+  name Dot2
+  xpos 211
+  ypos -67
+ }
+clone $Cb5fd0e00 {
+  xpos 177
+  ypos -37
+  selected false
+ }
+ Grade {
+  whitepoint {{parent.sourceC.r/parent.targetC.r} {parent.sourceC.g/parent.targetC.g} {parent.sourceC.b/parent.targetC.b} 1}
+  mix {{"lerp(\[min_curve CurveTool.avalue \[value Input1.first_frame] \[value Input1.last_frame]],0,\[max_curve CurveTool.avalue \[value Input1.first_frame] \[value Input1.last_frame]],1,CurveTool.avalue)"}}
+  name Grade3
+  xpos 177
+  ypos -11
+  disable {{1-parent.wb}}
+ }
+ set C5cc46e00 [stack 0]
+ FrameHold {
+  first_frame {{"\[if \{\[value parent.lfra] == 0\} \{return \[value Input1.last_frame]\} else \{return \[value parent.lfra]\}]"}}
+  name FrameHold_last
+  xpos 177
+  ypos 15
+ }
+set Na8042400 [stack 0]
+ Rectangle {
+  area {0 0 {Input1.width/2} {Input1.height}}
+  name Rectangle1
+  xpos 177
+  ypos 82
+ }
+push $Nb5fd0e00
+ FrameHold {
+  first_frame {{"\[if \{\[value parent.fra] == 0\} \{return \[value Input1.first_frame]\} else \{return \[value parent.fra]\}]"}}
+  name FrameHold_first
+  xpos 84
+  ypos 15
+ }
+push $Na8042400
+ Merge2 {
+  inputs 2+1
+  operation copy
+  name Merge1
+  xpos 84
+  ypos 82
+ }
+ Dot {
+  name Dot5
+  xpos 118
+  ypos 146
+ }
+push $Nb5fd1500
+clone $Cb5fd0e00 {
+  xpos 305
+  ypos 29
+  selected false
+ }
+clone $C5cc46e00 {
+  xpos 305
+  ypos 81
+  selected false
+ }
+set Na4ab9c00 [stack 0]
+ Switch {
+  inputs 4
+  which {{parent.view}}
+  name Switch
+  xpos 305
+  ypos 142
+ }
+ Output {
+  name Output1
+  xpos 305
+  ypos 177
+ }
+push $Nb5fd0000
+ CurveTool {
+  ROI {0 0 {Reformat.width x4368 2830} {Reformat.height x4368 1970}}
+  intensitydata {{curve x4367 0.0176708634 0.01899431678 0.01675623029 0.0179126383 0.01534980724 0.01960837549 0.01808192003 0.0182762455} {curve x4367 0.01551553892 0.0170682437 0.01488035759 0.01718764363 0.01454930256 0.0192159606 0.0175184486 0.01724118217} {curve x4367 0.007961746182 0.008141545613 0.007133386595 0.007457708368 0.005698238317 0.007585536333 0.007157692818 0.007078572689} 1}
+  name CurveTool
+  xpos 404
+  ypos -1
+  addUserKnob {20 User}
+  addUserKnob {7 avalue}
+  avalue {{(CurveTool.intensitydata.r+CurveTool.intensitydata.g+CurveTool.intensitydata.b)/3}}
+ }
+push $Na4ab9c00
+push $Nb5fd0e00
+ Viewer {
+  inputs 2
+  frame_range 4474-4474
+  colour_sample_bbox {0.6080452204 -0.5940824747 0.9401595592 -0.3420877755}
+  rotate 21.54602051
+  name Viewer1
+  xpos 0
+  ypos 202
+ }
+end_group

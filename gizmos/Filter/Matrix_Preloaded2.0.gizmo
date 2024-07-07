@@ -1,0 +1,481 @@
+Group {
+ name MatrixPreloaded
+ tile_color 0x990000
+ label "\[value matrixselect]"
+ selected true
+ xpos -150
+ ypos 56
+ addUserKnob {20 User}
+ addUserKnob {41 channels T Matrix_AntiAlias.channels}
+ addUserKnob {68 matrixselect l "Matrix Selection" t "Choose the matrix operation you would like to apply to the image." M {"Anti Alias" "Sharpen/Sharpen 1" "Sharpen/Sharpen 2" "Sharpen/Sharpen 3" "Edge Enhance/Edge Enhance 1" "Edge Enhance/Edge Enhance 2" "Edge Enhance/Edge Enhance 3" "Edge Detect/Edge Detect 1" "Edge Detect/Edge Detect 2" "Edge Detect/Edge Detect 3" "Edge Detect/Edge Detect 4" "Emboss/Emboss 1" "Emboss/Emboss 2" "Emboss/Emboss 3" "Sobel/Vertical Sobel" "Sobel/Horizontal Sobel" ""}}
+ addUserKnob {6 flip t "Filp the direction of the matrix operation" -STARTLINE}
+ addUserKnob {7 preBlur l preblur t "Blur the input before the matrix is applied. This will only affect the image going into the matrix and not the original that you can mix back the result." R 0 100}
+ addUserKnob {41 which l mix t "Mix between the original image and the matrix effect." T Dissolve1.which}
+ addUserKnob {26 ""}
+ addUserKnob {68 outputSelect l "output alpha matte" t "Select whether to bypass creating a matte in the alpha channel or creating one by selecting a single channel or merging them together." M {bypass Add Average "Single Chan/Red" "Single Chan/Green" "Single Chan/Blue" "" ""}}
+ addUserKnob {20 info l Info}
+ addUserKnob {26 creator l "" +STARTLINE T "\nMatrix Preloaded Version 2.0\nCreated by Rob Bannister"}
+ addUserKnob {26 site l "" +STARTLINE T "<a href=\"http://www.bannisterpost.com\" style=\"color:white\">www.bannisterpost.com</a>"}
+ addUserKnob {26 help_1 l "" +STARTLINE T "<a href=\"http://www.bannisterpost.com/downloads/matrix-preloaded/\" style=\"color:white\">HELP</a>"}
+}
+ Input {
+  inputs 0
+  name mask
+  xpos 1970
+  ypos -524
+  number 1
+ }
+set N366a700 [stack 0]
+ Input {
+  inputs 0
+  name Input1
+  xpos -444
+  ypos -836
+ }
+set N366a380 [stack 0]
+ Mirror2 {
+  flip {{parent.flip}}
+  flop {{flip}}
+  name Mirror2_1
+  xpos -444
+  ypos -716
+ }
+set N366a000 [stack 0]
+ Blur {
+  channels {{{parent.Matrix_AntiAlias.channels}}}
+  size {{parent.preBlur}}
+  name PreBlur
+  label "\[value size]"
+  xpos -444
+  ypos -659
+ }
+ Dot {
+  name Dot7
+  xpos -410
+  ypos -607
+ }
+set N366b880 [stack 0]
+ Dot {
+  name Dot17
+  xpos -317
+  ypos -607
+ }
+set N9b11c00 [stack 0]
+ Dot {
+  name Dot18
+  xpos -175
+  ypos -607
+ }
+set N9b11880 [stack 0]
+ Dot {
+  name Dot19
+  xpos -46
+  ypos -607
+ }
+set N9b11500 [stack 0]
+ Dot {
+  name Dot4
+  xpos 160
+  ypos -607
+ }
+set N9b11180 [stack 0]
+ Dot {
+  name Dot14
+  xpos 302
+  ypos -607
+ }
+set N9b10e00 [stack 0]
+ Dot {
+  name Dot15
+  xpos 432
+  ypos -607
+ }
+set N9b10a80 [stack 0]
+ Dot {
+  name Dot16
+  xpos 561
+  ypos -607
+ }
+set N9b10700 [stack 0]
+ Dot {
+  name Dot3
+  xpos 760
+  ypos -607
+ }
+set N9b10380 [stack 0]
+ Dot {
+  name Dot13
+  xpos 906
+  ypos -607
+ }
+set N9b10000 [stack 0]
+ Dot {
+  name Dot22
+  xpos 1042
+  ypos -607
+ }
+set N9b29c00 [stack 0]
+ Dot {
+  name Dot9
+  xpos 1262
+  ypos -607
+ }
+set N9b29880 [stack 0]
+ Dot {
+  name Dot10
+  xpos 1405
+  ypos -607
+ }
+ Matrix {
+  inputs 1+1
+  channels {{{parent.Matrix_AntiAlias.channels}}}
+  matrix {
+      {1 2 1}
+      {0 0 0}
+      {-1 -2 -1}
+    }
+  name Matrix_Horizontal_Sobel
+  xpos 1371
+  ypos -518
+ }
+ Dot {
+  name Dot5
+  xpos 1405
+  ypos -283
+ }
+push $N366a700
+push $N9b29880
+ Matrix {
+  inputs 1+1
+  channels {{{parent.Matrix_AntiAlias.channels}}}
+  matrix {
+      {1 0 -1}
+      {2 0 -2}
+      {1 0 -1}
+    }
+  name Matrix_Vertical_Sobel
+  xpos 1228
+  ypos -517
+ }
+push $N366a700
+push $N9b29c00
+ Matrix {
+  inputs 1+1
+  channels {{{parent.Matrix_AntiAlias.channels}}}
+  matrix {
+      {-2 0 0}
+      {0 1 0}
+      {0 0 2}
+    }
+  name Matrix_Emboss2
+  xpos 1008
+  ypos -516
+ }
+push $N366a700
+push $N9b10000
+ Matrix {
+  inputs 1+1
+  channels {{{parent.Matrix_AntiAlias.channels}}}
+  matrix {
+      {-2 -1 0}
+      {-1 1 1}
+      {0 1 2}
+    }
+  name Matrix_Emboss1
+  xpos 872
+  ypos -517
+ }
+push $N366a700
+push $N9b10380
+ Matrix {
+  inputs 1+1
+  channels {{{parent.Matrix_AntiAlias.channels}}}
+  matrix {
+      {2 0 0}
+      {0 -1 0}
+      {0 0 -1}
+    }
+  name Matrix_Emboss
+  xpos 726
+  ypos -517
+ }
+push $N366a700
+push $N9b10700
+ Matrix {
+  inputs 1+1
+  channels {{{parent.Matrix_AntiAlias.channels}}}
+  matrix {
+      {1 -2 1}
+      {-2 4 -2}
+      {1 -2 1}
+    }
+  name Matrix_EdgeDetect3
+  xpos 527
+  ypos -517
+ }
+push $N366a700
+push $N9b10a80
+ Matrix {
+  inputs 1+1
+  channels {{{parent.Matrix_AntiAlias.channels}}}
+  matrix {
+      {-1 -1 -1}
+      {-1 8 -1}
+      {-1 -1 -1}
+    }
+  name Matrix_EdgeDetect2
+  xpos 398
+  ypos -520
+ }
+push $N366a700
+push $N9b10e00
+ Matrix {
+  inputs 1+1
+  channels {{{parent.Matrix_AntiAlias.channels}}}
+  matrix {
+      {0 1 0}
+      {1 -4 1}
+      {0 1 0}
+    }
+  name Matrix_EdgeDetect1
+  xpos 268
+  ypos -520
+ }
+push $N366a700
+push $N9b11180
+ Matrix {
+  inputs 1+1
+  channels {{{parent.Matrix_AntiAlias.channels}}}
+  matrix {
+      {-1 -1 -1}
+      {0 0 0}
+      {1 1 1}
+    }
+  name Matrix_EdgeDetect
+  xpos 126
+  ypos -520
+ }
+push $N366a700
+push $N9b11500
+ Matrix {
+  inputs 1+1
+  channels {{{parent.Matrix_AntiAlias.channels}}}
+  matrix {
+      {-1 0 0}
+      {0 1 0}
+      {0 0 0}
+    }
+  name Matrix_EdgeEnhance2
+  xpos -80
+  ypos -518
+ }
+push $N366a700
+push $N9b11880
+ Matrix {
+  inputs 1+1
+  channels {{{parent.Matrix_AntiAlias.channels}}}
+  matrix {
+      {0 -1 0}
+      {0 1 0}
+      {0 0 0}
+    }
+  name Matrix_EdgeEnhance1
+  xpos -209
+  ypos -516
+ }
+push $N366a700
+push $N9b11c00
+ Matrix {
+  inputs 1+1
+  channels {{{parent.Matrix_AntiAlias.channels}}}
+  matrix {
+      {0 0 0}
+      {-1 1 0}
+      {0 0 0}
+    }
+  name Matrix_EdgeEnhance
+  xpos -351
+  ypos -524
+ }
+push $N366a700
+push $N366b880
+ Dot {
+  name Dot21
+  xpos -492
+  ypos -607
+ }
+set N9b52380 [stack 0]
+ Matrix {
+  inputs 1+1
+  channels {{{parent.Matrix_AntiAlias.channels}}}
+  matrix {
+      {-1 -1 -1}
+      {-1 17 -1}
+      {-1 -1 -1}
+    }
+  normalize true
+  name Matrix_Sharpen2
+  xpos -526
+  ypos -522
+ }
+push $N366a700
+push $N9b52380
+ Dot {
+  name Dot20
+  xpos -602
+  ypos -607
+ }
+set N9b87c00 [stack 0]
+ Matrix {
+  inputs 1+1
+  channels {{{parent.Matrix_AntiAlias.channels}}}
+  matrix {
+      {0 -1 0}
+      {-1 5 -1}
+      {0 -1 0}
+    }
+  normalize true
+  name Matrix_Sharpen1
+  xpos -636
+  ypos -519
+ }
+push $N366a700
+push $N9b87c00
+ Dot {
+  name Dot2
+  xpos -712
+  ypos -607
+ }
+set N9b87500 [stack 0]
+ Matrix {
+  inputs 1+1
+  channels {{{parent.Matrix_AntiAlias.channels}}}
+  matrix {
+      {-1 -1 -1}
+      {-1 9 -1}
+      {-1 -1 -1}
+    }
+  normalize true
+  name Matrix_Sharpen
+  xpos -746
+  ypos -518
+ }
+push $N366a700
+push $N9b87500
+ Dot {
+  name Dot1
+  xpos -866
+  ypos -607
+ }
+ Matrix {
+  inputs 1+1
+  channels rgb
+  matrix {
+      {0 1 0}
+      {1 3 1}
+      {0 1 0}
+    }
+  normalize true
+  name Matrix_AntiAlias
+  xpos -900
+  ypos -517
+ }
+ Switch {
+  inputs 16
+  which {{matrixselect i}}
+  name MatrixSwitch
+  xpos 126
+  ypos -288
+ }
+push $N366a000
+ Dot {
+  name Dot8
+  xpos -990
+  ypos -712
+ }
+ Dot {
+  name Dot11
+  xpos -990
+  ypos -4
+ }
+ Dissolve {
+  inputs 2
+  which 1
+  name Dissolve1
+  xpos 126
+  ypos -11
+ }
+ Mirror2 {
+  flip {{parent.Mirror2_1.flip}}
+  flop {{parent.Mirror2_1.flip}}
+  name Mirror2_2
+  xpos 126
+  ypos 95
+ }
+set N9bad880 [stack 0]
+ Expression {
+  expr3 b
+  name Expression_B
+  xpos 424
+  ypos 163
+ }
+push $N9bad880
+ Expression {
+  expr3 g
+  name Expression_G
+  xpos 322
+  ypos 159
+ }
+push $N9bad880
+ Expression {
+  expr3 r
+  name Expression_R
+  xpos 221
+  ypos 156
+ }
+push $N9bad880
+ Expression {
+  expr3 r+g+b/3
+  name Expression_Average
+  xpos 126
+  ypos 155
+ }
+push $N9bad880
+ Expression {
+  expr3 r+g+b
+  name Expression_Add
+  xpos 32
+  ypos 155
+ }
+push $N9bad880
+ Dot {
+  name Dot6
+  label bypass
+  xpos -36
+  ypos 155
+ }
+ Switch {
+  inputs 6
+  which {{outputSelect}}
+  name Switch1
+  xpos 126
+  ypos 225
+ }
+ Output {
+  name Output1
+  xpos 126
+  ypos 283
+ }
+push $N366a380
+push 0
+push $N9bad880
+push $N9bad880
+ Viewer {
+  inputs 4
+  frame_range 0-78
+  input_process false
+  name Viewer1
+  xpos 615
+  ypos 163
+ }
+end_group

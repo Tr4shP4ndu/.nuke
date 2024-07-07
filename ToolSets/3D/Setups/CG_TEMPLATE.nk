@@ -1,0 +1,3785 @@
+set cut_paste_input [stack 0]
+version 15.1 v1
+BackdropNode {
+ inputs 0
+ name BackdropNode11
+ tile_color 0xff0000ff
+ label "PARTICLES Set up Example"
+ note_font_size 40
+ selected true
+ xpos -2430
+ ypos 5108
+ appearance Border
+ bdwidth 966
+ bdheight 1486
+ z_order -1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode28
+ tile_color 0xc6717bff
+ label "Post Production Effects"
+ note_font "Segoe UI Black"
+ note_font_size 100
+ note_font_color 0xfff7faff
+ selected true
+ xpos -3928
+ ypos 6920
+ appearance Border
+ bdwidth 2359
+ bdheight 3127
+ z_order -1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode1
+ tile_color 0x568987ff
+ label Background
+ note_font "Segoe UI Black Bold"
+ note_font_size 100
+ note_font_color 0xff
+ selected true
+ xpos -923
+ ypos -4079
+ appearance Border
+ bookmark false
+ bdwidth 2271
+ bdheight 2085
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode10
+ tile_color 0x4f6deaff
+ label LAB
+ note_font "Segoe UI Black"
+ note_font_size 100
+ note_font_color 0xff
+ selected true
+ xpos 2410
+ ypos -4455
+ bdwidth 1627
+ bdheight 245
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode12
+ tile_color 0x999999ff
+ label "Glow Effect"
+ note_font "Segoe UI Black"
+ note_font_size 50
+ note_font_color 0x913145ff
+ selected true
+ xpos -2817
+ ypos 7280
+ appearance Border
+ bookmark false
+ bdwidth 638
+ bdheight 566
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode13
+ tile_color 0xff0000ff
+ label "EXPORT \nSequence Image PNG"
+ note_font_size 42
+ selected true
+ xpos -3185
+ ypos 11708
+ appearance Border
+ bdwidth 523
+ bdheight 214
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode14
+ tile_color 0x8e388e00
+ label "Chromatic aberration"
+ note_font "Segoe UI Black"
+ note_font_size 50
+ note_font_color 0xff
+ selected true
+ xpos -3322
+ ypos 8787
+ appearance Border
+ bdwidth 861
+ bdheight 543
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode15
+ tile_color 0x87cff
+ label "Vignetting and grain"
+ note_font "Segoe UI Black"
+ note_font_size 50
+ note_font_color 0xffffffff
+ selected true
+ xpos -3320
+ ypos 9349
+ appearance Border
+ bdwidth 859
+ bdheight 633
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode16
+ tile_color 0xff0000ff
+ label "VIDEO EXPORT"
+ note_font_size 42
+ selected true
+ xpos -3659
+ ypos 11701
+ appearance Border
+ bdwidth 339
+ bdheight 218
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode17
+ tile_color 0xff0000ff
+ label "EXPORT \nSequence Image JPEG"
+ note_font_size 42
+ selected true
+ xpos -2578
+ ypos 11707
+ appearance Border
+ bdwidth 523
+ bdheight 214
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode18
+ label "Camera Dirt"
+ note_font "Segoe UI Black"
+ note_font_size 100
+ note_font_color 0xff
+ selected true
+ xpos -3942
+ ypos 10307
+ appearance Border
+ bdwidth 2410
+ bdheight 1084
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode19
+ tile_color 0x7cb53bff
+ label "FX, Smoke, Particules ?"
+ note_font "Segoe UI Black"
+ note_font_size 100
+ note_font_color 0xfef9ffff
+ selected true
+ xpos -3838
+ ypos 5007
+ appearance Border
+ bookmark false
+ bdwidth 2466
+ bdheight 1654
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode2
+ tile_color 0x4f6deaff
+ label LAB
+ note_font "Segoe UI Black"
+ note_font_size 100
+ note_font_color 0xff
+ selected true
+ xpos 5713
+ ypos -4386
+ bdwidth 1627
+ bdheight 245
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode21
+ label "FINAL Grading"
+ note_font "Segoe UI Black"
+ note_font_size 50
+ note_font_color 0xfffffcff
+ selected true
+ xpos -3145
+ ypos 8011
+ appearance Border
+ bookmark false
+ bdwidth 599
+ bdheight 705
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode22
+ tile_color 0x568987ff
+ label "Mattepainting/ Sky"
+ note_font "Segoe UI Black Bold"
+ note_font_size 100
+ note_font_color 0xff
+ selected true
+ xpos -3609
+ ypos -4071
+ appearance Border
+ bookmark false
+ bdwidth 1417
+ bdheight 1111
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode23
+ tile_color 0xff001eff
+ label "Correction "
+ note_font "Segoe UI Black"
+ note_font_size 42
+ selected true
+ xpos -821
+ ypos -3163
+ appearance Border
+ bookmark false
+ bdwidth 2042
+ bdheight 1069
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode24
+ tile_color 0x4f6deaff
+ label LAB
+ note_font "Segoe UI Black"
+ note_font_size 100
+ note_font_color 0xff
+ selected true
+ xpos -3579
+ ypos -4394
+ bdwidth 836
+ bdheight 254
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode25
+ tile_color 0xf9a400ff
+ label Lightwrap
+ note_font "Segoe UI Black"
+ note_font_size 42
+ note_font_color 0xffffffff
+ selected true
+ xpos -2636
+ ypos 2877
+ appearance Border
+ bookmark false
+ bdwidth 353
+ bdheight 335
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode26
+ tile_color 0xf9a400ff
+ label Lightwrap
+ note_font "Segoe UI Black"
+ note_font_size 42
+ note_font_color 0xff
+ selected true
+ xpos -2813
+ ypos 1441
+ appearance Border
+ bookmark false
+ bdwidth 326
+ bdheight 319
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode27
+ tile_color 0x388e8e00
+ label "Merge Chara => Sky + Background"
+ note_font "Segoe UI Black"
+ note_font_size 42
+ selected true
+ xpos -3251
+ ypos 2309
+ bdwidth 796
+ bdheight 156
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode3
+ tile_color 0x7171c600
+ label "Motion Blur"
+ note_font_size 42
+ note_font_color 0xeffffeff
+ selected true
+ xpos 3007
+ ypos -996
+ appearance Border
+ bdwidth 986
+ bdheight 744
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode30
+ tile_color 0x568987ff
+ label FOREGROUND
+ note_font "Segoe UI Black Bold"
+ note_font_size 100
+ note_font_color 0xff
+ selected true
+ xpos 5700
+ ypos -4073
+ appearance Border
+ bookmark false
+ bdwidth 2237
+ bdheight 2023
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode31
+ tile_color 0xffffffff
+ label "Inject Alpha"
+ note_font_size 42
+ note_font_color 0xff001eff
+ selected true
+ xpos 3232
+ ypos -1357
+ appearance Border
+ bdwidth 604
+ bdheight 225
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode32
+ tile_color 0x3c9318ff
+ label Cryptomatte
+ note_font "Segoe UI Black Bold"
+ note_font_size 100
+ note_font_color 0xff
+ selected true
+ xpos 4856
+ ypos -4075
+ appearance Border
+ bdwidth 772
+ bdheight 609
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode33
+ tile_color 0xff001eff
+ label "Correction "
+ note_font "Segoe UI Black"
+ note_font_size 42
+ selected true
+ xpos 5792
+ ypos -3107
+ appearance Border
+ bookmark false
+ bdwidth 2030
+ bdheight 929
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode34
+ tile_color 0xe2262bff
+ gl_color 0x8cccb5ff
+ label FOG
+ note_font "Segoe UI Black"
+ note_font_size 42
+ note_font_color 0xff
+ selected true
+ xpos -600
+ ypos -1857
+ appearance Border
+ bdwidth 1651
+ bdheight 990
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode35
+ tile_color 0x4f68ff
+ label "Motion Blur"
+ note_font "Segoe UI Black"
+ note_font_size 42
+ note_font_color 0xeffffeff
+ selected true
+ xpos 6278
+ ypos -1644
+ appearance Border
+ bdwidth 991
+ bdheight 885
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode36
+ label "Fog setting"
+ note_font "Segoe UI Black"
+ note_font_size 50
+ selected true
+ xpos 281
+ ypos -1544
+ bdwidth 524
+ bdheight 597
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode39
+ tile_color 0x7f8460ff
+ gl_color 0x1a0922ff
+ label "Chara Shadows"
+ note_font_size 50
+ note_font_color 0xff
+ selected true
+ xpos -163
+ ypos -2591
+ appearance Border
+ bdwidth 1118
+ bdheight 463
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode40
+ tile_color 0xf9a400ff
+ label Lightwrap
+ note_font "Segoe UI Black"
+ note_font_size 42
+ note_font_color 0xff
+ selected true
+ xpos -2737
+ ypos 152
+ appearance Border
+ bookmark false
+ bdwidth 326
+ bdheight 319
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode41
+ tile_color 0xbf764aff
+ gl_color 0xccccccff
+ label ZDEFOCUS
+ note_font "Segoe UI Black"
+ note_font_size 42
+ note_font_color 0xff
+ selected true
+ xpos -3087
+ ypos 1369
+ appearance Border
+ bdwidth 1002
+ bdheight 575
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode42
+ tile_color 0x568987ff
+ label Character
+ note_font "Segoe UI Black Bold"
+ note_font_size 100
+ note_font_color 0xff
+ selected true
+ xpos 2415
+ ypos -4074
+ appearance Border
+ bookmark false
+ bdwidth 2274
+ bdheight 2656
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode43
+ tile_color 0xff001eff
+ label "Correction "
+ note_font "Segoe UI Black"
+ note_font_size 42
+ note_font_color 0xffffffff
+ selected true
+ xpos 2517
+ ypos -3118
+ appearance Border
+ bookmark false
+ bdwidth 2055
+ bdheight 1646
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode44
+ tile_color 0xc8d6a5ff
+ gl_color 0x1a0922ff
+ label "Chara Eyes"
+ note_font "Segoe UI Black"
+ note_font_size 50
+ note_font_color 0xaaaeffff
+ selected true
+ xpos 3009
+ ypos -2433
+ appearance Border
+ bdwidth 1123
+ bdheight 876
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode46
+ tile_color 0x388e8e00
+ label "Merge Foreground => Sky+Background+Chara"
+ note_font "Segoe UI Black"
+ note_font_size 42
+ selected true
+ xpos -3167
+ ypos 3659
+ bdwidth 985
+ bdheight 159
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode47
+ tile_color 0x388e8e00
+ label "Merge Background => Sky "
+ note_font "Segoe UI Black"
+ note_font_size 42
+ selected true
+ xpos -3175
+ ypos 919
+ bdwidth 715
+ bdheight 163
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode48
+ tile_color 0xbf764aff
+ gl_color 0xccccccff
+ label ZDEFOCUS
+ note_font "Segoe UI Black"
+ note_font_size 42
+ note_font_color 0xff
+ selected true
+ xpos -3093
+ ypos 2728
+ appearance Border
+ bdwidth 1031
+ bdheight 596
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode50
+ tile_color 0xbf764aff
+ gl_color 0xccccccff
+ label ZDEFOCUS
+ note_font "Segoe UI Black"
+ note_font_size 42
+ note_font_color 0xff
+ selected true
+ xpos -3093
+ ypos 80
+ appearance Border
+ bdwidth 1008
+ bdheight 576
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode55
+ tile_color 0x7171c600
+ label "Motion Blur"
+ note_font_size 42
+ note_font_color 0xeffffeff
+ selected true
+ xpos -332
+ ypos -487
+ appearance Border
+ bdwidth 986
+ bdheight 744
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode58
+ tile_color 0x4f6deaff
+ label LAB
+ note_font "Segoe UI Black"
+ note_font_size 100
+ note_font_color 0xff
+ selected true
+ xpos -925
+ ypos -4423
+ bdwidth 1627
+ bdheight 245
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode59
+ tile_color 0xffffffff
+ label "Inject Alpha"
+ note_font_size 42
+ note_font_color 0xff001eff
+ selected true
+ xpos 6491
+ ypos -1946
+ appearance Border
+ bdwidth 604
+ bdheight 225
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode6
+ tile_color 0xffffffff
+ label "Inject Alpha"
+ note_font_size 42
+ note_font_color 0xff001eff
+ selected true
+ xpos -111
+ ypos -774
+ appearance Border
+ bdwidth 604
+ bdheight 225
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode7
+ tile_color 0x3c9318ff
+ label Cryptomatte
+ note_font "Segoe UI Black Bold"
+ note_font_size 100
+ note_font_color 0xff
+ selected true
+ xpos -1768
+ ypos -4083
+ appearance Border
+ bdwidth 772
+ bdheight 609
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode8
+ tile_color 0x8e8e3800
+ label "Color corrections"
+ note_font "Segoe UI Black"
+ note_font_size 100
+ selected true
+ xpos -3431
+ ypos 3992
+ appearance Border
+ bdwidth 1232
+ bdheight 884
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode9
+ tile_color 0x3c9318ff
+ label Cryptomatte
+ note_font "Segoe UI Black Bold"
+ note_font_size 100
+ note_font_color 0xff
+ selected true
+ xpos 1573
+ ypos -4077
+ appearance Border
+ bdwidth 772
+ bdheight 609
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode20
+ tile_color 0xaaaaaa00
+ label "Main Grading Node"
+ note_font "Segoe UI Black"
+ note_font_size 42
+ selected true
+ xpos 6592
+ ypos -2934
+ bdwidth 460
+ bdheight 457
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode29
+ tile_color 0x388e8e00
+ label "Motion Force AOVs"
+ note_font "Segoe UI Black"
+ note_font_size 42
+ note_font_color 0xff
+ selected true
+ xpos 6338
+ ypos -1450
+ appearance Border
+ bdwidth 873
+ bdheight 222
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode37
+ tile_color 0x8e388e00
+ label "DPtime AOVs"
+ note_font "Segoe UI Black"
+ note_font_size 42
+ note_font_color 0xff
+ selected true
+ xpos 6336
+ ypos -1196
+ appearance Border
+ bdwidth 869
+ bdheight 307
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode38
+ tile_color 0xaaaaaa00
+ label "Main Grading Node"
+ note_font_size 42
+ selected true
+ xpos -21
+ ypos -3091
+ bdwidth 460
+ bdheight 457
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode4
+ tile_color 0x388e8e00
+ label "Motion Force AOVs"
+ note_font_size 42
+ note_font_color 0xff
+ selected true
+ xpos 3075
+ ypos -917
+ appearance Border
+ bdwidth 872
+ bdheight 247
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode45
+ tile_color 0xaaaaaa00
+ label "Main Grading Node"
+ note_font "Segoe UI Black"
+ note_font_size 42
+ selected true
+ xpos 3317
+ ypos -2985
+ bdwidth 460
+ bdheight 457
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode49
+ tile_color 0xaaaaaa00
+ label "particle shader"
+ note_font "Segoe UI Black"
+ note_font_size 42
+ selected true
+ xpos -2139
+ ypos 5232
+ bookmark false
+ bdwidth 297
+ bdheight 108
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode5
+ tile_color 0x8e388e00
+ label "DPtime AOVs"
+ note_font_size 42
+ note_font_color 0xff
+ selected true
+ xpos 3078
+ ypos -643
+ appearance Border
+ bdwidth 869
+ bdheight 307
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode51
+ tile_color 0xaaaaaa00
+ label forces
+ note_font "Segoe UI Black"
+ note_font_size 42
+ selected true
+ xpos -2085
+ ypos 5592
+ bookmark false
+ bdwidth 350
+ bdheight 214
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode52
+ tile_color 0xaaaaaa00
+ label "controlling attributes"
+ note_font "Segoe UI Black"
+ note_font_size 42
+ selected true
+ xpos -2084
+ ypos 5815
+ bookmark false
+ bdwidth 427
+ bdheight 223
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode53
+ tile_color 0x388e8e00
+ label "Dirt Camera"
+ note_font "Segoe UI Black"
+ note_font_size 42
+ selected true
+ xpos -2771
+ ypos 10380
+ bdwidth 337
+ bdheight 170
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode54
+ tile_color 0x388e8e00
+ label "Dirt Camera \nBokeh"
+ note_font "Segoe UI Black"
+ note_font_size 42
+ selected true
+ xpos -2587
+ ypos 10710
+ bdwidth 391
+ bdheight 170
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode56
+ tile_color 0x388e8e00
+ label "Motion Force AOVs"
+ note_font_size 42
+ note_font_color 0xff
+ selected true
+ xpos -272
+ ypos -369
+ appearance Border
+ bdwidth 873
+ bdheight 222
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode57
+ tile_color 0x8e388e00
+ label "DPtime AOVs"
+ note_font_size 42
+ note_font_color 0xff
+ selected true
+ xpos -267
+ ypos -111
+ appearance Border
+ bdwidth 869
+ bdheight 307
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode60
+ tile_color 0x7171c600
+ note_font_size 42
+ selected true
+ xpos -3093
+ ypos 11103
+ appearance Border
+ bdwidth 401
+ bdheight 260
+ z_order 1
+}
+StickyNote {
+ inputs 0
+ name StickyNote8
+ label "You can put your input here, with several versions"
+ selected true
+ xpos 5729
+ ypos -4216
+}
+push $cut_paste_input
+Cryptomatte {
+ pickerAdd {0 0 0 0 0 0 0 0}
+ name Cryptomatte2
+ selected true
+ xpos 4942
+ ypos -3876
+}
+Cryptomatte {
+ inputs 0
+ pickerAdd {0 0 0 0 0 0 0 0}
+ name Cryptomatte7
+ selected true
+ xpos 5394
+ ypos -3876
+}
+Cryptomatte {
+ inputs 0
+ pickerAdd {0 0 0 0 0 0 0 0}
+ name Cryptomatte6
+ selected true
+ xpos 5281
+ ypos -3876
+}
+Cryptomatte {
+ inputs 0
+ pickerAdd {0 0 0 0 0 0 0 0}
+ name Cryptomatte5
+ selected true
+ xpos 5175
+ ypos -3876
+}
+Cryptomatte {
+ inputs 0
+ pickerAdd {0 0 0 0 0 0 0 0}
+ name Cryptomatte4
+ selected true
+ xpos 5056
+ ypos -3876
+}
+StickyNote {
+ inputs 0
+ name StickyNote3
+ label "Just an example set up for the Shadows integrations"
+ selected true
+ xpos 291
+ ypos -2554
+}
+StickyNote {
+ inputs 0
+ name StickyNote4
+ label "Here we can create a fog with the Z map but yu can play \nwith stockshots or other stuff"
+ selected true
+ xpos 280
+ ypos -1698
+}
+StickyNote {
+ inputs 0
+ name StickyNote7
+ label "You can put your input here, with several versions"
+ selected true
+ xpos -909
+ ypos -4253
+}
+Cryptomatte {
+ inputs 0
+ pickerAdd {0 0 0 0 0 0 0 0}
+ name Cryptomatte3
+ selected true
+ xpos -1230
+ ypos -3884
+}
+Cryptomatte {
+ inputs 0
+ pickerAdd {0 0 0 0 0 0 0 0}
+ name Cryptomatte8
+ selected true
+ xpos -1343
+ ypos -3884
+}
+Cryptomatte {
+ inputs 0
+ pickerAdd {0 0 0 0 0 0 0 0}
+ name Cryptomatte9
+ selected true
+ xpos -1449
+ ypos -3884
+}
+Cryptomatte {
+ inputs 0
+ pickerAdd {0 0 0 0 0 0 0 0}
+ name Cryptomatte10
+ selected true
+ xpos -1568
+ ypos -3884
+}
+Cryptomatte {
+ inputs 0
+ pickerAdd {0 0 0 0 0 0 0 0}
+ name Cryptomatte1
+ selected true
+ xpos -1682
+ ypos -3884
+}
+Cryptomatte {
+ inputs 0
+ pickerAdd {0 0 0 0 0 0 0 0}
+ name Cryptomatte12
+ selected true
+ xpos 1998
+ ypos -3878
+}
+Cryptomatte {
+ inputs 0
+ pickerAdd {0 0 0 0 0 0 0 0}
+ name Cryptomatte13
+ selected true
+ xpos 1892
+ ypos -3878
+}
+Cryptomatte {
+ inputs 0
+ pickerAdd {0 0 0 0 0 0 0 0}
+ name Cryptomatte14
+ selected true
+ xpos 1773
+ ypos -3878
+}
+Cryptomatte {
+ inputs 0
+ pickerAdd {0 0 0 0 0 0 0 0}
+ name Cryptomatte15
+ selected true
+ xpos 1659
+ ypos -3878
+}
+Cryptomatte {
+ inputs 0
+ pickerAdd {0 0 0 0 0 0 0 0}
+ name Cryptomatte11
+ selected true
+ xpos 2111
+ ypos -3878
+}
+StickyNote {
+ inputs 0
+ name StickyNote1
+ label "You can put your input here, with several versions"
+ selected true
+ xpos 2426
+ ypos -4285
+}
+Roto {
+ inputs 0
+ output {rgba.red -rgba.green -rgba.blue rgba.alpha}
+ curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 0}
+    {t x4479c000 x44070000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}}}}}
+ toolbox {createBezier {
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+ toolbar_brush_hardness 0.200000003
+ toolbar_source_transform_scale {1 1}
+ toolbar_source_transform_center {999 540}
+ name Roto6
+ selected true
+ xpos -2647
+ ypos 4167
+ postage_stamp true
+}
+Roto {
+ inputs 0
+ output {rgba.red -rgba.green -rgba.blue rgba.alpha}
+ curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 0}
+    {t x4479c000 x44070000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}}}}}
+ toolbox {createBezier {
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+ toolbar_brush_hardness 0.200000003
+ toolbar_source_transform_scale {1 1}
+ toolbar_source_transform_center {999 540}
+ name Roto7
+ selected true
+ xpos -2537
+ ypos 4167
+ postage_stamp true
+}
+Roto {
+ inputs 0
+ output {rgba.red -rgba.green -rgba.blue rgba.alpha}
+ curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 0}
+    {t x4479c000 x44070000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}}}}}
+ toolbox {createBezier {
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+ toolbar_brush_hardness 0.200000003
+ toolbar_source_transform_scale {1 1}
+ toolbar_source_transform_center {999 540}
+ name Roto9
+ selected true
+ xpos -2427
+ ypos 4167
+ postage_stamp true
+}
+Roto {
+ inputs 0
+ output {rgba.red -rgba.green -rgba.blue rgba.alpha}
+ curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 0}
+    {t x4479c000 x44070000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}}}}}
+ toolbox {createBezier {
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+ toolbar_brush_hardness 0.200000003
+ toolbar_source_transform_scale {1 1}
+ toolbar_source_transform_center {999 540}
+ name Roto10
+ selected true
+ xpos -2317
+ ypos 4167
+ postage_stamp true
+}
+StickyNote {
+ inputs 0
+ name StickyNote2
+ label "You can put your input here, with several versions"
+ selected true
+ xpos -3563
+ ypos -4224
+}
+ParticleTurbulence {
+ inputs 0
+ name ParticleTurbulence1
+ selected true
+ xpos -1894
+ ypos 5643
+}
+ParticleWind {
+ inputs 0
+ name ParticleWind1
+ selected true
+ xpos -2052
+ ypos 5687
+}
+ParticlePointForce {
+ inputs 0
+ name ParticlePointForce1
+ selected true
+ xpos -1864
+ ypos 5722
+}
+ParticleExpression {
+ inputs 0
+ name ParticleExpression1
+ selected true
+ xpos -2015
+ ypos 5920
+}
+ParticleCurve {
+ inputs 0
+ name ParticleCurve1
+ selected true
+ xpos -1906
+ ypos 5969
+}
+Dot {
+ inputs 0
+ name Dot1
+ selected true
+ xpos -2143
+ ypos 6344
+}
+Dot {
+ inputs 0
+ name Dot12
+ label geometry
+ selected true
+ xpos -2158
+ ypos 5499
+}
+BlendMat {
+ inputs 0
+ name BlendMat1
+ selected true
+ xpos -2129
+ ypos 5312
+}
+Dot {
+ name Dot14
+ label image
+ selected true
+ xpos -2095
+ ypos 5407
+}
+Dot {
+ inputs 0
+ name Dot16
+ label "mesh or pointcloud"
+ selected true
+ xpos -1897
+ ypos 5408
+}
+push 0
+ParticleEmitter {
+ inputs 4
+ name ParticleEmitter1
+ selected true
+ xpos -1967
+ ypos 5535
+}
+Scene {
+ name Scene1
+ selected true
+ xpos -1957
+ ypos 6177
+}
+push 0
+ScanlineRender {
+ inputs 3
+ conservative_shader_sampling false
+ motion_vectors_type distance
+ name ScanlineRender2
+ selected true
+ xpos -1967
+ ypos 6416
+}
+Unpremult {
+ inputs 0
+ name Unpremult2
+ selected true
+ xpos 4560
+ ypos -4001
+}
+Unpremult {
+ inputs 0
+ name Unpremult3
+ selected true
+ xpos 7798
+ ypos -3981
+}
+Unpremult {
+ inputs 0
+ name Unpremult1
+ selected true
+ xpos 1219
+ ypos -4021
+}
+StickyNote {
+ inputs 0
+ name StickyNote6
+ label "When you color correct premultiplied images, you should first connect an \nUnpremult node to the image to turn the image into an unpremultiplied one. \nThen, apply the color correction.\n Finally, add a Premult node to return the image to its original \npremultiplied state - this last step is important if you want to \nmerge the image over another one, as Merge nodes in Nuke expect premultiplied images. (Doc Foundry Nuke)"
+ selected true
+ xpos 3896
+ ypos -4033
+}
+StickyNote {
+ inputs 0
+ name StickyNote9
+ label "When you color correct premultiplied images, you should first connect an \nUnpremult node to the image to turn the image into an unpremultiplied one. \nThen, apply the color correction.\n Finally, add a Premult node to return the image to its original \npremultiplied state - this last step is important if you want to \nmerge the image over another one, as Merge nodes in Nuke expect premultiplied images. (Doc Foundry Nuke)"
+ selected true
+ xpos 7144
+ ypos -4021
+}
+StickyNote {
+ inputs 0
+ name StickyNote5
+ label "When you color correct premultiplied images, you should first connect an \nUnpremult node to the image to turn the image into an unpremultiplied one. \nThen, apply the color correction.\n Finally, add a Premult node to return the image to its original \npremultiplied state - this last step is important if you want to \nmerge the image over another one, as Merge nodes in Nuke expect premultiplied images. (Doc Foundry Nuke)"
+ selected true
+ xpos 543
+ ypos -4042
+}
+PostageStamp {
+ inputs 0
+ name PostageStamp7
+ selected true
+ xpos -2423
+ ypos 10781
+ postage_stamp true
+}
+Reformat {
+ name Reformat2
+ selected true
+ xpos -2423
+ ypos 10883
+}
+Transform {
+ scale {1 0.8399999738}
+ center {999 540}
+ name Transform2
+ selected true
+ xpos -2423
+ ypos 10934
+}
+Blur {
+ size 6.6
+ name Blur3
+ selected true
+ xpos -2423
+ ypos 10979
+}
+Dot {
+ name Dot20
+ selected true
+ xpos -2389
+ ypos 11036
+}
+PostageStamp {
+ inputs 0
+ name PostageStamp4
+ selected true
+ xpos -2646
+ ypos 10465
+ postage_stamp true
+}
+Reformat {
+ name Reformat1
+ selected true
+ xpos -2646
+ ypos 10562
+}
+Transform {
+ scale {1 0.8399999738}
+ center {999 540}
+ name Transform3
+ selected true
+ xpos -2646
+ ypos 10606
+}
+Grade {
+ white 2.2
+ name Grade5
+ selected true
+ xpos -2646
+ ypos 10646
+}
+Dot {
+ name Dot24
+ selected true
+ xpos -2612
+ ypos 10694
+}
+PostageStamp {
+ inputs 0
+ name PostageStamp2
+ selected true
+ xpos -2712
+ ypos 9450
+ postage_stamp true
+}
+Reformat {
+ name Reformat6
+ selected true
+ xpos -2712
+ ypos 9562
+}
+Dot {
+ name Dot5
+ selected true
+ xpos -2678
+ ypos 9623
+}
+Roto {
+ inputs 0
+ output {rgba.red -rgba.green -rgba.blue rgba.alpha}
+ curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 0}
+    {t x44800000 x44428000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}}}}}
+ toolbox {createBezier {
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+ toolbar_brush_hardness 0.200000003
+ toolbar_source_transform_scale {1 1}
+ toolbar_source_transform_center {1024 778}
+ name Roto3
+ selected true
+ xpos -2783
+ ypos 8453
+ postage_stamp true
+}
+Roto {
+ inputs 0
+ output {rgba.red -rgba.green -rgba.blue rgba.alpha}
+ curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 0}
+    {t x44800000 x44428000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}}}}}
+ toolbox {createBezier {
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+ toolbar_brush_hardness 0.200000003
+ toolbar_source_transform_scale {1 1}
+ toolbar_source_transform_center {1024 778}
+ name Roto11
+ selected true
+ xpos -2783
+ ypos 8351
+ postage_stamp true
+}
+Roto {
+ inputs 0
+ output {rgba.red -rgba.green -rgba.blue rgba.alpha}
+ curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 0}
+    {t x44800000 x44428000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}}}}}
+ toolbox {createBezier {
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+ toolbar_brush_hardness 0.200000003
+ toolbar_source_transform_scale {1 1}
+ toolbar_source_transform_center {1024 778}
+ name Roto1
+ selected true
+ xpos -2375
+ ypos 7445
+ postage_stamp true
+}
+Dot {
+ inputs 0
+ name Dot10
+ tile_color 0xff0000ff
+ label "Z MAP"
+ note_font "Segoe UI Black"
+ selected true
+ xpos -2334
+ ypos 3159
+ hide_input true
+}
+Dot {
+ inputs 0
+ name Dot7
+ tile_color 0xff0000ff
+ label "Z MAP"
+ note_font "Segoe UI Black"
+ selected true
+ xpos -2452
+ ypos 1800
+ hide_input true
+}
+Dot {
+ inputs 0
+ name Dot6
+ tile_color 0xff0000ff
+ label "Z MAP"
+ note_font "Segoe UI Black"
+ selected true
+ xpos -2458
+ ypos 511
+ hide_input true
+}
+Roto {
+ inputs 0
+ output {rgba.red -rgba.green -rgba.blue rgba.alpha}
+ curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 0}
+    {t x44800000 x44428000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}}}}}
+ toolbox {createBezier {
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+ toolbar_brush_hardness 0.200000003
+ toolbar_source_transform_scale {1 1}
+ toolbar_source_transform_center {1024 778}
+ name Roto4
+ selected true
+ xpos -2733
+ ypos -3236
+ postage_stamp true
+}
+Camera3 {
+ inputs 0
+ focal 10
+ name Camera1
+ selected true
+ xpos -2836
+ ypos -3499
+}
+PostageStamp {
+ inputs 0
+ name PostageStamp1
+ selected true
+ xpos -3002
+ ypos -3832
+ hide_input true
+ postage_stamp true
+}
+Grade {
+ name Grade1
+ selected true
+ xpos -3002
+ ypos -3710
+}
+ColorCorrect {
+ name ColorCorrect1
+ selected true
+ xpos -3002
+ ypos -3646
+}
+Sphere {
+ rotate {0 180 0}
+ uniform_scale 10
+ name Sphere1
+ selected true
+ xpos -3002
+ ypos -3467
+}
+push 0
+ScanlineRender {
+ inputs 3
+ conservative_shader_sampling false
+ motion_vectors_type distance
+ name ScanlineRender1
+ selected true
+ xpos -2946
+ ypos -3388
+}
+Defocus {
+ defocus 36
+ name Defocus1
+ selected true
+ xpos -2946
+ ypos -3302
+}
+Grade {
+ inputs 1+1
+ name Grade7
+ selected true
+ xpos -2946
+ ypos -3206
+}
+Dot {
+ name Dot28
+ selected true
+ xpos -2910
+ ypos 239
+}
+set Ne64c1000 [stack 0]
+Dot {
+ name Dot52
+ selected true
+ xpos -2609
+ ypos 239
+}
+Dot {
+ inputs 0
+ name Dot112
+ tile_color 0xff00ff
+ label "Motion Blur AOVs"
+ note_font "Segoe UI Black"
+ note_font_size 15
+ note_font_color 0xd10e26ff
+ selected true
+ xpos 75
+ ypos 37
+}
+Dot {
+ inputs 0
+ name Dot114
+ tile_color 0xff0000ff
+ label "AOVs Motion Force"
+ note_font "Segoe UI Black"
+ selected true
+ xpos -225
+ ypos -261
+}
+add_layer {motionFore motionFore.x motionFore.y motionFore.z}
+Shuffle2 {
+ fromInput1 {{0} B}
+ in1 motionFore
+ fromInput2 {{0} B}
+ mappings "4 black -1 -1 rgba.alpha 0 3 motionFore.x 0 0 rgba.red 0 0 motionFore.y 0 1 rgba.green 0 1 black -1 -1 rgba.blue 0 2"
+ name Shuffle36
+ label motionFore
+ selected true
+ xpos -154
+ ypos -294
+ postage_stamp true
+}
+Multiply {
+ channels {-rgba.red rgba.green -rgba.blue none}
+ value -1
+ name Multiply1
+ selected true
+ xpos -14
+ ypos -264
+}
+Dot {
+ inputs 0
+ name Dot27
+ tile_color 0x5ff00ff
+ label "Beauty Z"
+ note_font "Segoe UI Black"
+ note_font_color 0xffffffff
+ selected true
+ xpos -42
+ ypos -1488
+ hide_input true
+}
+Dot {
+ name Dot38
+ selected true
+ xpos -42
+ ypos -1375
+}
+Dot {
+ inputs 0
+ name Dot39
+ tile_color 0xff0000ff
+ label Alpha_Background
+ note_font "Segoe UI Black"
+ note_font_color 0xff
+ selected true
+ xpos 70
+ ypos -1583
+ hide_input true
+}
+Dot {
+ inputs 0
+ name Dot104
+ tile_color 0xff0000ff
+ label "AOVS Map_Shadow <- beautyChara \n"
+ note_font "Segoe UI Black"
+ note_font_size 20
+ note_font_color 0xff
+ selected true
+ xpos 612
+ ypos -2509
+ hide_input true
+}
+add_layer {shadow_ground shadow_ground.red shadow_ground.green shadow_ground.blue}
+Shuffle2 {
+ fromInput1 {{0} B}
+ in1 shadow_ground
+ fromInput2 {{0} B}
+ mappings "4 shadow_ground.red 0 0 rgba.red 0 0 shadow_ground.green 0 1 rgba.green 0 1 shadow_ground.blue 0 2 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3"
+ name Shuffle_Shadow
+ selected true
+ xpos 578
+ ypos -2442
+}
+set Ne6855800 [stack 0]
+Dot {
+ name Dot106
+ selected true
+ xpos 746
+ ypos -2439
+}
+Keyer {
+ operation "luminance key"
+ range {0.3111285069 0.3111285069 1 1}
+ name Keyer5
+ selected true
+ xpos 712
+ ypos -2375
+}
+Blur {
+ channels alpha
+ size 4.8
+ name Blur17
+ selected true
+ xpos 712
+ ypos -2298
+}
+push $Ne6855800
+Invert {
+ name Invert1
+ selected true
+ xpos 578
+ ypos -2368
+}
+Grade {
+ inputs 1+1
+ blackpoint 0.035
+ white {0.667833 0.771645 1 1}
+ white_panelDropped true
+ name Grade18
+ selected true
+ xpos 578
+ ypos -2292
+}
+Dilate {
+ size -1
+ name Dilate2
+ selected true
+ xpos 475
+ ypos -2299
+}
+Dot {
+ name Dot105
+ selected true
+ xpos 509
+ ypos -2178
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle8
+ selected true
+ xpos -11
+ ypos -3811
+}
+Dot {
+ name Dot42
+ selected true
+ xpos 23
+ ypos -3741
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle9
+ selected true
+ xpos -116
+ ypos -3812
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge24
+ selected true
+ xpos -116
+ ypos -3744
+}
+Dot {
+ name Dot45
+ selected true
+ xpos -82
+ ypos -3653
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle10
+ selected true
+ xpos -220
+ ypos -3814
+}
+Dot {
+ name Dot50
+ selected true
+ xpos -186
+ ypos -3738
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle27
+ selected true
+ xpos -323
+ ypos -3815
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge25
+ selected true
+ xpos -323
+ ypos -3741
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge26
+ selected true
+ xpos -323
+ ypos -3656
+}
+Dot {
+ name Dot73
+ selected true
+ xpos -289
+ ypos -3325
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle28
+ selected true
+ xpos 988
+ ypos -3802
+}
+Dot {
+ name Dot92
+ selected true
+ xpos 1022
+ ypos -3732
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle29
+ selected true
+ xpos 883
+ ypos -3803
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge27
+ selected true
+ xpos 883
+ ypos -3735
+}
+Dot {
+ name Dot98
+ selected true
+ xpos 917
+ ypos -3644
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle30
+ selected true
+ xpos 779
+ ypos -3805
+}
+Dot {
+ name Dot99
+ selected true
+ xpos 813
+ ypos -3729
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle31
+ selected true
+ xpos 676
+ ypos -3806
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge28
+ selected true
+ xpos 676
+ ypos -3732
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge29
+ selected true
+ xpos 676
+ ypos -3647
+}
+Dot {
+ name Dot100
+ selected true
+ xpos 710
+ ypos -3517
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle32
+ selected true
+ xpos 469
+ ypos -3808
+}
+Dot {
+ name Dot101
+ selected true
+ xpos 503
+ ypos -3738
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle33
+ selected true
+ xpos 364
+ ypos -3809
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge30
+ selected true
+ xpos 364
+ ypos -3741
+}
+Dot {
+ name Dot102
+ selected true
+ xpos 398
+ ypos -3650
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle34
+ selected true
+ xpos 260
+ ypos -3811
+}
+Dot {
+ name Dot103
+ selected true
+ xpos 294
+ ypos -3735
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle35
+ selected true
+ xpos 157
+ ypos -3812
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge31
+ selected true
+ xpos 157
+ ypos -3738
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge32
+ selected true
+ xpos 157
+ ypos -3653
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge33
+ selected true
+ xpos 157
+ ypos -3520
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge34
+ selected true
+ xpos 157
+ ypos -3328
+}
+ColorCorrect {
+ name ColorCorrect7
+ selected true
+ xpos 157
+ ypos -2983
+}
+Grade {
+ name Grade16
+ selected true
+ xpos 157
+ ypos -2933
+}
+HueCorrect {
+ name HueCorrect3
+ selected true
+ xpos 157
+ ypos -2877
+}
+ColorLookup {
+ name ColorLookup2
+ selected true
+ xpos 157
+ ypos -2816
+}
+Merge2 {
+ inputs 2
+ operation multiply
+ name Plus8
+ selected true
+ xpos 157
+ ypos -2181
+}
+Grade {
+ inputs 1+1
+ name Grade2
+ selected true
+ xpos 160
+ ypos -1542
+}
+Copy {
+ inputs 2
+ from0 depth.Z
+ to0 depth.Z
+ name Copy4
+ selected true
+ xpos 160
+ ypos -1384
+ disable true
+}
+set Ne2fcd800 [stack 0]
+Dot {
+ name Dot111
+ selected true
+ xpos 299
+ ypos -1436
+}
+Shuffle2 {
+ fromInput1 {{0} B}
+ in1 depth
+ fromInput2 {{0} B}
+ mappings "4 depth.Z 0 0 rgba.alpha 0 3 black -1 -1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.red 0 0"
+ name Shuffle50
+ selected true
+ xpos 522
+ ypos -1439
+}
+Dot {
+ name Dot40
+ selected true
+ xpos 556
+ ypos -1359
+}
+set Ne61ae400 [stack 0]
+Dot {
+ name Dot107
+ selected true
+ xpos 645
+ ypos -1359
+}
+Grade {
+ channels alpha
+ blackpoint 2000
+ whitepoint 100
+ name Grade14
+ selected true
+ xpos 611
+ ypos -1315
+}
+Invert {
+ name Invert4
+ selected true
+ xpos 611
+ ypos -1263
+}
+Dot {
+ name Dot108
+ selected true
+ xpos 645
+ ypos -996
+}
+push $Ne61ae400
+Dot {
+ name Dot109
+ selected true
+ xpos 446
+ ypos -1359
+}
+Grade {
+ channels alpha
+ blackpoint 1800
+ whitepoint 1500
+ name Grade15
+ selected true
+ xpos 412
+ ypos -1321
+}
+Dilate {
+ size -0.5
+ name Dilate4
+ selected true
+ xpos 412
+ ypos -1262
+}
+Invert {
+ name Invert3
+ selected true
+ xpos 412
+ ypos -1208
+}
+Dot {
+ name Dot110
+ selected true
+ xpos 446
+ ypos -1141
+}
+set Ne6272800 [stack 0]
+push $Ne6272800
+push $Ne2fcd800
+ColorCorrect {
+ inputs 1+1
+ name ColorCorrect6
+ selected true
+ xpos 160
+ ypos -1172
+}
+Grade {
+ inputs 1+1
+ name Grade8
+ selected true
+ xpos 160
+ ypos -1105
+}
+ColorCorrect {
+ inputs 1+1
+ name ColorCorrect10
+ selected true
+ xpos 160
+ ypos -999
+}
+Copy {
+ from0 rgba.alpha
+ to0 rgba.alpha
+ name Copy5
+ selected true
+ xpos 160
+ ypos -690
+}
+Premult {
+ name Premult1
+ selected true
+ xpos 160
+ ypos -629
+}
+Copy {
+ inputs 2
+ from0 rgba.red
+ to0 forward.u
+ from1 rgba.green
+ to1 forward.v
+ name Copy12
+ selected true
+ xpos 160
+ ypos -276
+ disable true
+}
+VectorBlur2 {
+ uv forward
+ name VectorBlur5
+ selected true
+ xpos 160
+ ypos -199
+ disable true
+}
+add_layer {dPcameradtime dPcameradtime.x dPcameradtime.y dPcameradtime.z}
+add_layer {dPdtime dPdtime.x dPdtime.y dPdtime.z}
+Copy {
+ inputs 2
+ from0 dPcameradtime.x
+ to0 dPdtime.x
+ from1 dPcameradtime.y
+ to1 dPdtime.y
+ from2 dPcameradtime.z
+ to2 dPdtime.z
+ name Copy13
+ selected true
+ xpos 160
+ ypos 61
+ disable true
+}
+VectorBlur2 {
+ name VectorBlur6
+ selected true
+ xpos 160
+ ypos 153
+ disable true
+}
+Dot {
+ name Dot51
+ selected true
+ xpos 194
+ ypos 332
+}
+LightWrap {
+ inputs 2
+ name LightWrap2
+ selected true
+ xpos -2643
+ ypos 329
+ master 1
+ shadows 1
+ midtones 1
+ highlights 1
+}
+Copy {
+ inputs 2
+ from0 depth.Z
+ to0 depth.Z
+ name Copy11
+ selected true
+ xpos -2643
+ ypos 502
+ disable true
+}
+ZDefocus2 {
+ math depth
+ center 12.94498062
+ focal_point {1236 492}
+ blur_dof false
+ name ZDefocus5
+ selected true
+ xpos -2643
+ ypos 593
+}
+Dot {
+ name Dot31
+ selected true
+ xpos -2609
+ ypos 1013
+}
+push $Ne64c1000
+Merge2 {
+ inputs 2
+ name Merge12
+ selected true
+ xpos -2944
+ ypos 1010
+}
+Dot {
+ name Dot8
+ selected true
+ xpos -2910
+ ypos 1528
+}
+set Ne2e95800 [stack 0]
+Dot {
+ name Dot9
+ selected true
+ xpos -2603
+ ypos 1528
+}
+Dot {
+ inputs 0
+ name Dot2
+ tile_color 0xff00ff
+ label "Motion Blur AOVs"
+ note_font "Segoe UI Black"
+ note_font_size 15
+ note_font_color 0xd10e26ff
+ selected true
+ xpos 3368
+ ypos -512
+}
+Dot {
+ inputs 0
+ name Dot4
+ tile_color 0xff0000ff
+ label "AOVs Motion Force"
+ note_font "Segoe UI Black"
+ selected true
+ xpos 3135
+ ypos -812
+}
+Shuffle2 {
+ fromInput1 {{0} B}
+ in1 motionFore
+ fromInput2 {{0} B}
+ mappings "4 black -1 -1 rgba.alpha 0 3 motionFore.x 0 0 rgba.red 0 0 motionFore.y 0 1 rgba.green 0 1 black -1 -1 rgba.blue 0 2"
+ name Shuffle1
+ label motionFore
+ selected true
+ xpos 3239
+ ypos -845
+ postage_stamp true
+}
+Multiply {
+ channels {-rgba.red rgba.green -rgba.blue none}
+ value -1
+ name Multiply2
+ selected true
+ xpos 3359
+ ypos -815
+}
+Roto {
+ inputs 0
+ output {rgba.red -rgba.green -rgba.blue rgba.alpha}
+ curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 0}
+    {t x44800000 x44428000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}}}}}
+ toolbox {createBezier {
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+ toolbar_brush_hardness 0.200000003
+ toolbar_source_transform_scale {1 1}
+ toolbar_source_transform_center {1024 778}
+ name Roto8
+ selected true
+ xpos 3711
+ ypos -1731
+ postage_stamp true
+}
+Dot {
+ name Dot75
+ label "EYES MASK"
+ selected true
+ xpos 3745
+ ypos -1611
+}
+Dot {
+ inputs 0
+ name Dot76
+ label "add fake spec"
+ selected true
+ xpos 3252
+ ypos -1825
+}
+Dot {
+ inputs 0
+ name Dot77
+ label "occlusion around the eye "
+ selected true
+ xpos 3256
+ ypos -1924
+}
+Dot {
+ inputs 0
+ name Dot116
+ label "caustic boost mask"
+ selected true
+ xpos 3259
+ ypos -2053
+}
+Dot {
+ inputs 0
+ name Dot117
+ label "iris mask"
+ selected true
+ xpos 3264
+ ypos -2171
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle11
+ selected true
+ xpos 3327
+ ypos -3836
+}
+Dot {
+ name Dot78
+ selected true
+ xpos 3361
+ ypos -3766
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle12
+ selected true
+ xpos 3222
+ ypos -3837
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge13
+ selected true
+ xpos 3222
+ ypos -3769
+}
+Dot {
+ name Dot79
+ selected true
+ xpos 3256
+ ypos -3678
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle13
+ selected true
+ xpos 3118
+ ypos -3839
+}
+Dot {
+ name Dot80
+ selected true
+ xpos 3152
+ ypos -3763
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle14
+ selected true
+ xpos 3015
+ ypos -3840
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge35
+ selected true
+ xpos 3015
+ ypos -3766
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge36
+ selected true
+ xpos 3015
+ ypos -3681
+}
+Dot {
+ name Dot81
+ selected true
+ xpos 3049
+ ypos -3350
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle38
+ selected true
+ xpos 4326
+ ypos -3827
+}
+Dot {
+ name Dot82
+ selected true
+ xpos 4360
+ ypos -3757
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle39
+ selected true
+ xpos 4221
+ ypos -3828
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge37
+ selected true
+ xpos 4221
+ ypos -3760
+}
+Dot {
+ name Dot83
+ selected true
+ xpos 4255
+ ypos -3669
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle40
+ selected true
+ xpos 4117
+ ypos -3830
+}
+Dot {
+ name Dot84
+ selected true
+ xpos 4151
+ ypos -3754
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle41
+ selected true
+ xpos 4014
+ ypos -3831
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge38
+ selected true
+ xpos 4014
+ ypos -3757
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge39
+ selected true
+ xpos 4014
+ ypos -3672
+}
+Dot {
+ name Dot85
+ selected true
+ xpos 4048
+ ypos -3542
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle42
+ selected true
+ xpos 3807
+ ypos -3833
+}
+Dot {
+ name Dot90
+ selected true
+ xpos 3841
+ ypos -3763
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle43
+ selected true
+ xpos 3702
+ ypos -3834
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge40
+ selected true
+ xpos 3702
+ ypos -3766
+}
+Dot {
+ name Dot91
+ selected true
+ xpos 3736
+ ypos -3675
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle44
+ selected true
+ xpos 3598
+ ypos -3836
+}
+Dot {
+ name Dot115
+ selected true
+ xpos 3632
+ ypos -3760
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle45
+ selected true
+ xpos 3495
+ ypos -3837
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge41
+ selected true
+ xpos 3495
+ ypos -3763
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge42
+ selected true
+ xpos 3495
+ ypos -3678
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge43
+ selected true
+ xpos 3495
+ ypos -3545
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge44
+ selected true
+ xpos 3495
+ ypos -3353
+}
+ColorCorrect {
+ name ColorCorrect5
+ selected true
+ xpos 3495
+ ypos -2877
+}
+Grade {
+ name Grade19
+ selected true
+ xpos 3495
+ ypos -2827
+}
+HueCorrect {
+ name HueCorrect4
+ selected true
+ xpos 3495
+ ypos -2771
+}
+ColorLookup {
+ name ColorLookup3
+ selected true
+ xpos 3495
+ ypos -2710
+}
+Dot {
+ name Dot118
+ selected true
+ xpos 3529
+ ypos -2325
+}
+set Ne47b2000 [stack 0]
+Grade {
+ inputs 1+1
+ name Grade9
+ selected true
+ xpos 3376
+ ypos -2119
+}
+Grade {
+ inputs 1+1
+ name Grade20
+ selected true
+ xpos 3376
+ ypos -2007
+}
+Grade {
+ inputs 1+1
+ name Grade21
+ selected true
+ xpos 3376
+ ypos -1886
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Plus19
+ selected true
+ xpos 3376
+ ypos -1781
+}
+Dot {
+ name Dot119
+ selected true
+ xpos 3410
+ ypos -1611
+}
+push $Ne47b2000
+Keymix {
+ inputs 3
+ name Keymix3
+ selected true
+ xpos 3495
+ ypos -1620
+}
+Copy {
+ from0 rgba.alpha
+ to0 rgba.alpha
+ name Copy7
+ selected true
+ xpos 3495
+ ypos -1275
+}
+Premult {
+ name Premult3
+ selected true
+ xpos 3495
+ ypos -1188
+}
+Copy {
+ inputs 2
+ from0 rgba.red
+ to0 forward.u
+ from1 rgba.green
+ to1 forward.v
+ name Copy2
+ selected true
+ xpos 3495
+ ypos -827
+ disable true
+}
+VectorBlur2 {
+ uv forward
+ name VectorBlur1
+ selected true
+ xpos 3495
+ ypos -741
+ disable true
+}
+Copy {
+ inputs 2
+ from0 dPcameradtime.x
+ to0 dPdtime.x
+ from1 dPcameradtime.y
+ to1 dPdtime.y
+ from2 dPcameradtime.z
+ to2 dPdtime.z
+ name Copy3
+ selected true
+ xpos 3495
+ ypos -533
+ disable true
+}
+VectorBlur2 {
+ name VectorBlur3
+ selected true
+ xpos 3495
+ ypos -412
+ disable true
+}
+Dot {
+ name Dot3
+ selected true
+ xpos 3529
+ ypos 1621
+}
+LightWrap {
+ inputs 2
+ name LightWrap1
+ selected true
+ xpos -2637
+ ypos 1618
+ master 1
+ shadows 1
+ midtones 1
+ highlights 1
+}
+Copy {
+ inputs 2
+ from0 depth.Z
+ to0 depth.Z
+ name Copy1
+ selected true
+ xpos -2637
+ ypos 1791
+ disable true
+}
+ZDefocus2 {
+ math depth
+ center 12.94498062
+ focal_point {1236 492}
+ blur_dof false
+ name ZDefocus1
+ selected true
+ xpos -2637
+ ypos 1869
+}
+Dot {
+ name Dot32
+ selected true
+ xpos -2603
+ ypos 2396
+}
+push $Ne2e95800
+Merge2 {
+ inputs 2
+ name Merge2
+ selected true
+ xpos -2944
+ ypos 2393
+}
+Dot {
+ name Dot26
+ selected true
+ xpos -2910
+ ypos 2958
+}
+set Ne2a5dc00 [stack 0]
+Dot {
+ name Dot29
+ selected true
+ xpos -2421
+ ypos 2958
+}
+Dot {
+ inputs 0
+ name Dot41
+ tile_color 0xff00ff
+ label "Motion Blur AOVs"
+ note_font "Segoe UI Black"
+ note_font_size 15
+ note_font_color 0xd10e26ff
+ selected true
+ xpos 6633
+ ypos -1061
+}
+Dot {
+ inputs 0
+ name Dot44
+ tile_color 0xff0000ff
+ label "AOVs Motion Force"
+ note_font "Segoe UI Black"
+ selected true
+ xpos 6441
+ ypos -1355
+}
+Shuffle2 {
+ fromInput1 {{0} B}
+ in1 motionFore
+ fromInput2 {{0} B}
+ mappings "4 black -1 -1 rgba.alpha 0 3 motionFore.x 0 0 rgba.red 0 0 motionFore.y 0 1 rgba.green 0 1 black -1 -1 rgba.blue 0 2"
+ name Shuffle7
+ label motionFore
+ selected true
+ xpos 6518
+ ypos -1388
+ postage_stamp true
+}
+Multiply {
+ channels {-rgba.red rgba.green -rgba.blue none}
+ value -1
+ name Multiply3
+ selected true
+ xpos 6643
+ ypos -1358
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle23
+ selected true
+ xpos 6602
+ ypos -3824
+}
+Dot {
+ name Dot94
+ selected true
+ xpos 6636
+ ypos -3754
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle24
+ selected true
+ xpos 6497
+ ypos -3825
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge20
+ selected true
+ xpos 6497
+ ypos -3757
+}
+Dot {
+ name Dot95
+ selected true
+ xpos 6531
+ ypos -3666
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle25
+ selected true
+ xpos 6393
+ ypos -3827
+}
+Dot {
+ name Dot96
+ selected true
+ xpos 6427
+ ypos -3751
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle26
+ selected true
+ xpos 6290
+ ypos -3828
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge21
+ selected true
+ xpos 6290
+ ypos -3754
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge22
+ selected true
+ xpos 6290
+ ypos -3669
+}
+Dot {
+ name Dot97
+ selected true
+ xpos 6324
+ ypos -3338
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle19
+ selected true
+ xpos 7601
+ ypos -3815
+}
+Dot {
+ name Dot87
+ selected true
+ xpos 7635
+ ypos -3745
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle20
+ selected true
+ xpos 7496
+ ypos -3816
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge17
+ selected true
+ xpos 7496
+ ypos -3748
+}
+Dot {
+ name Dot88
+ selected true
+ xpos 7530
+ ypos -3657
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle21
+ selected true
+ xpos 7392
+ ypos -3818
+}
+Dot {
+ name Dot89
+ selected true
+ xpos 7426
+ ypos -3742
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle22
+ selected true
+ xpos 7289
+ ypos -3819
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge18
+ selected true
+ xpos 7289
+ ypos -3745
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge19
+ selected true
+ xpos 7289
+ ypos -3660
+}
+Dot {
+ name Dot93
+ selected true
+ xpos 7323
+ ypos -3530
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle18
+ selected true
+ xpos 7082
+ ypos -3821
+}
+Dot {
+ name Dot86
+ selected true
+ xpos 7116
+ ypos -3751
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle17
+ selected true
+ xpos 6977
+ ypos -3822
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge16
+ selected true
+ xpos 6977
+ ypos -3754
+}
+Dot {
+ name Dot37
+ selected true
+ xpos 7011
+ ypos -3663
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle16
+ selected true
+ xpos 6873
+ ypos -3824
+}
+Dot {
+ name Dot36
+ selected true
+ xpos 6907
+ ypos -3748
+}
+Shuffle2 {
+ inputs 0
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle15
+ selected true
+ xpos 6770
+ ypos -3825
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge14
+ selected true
+ xpos 6770
+ ypos -3751
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge15
+ selected true
+ xpos 6770
+ ypos -3666
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge3
+ selected true
+ xpos 6770
+ ypos -3533
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge23
+ selected true
+ xpos 6770
+ ypos -3341
+}
+ColorCorrect {
+ name ColorCorrect4
+ selected true
+ xpos 6770
+ ypos -2826
+}
+Grade {
+ name Grade13
+ selected true
+ xpos 6770
+ ypos -2776
+}
+HueCorrect {
+ name HueCorrect2
+ selected true
+ xpos 6770
+ ypos -2720
+}
+ColorLookup {
+ name ColorLookup1
+ selected true
+ xpos 6770
+ ypos -2659
+}
+Copy {
+ from0 rgba.alpha
+ to0 rgba.alpha
+ name Copy9
+ selected true
+ xpos 6770
+ ypos -1900
+}
+Premult {
+ name Premult4
+ selected true
+ xpos 6770
+ ypos -1822
+}
+Copy {
+ inputs 2
+ from0 rgba.red
+ to0 forward.u
+ from1 rgba.green
+ to1 forward.v
+ name Copy6
+ selected true
+ xpos 6770
+ ypos -1370
+ disable true
+}
+VectorBlur2 {
+ uv forward
+ name VectorBlur2
+ selected true
+ xpos 6770
+ ypos -1285
+ disable true
+}
+Copy {
+ inputs 2
+ from0 dPcameradtime.x
+ to0 dPdtime.x
+ from1 dPcameradtime.y
+ to1 dPdtime.y
+ from2 dPcameradtime.z
+ to2 dPdtime.z
+ name Copy10
+ selected true
+ xpos 6770
+ ypos -1082
+ disable true
+}
+VectorBlur2 {
+ name VectorBlur4
+ selected true
+ xpos 6770
+ ypos -971
+ disable true
+}
+Dot {
+ name Dot74
+ selected true
+ xpos 6804
+ ypos 3044
+}
+LightWrap {
+ inputs 2
+ name LightWrap3
+ selected true
+ xpos -2455
+ ypos 3041
+ master 1
+ shadows 1
+ midtones 1
+ highlights 1
+}
+Copy {
+ inputs 2
+ from0 depth.Z
+ to0 depth.Z
+ name Copy8
+ selected true
+ xpos -2455
+ ypos 3150
+ disable true
+}
+ZDefocus2 {
+ math depth
+ center 12.94498062
+ focal_point {1236 492}
+ blur_dof false
+ name ZDefocus4
+ selected true
+ xpos -2455
+ ypos 3247
+}
+Dot {
+ name Dot33
+ selected true
+ xpos -2421
+ ypos 3739
+}
+push $Ne2a5dc00
+Merge2 {
+ inputs 2
+ name Merge7
+ selected true
+ xpos -2944
+ ypos 3736
+}
+ColorCorrect {
+ name ColorCorrect2
+ selected true
+ xpos -2944
+ ypos 4280
+}
+Grade {
+ name Grade3
+ selected true
+ xpos -2944
+ ypos 4372
+}
+Grade {
+ name Grade10
+ selected true
+ xpos -2944
+ ypos 4477
+}
+Grade {
+ name Grade11
+ selected true
+ xpos -2944
+ ypos 4591
+}
+Dot {
+ name Dot25
+ selected true
+ xpos -2913
+ ypos 5943
+}
+Dot {
+ name Dot22
+ selected true
+ xpos -2913
+ ypos 7382
+}
+set Ne66e0000 [stack 0]
+Keyer {
+ operation "luminance key"
+ range {0.404087018 0.8877616727 1 1}
+ name Keyer1
+ selected true
+ xpos -2576
+ ypos 7373
+}
+Premult {
+ name Premult2
+ selected true
+ xpos -2576
+ ypos 7431
+}
+Merge2 {
+ inputs 2
+ operation stencil
+ name Merge6
+ selected true
+ xpos -2576
+ ypos 7475
+}
+set Ne66e0c00 [stack 0]
+Blur {
+ size 5
+ name Blur6
+ label "\[value size]"
+ selected true
+ xpos -2470
+ ypos 7598
+}
+push 0
+push $Ne66e0c00
+Blur {
+ size 10
+ name Blur5
+ label "\[value size]"
+ selected true
+ xpos -2576
+ ypos 7599
+}
+push $Ne66e0c00
+Blur {
+ size 20
+ name Blur4
+ label "\[value size]"
+ selected true
+ xpos -2677
+ ypos 7597
+}
+Merge2 {
+ inputs 3+1
+ operation plus
+ name Plus5
+ selected true
+ xpos -2576
+ ypos 7689
+}
+Crop {
+ box {0 0 1920 1080}
+ name Crop1
+ selected true
+ xpos -2576
+ ypos 7735
+}
+Dot {
+ name Dot23
+ selected true
+ xpos -2542
+ ypos 7805
+}
+push $Ne66e0000
+Merge2 {
+ inputs 2
+ operation screen
+ mix 0.1
+ name Plus6
+ selected true
+ xpos -2947
+ ypos 7802
+}
+HueCorrect {
+ name HueCorrect1
+ selected true
+ xpos -2943
+ ypos 8197
+}
+Grade {
+ name Grade4
+ selected true
+ xpos -2943
+ ypos 8249
+}
+ColorCorrect {
+ name ColorCorrect3
+ selected true
+ xpos -2943
+ ypos 8309
+}
+ColorCorrect {
+ inputs 1+1
+ name ColorCorrect9
+ selected true
+ xpos -2943
+ ypos 8381
+}
+Grade {
+ inputs 1+1
+ name Grade6
+ selected true
+ xpos -2943
+ ypos 8483
+}
+Dot {
+ name Dot11
+ selected true
+ xpos -2909
+ ypos 8911
+}
+set Ne676c000 [stack 0]
+Shuffle2 {
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ mappings "4 black -1 -1 rgba.green 0 1 rgba.alpha 0 3 rgba.alpha 0 3 rgba.blue 0 2 rgba.blue 0 2 black -1 -1 rgba.red 0 0"
+ name Shuffle67
+ selected true
+ xpos -2809
+ ypos 8978
+}
+Transform {
+ scale 0.998
+ center {999 540}
+ name Transform5
+ selected true
+ xpos -2809
+ ypos 9038
+}
+Dot {
+ name Dot18
+ selected true
+ xpos -2775
+ ypos 9141
+}
+push $Ne676c000
+Shuffle2 {
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ mappings "4 rgba.red 0 0 rgba.red 0 0 black -1 -1 rgba.alpha 0 3 black -1 -1 rgba.green 0 1 black -1 -1 rgba.blue 0 2"
+ name Shuffle68
+ selected true
+ xpos -3095
+ ypos 8977
+}
+Transform {
+ scale 1.001
+ center {999 540}
+ name Transform6
+ selected true
+ xpos -3095
+ ypos 9021
+}
+Dot {
+ name Dot19
+ selected true
+ xpos -3061
+ ypos 9078
+}
+push $Ne676c000
+Shuffle2 {
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ mappings "4 black -1 -1 rgba.blue 0 2 rgba.green 0 1 rgba.green 0 1 black -1 -1 rgba.alpha 0 3 black -1 -1 rgba.red 0 0"
+ name Shuffle69
+ selected true
+ xpos -2943
+ ypos 8971
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Plus15
+ selected true
+ xpos -2943
+ ypos 9075
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Plus16
+ selected true
+ xpos -2943
+ ypos 9138
+}
+LensDistortion2 {
+ distortionDenominator0 -0.01
+ distortionDenominator1 -0.01
+ output Undistort
+ outputBBox {-47 -36 2095 1592}
+ featuresKnob "
+version 1
+entries 0
+entries 0
+"
+ distortionModelDisplayX "xu = xd / (1 + k0 * rd^2 + k1 * rd^4)"
+ distortionModelDisplayY "yu = yd / (1 + k0 * rd^2 + k1 * rd^4)"
+ name LensDistortion2
+ selected true
+ xpos -2943
+ ypos 9241
+}
+Merge2 {
+ inputs 2
+ mix 0.37
+ name Merge53
+ selected true
+ xpos -2943
+ ypos 9620
+}
+Shuffle2 {
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 white -1 -1 rgba.alpha 0 3"
+ name Shuffle3
+ selected true
+ xpos -2943
+ ypos 9698
+}
+Dot {
+ name Dot72
+ selected true
+ xpos -2909
+ ypos 9768
+}
+set Ne6797400 [stack 0]
+Dot {
+ name Dot21
+ selected true
+ xpos -2769
+ ypos 9768
+}
+Grain2 {
+ name Grain2_2
+ label "Kodak 5217"
+ selected true
+ xpos -2803
+ ypos 9867
+ red_size 0.23
+ green_size 1.2
+ blue_size 1.4
+ green_i 0.86
+ red_m 0.48
+ green_m 0.42
+ blue_m 0.87
+ black {0 0 0}
+ minimum {0 0 0}
+}
+push $Ne6797400
+Merge2 {
+ inputs 2
+ mix 0.3
+ name Merge1
+ selected true
+ xpos -2943
+ ypos 9873
+}
+Merge2 {
+ inputs 2
+ operation plus
+ mix 0.5
+ name Merge4
+ selected true
+ xpos -2943
+ ypos 10691
+}
+Merge2 {
+ inputs 2
+ operation plus
+ mix 0.5
+ name Merge5
+ selected true
+ xpos -2943
+ ypos 11033
+}
+Shuffle2 {
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 white -1 -1 rgba.alpha 0 3"
+ name Shuffle2
+ selected true
+ xpos -2943
+ ypos 11180
+}
+Crop {
+ box {0 0 2048 1556}
+ name Crop2
+ selected true
+ xpos -2943
+ ypos 11225
+}
+Clamp {
+ maximum_enable false
+ name Clamp1
+ selected true
+ xpos -2943
+ ypos 11286
+}
+Dot {
+ name Dot62
+ selected true
+ xpos -2909
+ ypos 11542
+}
+set Ne6acdc00 [stack 0]
+Write {
+ file C:/Users/3D/Desktop/nuke_template/sq0040_sh12_v001.mp4
+ file_type mov
+ mov64_format "mp4 (MP4 (MPEG-4 Part 14))"
+ mov64_codec h264
+ mov_h264_codec_profile "High 4:2:0 8-bit"
+ mov64_pixel_format {{0}}
+ mov64_quality Custom
+ mov64_fast_start true
+ mov64_write_timecode true
+ mov64_gop_size 12
+ mov64_b_frames 0
+ mov64_bitrate 50000
+ mov64_bitrate_tolerance 0
+ mov64_quality_min 1
+ mov64_quality_max 1
+ create_directories true
+ checkHashOnRead false
+ version 12
+ ocioColorspace scene_linear
+ display default
+ view sRGB
+ name Write3
+ selected true
+ xpos -3553
+ ypos 11818
+}
+push $Ne6acdc00
+Write {
+ file C:/Users/3D/Desktop/nuke_template/sq0040_sh12_v001%d04.jpeg
+ file_type jpeg
+ create_directories true
+ checkHashOnRead false
+ version 12
+ ocioColorspace scene_linear
+ display default
+ view sRGB
+ name Write2
+ selected true
+ xpos -2386
+ ypos 11844
+}
+push $Ne6acdc00
+Write {
+ file C:/Users/3D/Desktop/nuke_template/sq0040_sh12_v001%d04.png
+ file_type png
+ datatype "16 bit"
+ create_directories true
+ checkHashOnRead false
+ version 12
+ ocioColorspace scene_linear
+ display default
+ view sRGB
+ name Write1
+ selected true
+ xpos -2943
+ ypos 11835
+}
