@@ -1,34 +1,30 @@
 Group {
 inputs 0
-name Write_Flws
-onCreate "exec(\"from python import write_flwls_handle_node_trigger; write_flwls_handle_node_trigger.handle_node_trigger(nuke.thisNode())\")"
-knobChanged "exec(\"from python import write_flwls_handle_node_trigger; write_flwls_handle_node_trigger.handle_node_trigger(nuke.thisNode())\")"
+name Write_Flwls
+onCreate "exec(\"from python_scripts.write_flwls.callback_handler import *; callback_handler({'node' : nuke.thisNode(), 'knob' : nuke.thisKnob(),})\")"
+knobChanged "exec(\"from python_scripts.write_flwls.callback_handler import *; callback_handler({'node' : nuke.thisNode(), 'knob' : nuke.thisKnob(),})\")"
 tile_color 0x513a00ff
-label "----------\nDatatype: \[value datatype_flwls] \n----------\nFiletype: \[value filetype_flwls] - Version: \[value version_flwls]"
+label "Datatype: \[value datatype_flwls]\nFiletype: \[value filetype_flwls]"
 note_font "Verdana Bold"
 note_font_color 0xffb800ff
 selected true
-addUserKnob {20 write_flwls l "Write Flws"}
+addUserKnob {20 Write_Flwls l "Write Flwls"}
 addUserKnob {26 node_title l "" +STARTLINE T "<font size = 5>Write Flwls"}
 addUserKnob {26 made_by l "" +STARTLINE T "<font color = '#eba834'><b>by Filipe Correia                           \n          "}
 addUserKnob {26 sep_1 l "" +STARTLINE}
 addUserKnob {4 datatype_flwls l "<font color = '#eba834'><b>Datatype" M {SELECT PREPCOMP PREPGEO COPYCAT SMARTVECTOR FLOATING_FACE REVIEW_EXR REVIEW_MOV "" "" "" "" "" "" "" "" "" ""}}
-addUserKnob {4 filetype_flwls l "<font color = '#eba834'><b>File type" -STARTLINE M {" "}}
+addUserKnob {4 filetype_flwls +INVISIBLE l "<font color = '#eba834'><b>File type" -STARTLINE M {" "}}
 addUserKnob {26 sep_2 l "" +STARTLINE}
-addUserKnob {1 filename_flwls l "<font color = '#eba834'><b>File Name"}
-filename_flwls "Please choose a filename"
-addUserKnob {1 version_flwls l "<font color = '#eba834'><b>Version" -STARTLINE}
-version_flwls v000
-addUserKnob {2 filepath_flwls l "<font color = '#eba834'><b>FilePath"}
-filepath_flwls "Please choose a datatype"
+addUserKnob {1 filename_flwls +INVISIBLE l "<font color = '#eba834'><b>Custom Name"}
+filename_flwls ""
 addUserKnob {22 execute_write_flwls l "<font color = '#eba834'><b>Render" +INVISIBLE +STARTLINE}
-addUserKnob {22 rewadfromwrite_flwls l "<font color = '#eba834'><b>ReadFromWrite" +INVISIBLE -STARTLINE T "newfile = nuke.selectedNode()\[\"file\"].value()\ntmp = ''\nelems = newfile.split('\[value ')\[1:]\nfor s in elems:\n    v = s.split(']')\[0]\n    tmp+='nuke.selectedNode()\[\"'+v+'\"].getValue()+'\n    print eval('nuke.selectedNode()\[\"'+v+'\"].getValue()')\n    if not eval('nuke.selectedNode()\[\"'+v+'\"].getValue()').endswith('/') and s != elems\[-1]:\n        tmp+='\"/\"+'\n\n\next = newfile.split(']')\[-1]\nres = tmp\[:-1]+'+\"'+ext+'\"'\n\nresult = eval(res)\n\nnewPosx = nuke.selectedNode().xpos()\nnewPosy = nuke.selectedNode().ypos()\ncolor = nuke.selectedNode().knob(\"colorspace\").value()\nfirstframe = int(nuke.root().knob(\"first_frame\").value())\nlastframe = int(nuke.root().knob(\"last_frame\").value())\n\nnewNode = nuke.nodes.Read(file = result)\nnewNode.setXpos(newPosx+100)\nnewNode.setYpos(newPosy)\nnewNode.knob(\"colorspace\").setValue(color)\nnewNode.knob(\"first\").setValue(firstframe)\nnewNode.knob(\"last\").setValue(lastframe)"}
+addUserKnob {22 readfromwrite_flwls l "<font color = '#eba834'><b>ReadFromWrite" +INVISIBLE -STARTLINE T "newfile = nuke.selectedNode()\[\"file\"].value()\ntmp = ''\nelems = newfile.split('\[value ')\[1:]\nfor s in elems:\n    v = s.split(']')\[0]\n    tmp+='nuke.selectedNode()\[\"'+v+'\"].getValue()+'\n    print eval('nuke.selectedNode()\[\"'+v+'\"].getValue()')\n    if not eval('nuke.selectedNode()\[\"'+v+'\"].getValue()').endswith('/') and s != elems\[-1]:\n        tmp+='\"/\"+'\n\n\next = newfile.split(']')\[-1]\nres = tmp\[:-1]+'+\"'+ext+'\"'\n\nresult = eval(res)\n\nnewPosx = nuke.selectedNode().xpos()\nnewPosy = nuke.selectedNode().ypos()\ncolor = nuke.selectedNode().knob(\"colorspace\").value()\nfirstframe = int(nuke.root().knob(\"first_frame\").value())\nlastframe = int(nuke.root().knob(\"last_frame\").value())\n\nnewNode = nuke.nodes.Read(file = result)\nnewNode.setXpos(newPosx+100)\nnewNode.setYpos(newPosy)\nnewNode.knob(\"colorspace\").setValue(color)\nnewNode.knob(\"first\").setValue(firstframe)\nnewNode.knob(\"last\").setValue(lastframe)"}
 addUserKnob {26 sep_3 l "" +STARTLINE}
-addUserKnob {26 scriptname_text_flwls l "" +STARTLINE T "<center><b>Scriptname:</b> <font color='#228B22'></font>: <font color='#eba834'>Please choose a datatype</font"}
-addUserKnob {26 datatype_text_flwls l "" +STARTLINE T "<center><b>Datatype:</b> <font color='#228B22'></font>: <font color='#eba834'>Please choose a datatype</font>"}
-addUserKnob {26 filetype_text_flwls l "" +STARTLINE T "<center><b>Filetype:</b> <font color='#228B22'></font>: <font color='#eba834'>Please choose a datatype</font"}
-addUserKnob {26 filename_text_flwls l "" +STARTLINE T "<center><b>Filename:</b> <font color='#228B22'></font>: <font color='#eba834'>Please choose a datatype</font"}
-addUserKnob {26 version_text_flwls l "" +STARTLINE T "<center><b>Version:</b> <font color='#228B22'></font>: <font color='#eba834'>Please choose a datatype</font"}
+addUserKnob {26 info_printout l "" +STARTLINE T ""}
+addUserKnob {22 folderPath +INVISIBLE}
+addUserKnob {22 filePath +INVISIBLE}
+addUserKnob {26 sep_5 l "" +STARTLINE}
+addUserKnob {22 openFolder l "Go to Internal Renders Folder" +INVISIBLE}
 addUserKnob {20 WriteGroupBegin l "" +STARTLINE n -2}
 addUserKnob {20 write_tab l Write +INVISIBLE}
 addUserKnob {41 channels T Write.channels}
@@ -39,7 +35,6 @@ addUserKnob {41 colorspace l "output transform" T Write.colorspace}
 addUserKnob {41 premultiplied -STARTLINE T Write.premultiplied}
 addUserKnob {41 raw l "raw data" -STARTLINE T Write.raw}
 addUserKnob {41 views T Write.views}
-addUserKnob {41 file_type l "file type" T Write.file_type}
 addUserKnob {26 cin_options l "<b>CIN Options</b>" +INVISIBLE}
 addUserKnob {41 edge_code l "edge code" +INVISIBLE T Write.edge_code}
 addUserKnob {26 dpx_options l "<b>DPX Options</b>" +INVISIBLE}
@@ -141,7 +136,6 @@ addUserKnob {41 last_1 l "" -STARTLINE T geo.last}
 addUserKnob {41 use_limit_1 l "limit to range" -STARTLINE T geo.use_limit}
 addUserKnob {41 views_1 l views T geo.views}
 addUserKnob {41 Execute T geo.Execute}
-addUserKnob {41 file_type_1 l "file type" T geo.file_type}
 addUserKnob {26 abc_options l "<b>ABC Options</b>"}
 addUserKnob {41 writeGeometries_1 l geometries T geo.writeGeometries}
 addUserKnob {41 writePointClouds_1 l pointClouds T geo.writePointClouds}

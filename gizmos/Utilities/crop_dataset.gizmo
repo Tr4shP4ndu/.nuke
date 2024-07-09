@@ -1,0 +1,53 @@
+Group {
+ name CropDataset_flw1
+ help "Copyright 2022 Flawless AI"
+ tile_color 0xff5555ff
+ label "\[value tileXY]"
+ selected true
+ addUserKnob {20 User}
+ addUserKnob {14 cells l tiles R 0 100}
+ cells {{width/height} 1}
+ addUserKnob {14 tileXY l "tile position" R 0 100}
+ tileXY {{((tilenumber-1)%cells.w)+1} {(((tilenumber-1)//cells.w)%cells.h)+1}}
+ addUserKnob {3 tilenumber l "tile number"}
+ tilenumber 1
+ addUserKnob {41 reformat T Crop1.reformat}
+ addUserKnob {6 showgrid l "show grid" t "shows the grid (non-reformat mode only)" +STARTLINE}
+}
+ Input {
+  inputs 0
+  name bg
+  xpos 500
+  ypos 395
+ }
+ Crop {
+  box {{(tileXY.w-1)*(width/cells.w)} {(tileXY.h-1)*(height/cells.h)} {box.x+(width/cells.w)} {box.y+(height/cells.h)}}
+  reformat true
+  intersect true
+  crop false
+  name Crop1
+  selected true
+  xpos 500
+  ypos 563
+ }
+set Nfe1d9600 [stack 0]
+ Grid {
+  number {{parent.cells.w} {parent.cells.h}}
+  name Grid1
+  xpos 610
+  ypos 635
+ }
+push $Nfe1d9600
+ Switch {
+  inputs 2
+  which {{parent.showgrid&&!(parent.reformat)}}
+  name Switch1
+  xpos 500
+  ypos 731
+ }
+ Output {
+  name Output1
+  xpos 500
+  ypos 779
+ }
+end_group
