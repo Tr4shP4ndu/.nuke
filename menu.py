@@ -12,7 +12,7 @@ FC_TOOLS_MENU = 'FC_Tools'
 FC_TOOLS_TOP_MENU = nuke.menu('Nuke').addMenu(FC_TOOLS_MENU)
 
 # Add FC_Tools pp node menu 
-FC_TOOLS_NODE_MENU = nuke.menu('Nodes').addMenu(FC_TOOLS_MENU, icon='flawless-pp.png')
+FC_TOOLS_NODE_MENU = nuke.menu('Nodes').addMenu(FC_TOOLS_MENU, icon='tp_logo.png')
 
 
 # Add Gizmo Nodes and Icons
