@@ -1,0 +1,189 @@
+Group {
+ name tp_Histalizer
+ tile_color 0x513a00ff
+ note_font "Bitstream Vera Sans Bold"
+ note_font_color 0xffb800ff
+ selected true
+ xpos 840
+ ypos 21
+ addUserKnob {20 user l User}
+ addUserKnob {26 node_title l "" +STARTLINE T "<font size = 5>Histogram Equalizer"}
+ addUserKnob {26 made_by l "" +STARTLINE T "<font color = '#eba834'><b>by Filipe Correia                           \n          "}
+ addUserKnob {26 _1 l "" +STARTLINE}
+ addUserKnob {22 converter_button l "<font color = '#eba834'><b>Run Equalization" T "\nimport nuke \n\nFRAME_RANGE_NODE = 'frame_range_in_out'\nMAX_TOOL_NODE = 'max'\nWHITE_BLACK_POINT_NODE = 'whiteblackpoint'\nSET_GAMMA_AVG_NODE = 'set_gamma_avg'\nSET_GAMMA_HIGH_NODE = 'set_gamma_high'\nLIFT_GAIN_AVG_NODE = 'LiftGain_avg'\nLIFT_GAIN_HIGH_NODE = 'LiftGain_High'\nKEYMIX1_NODE = 'Keymix1'\nKEYMIX2_NODE = 'Keymix2'\n\ndef get_sample_values(max_tool, first_frame, last_frame):\n    \"\"\"Retrieve animated values for min and max knobs over a frame range\"\"\"\n    min_knob = max_tool\['minlumapixvalue']\n    max_knob = max_tool\['maxlumapixvalue']\n    min_knob.setAnimated()\n    max_knob.setAnimated()\n    nuke.execute(max_tool, int(first_frame), int(last_frame))\n    max_values = \[max_knob.getValueAt(frame) for frame in range(int(first_frame), int(last_frame) + 1)]\n    min_values = \[min_knob.getValueAt(frame) for frame in range(int(first_frame), int(last_frame) + 1)]\n    return max_values, min_values\n\ndef calculate_tone_values(max_values, min_values):\n    \"\"\"Calculate tone values based on max and min values\"\"\"\n    hightone_values = \[sum(values) / 3 for values in max_values]\n    darktone_values = \[sum(values) / 3 for values in min_values]\n    midtone_values = \[(hightone + darktone) / 3.5 for hightone, darktone in zip(hightone_values, darktone_values)]\n    less_or_highers = \[1 if midtone < 0.4 else 0 for midtone in midtone_values]\n    avg_values = \[(midtone + less_or_higher) / 2 - 0.05 for midtone, less_or_higher in zip(midtone_values, less_or_highers)]\n    midtone_hightone_values = \[((midtone if midtone > 0.4 else avg_value) + hightone) / 2.5 for midtone, avg_value, hightone in zip(midtone_values, avg_values, hightone_values)]\n    midtone_mid_values = \[1 / (midtone if midtone > 0.4 else midtone + midtone) for midtone in midtone_values]\n    keymix2 = \[1 if hightone_values > 0.94 else 0 for hightone_values in hightone_values]\n    keymix1 = \[1 if midtone_hightone_values > 0.55 else 0 for midtone_hightone_values in midtone_hightone_values]\n    return hightone_values, darktone_values, midtone_values, less_or_highers, avg_values, midtone_hightone_values, midtone_mid_values, keymix2, keymix1\n\ndef set_keyframes(node, knob_name, values, frame_range):\n    \"\"\"Set keyframes for a knob with given values over a frame range\"\"\"\n    knob = node\[knob_name]\n    knob.setAnimated()\n    for frame, value in zip(range(int(frame_range\[0]), int(frame_range\[1]) + 1), values):\n        knob.setValueAt(value, frame)\n\ndef check_inputs(read):\n    \"\"\"Checks if there are connected inputs and if format is matching\"\"\"\n    if read.input(0) is None:\n        raise RuntimeError('No Plate Connected!')\n    else:\n        return 'Inputs - Connected'\n\ndef start(read_input):\n    \"\"\"Entry point function\"\"\"\n    check_inputs(read_input)\n\n    \"\"\"Get Nodes\"\"\"\n    frame_range_input = nuke.toNode(FRAME_RANGE_NODE)\n    max_tool = nuke.toNode(MAX_TOOL_NODE)\n    whiteblackpoint = nuke.toNode(WHITE_BLACK_POINT_NODE)\n    set_gamma_avg = nuke.toNode(SET_GAMMA_AVG_NODE)\n    set_gamma_high = nuke.toNode(SET_GAMMA_HIGH_NODE)\n    LiftGain_avg = nuke.toNode(LIFT_GAIN_AVG_NODE)\n    LiftGain_High = nuke.toNode(LIFT_GAIN_HIGH_NODE)\n    Keymix1 = nuke.toNode(KEYMIX1_NODE)\n    Keymix2 = nuke.toNode(KEYMIX2_NODE)\n\n    \"\"\"Get Range\"\"\"\n    first_frame = frame_range_input\['first_frame'].value()\n    last_frame = frame_range_input\['last_frame'].value()\n\n    \"\"\"Sample Values\"\"\"\n    max_values, min_values = get_sample_values(max_tool, first_frame, last_frame)\n\n    \"\"\"Calculate Values\"\"\"\n    hightone_values, darktone_values, midtone_values, less_or_highers, avg_values, midtone_hightone_values, midtone_mid_values, keymix2, keymix1 = calculate_tone_values(max_values, min_values)\n\n    \"\"\"Animate Nodes\"\"\"\n    for node, knob_name, values in \[(whiteblackpoint, 'blackpoint', darktone_values),\n                                    (whiteblackpoint, 'whitepoint', hightone_values),\n                                    (set_gamma_avg, 'gamma', midtone_mid_values),\n                                    (set_gamma_high, 'gamma', midtone_hightone_values),\n                                    (LiftGain_avg, 'black', darktone_values),\n                                    (LiftGain_avg, 'white', hightone_values),\n                                    (LiftGain_High, 'black', darktone_values),\n                                    (LiftGain_High, 'white', hightone_values),\n                                    (Keymix1, 'disable', keymix1),\n                                    (Keymix2, 'disable', keymix2)]:\n        set_keyframes(node, knob_name, values, (first_frame, last_frame))\n\n        for i, (hightone, darktone, midtone, less_or_higher, avg, midtone_hightone, midtone_mid) in enumerate(zip(hightone_values, darktone_values, midtone_values, less_or_highers, avg_values, midtone_hightone_values, midtone_mid_values)):\n            print(f\"Frame \{first_frame + i\}\")\n            print(f\"hightone_value: \{hightone\}\")\n            print(f\"darktone_value: \{darktone\}\")\n            print(f\"midtone_value: \{midtone\}\")\n            print(f\"less_or_higher: \{less_or_higher\}\")\n            print(f\"avg_value: \{avg\}\")\n            print(f\"midtone_hightone_value: \{midtone_hightone\}\")\n            print(f\"midtone_mid_value: \{midtone_mid\}\")\n\nstart(nuke.thisNode())\n" +STARTLINE}
+ addUserKnob {22 clear l "<font color = '#eba834'><b>Clear Histogram" -STARTLINE T "# Constants\nFRAME_RANGE_NODE = nuke.toNode('frame_range_in_out')\nMAX_TOOL_NODE = nuke.toNode('max')\nWHITE_BLACK_POINT_NODE = nuke.toNode('whiteblackpoint')\nSET_GAMMA_AVG_NODE = nuke.toNode('set_gamma_avg')\nSET_GAMMA_HIGH_NODE = nuke.toNode('set_gamma_high')\nLIFT_GAIN_AVG_NODE = nuke.toNode('LiftGain_avg')\nLIFT_GAIN_HIGH_NODE = nuke.toNode('LiftGain_High')\nKEYMIX1_NODE = nuke.toNode('Keymix1')\nKEYMIX2_NODE = nuke.toNode('Keymix2')\n\n\ndef clear_animations_and_reset_defaults():\n    \"\"\"Clear animations set on knobs and reset them to default values\"\"\"\n    # Get Nodes\n    nodes = \[MAX_TOOL_NODE, WHITE_BLACK_POINT_NODE, SET_GAMMA_AVG_NODE, SET_GAMMA_HIGH_NODE, LIFT_GAIN_AVG_NODE, LIFT_GAIN_HIGH_NODE, KEYMIX1_NODE, KEYMIX2_NODE]\n\n\n    # Clear animations and reset to defaults\n    for node in nodes:\n        if node is not None:\n            for knob_name in node.knobs():\n                knob = node\[knob_name]\n                knob.clearAnimated()\n\n\nclear_animations_and_reset_defaults()"}
+ addUserKnob {26 _6 l "" +STARTLINE}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos -810
+  ypos -459
+ }
+ FrameRange {
+  first_frame {{input0.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name frame_range_in_out
+  xpos -810
+  ypos -349
+ }
+ OCIOLogConvert {
+  operation "lin to log"
+  name OCIOLogConvert1
+  xpos -810
+  ypos -226
+ }
+ Dot {
+  name Dot11
+  xpos -776
+  ypos -126
+ }
+set N12f5c6b0 [stack 0]
+ Dot {
+  name Dot1
+  xpos -776
+  ypos 186
+ }
+set N12f61ef0 [stack 0]
+ Keyer {
+  operation "luminance key"
+  name Keyer1
+  xpos -810
+  ypos 369
+ }
+ Dot {
+  name Dot15
+  xpos -776
+  ypos 714
+ }
+set N12f72790 [stack 0]
+push $N12f72790
+ Multiply {
+  value 1.15
+  name Multiply1
+  xpos -810
+  ypos 799
+ }
+ Dot {
+  name Dot16
+  xpos -776
+  ypos 881
+ }
+push $N12f72790
+push $N12f61ef0
+ Dot {
+  name Dot13
+  xpos -226
+  ypos 186
+ }
+ Grade {
+  blackpoint {{curve x325 0.1125667095 0.1107522398 0.1131468713 0.1135447323 0.1144496053 0.1136204004 0.1129664034 0.1142051816 0.1147872806 0.1150867045 0.1134217978 0.1150306165 0.1150867045 0.1144496053 0.1160920709 0.1154226959 0.1147872806 0.1144871712 0.1157205999 0.1158136129 0.1141675264}}
+  whitepoint {{curve x325 0.9712730646 0.9668676853 0.9661982059 0.9667723179 0.9626991749 0.964363575 0.9631910324 0.9631910324 0.9644607306 0.9632891417 0.9658141136 0.964363575 0.964168787 0.9621065855 0.9632891417 0.9646550417 0.9638762474 0.964168787 0.9644607306 0.9660063982 0.9655253887}}
+  name whiteblackpoint
+  xpos -260
+  ypos 254
+ }
+set N12f901a0 [stack 0]
+ Grade {
+  gamma {{curve x325 0.6304429272 0.6283253556 0.6281561439 0.62844133 0.6266310288 0.6273445143 0.6267711236 0.6268419109 0.6274556071 0.6269371336 0.627996269 0.6274250981 0.6273392572 0.6263601308 0.6269945831 0.6275807445 0.6271884148 0.6273049981 0.6275089397 0.6282208456 0.6279068935}}
+  name set_gamma_high
+  xpos -260
+  ypos 374
+ }
+ Grade {
+  black {{curve x325 0.1125667095 0.1107522398 0.1131468713 0.1135447323 0.1144496053 0.1136204004 0.1129664034 0.1142051816 0.1147872806 0.1150867045 0.1134217978 0.1150306165 0.1150867045 0.1144496053 0.1160920709 0.1154226959 0.1147872806 0.1144871712 0.1157205999 0.1158136129 0.1141675264}}
+  white {{curve x325 0.9712730646 0.9668676853 0.9661982059 0.9667723179 0.9626991749 0.964363575 0.9631910324 0.9631910324 0.9644607306 0.9632891417 0.9658141136 0.964363575 0.964168787 0.9621065855 0.9632891417 0.9646550417 0.9638762474 0.964168787 0.9644607306 0.9660063982 0.9655253887}}
+  name LiftGain_High
+  xpos -260
+  ypos 505
+ }
+ Dot {
+  name Dot14
+  xpos -226
+  ypos 714
+ }
+push $N12f901a0
+ Dot {
+  name Dot2
+  xpos -446
+  ypos 258
+ }
+ Grade {
+  gamma {{curve x325 1.614629802 1.623949186 1.621353575 1.619894826 1.624659501 1.623400755 1.62615612 1.624286383 1.621499398 1.622810828 1.621517577 1.621279801 1.621488159 1.625553794 1.621299296 1.620253746 1.622378021 1.622389407 1.620098358 1.617644323 1.620831234}}
+  name set_gamma_avg
+  xpos -480
+  ypos 374
+ }
+ Grade {
+  black {{curve x325 0.1125667095 0.1107522398 0.1131468713 0.1135447323 0.1144496053 0.1136204004 0.1129664034 0.1142051816 0.1147872806 0.1150867045 0.1134217978 0.1150306165 0.1150867045 0.1144496053 0.1160920709 0.1154226959 0.1147872806 0.1144871712 0.1157205999 0.1158136129 0.1141675264}}
+  white {{curve x325 0.9712730646 0.9668676853 0.9661982059 0.9667723179 0.9626991749 0.964363575 0.9631910324 0.9631910324 0.9644607306 0.9632891417 0.9658141136 0.964363575 0.964168787 0.9621065855 0.9632891417 0.9646550417 0.9638762474 0.964168787 0.9644607306 0.9660063982 0.9655253887}}
+  name LiftGain_avg
+  xpos -480
+  ypos 494
+ }
+ Keymix {
+  inputs 3
+  name Keymix1
+  xpos -480
+  ypos 704
+  disable {{curve x325 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1}}
+ }
+ Keymix {
+  inputs 3
+  name Keymix2
+  xpos -480
+  ypos 871
+  disable {{curve x325 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1}}
+ }
+ OCIOLogConvert {
+  operation "log to lin"
+  name OCIOLogConvert3
+  xpos -480
+  ypos 1045
+ }
+ Remove {
+  operation keep
+  channels rgb
+  name Remove1
+  xpos -480
+  ypos 1141
+ }
+ Output {
+  name Output1
+  xpos -480
+  ypos 1363
+ }
+push $N12f5c6b0
+ Dot {
+  name Dot12
+  xpos -336
+  ypos -126
+ }
+ Expression {
+  expr3 max(r,g,b)
+  name Expression1
+  xpos -370
+  ypos -58
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.alpha 0 3 rgba.red 0 0 rgba.alpha 0 3 rgba.green 0 1 rgba.alpha 0 3 rgba.blue 0 2 rgba.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle4
+  xpos -370
+  ypos 14
+ }
+ CurveTool {
+  operation "Max Luma Pixel"
+  ROI {0 0 1920 800}
+  autocropdata {512 389 1536 1167}
+  maxlumapixdata {{curve x325 677 676 675 675 675 674 675 674 673 672 671 671 670 671 672 758 672 672 670 670 757} {curve x325 558 557 556 532 530 552 550 526 548 547 546 545 522 521 544 523 544 522 545 545 524}}
+  maxlumapixvalue {{curve x325 0.9712730646 0.9668676853 0.9661982059 0.9667723179 0.9626991749 0.964363575 0.9631910324 0.9631910324 0.9644607306 0.9632891417 0.9658141136 0.964363575 0.964168787 0.9621065855 0.9632891417 0.9646550417 0.9638762474 0.964168787 0.9644607306 0.9660063982 0.9655253887} {curve x325 0.9712730646 0.9668676853 0.9661982059 0.9667723179 0.9626991749 0.964363575 0.9631910324 0.9631910324 0.9644607306 0.9632891417 0.9658141136 0.964363575 0.964168787 0.9621065855 0.9632891417 0.9646550417 0.9638762474 0.964168787 0.9644607306 0.9660063982 0.9655253887} {curve x325 0.9712730646 0.9668676853 0.9661982059 0.9667723179 0.9626991749 0.964363575 0.9631910324 0.9631910324 0.9644607306 0.9632891417 0.9658141136 0.964363575 0.964168787 0.9621065855 0.9632891417 0.9646550417 0.9638762474 0.964168787 0.9644607306 0.9660063982 0.9655253887}}
+  minlumapixdata {{curve x325 1745 1787 1859 1808 1690 1833 1717 1777 1770 1741 1694 1680 1779 1776 1828 1846 1720 1822 1686 1672 1820} {curve x325 13 12 26 9 7 5 1 0 5 5 14 6 9 8 4 15 6 14 3 8 24}}
+  minlumapixvalue {{curve x325 0.1125667095 0.1107522398 0.1131468713 0.1135447323 0.1144496053 0.1136204004 0.1129664034 0.1142051816 0.1147872806 0.1150867045 0.1134217978 0.1150306165 0.1150867045 0.1144496053 0.1160920709 0.1154226959 0.1147872806 0.1144871712 0.1157205999 0.1158136129 0.1141675264} {curve x325 0.1125667095 0.1107522398 0.1131468713 0.1135447323 0.1144496053 0.1136204004 0.1129664034 0.1142051816 0.1147872806 0.1150867045 0.1134217978 0.1150306165 0.1150867045 0.1144496053 0.1160920709 0.1154226959 0.1147872806 0.1144871712 0.1157205999 0.1158136129 0.1141675264} {curve x325 0.1125667095 0.1107522398 0.1131468713 0.1135447323 0.1144496053 0.1136204004 0.1129664034 0.1142051816 0.1147872806 0.1150867045 0.1134217978 0.1150306165 0.1150867045 0.1144496053 0.1160920709 0.1154226959 0.1147872806 0.1144871712 0.1157205999 0.1158136129 0.1141675264}}
+  name max
+  xpos -370
+  ypos 86
+ }
+end_group

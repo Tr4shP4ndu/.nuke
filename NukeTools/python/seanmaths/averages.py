@@ -1,2 +1,0 @@
-def moo():
-    return "moo"
