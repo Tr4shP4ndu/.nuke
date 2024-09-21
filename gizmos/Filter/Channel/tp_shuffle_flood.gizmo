@@ -1,0 +1,19 @@
+Expression {
+ name Shuffle_Flood
+ tile_color 0x513a00ff
+ note_font "Bitstream Vera Sans Bold"
+ note_font_color 0xffb800ff
+ selected true
+ addUserKnob {20 tab l Switcher -STARTLINE}
+ addUserKnob {26 node_title l "" t " " +STARTLINE T "<font size = 5>Shuffle Flood"}
+ addUserKnob {26 made_by l "" +STARTLINE T "<font color = '#eba834'><b>by Filipe Correia"}
+ addUserKnob {26 _1 l "" +STARTLINE}
+ addUserKnob {22 Red l "<font color=\"Red\">R" -STARTLINE T "nuke.thisNode()\['channel'].setValue('  \[red]')\nnuke.thisNode()\['note_font_color'].setValue(4278190335)\nnuke.thisNode()\['tile_color'].setValue(4294967295)\nnuke.toNode(nuke.thisNode().name())\['expr0'].setValue('r')\n"}
+ addUserKnob {22 green l "<font color=\"Lime\">G" -STARTLINE T "nuke.thisNode()\['channel'].setValue('  \[green]')\nnuke.thisNode()\['note_font_color'].setValue(255)\nnuke.thisNode()\['tile_color'].setValue(2197783295)\n\nnuke.toNode(nuke.thisNode().name())\['expr0'].setValue('g')"}
+ addUserKnob {22 blue l "<font color=\"DodgerBlue\">B" -STARTLINE T "nuke.thisNode()\['channel'].setValue('  \[blue]')\nnuke.thisNode()\['note_font_color'].setValue(65535)\nnuke.thisNode()\['tile_color'].setValue(4294967295)\n\nnuke.toNode(nuke.thisNode().name())\['expr0'].setValue('b')"}
+ addUserKnob {26 space l " " -STARTLINE T "  "}
+ addUserKnob {22 Alpha l "<font color=\"White\">a" -STARTLINE T "nuke.thisNode()\['channel'].setValue('  \[alpha]')\nnuke.thisNode()\['note_font_color'].setValue(4294967295)\nnuke.thisNode()\['tile_color'].setValue(255)\nnuke.toNode(nuke.thisNode().name())\['expr0'].setValue('a')"}
+ addUserKnob {22 Luminance l "<font color=\"Grey\">Lum" -STARTLINE T "nuke.thisNode()\['channel'].setValue('  \[Luminance]')\nnuke.thisNode()\['note_font_color'].setValue(1280068863)\nnuke.thisNode()\['tile_color'].setValue(4294967295)\n\n\nnuke.toNode(nuke.thisNode().name())\['expr0'].setValue('(r*0.21264936)+(g*0.71516907)+(b*0.07218152)')\n\n"}
+ addUserKnob {26 ""}
+ addUserKnob {26 channel l " " T "  \[Luminance]"}
+}
