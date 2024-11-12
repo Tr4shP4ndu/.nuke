@@ -1,0 +1,47 @@
+/* iBlur - Compute a box-blur based on a control image input.
+    Requires a Summed Area Table input.
+*/
+
+kernel iBlur : ImageComputationKernel<eComponentWise> {
+  Image<eRead, eAccessPoint, eEdgeClamped> src;
+  Image<eRead, eAccessPoint, eEdgeClamped> ctr;
+  Image<eRead, eAccessRandom, eEdgeClamped> sat;
+  Image<eWrite> dst;
+
+  param:
+    float2 size;
+
+  local:
+
+  void init() {
+  }
+  
+  // Find Summed Area Table sum given point p and radius r (box of size 2*r+1)
+  float satsum(float2 p, float2 r) { 
+    float d = bilinear(sat, p.x+r.x, p.y+r.y);
+    float b = bilinear(sat, p.x+r.x, p.y-r.y-1);
+    float c = bilinear(sat, p.x-r.x-1, p.y+r.y);
+    float a = bilinear(sat, p.x-r.x-1, p.y-r.y-1);
+    return d-b-c+a;
+  }
+
+  void process(int2 p) {
+
+    // Blur size using ctr input as multiplier
+    float2 s = float2(ctr()*size.x, ctr()*size.y);
+    
+    // Don't process if size is small
+    if (s.x<1e-8&&s.y<1e-8) { dst() = src(); return; }
+
+    // Normalization factor
+    float norm = (s.x*2.0f+1)*(s.y*2.0f+1);
+    
+    // Get sum from SAT
+    float sum = satsum(float2(p.x, p.y), s);
+
+    // Write normalized sum to output
+    dst() = sum/norm;
+
+
+  }
+};

@@ -1,0 +1,145 @@
+kernel Distort : ImageComputationKernel<ePixelWise> {
+  Image<eRead, eAccessRandom, eEdgeClamped> in;
+  Image<eRead, eAccessPoint, eEdgeClamped> uv;
+  Image<eWrite, eAccessPoint> out;
+
+  param:
+    bool stmap;
+    bool enable_blur;
+    float blur_size;
+    int blur_samples;
+    int filter;
+    bool range_compress;
+    float par;
+
+  local:
+    int2 size_in;
+    int2 size_uv;
+    float weights[2048]; // interpolation weights
+    int n;
+    bool rcomp;
+
+  void init() {
+    size_in = float2(in.bounds.width(), in.bounds.height());
+    size_uv = float2(in.bounds.width(), in.bounds.height());
+    
+    // set size of filter neighborhood: n*2+1 square
+    n = filter==1?1:filter==8?3:2; // cubic=3x3, lanczos6=7x7, others=5x5
+
+    // enable range compression for filters with negative lobes
+    rcomp = range_compress&&((filter>1&&filter<5)||(filter>6)) ? 1 : 0;
+
+    // precalculate weights and store them in interpolation weights lookup table
+    for (int i=0; i < 2048; i++)
+      weights[i] = weight(float(i) * float(n) / 2048.0f);
+  }
+
+  // Choose filter interpolation to weight value x
+  float weight(float x) {
+    if (filter == 1)      return bicubic(x, 0.0f, 0.0f, n); // Cubic
+    else if (filter == 2) return bicubic(x, 0.5f, 0.0f, n); // Keys (Catmull-Rom)
+    else if (filter == 3) return bicubic(x, 0.75f, 0.0f, n); // Simon
+    else if (filter == 4) return bicubic(x, 1.0f, 0.0f, n); // Rifman
+    else if (filter == 5) return bicubic(x, 0.33333333f, 0.33333333f, n); // Mitchell
+    else if (filter == 6) return bicubic(x, 0.0f, 1.0f, n); // Parzen
+    else if (filter == 7) return lanczos(x, n); // Lanczos4
+    else if (filter == 8) return lanczos(x, n); // Lanczos6
+  }
+
+  float log2shaper(float x, bool inverse) {
+    float max_exp = 2.0f, min_exp = -2.0f, mid_grey = 0.18f, cut = 0.008;
+    float slope = 1.0f/(log(2)*cut*(max_exp-min_exp));
+    float offset = (log(cut/mid_grey)/log(2)-min_exp)/(max_exp-min_exp);
+    if (inverse)
+      return x >= offset ? pow(2.0f, x*(max_exp-min_exp)+min_exp)*mid_grey : (x-offset)/slope+cut;
+    else
+      return x >= cut ? (log(x/mid_grey)/log(2)-min_exp)/(max_exp-min_exp) : slope*(x-cut)+offset;
+  }
+
+  // Parameterized Cubic spline interpolation - https://www.desmos.com/calculator/il0lu3cnxr
+  float bicubic(float x, float a, float b, float n) {
+    x = fabs(x);
+    if (x > n) return 0.0f;
+    float x2 = x*x;
+    float x3 = x*x*x;
+    return x < 1.0f ? ((-6*a-9*b+12)*x3+(6*a+12*b-18)*x2-2*b+6)/6 : x < 2.0f ? ((-6*a-b)*x3+(30*a+6*b)*x2+(-48*a-12*b)*x+24*a+8*b)/6 : 0.0f;
+  }
+
+  // Lanczos windowed sinc interpolation. Lanczos4 a=2, Lanczos6 a=3
+  float lanczos(float x, float a) {
+    x = fabs(x);
+    if (x > a) return 0.0f;
+    if (x < 0.0001f) return 1.0f;
+    float pi_x = PI*x;
+    return a*(sin(pi_x)*(sin((pi_x)/a))/(pi_x*pi_x));
+  }
+
+  // Sample pixel at continuous float position (x, y)
+  float sample(float x, float y, int k) {
+    if (filter==0) return in(round(x), round(y), k); // Impulse
+    int u0 = round(x), v0 = round(y);
+    bool normalize = (filter>6);
+    float norm = 0.0f, q = 0.0f;
+    for (int j = -n; j <= n; j++) {
+      int v = v0 + j;
+      float p = 0.0f, row_norm = 0.0f;
+      for (int i = -n; i <= n; i++) {
+        int u = u0 + i;
+        float c = in(u, v, k);
+        float w = weights[int(round(fabs(u-x)/n*2048.0f))];
+        if (rcomp) c = log2shaper(c, 0);
+        p += c * w;
+        if (normalize) row_norm += w;
+      }
+      float w = weights[int(round(fabs(v-y)/n*2048.0f))];
+      q += p * w;
+      if (normalize) norm += row_norm * w;
+    }
+    if (normalize) q /= norm;
+    if (rcomp) return log2shaper(q, 1);
+    return q;
+  }
+
+
+  void process(int2 p) {
+    // sample uv input to get source position to warp from
+    float2 src_pos = float2(uv(0), uv(1)); 
+    if (stmap) // convert from stmap input to vector
+      src_pos = float2((src_pos.x*size_uv.x-0.5f-p.x)*par, src_pos.y*size_uv.y-0.5f-p.y);
+
+    src_pos += float2(p.x, p.y); // get position relative to current pixel
+
+    if (!enable_blur) {
+      for (int k = 0; k <=3; k++) {
+        out(k) = sample(src_pos.x, src_pos.y, k);
+      }
+    } else {
+      /* Apply a blur based on uv(2) channel
+        This is pretty rudimentary and slow. It's a box blur and sample based.
+      */
+
+      float blur_amount = uv(2);
+      blur_amount *= blur_size;
+      
+      if (fabs(blur_amount)<0.0001f) return;
+
+
+      for (int k = 0; k <=3; k++) {
+        float sum = 0.0f;
+
+        int cnt = 0;
+        for (int i=0; i<=blur_samples; i++) {
+          float step_x = float(i)/float(blur_samples);
+          for (int j=0; j<=blur_samples; j++) {
+            float step_y = float(j)/float(blur_samples);
+            sum += sample(src_pos.x+blur_amount*step_x, src_pos.y+blur_amount*step_y, k);
+            sum += sample(src_pos.x-blur_amount*step_x, src_pos.y-blur_amount*step_y, k);
+            cnt ++;
+            cnt ++;
+          }
+          out(k) = sum/float(cnt);
+        }
+      }
+    }
+  }
+};

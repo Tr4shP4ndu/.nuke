@@ -1,0 +1,68 @@
+/* Perform a horizontal or vertical Box Blur 
+    Can perform multiple iterations in order to approximate a Gaussian Blur.
+*/ 
+kernel BoxBlur : ImageComputationKernel<eComponentWise> {
+  Image<eRead, eAccessRandom, eEdgeClamped> src;
+  Image<eReadWrite, eAccessRandom, eEdgeClamped> dst;
+
+   param:
+    float2 size; // blur size
+    int iterations; // number of iterations to perform
+    bool v; // vertical
+
+  local:
+    int n; // width or height: total pixels of row or col
+    int r; // integer part of radius
+    float f; // fractional part of radius
+    int w; // width of moving average window
+    int iters;
+
+  void init() {
+    float s = v?size.y:size.x;
+    r = int(max(0.0f, fabs(s)));
+    f = s-r;
+    w = r+1;
+    n = v?src.bounds.height():src.bounds.width();
+    iters = max(1, iterations);
+  }
+  
+  // Linear interpolation between a and b given factor t
+  float lerp(float a, float b, float t) { return (1.0f-t)*a+t*b; }
+
+  void process(int2 p) {
+    if (v?p.y>0:p.x>0) return; // One thread for each row or col
+    
+    // Normalization factor: total size of window
+    double norm = v?size.y*2+1:size.x*2+1;
+    
+    // Array to hold entire row or col. Necessary for multiple iterations.
+    float data[5120]; 
+
+    // Load input into data array including w pixels of padding
+    for (int i=0; i<n+w*2+1; i++) 
+      data[i] = src(v?p.x:i-w, v?i-w:p.y);
+
+    // Do multiple iterations of box blur
+    for (int iter=1; iter<=iters; iter++) {
+      double sum = 0.0f;
+
+      // Initial Average centered on first value
+      for (int i=-r; i<=r; i++) 
+        sum += data[i+w];
+
+      // Fractional amount
+      sum += f * (data[0]+data[2*w]); 
+
+      // Calculate moving average: 
+      for (int i=0; i<n; i++) { 
+        dst(v?p.x:i, v?i:p.y) = sum / norm;
+        sum += lerp(data[i+r+1+w], data[i+r+2+w], f);
+        sum -= lerp(data[i-r+w], data[i-r+w-1], f);
+      }
+
+      // Copy result to data for next iteration
+      for (int i=0; i<n+w*2+1; i++)
+        data[i] = dst(v?p.x:i-w, v?i-w:p.y);
+    }
+  }
+};
