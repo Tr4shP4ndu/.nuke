@@ -1,0 +1,182 @@
+Group {
+ name oz_Warp_Wipe
+ selected true
+ xpos -90
+ ypos 41
+ addUserKnob {20 warpwipe l WarpWipe}
+ addUserKnob {7 rotation_1 l rotation R 0 360}
+ addUserKnob {7 position}
+ position 0.5
+ addUserKnob {7 soften_edge l "soften edge" R 0 300}
+ soften_edge 300
+ addUserKnob {26 line1 l "" +STARTLINE}
+ addUserKnob {7 relax}
+ addUserKnob {7 sway R -90 90}
+ addUserKnob {20 info l Info}
+ addUserKnob {26 text l "" +STARTLINE T "<style> a:link \{\n  color: orange;\n  background-color: transparent;\n  text-decoration: none;\n\}\n</style>\nv003\n<hr>\nCreated by <a href=\"mailto:oz@garius.io\">Osvaldo Andreaus</a><br>\nWith the help of Ryan Ross\n<hr>\n<a href=\"http://garius.media\">Garius.Media</a>\n"}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos 260
+  ypos -359
+ }
+ NoOp {
+  name NoOp1
+  xpos 260
+  ypos -309
+ }
+ Reformat {
+  type "to box"
+  box_width {{width/height>1?width:height}}
+  box_height {{width/height>1?width:height}}
+  box_fixed true
+  resize none
+  name Reformat3
+  xpos 260
+  ypos -259
+ }
+ Reformat {
+  type scale
+  scale 1.1
+  resize none
+  name Reformat1
+  xpos 260
+  ypos -209
+ }
+ Dot {
+  name Dot1
+  xpos 294
+  ypos -156
+ }
+set N6af8e000 [stack 0]
+ Shuffle {
+  red black
+  green black
+  blue black
+  alpha black
+  name Shuffle1
+  xpos 460
+  ypos -159
+ }
+ Ramp {
+  p0 {{lerp(point1.x,point0.x,position)} {lerp(point1.y,point0.y,position)}}
+  p1 {{point1.x} {point1.y}}
+  name Ramp1
+  xpos 710
+  ypos -159
+  addUserKnob {20 User}
+  addUserKnob {7 rotation R 0 360}
+  rotation {{parent.rotation_1+45}}
+  addUserKnob {7 position}
+  position {{lerp(0.025,0.975,parent.position)}}
+  addUserKnob {26 _1 l "" +STARTLINE}
+  addUserKnob {12 point0}
+  point0 {{"rotation%360 >= 0 && rotation%360 <= 90 ? lerp(0,0,90,width,rotation%360) : (rotation%360 >= 90 && rotation%360 <= 180 ? width : (rotation%360 >= 180 && rotation%360 <= 270 ? lerp(180,width,270,0,rotation%360) : 0))"} {"rotation%360 >= 90 && rotation%360 <= 180 ? lerp(90,0,180,height,rotation%360) : (rotation%360 >= 180 && rotation%360 <= 270 ? height : (rotation%360 >= 270 && rotation%360 <= 360 ? lerp(270,height,360,0,rotation%360) : 0))"}}
+  addUserKnob {12 point1}
+  point1 {{"rotation%360 >= 0 && rotation%360 <= 90 ? lerp(0,width,90,0,rotation%360) : (rotation%360 >= 90 && rotation%360 <= 180 ? 0 : (rotation%360 >= 180 && rotation%360 <= 270 ? lerp(180,0,270,width,rotation%360) : width))"} {"rotation%360 >= 90 && rotation%360 <= 180 ? lerp(90,height,180,0,rotation%360) : (rotation%360 >= 180 && rotation%360 <= 270 ? 0 : (rotation%360 >= 270 && rotation%360 <= 360 ? lerp(270,0,360,height,rotation%360) : height))"}}
+ }
+set N6af8d800 [stack 0]
+ Ramp {
+  p0 {{lerp(point1.x,point0.x,position)} {lerp(point1.y,point0.y,position)}}
+  p1 {{point1.x} {point1.y}}
+  type smooth
+  name Ramp2
+  xpos 710
+  ypos 41
+  addUserKnob {20 User}
+  addUserKnob {7 rotation R 0 360}
+  rotation {{parent.rotation_1+45+parent.sway}}
+  addUserKnob {7 position}
+  position {{lerp(0.025,0.975,parent.position)}}
+  addUserKnob {26 _1 l "" +STARTLINE}
+  addUserKnob {12 point0}
+  point0 {{"rotation%360 >= 0 && rotation%360 <= 90 ? lerp(0,0,90,width,rotation%360) : (rotation%360 >= 90 && rotation%360 <= 180 ? width : (rotation%360 >= 180 && rotation%360 <= 270 ? lerp(180,width,270,0,rotation%360) : 0))"} {"rotation%360 >= 90 && rotation%360 <= 180 ? lerp(90,0,180,height,rotation%360) : (rotation%360 >= 180 && rotation%360 <= 270 ? height : (rotation%360 >= 270 && rotation%360 <= 360 ? lerp(270,height,360,0,rotation%360) : 0))"}}
+  addUserKnob {12 point1}
+  point1 {{"rotation%360 >= 0 && rotation%360 <= 90 ? lerp(0,width,90,0,rotation%360) : (rotation%360 >= 90 && rotation%360 <= 180 ? 0 : (rotation%360 >= 180 && rotation%360 <= 270 ? lerp(180,0,270,width,rotation%360) : width))"} {"rotation%360 >= 90 && rotation%360 <= 180 ? lerp(90,height,180,0,rotation%360) : (rotation%360 >= 180 && rotation%360 <= 270 ? 0 : (rotation%360 >= 270 && rotation%360 <= 360 ? lerp(270,0,360,height,rotation%360) : height))"}}
+ }
+ Grade {
+  channels rgba
+  black {{1-(parent.relax)}}
+  name Grade1
+  label "\[value mix]"
+  xpos 610
+  ypos 35
+ }
+push $N6af8d800
+ Blur {
+  size {{parent.soften_edge}}
+  crop false
+  name Blur1
+  label "\[value size]"
+  xpos 460
+  ypos -71
+ }
+ Merge2 {
+  inputs 2
+  operation mask
+  bbox A
+  name Merge1
+  label "\[value mix]"
+  xpos 460
+  ypos 35
+ }
+push $N6af8e000
+ Copy {
+  inputs 2
+  from0 rgba.red
+  to0 forward.u
+  from1 rgba.green
+  to1 forward.v
+  name Copy1
+  xpos 260
+  ypos 29
+ }
+ IDistort {
+  uv forward
+  uv_scale {{(parent.Ramp1.p0.x-parent.Ramp1.p1.x) x40 -208.1} {"(parent.Ramp1.p0.y-parent.Ramp1.p1.y) + (parent.relax * abs(parent.Ramp1.p0.y-parent.Ramp1.p1.y))" x40 260}}
+  blur_scale {0 0}
+  maskChannel -rgba.alpha
+  filter Lanczos6
+  name IDistort1
+  xpos 260
+  ypos 135
+ }
+ Reformat {
+  type scale
+  scale {{1/Reformat1.scale}}
+  resize none
+  name Reformat2
+  xpos 260
+  ypos 191
+ }
+ Reformat {
+  type "to box"
+  box_width {{NoOp1.width}}
+  box_height {{NoOp1.height}}
+  box_fixed true
+  resize none
+  name Reformat4
+  xpos 260
+  ypos 241
+ }
+ Output {
+  name Output1
+  xpos 260
+  ypos 341
+ }
+push $N6af8d800
+ Viewer {
+  frame_range 1-100
+  name Viewer1
+  onCreate "tab_more = nuke.Tab_Knob('tab_more', 'More')\ncurrent_roi = nuke.BBox_Knob('current_roi', 'ROI')\nnuke.thisNode().addKnob(tab_more)\nnuke.thisNode().addKnob(current_roi)"
+  knobChanged "this = nuke.thisNode()\nknob = nuke.thisKnob()\nif knob.name() == \"roi\":\n    this\['current_roi'].fromDict(this.roi())\nif knob.name() == \"current_roi\":\n    this.setRoi(dict(\[d for d in ((k,int(v)) for k, v in this\['current_roi'].toDict().items())]))"
+  selected true
+  xpos 460
+  ypos 191
+  addUserKnob {20 tab_more l More}
+  addUserKnob {15 current_roi l ROI}
+  addUserKnob {20 tab_more l More}
+  addUserKnob {15 current_roi l ROI}
+ }
+end_group

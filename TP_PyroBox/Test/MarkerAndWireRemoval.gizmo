@@ -1,0 +1,364 @@
+Group {
+ name MarkerAndWireRemoval
+ inputs 2
+ tile_color 0x610093ff
+ note_font "Bitstream Vera Sans Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold"
+ note_font_color 0xffffffff
+ addUserKnob {20 Parameters}
+ addUserKnob {7 blur_size l size R 0 200}
+ blur_size 50
+ addUserKnob {4 iterations -STARTLINE M {1 2 3 4 5 6 7 8 9 10}}
+ iterations 10
+ addUserKnob {26 ""}
+ addUserKnob {41 mix T Merge1.mix}
+ addUserKnob {4 alpha M {original mask 0 1}}
+ addUserKnob {26 ""}
+ addUserKnob {20 mask n 1}
+ addUserKnob {4 channel M {alpha red green blue}}
+ addUserKnob {41 size l "erode size" T FilterErode9.size}
+ addUserKnob {41 filter -STARTLINE T FilterErode9.filter}
+ addUserKnob {6 invert l "invert mask" +STARTLINE}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {20 email l @}
+ addUserKnob {26 message l "" +STARTLINE T "<b><font color=\"DarkViolet\">Marker and Wire Removal v1.1</font></b><br>\n<font size=“1”><i>by Andrea Geremia</i><br>\n<br>\nandrea.geremia89@gmail.com<br>\nwww.andreageremia.it</font>"}
+}
+ Shuffle {
+  inputs 0
+  alpha white
+  name Shuffle6
+  tile_color 0xffffffff
+  label "reset Alpha"
+  xpos 855
+  ypos 972
+ }
+set N19a6ae10 [stack 0]
+ Shuffle {
+  inputs 0
+  alpha black
+  name Shuffle5
+  tile_color 0xff
+  label "reset Alpha"
+  xpos 755
+  ypos 972
+ }
+ Input {
+  inputs 0
+  name markers_mask
+  xpos 878
+  ypos -181
+  number 1
+ }
+ Dot {
+  name Dot1
+  xpos 912
+  ypos -87
+ }
+set N19a7aa90 [stack 0]
+ Shuffle {
+  red blue
+  green blue
+  alpha blue
+  name Shuffle3
+  tile_color 0x3d3f8e00
+  xpos 942
+  ypos 36
+ }
+push $N19a7aa90
+ Shuffle {
+  red green
+  blue green
+  alpha green
+  name Shuffle2
+  tile_color 0x3f633800
+  xpos 844
+  ypos 37
+ }
+push $N19a7aa90
+ Shuffle {
+  green red
+  blue red
+  alpha red
+  name Shuffle1
+  tile_color 0x93000000
+  xpos 739
+  ypos 37
+ }
+push $N19a7aa90
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Shuffle4
+  tile_color 0xffffffff
+  xpos 1039
+  ypos 35
+ }
+ Switch {
+  inputs 4
+  which {{parent.channel}}
+  name Switch2
+  label "\[value which]"
+  xpos 886
+  ypos 137
+ }
+ Invert {
+  channels alpha
+  name Invert2
+  xpos 886
+  ypos 200
+ }
+ FilterErode {
+  channels alpha
+  size 0
+  name FilterErode9
+  xpos 886
+  ypos 266
+ }
+ Invert {
+  channels alpha
+  name Invert18
+  xpos 886
+  ypos 329
+  disable {{"! parent.invert"}}
+ }
+ Input {
+  inputs 0
+  name src
+  xpos 507
+  ypos -134
+ }
+set N28cec1c0 [stack 0]
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy1
+  xpos 507
+  ypos 329
+ }
+ Premult {
+  name Premult5
+  xpos 507
+  ypos 442
+ }
+set N28cf4000 [stack 0]
+ Invert {
+  channels alpha
+  name Invert1
+  xpos 507
+  ypos 527
+ }
+ Dot {
+  name Dot41
+  xpos 541
+  ypos 661
+ }
+set N2d6011d0 [stack 0]
+push $N2d6011d0
+push $N2d6011d0
+push $N2d6011d0
+push $N2d6011d0
+push $N2d6011d0
+push $N2d6011d0
+push $N2d6011d0
+push $N2d6011d0
+push $N2d6011d0
+push $N28cf4000
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blur_size}}
+  name Blur8
+  label "\[value size]"
+  xpos 804
+  ypos 436
+ }
+set N2d603690 [stack 0]
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blur_size}}
+  name Blur9
+  label "\[value size]"
+  xpos 804
+  ypos 474
+ }
+set N2d608e00 [stack 0]
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blur_size}}
+  name Blur10
+  label "\[value size]"
+  xpos 804
+  ypos 512
+ }
+set N2d60e370 [stack 0]
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blur_size}}
+  name Blur109
+  label "\[value size]"
+  xpos 804
+  ypos 550
+ }
+set N2d6138e0 [stack 0]
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blur_size}}
+  name Blur11
+  label "\[value size]"
+  xpos 804
+  ypos 588
+ }
+set N2d618e50 [stack 0]
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blur_size}}
+  name Blur12
+  label "\[value size]"
+  xpos 804
+  ypos 626
+ }
+set N2d61e520 [stack 0]
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blur_size}}
+  name Blur13
+  label "\[value size]"
+  xpos 806
+  ypos 664
+ }
+set N2d623ac0 [stack 0]
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blur_size}}
+  name Blur14
+  label "\[value size]"
+  xpos 806
+  ypos 702
+ }
+set N2d629030 [stack 0]
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blur_size}}
+  name Blur15
+  label "\[value size]"
+  xpos 806
+  ypos 740
+ }
+set N2d62e600 [stack 0]
+ Blur {
+  inputs 1+1
+  channels rgba
+  size {{parent.blur_size}}
+  name Blur16
+  label "\[value size]"
+  xpos 806
+  ypos 778
+ }
+push $N2d62e600
+push $N2d629030
+push $N2d623ac0
+push $N2d61e520
+push $N2d618e50
+push $N2d6138e0
+push $N2d60e370
+push $N2d608e00
+push $N2d603690
+ Switch {
+  inputs 10
+  which {{parent.iterations}}
+  name Switch1
+  label "\[value which]"
+  xpos 1064
+  ypos 713
+ }
+ Unpremult {
+  name Unpremult4
+  xpos 1064
+  ypos 773
+ }
+ Dot {
+  name Dot3
+  xpos 1098
+  ypos 852
+ }
+ Dot {
+  name Dot8
+  xpos 694
+  ypos 852
+ }
+set N2d643630 [stack 0]
+ Dot {
+  name Dot7
+  xpos 694
+  ypos 932
+ }
+push $N28cec1c0
+ Dot {
+  name Dot2
+  xpos 437
+  ypos -8
+ }
+ Dot {
+  name Dot5
+  xpos 436
+  ypos 778
+ }
+set N2d64aae0 [stack 0]
+ Dot {
+  name Dot6
+  xpos 617
+  ypos 778
+ }
+ Dot {
+  name Dot4
+  xpos 617
+  ypos 938
+ }
+ Switch {
+  inputs 4
+  which {{parent.alpha}}
+  name Switch3
+  label "\[value which]"
+  xpos 583
+  ypos 1027
+ }
+push $N2d643630
+push $N2d64aae0
+ Merge2 {
+  inputs 2
+  operation copy
+  name Merge1
+  xpos 403
+  ypos 849
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy2
+  xpos 403
+  ypos 1028
+ }
+ Output {
+  name Output1
+  xpos 403
+  ypos 1140
+ }
+push $N19a6ae10
+ Viewer {
+  frame_range 100-100
+  viewerProcess None
+  name Viewer1
+  xpos 1299
+  ypos 985
+ }
+end_group

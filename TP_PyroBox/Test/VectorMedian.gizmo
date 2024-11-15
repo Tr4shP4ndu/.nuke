@@ -1,0 +1,689 @@
+#! /Applications/Nuke11.1v1/Nuke11.1v1.app/Contents/MacOS/libnuke-11.1.1.dylib -nx
+version 11.1 v1
+Gizmo {
+ inputs 2
+ tile_color 0xccccccff
+ addUserKnob {20 VectorMedian}
+ addUserKnob {41 "Local GPU: " T BlinkScript.gpuName}
+ addUserKnob {41 "Use GPU if Available" T BlinkScript.useGPUIfAvailable}
+ addUserKnob {26 ""}
+ addUserKnob {41 channels T BlinkScript.channels}
+ addUserKnob {6 unpremultiply -STARTLINE}
+ unpremultiply true
+ addUserKnob {26 ""}
+ addUserKnob {41 in l "vector channel" T ShuffleCopy1.in}
+ addUserKnob {26 ""}
+ addUserKnob {7 frames R 3 7}
+ frames 3
+ addUserKnob {20 info_1 l info}
+ addUserKnob {26 explanation l "" +STARTLINE T "\nThis median filter uses a motion-vector pass to warp \nthe frames before and the frames after to match up with the current one. \nThe median is then taken of those selected frames to reduce flickering in noisy renders \nor buzzing plates. It works exactly like a \"TemporalMedian\", but with the big advantage \nof ligning up the comparative frames to minimize blending artefacts. \n7 frames are max and if you set the frames to 7, three frames before and 3 frames after the current one are considered in the calculation.\n\nThe Vector Input expects a motion pass layer, in the format that the \"VectorGenerate\" node exports. \nA \"Motion\" Layer including forward uv and backward uv. If you bring in a rendered motion pass, \nplease make sure that the vector calculation correlates with the results of the vector generator node.\n\nPlease make sure to have the first frame and \nthe last frame of your input set to hold or bounce \nin order to not get additional artifatcs.\n"}
+ addUserKnob {26 ""}
+ addUserKnob {26 info l "" +STARTLINE T "VectorMedian version v01.00\ncreated by Egbert Reichel 2016"}
+ addUserKnob {26 ""}
+ addUserKnob {41 recompile l Recompile T BlinkScript.recompile}
+}
+ Input {
+  inputs 0
+  name Input
+  xpos 1094
+  ypos 493
+ }
+ Dot {
+  name Dot22
+  xpos 1127
+  ypos 670
+ }
+set Nd7696590 [stack 0]
+ Dot {
+  name Dot24
+  xpos 2391
+  ypos 670
+ }
+ Shuffle {
+  red black
+  green black
+  blue black
+  alpha black
+  name Shuffle1
+  xpos 2358
+  ypos 2204
+ }
+ Dot {
+  name Dot26
+  xpos 2392
+  ypos 2284
+ }
+ Input {
+  inputs 0
+  name vector
+  xpos 897
+  ypos 466
+  number 1
+ }
+ Dot {
+  name Dot23
+  xpos 931
+  ypos 726
+ }
+push $Nd7696590
+ Remove {
+  operation keep
+  channels rgba
+  name Remove1
+  xpos 1093
+  ypos 723
+ }
+ ShuffleCopy {
+  inputs 2
+  in motion
+  red red
+  green green
+  blue blue
+  out motion
+  name ShuffleCopy1
+  xpos 1093
+  ypos 803
+ }
+ Unpremult {
+  name Unpremult1
+  xpos 1093
+  ypos 887
+  disable {{1-parent.unpremultiply}}
+ }
+ Dot {
+  name Dot1
+  xpos 1127
+  ypos 1002
+ }
+set Nd76ba520 [stack 0]
+ Dot {
+  name Dot2
+  xpos 1347
+  ypos 1002
+ }
+set Nd76bc990 [stack 0]
+ Dot {
+  name Dot3
+  xpos 1576
+  ypos 1002
+ }
+set Nd76bee00 [stack 0]
+ Dot {
+  name Dot4
+  xpos 1686
+  ypos 1002
+ }
+set Nd76c1270 [stack 0]
+ Dot {
+  name Dot5
+  xpos 1929
+  ypos 1002
+ }
+set Nd76c36e0 [stack 0]
+ TimeOffset {
+  time_offset 2
+  time ""
+  name TimeOffset11
+  xpos 1895
+  ypos 1071
+ }
+ Dot {
+  name Dot6
+  xpos 1929
+  ypos 1266
+ }
+set Nd76ca090 [stack 0]
+ TimeOffset {
+  time_offset -1
+  time ""
+  name TimeOffset12
+  xpos 1895
+  ypos 1375
+ }
+ Dot {
+  name Dot7
+  xpos 1929
+  ypos 1458
+ }
+push $Nd76ca090
+push $Nd76c36e0
+ Dot {
+  name Dot8
+  xpos 2065
+  ypos 1002
+ }
+ TimeOffset {
+  time_offset 3
+  time ""
+  name TimeOffset1
+  xpos 2031
+  ypos 1071
+ }
+ OCIOColorSpace {
+  in_colorspace linear
+  out_colorspace AlexaV3LogC
+  name OCIOColorSpace9
+  xpos 2031
+  ypos 1140
+ }
+ IDistort {
+  channels rgba
+  uv forward
+  uv_scale -1
+  filter Simon
+  name IDistort1
+  xpos 2031
+  ypos 1194
+ }
+ ShuffleCopy {
+  inputs 2
+  in motion
+  in2 motion
+  red red
+  green green
+  blue blue
+  black red
+  white green
+  red2 blue
+  green2 alpha
+  out motion
+  name ShuffleCopy3
+  xpos 2031
+  ypos 1294
+ }
+ IDistort {
+  channels rgba
+  uv forward
+  uv_scale -1
+  filter Simon
+  name IDistort2
+  xpos 2031
+  ypos 1383
+ }
+ ShuffleCopy {
+  inputs 2
+  in motion
+  in2 motion
+  red red
+  green green
+  blue blue
+  black red
+  white green
+  red2 blue
+  green2 alpha
+  out motion
+  name ShuffleCopy4
+  xpos 2031
+  ypos 1499
+ }
+ IDistort {
+  channels rgba
+  uv forward
+  uv_scale -1
+  filter Simon
+  name IDistort3
+  xpos 2031
+  ypos 1572
+ }
+ OCIOColorSpace {
+  in_colorspace AlexaV3LogC
+  out_colorspace linear
+  name OCIOColorSpace8
+  xpos 2031
+  ypos 1626
+ }
+ Clamp {
+  maximum_enable false
+  name Clamp1
+  xpos 2031
+  ypos 1677
+ }
+ Dot {
+  name Dot42
+  xpos 2065
+  ypos 1794
+ }
+set Nd8d16a90 [stack 0]
+push $Nd76ba520
+ Dot {
+  name Dot9
+  xpos 903
+  ypos 1002
+ }
+set Nd8d18dc0 [stack 0]
+ Dot {
+  name Dot10
+  xpos 686
+  ypos 1002
+ }
+set Nd8d1b450 [stack 0]
+ Dot {
+  name Dot11
+  xpos 576
+  ypos 1002
+ }
+set Nd8d1d780 [stack 0]
+ Dot {
+  name Dot12
+  xpos 376
+  ypos 1002
+ }
+set Nd8d1fdf0 [stack 0]
+ TimeOffset {
+  time_offset -2
+  time ""
+  name TimeOffset15
+  xpos 342
+  ypos 1071
+ }
+ Dot {
+  name Dot13
+  xpos 376
+  ypos 1266
+ }
+set Nd8d267c0 [stack 0]
+ TimeOffset {
+  time_offset 1
+  time ""
+  name TimeOffset16
+  xpos 342
+  ypos 1391
+ }
+ Dot {
+  name Dot14
+  xpos 376
+  ypos 1482
+ }
+push $Nd8d267c0
+push $Nd8d1fdf0
+ Dot {
+  name Dot15
+  xpos 238
+  ypos 1002
+ }
+ TimeOffset {
+  time_offset -3
+  time ""
+  name TimeOffset2
+  xpos 204
+  ypos 1069
+ }
+ OCIOColorSpace {
+  in_colorspace linear
+  out_colorspace AlexaV3LogC
+  name OCIOColorSpace3
+  xpos 204
+  ypos 1139
+ }
+ IDistort {
+  channels rgba
+  uv backward
+  uv_scale -1
+  filter Simon
+  name IDistort4
+  xpos 204
+  ypos 1193
+ }
+ ShuffleCopy {
+  inputs 2
+  in motion
+  in2 motion
+  red red
+  green green
+  blue blue
+  black red
+  white green
+  red2 blue
+  green2 alpha
+  out motion
+  name ShuffleCopy5
+  xpos 204
+  ypos 1301
+ }
+ IDistort {
+  channels rgba
+  uv backward
+  uv_scale -1
+  filter Simon
+  name IDistort5
+  xpos 204
+  ypos 1395
+ }
+ ShuffleCopy {
+  inputs 2
+  in motion
+  in2 motion
+  red red
+  green green
+  blue blue
+  black red
+  white green
+  red2 blue
+  green2 alpha
+  out motion
+  name ShuffleCopy12
+  xpos 204
+  ypos 1526
+ }
+ IDistort {
+  channels rgba
+  uv backward
+  uv_scale -1
+  filter Simon
+  name IDistort6
+  xpos 204
+  ypos 1592
+ }
+ OCIOColorSpace {
+  in_colorspace AlexaV3LogC
+  out_colorspace linear
+  name OCIOColorSpace15
+  xpos 204
+  ypos 1650
+ }
+ Clamp {
+  maximum_enable false
+  name Clamp6
+  xpos 204
+  ypos 1696
+ }
+ Dot {
+  name Dot41
+  xpos 238
+  ypos 1779
+ }
+push $Nd76bee00
+ TimeOffset {
+  time_offset 1
+  time ""
+  name TimeOffset9
+  xpos 1542
+  ypos 1071
+ }
+ Dot {
+  name Dot16
+  xpos 1576
+  ypos 1266
+ }
+push $Nd76c1270
+ TimeOffset {
+  time_offset 2
+  time ""
+  name TimeOffset3
+  xpos 1652
+  ypos 1071
+ }
+ OCIOColorSpace {
+  in_colorspace linear
+  out_colorspace AlexaV3LogC
+  name OCIOColorSpace7
+  xpos 1652
+  ypos 1131
+ }
+ IDistort {
+  channels rgba
+  uv forward
+  uv_scale -1
+  filter Simon
+  name IDistort9
+  xpos 1652
+  ypos 1187
+ }
+ ShuffleCopy {
+  inputs 2
+  in motion
+  in2 motion
+  red red
+  green green
+  blue blue
+  black red
+  white green
+  red2 blue
+  green2 alpha
+  out motion
+  name ShuffleCopy13
+  xpos 1652
+  ypos 1311
+ }
+ IDistort {
+  channels rgba
+  uv forward
+  uv_scale -1
+  filter Simon
+  name IDistort10
+  xpos 1652
+  ypos 1389
+ }
+ OCIOColorSpace {
+  in_colorspace AlexaV3LogC
+  out_colorspace linear
+  name OCIOColorSpace4
+  xpos 1652
+  ypos 1444
+ }
+ Clamp {
+  maximum_enable false
+  name Clamp2
+  xpos 1652
+  ypos 1664
+ }
+ Dot {
+  name Dot17
+  xpos 1686
+  ypos 1746
+ }
+set Nd8da7970 [stack 0]
+push $Nd8d1b450
+ TimeOffset {
+  time_offset -1
+  time ""
+  name TimeOffset10
+  xpos 652
+  ypos 1073
+ }
+ Dot {
+  name Dot18
+  xpos 686
+  ypos 1266
+ }
+push $Nd8d1d780
+ TimeOffset {
+  time_offset -2
+  time ""
+  name TimeOffset4
+  xpos 542
+  ypos 1068
+ }
+ OCIOColorSpace {
+  in_colorspace linear
+  out_colorspace AlexaV3LogC
+  name OCIOColorSpace13
+  xpos 542
+  ypos 1133
+ }
+ IDistort {
+  channels rgba
+  uv backward
+  uv_scale -1
+  filter Simon
+  name IDistort11
+  xpos 542
+  ypos 1195
+ }
+ ShuffleCopy {
+  inputs 2
+  in motion
+  in2 motion
+  red red
+  green green
+  blue blue
+  black red
+  white green
+  red2 blue
+  green2 alpha
+  out motion
+  name ShuffleCopy14
+  xpos 542
+  ypos 1311
+ }
+ IDistort {
+  channels rgba
+  uv backward
+  uv_scale -1
+  filter Simon
+  name IDistort12
+  xpos 542
+  ypos 1372
+ }
+ OCIOColorSpace {
+  in_colorspace AlexaV3LogC
+  out_colorspace linear
+  name OCIOColorSpace14
+  xpos 542
+  ypos 1442
+ }
+ Clamp {
+  maximum_enable false
+  name Clamp5
+  xpos 542
+  ypos 1689
+ }
+ Dot {
+  name Dot19
+  xpos 576
+  ypos 1768
+ }
+set Nd8ddfda0 [stack 0]
+push $Nd76bc990
+ TimeOffset {
+  time_offset 1
+  time ""
+  name TimeOffset6
+  xpos 1313
+  ypos 1071
+ }
+ OCIOColorSpace {
+  in_colorspace linear
+  out_colorspace AlexaV3LogC
+  name OCIOColorSpace2
+  xpos 1313
+  ypos 1145
+ }
+ IDistort {
+  channels rgba
+  uv forward
+  uv_scale -1
+  filter Simon
+  name IDistort24
+  xpos 1313
+  ypos 1197
+ }
+ OCIOColorSpace {
+  in_colorspace AlexaV3LogC
+  out_colorspace linear
+  name OCIOColorSpace1
+  xpos 1313
+  ypos 1241
+ }
+ Clamp {
+  maximum_enable false
+  name Clamp3
+  xpos 1313
+  ypos 1658
+ }
+ Dot {
+  name Dot21
+  xpos 1347
+  ypos 1746
+ }
+push $Nd8d18dc0
+ TimeOffset {
+  time_offset -1
+  time ""
+  name TimeOffset5
+  xpos 869
+  ypos 1071
+ }
+ OCIOColorSpace {
+  in_colorspace linear
+  out_colorspace AlexaV3LogC
+  name OCIOColorSpace5
+  xpos 869
+  ypos 1144
+ }
+ IDistort {
+  channels rgba
+  uv backward
+  uv_scale -1
+  filter Simon
+  name IDistort23
+  xpos 869
+  ypos 1188
+ }
+ OCIOColorSpace {
+  in_colorspace AlexaV3LogC
+  out_colorspace linear
+  name OCIOColorSpace6
+  xpos 869
+  ypos 1246
+ }
+ Clamp {
+  maximum_enable false
+  name Clamp4
+  xpos 869
+  ypos 1688
+ }
+ Dot {
+  name Dot20
+  xpos 903
+  ypos 1755
+ }
+push $Nd76ba520
+ BlinkScript {
+  inputs 7
+  recompileCount 1
+  ProgramGroup 1
+  KernelDescription "2 \"VectorMedian\" iterate componentWise 456a6179758a7d44cf68fb7f9f70007865593bd238608341fdf699bdf158e276 8 \"in1\" Read Point \"in2\" Read Point \"in3\" Read Point \"in4\" Read Point \"in5\" Read Point \"in6\" Read Point \"in7\" Read Point \"dst\" Write Point 1 \"Size\" Int 1 AQAAAA== 1 \"size\" 1 1 0"
+  kernelSource "\nkernel VectorMedian : ImageComputationKernel<eComponentWise>\n\{\n  Image<eRead, eAccessPoint, eEdgeClamped> in1; // the input image nr 1\n  Image<eRead, eAccessPoint, eEdgeClamped> in2; // the input image nr 2\n  Image<eRead, eAccessPoint, eEdgeClamped> in3; // the input image nr 3\n  Image<eRead, eAccessPoint, eEdgeClamped> in4; // the input image nr 4\n  Image<eRead, eAccessPoint, eEdgeClamped> in5; // the input image nr 5\n  Image<eRead, eAccessPoint, eEdgeClamped> in6; // the input image nr 6\n  Image<eRead, eAccessPoint, eEdgeClamped> in7; // the input image nr 7\n\n\n  Image<eWrite> dst; // the output image\n\n  param:\n\n    int size;\n\n  local:\n\n    // float sorted_list\[];\n\n  // In define(), parameters can be given labels and default values.\n  void define() \{\n\n    defineParam(size, \"Size\", 1);\n\n  \}\n\n  // The init() function is run before any calls to process().\n  // Local variables can be initialized here.\n\n  void init() \{\n\n  \}\n\n  void process() \{\n    // Read the input image\n\n    float input\[] = \{ in1(), in2(), in3(), in4(), in5(),in6(), in7()\};\n    float output = median(input, size);\n\n\n    // Write the result to the output image\n    dst() = float (output);\n \}\n\};\n"
+  rebuild ""
+  VectorMedian_Size {{parent.frames}}
+  rebuild_finalise ""
+  name BlinkScript
+  selected true
+  xpos 1093
+  ypos 1884
+ }
+ Premult {
+  name Premult1
+  xpos 1093
+  ypos 2035
+  disable {{1-parent.unpremultiply}}
+ }
+set Nd8e301c0 [stack 0]
+ Merge2 {
+  inputs 2
+  also_merge all
+  name Merge1
+  xpos 1093
+  ypos 2426
+ }
+ Output {
+  name Output
+  xpos 1093
+  ypos 2613
+ }
+push $Nd8d16a90
+push $Nd8da7970
+push $Nd8ddfda0
+push $Nd8e301c0
+ Viewer {
+  inputs 4
+  frame 1096
+  frame_range 1067-1094
+  center_fstop 0
+  name Viewer1
+  xpos 4028
+  ypos -13
+  hide_input true
+ }
+end_group

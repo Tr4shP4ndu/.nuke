@@ -1,0 +1,361 @@
+#! /usr/local/Nuke11.3v5/libnuke-11.3.5.so -nx
+version 11.3 v5
+Gizmo {
+ inputs 4
+ addUserKnob {20 User}
+ addUserKnob {26 Version l "Comparative Grain" t "I have corrected the maths from the earlier version so the Gamma function should help reduce artifacts from the original plate." T "Version 2.0 by Daniel Mark Miller 2015\nBased on workflow of Bradley Friedman:\nhttp://www.fie.us/grain-management-101/"}
+ addUserKnob {4 matte_output l "Limit to matte" M {"Limit to Matte" "Grain Whole Comp"}}
+ matte_output "Grain Whole Comp"
+ addUserKnob {4 output l Output M {"Grain Only" "Grain Comparison" "Grained Comp"}}
+ output "Grained Comp"
+ addUserKnob {26 ""}
+ addUserKnob {41 norm_grain l "Grain Normalize" t "Uses a Gamma value to try to remove image edges from sampled grain." T Gamma1.value}
+ addUserKnob {41 mix T PlusGrain.mix}
+ addUserKnob {41 minimum_enable l "Enable Minimum" T Clamp1.minimum_enable}
+ addUserKnob {41 minimum t "Clamps lack values of sampled grain, adjust this to remove nasty artifacts." T Clamp1.minimum}
+ addUserKnob {41 lift l "Lift Sub Blacks" t "Use this to raise any values in plate below 0 to 0\nas these can cause artifacts.\nKeep as close to 0 as possible." T LIFT.value}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode1
+  tile_color 0x71c67100
+  label "Normalize Grain"
+  note_font_size 22
+  xpos 596
+  ypos -236
+  bdwidth 206
+  bdheight 198
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode2
+  tile_color 0x388e8e00
+  label "Denormalize Grain with comp"
+  note_font_size 22
+  xpos 407
+  ypos 26
+  bdwidth 425
+  bdheight 193
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode3
+  tile_color 0x388e8e00
+  label "Denormalize Grain with plate"
+  note_font_size 22
+  xpos 943
+  ypos 27
+  bdwidth 425
+  bdheight 193
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode4
+  tile_color 0x494949ff
+  label inputs
+  note_font_size 42
+  xpos -137
+  ypos -683
+  bdwidth 903
+  bdheight 116
+ }
+ Input {
+  inputs 0
+  name Comp2Grain
+  tile_color 0x9fffff
+  xpos -1
+  ypos -608
+ }
+ Add {
+  channels rgb
+  value 0.001
+  name LIFT
+  xpos -1
+  ypos 97
+ }
+ set C8ababc0 [stack 0]
+set N8ababc0 [stack 0]
+ Gamma {
+  name Gamma1
+  xpos 486
+  ypos 91
+ }
+ set C8ac6610 [stack 0]
+ Dot {
+  name Dot6
+  label "gamma denoised comp or element"
+  xpos 520
+  ypos 153
+ }
+ Input {
+  inputs 0
+  name Plate
+  tile_color 0xffd455ff
+  xpos 350
+  ypos -607
+  number 2
+ }
+ Dot {
+  name Dot8
+  label "plate\n"
+  xpos 384
+  ypos -415
+ }
+set N8adb900 [stack 0]
+clone $C8ababc0 {
+  xpos 350
+  ypos -334
+  selected false
+ }
+set N8ae0560 [stack 0]
+ Input {
+  inputs 0
+  name Denoised
+  tile_color 0x55ffffff
+  xpos 659
+  ypos -611
+  number 1
+ }
+ Dot {
+  name Dot7
+  label denoised
+  xpos 693
+  ypos -417
+ }
+clone $C8ababc0 {
+  xpos 659
+  ypos -371
+  selected false
+ }
+set N8af5ac0 [stack 0]
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge31
+  label "Extract Grain"
+  xpos 350
+  ypos -122
+ }
+set N8b01550 [stack 0]
+ Dot {
+  name Dot5
+  label "Gamma denoised image"
+  xpos 525
+  ypos -62
+ }
+push $N8af5ac0
+clone $C8ac6610 {
+  xpos 659
+  ypos -271
+  selected false
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge32
+  xpos 659
+  ypos -65
+ }
+set N8b22400 [stack 0]
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge37
+  xpos 659
+  ypos 150
+ }
+ Clamp {
+  minimum -0.02
+  minimum_enable false
+  maximum_enable false
+  name Clamp1
+  xpos 438
+  ypos 288
+ }
+set N8b42c40 [stack 0]
+push $N8b01550
+ Add {
+  value {{-parent.LIFT.value}}
+  name Add5
+  xpos 350
+  ypos 842
+ }
+ Viewer {
+  inputs 2
+  frame_range 993-993
+  fps 25
+  colour_sample_bbox {0.287966162 0.2773933113 0.2918108404 0.2789311707}
+  name Viewer1
+  xpos 438
+  ypos 549
+ }
+push $N8b42c40
+push $N8ababc0
+ Dot {
+  name Dot2
+  label footage
+  xpos 260
+  ypos 234
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  name PlusGrain
+  xpos 226
+  ypos 294
+ }
+set N8b55b80 [stack 0]
+ Add {
+  value {{-parent.LIFT.value}}
+  name Add3
+  xpos 237
+  ypos 637
+ }
+ Input {
+  inputs 0
+  name Mask
+  tile_color 0x1fff00ff
+  xpos -127
+  ypos -608
+  number 3
+ }
+ Dot {
+  name Dot10
+  label "mask\n"
+  xpos -93
+  ypos 651
+ }
+set N8b76760 [stack 0]
+push $N8b55b80
+push $N8ababc0
+ Keymix {
+  inputs 3
+  name Keymix1
+  xpos -9
+  ypos 680
+ }
+ Add {
+  value {{-parent.LIFT.value}}
+  name Add4
+  xpos 101
+  ypos 719
+ }
+ Switch {
+  inputs 2
+  which {{parent.matte_output}}
+  name LIMIT_TO_MATTE
+  xpos 237
+  ypos 760
+ }
+set N8b8fc10 [stack 0]
+ Dot {
+  name Dot3
+  label "Grained Comp"
+  xpos 260
+  ypos 858
+ }
+push $N8b8fc10
+push $N8adb900
+ Dot {
+  name Dot9
+  xpos -420
+  ypos -415
+ }
+ Merge2 {
+  inputs 2
+  operation difference
+  name COMPARE_GRAIN
+  xpos -454
+  ypos 760
+ }
+ Dot {
+  name Dot4
+  label "Grain Comparison"
+  xpos -420
+  ypos 1018
+ }
+push $N8ae0560
+ Dot {
+  name Dot12
+  xpos 1197
+  ypos -331
+ }
+clone $C8ac6610 {
+  xpos 1163
+  ypos 101
+  selected false
+ }
+ Dot {
+  name Dot11
+  label "gamma denoised comp or element"
+  xpos 1197
+  ypos 163
+ }
+push $N8b22400
+ Dot {
+  name Dot13
+  xpos 1047
+  ypos -62
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge1
+  xpos 1013
+  ypos 160
+ }
+ Dot {
+  name Dot14
+  xpos 1047
+  ypos 769
+ }
+set Ne86dd3c0 [stack 0]
+push $N8b76760
+ Dot {
+  name Dot15
+  label "mask\n"
+  xpos -93
+  ypos 962
+ }
+push $Ne86dd3c0
+push $Ne86dd3c0
+ Multiply {
+  channels rgb
+  value 0
+  name Multiply1
+  xpos 848
+  ypos 862
+ }
+ Keymix {
+  inputs 3
+  name Keymix2
+  xpos 920
+  ypos 927
+ }
+ Switch {
+  inputs 2
+  which {{parent.matte_output}}
+  name LIMIT_TO_MATTE1
+  xpos 1013
+  ypos 1022
+ }
+ Dot {
+  name Dot1
+  label "Grain Only"
+  xpos 384
+  ypos 1025
+ }
+ Switch {
+  inputs 3
+  which {{parent.output}}
+  name OUTPUT_TYPE
+  xpos 226
+  ypos 1022
+ }
+ Output {
+  name Output1
+  selected true
+  xpos 226
+  ypos 1125
+ }
+end_group

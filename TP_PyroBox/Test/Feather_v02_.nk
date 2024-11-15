@@ -1,0 +1,223 @@
+set cut_paste_input [stack 0]
+version 6.3 v8
+push 0
+push $cut_paste_input
+Group {
+ inputs 2
+ name Feather_v01_
+ selected true
+ xpos -270
+ ypos -79
+ addUserKnob {20 User}
+ addUserKnob {41 channels T Blur1.channels}
+ addUserKnob {7 amount R -100 100}
+ amount 25
+ addUserKnob {41 filter T Blur1.filter}
+ addUserKnob {26 ""}
+ addUserKnob {4 fallOff M {linear smooth smooth0 smooth1 "" "" "" ""}}
+ addUserKnob {41 value l gamma T Gamma1.value}
+ addUserKnob {26 "" +STARTLINE}
+ addUserKnob {7 mix}
+ mix 1
+ addUserKnob {6 cropBBox l "crop BBox?" +STARTLINE}
+ addUserKnob {6 intersect l intersect? -STARTLINE}
+ addUserKnob {6 blackoutside l "Black Outside" -STARTLINE}
+}
+ Input {
+  inputs 0
+  name InputMask
+  xpos 351
+  ypos 73
+  number 1
+ }
+ Invert {
+  name Invert1
+  xpos 351
+  ypos 121
+ }
+ AddChannels {
+  channels rgba
+  name AddChannels1
+  xpos 351
+  ypos 157
+ }
+ Invert {
+  name Invert2
+  xpos 351
+  ypos 193
+ }
+ Dot {
+  name Dot5
+  xpos 385
+  ypos 305
+ }
+ Input {
+  inputs 0
+  name Input1
+  xpos 181
+  ypos -506
+ }
+ Dot {
+  name Dot6
+  xpos 215
+  ypos -446
+ }
+set Nea58030 [stack 0]
+ Blur {
+  channels rgba
+  size {{parent.amount*2 i}}
+  name Blur1
+  label "\[value size]"
+  xpos 181
+  ypos -360
+ }
+set N9950d80 [stack 0]
+ Grade {
+  channels {{{parent.Blur1.channels}}}
+  whitepoint 0.47
+  white_clamp true
+  name Grade2
+  xpos 287
+  ypos -280
+ }
+push $N9950d80
+ Grade {
+  channels {{{parent.Blur1.channels}}}
+  blackpoint 0.52
+  white_clamp true
+  name Grade1
+  xpos 181
+  ypos -280
+ }
+ Switch {
+  inputs 2
+  which {{"parent.amount < 0 ? 0 : 1" i}}
+  name Switch1
+  xpos 181
+  ypos -234
+ }
+ Dot {
+  name Dot1
+  xpos 215
+  ypos -188
+ }
+set N9951710 [stack 0]
+ Dot {
+  name Dot4
+  xpos 310
+  ypos -188
+ }
+set N9951a40 [stack 0]
+ Dot {
+  name Dot2
+  xpos 434
+  ypos -188
+ }
+set N9951d70 [stack 0]
+ Dot {
+  name Dot3
+  xpos 544
+  ypos -188
+ }
+ ColorLookup {
+  channels {{{parent.Blur1.channels}}}
+  lut {master {curve L 0 C k 1 s0}
+    red {}
+    green {}
+    blue {}
+    alpha {}}
+  name ColorLookup2
+  label smooth1
+  xpos 510
+  ypos -147
+ }
+push $N9951d70
+ ColorLookup {
+  channels {{{parent.Blur1.channels}}}
+  lut {master {curve C k 0 s0 L 1}
+    red {}
+    green {}
+    blue {}
+    alpha {}}
+  name ColorLookup1
+  label smooth0
+  xpos 400
+  ypos -148
+ }
+push $N9951a40
+ ColorLookup {
+  channels {{{parent.Blur1.channels}}}
+  lut {master {curve C k 0 s0 1 s0}
+    red {}
+    green {}
+    blue {}
+    alpha {}}
+  name ColorLookup3
+  label smooth
+  xpos 276
+  ypos -146
+ }
+push $N9951710
+ Switch {
+  inputs 4
+  which {{parent.fallOff i}}
+  name Switch2
+  xpos 181
+  ypos -75
+ }
+ Clamp {
+  channels {{{parent.Blur1.channels}}}
+  name Clamp1
+  xpos 181
+  ypos -38
+ }
+ Gamma {
+  channels {{{parent.Blur1.channels}}}
+  name Gamma1
+  xpos 181
+  ypos 22
+ }
+push $Nea58030
+ Dot {
+  name Dot7
+  xpos 72
+  ypos -446
+ }
+ Dot {
+  name Dot8
+  xpos 71
+  ypos 305
+ }
+ Keymix {
+  inputs 3
+  mix {{parent.mix i}}
+  name Keymix1
+  xpos 181
+  ypos 296
+ }
+ Crop {
+  box {0 0 {input.width i} {input.height i}}
+  intersect {{parent.intersect i}}
+  crop {{parent.blackoutside i}}
+  name Crop1
+  xpos 181
+  ypos 379
+  disable {{!parent.cropBBox i}}
+ }
+set Ne7add70 [stack 0]
+ Output {
+  name Output1
+  xpos 181
+  ypos 476
+ }
+push $Ne7add70
+ Viewer {
+  frame_increment 8
+  input_process false
+  far 1000000
+  name Viewer1
+  selected true
+  xpos -313
+  ypos 148
+ }
+end_group
