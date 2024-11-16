@@ -1,0 +1,37 @@
+Group {
+ name FlickerGenerator
+ inputs 0
+ tile_color 0xb0a45dff
+ note_font "Bitstream Vera Sans"
+ addUserKnob {20 FlickerGenerator}
+ addUserKnob {7 offset t "Adjusting this value will offset the curve across the timeline." R 0 100}
+ addUserKnob {7 add t "Adjusting this value will either add or subtract to the curve." R 0 10}
+ addUserKnob {7 frequency t "Choose the frequency of the wave."}
+ frequency 1
+ addUserKnob {7 minValue l "min value" t "Lowest value the curve can be." R 0 10}
+ addUserKnob {7 maxValue l "max value" t "Lowest value the curve can reach." R 0 10}
+ maxValue 1
+ addUserKnob {26 ""}
+ addUserKnob {7 result}
+ result {{randomValue.value}}
+ addUserKnob {20 Version}
+ addUserKnob {26 Description l "" +STARTLINE T "This node generates a random curve."}
+ addUserKnob {26 ""}
+ addUserKnob {26 ReleaseNotes l "" +STARTLINE T "<font>Version Release: 1.0\n<br><br>\nRelease Notes: Initial release\n<br><br>\nAuthor: Tim Adams\n<br><br>\nLast Updated: 2023/08/16\n<br><br>\nRelease Date: 2023/08/16</font>"}
+}
+ NoOp {
+  inputs 0
+  name randomValue
+  selected true
+  xpos -152
+  ypos 28
+  addUserKnob {20 User}
+  addUserKnob {7 value}
+  value {{(random(frame*frequency-offset))*(maxValue-minValue)+minValue+add}}
+ }
+ Output {
+  name Output1
+  xpos -152
+  ypos 129
+ }
+end_group

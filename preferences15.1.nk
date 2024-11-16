@@ -1,0 +1,6 @@
+Preferences {
+ inputs 0
+ name Preferences
+ selectedGPUDeviceName "NVIDIA GeForce RTX 3090"
+ platformPathRemaps ""
+}

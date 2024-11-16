@@ -1,0 +1,59 @@
+Group {
+ inputs 2
+ name fc_DifferenceKeyer
+ tile_color 0x323e84ff
+ label "Tolerance = \[value tolerance]"
+ note_font "Bitstream Vera Sans Bold"
+ note_font_color 0xffb800ff
+ selected true
+ addUserKnob {20 user l DiffKey_flw}
+ addUserKnob {26 node_title l "" t " " +STARTLINE T "<font size = 5>Difference Keyer"}
+ addUserKnob {26 made_by l "" +STARTLINE T "<font color = '#eba834'><b>by Filipe Correia"}
+ addUserKnob {26 _1 l "" +STARTLINE}
+ addUserKnob {26 _3 l "" +STARTLINE T "<font color = '#eba834'><b>Settings"}
+ addUserKnob {41 tolerance l Tolerance t "Use the slider to adjust the amount of difference from both images you would like your alpha to be \nEXPLANATION\nabs(Br - Ar):\nThis calculates the absolute difference between the Blue channel value of images (Br and Ar).\n\nBr represents the Blue channel value of the first image.\nAr represents the Blue channel value of the second image. This checks if the absolute difference between these two blue values exceeds the given tolerance.\n\nabs(Bg - Ag):\nSimilarly, this calculates the absolute difference for the Green channel (Bg and Ag being the Green channel values of two images) and checks if this difference exceeds the tolerance.\n\nabs(Bb - Ab):\nThis calculates the absolute difference for the Red channel (Bb and Ab being the Red channel values of the two images) and checks if this difference exceeds the tolerance.\n\n|| (logical OR operator):\nThe || operator means \"logical OR.\" The condition checks whether the difference in any of the three color channels (Red, Green, or Blue) exceeds the tolerance.\n\nResult (ternary operator):\nThe expression uses the ternary conditional operator, which works as:\nIf any of the conditions (absolute differences) are true, the expression returns 1 (true).\nIf none of the conditions are true, it returns 0 (false).\n\nSummary:\nThe expression compares the RGB values of two images or nodes (Br, Bg, Bb vs. Ar, Ag, Ab).\nIf the absolute difference in any of the channels (Red, Green, or Blue) is greater than the specified tolerance, it returns 1 (true).\nOtherwise, it returns 0 (false)." T MergeExpression1.tolerance}
+}
+ Input {
+  inputs 0
+  name A
+  xpos -321
+  ypos -532
+  number 1
+ }
+ OCIOLogConvert {
+  operation "lin to log"
+  name OCIOLogConvert1
+  xpos -321
+  ypos -444
+ }
+ set C92d92000 [stack 0]
+ Input {
+  inputs 0
+  name B
+  xpos -4
+  ypos -539
+ }
+clone $C92d92000 {
+  xpos -4
+  ypos -444
+  selected false
+ }
+ MergeExpression {
+  inputs 2
+  temp_name0 difference
+  temp_expr0 "abs(Br-Ar) > tolerance || abs(Bg-Ag) > tolerance || abs(Bb-Ab)\n > tolerance?1:0"
+  channel3 rgba
+  expr3 difference
+  name MergeExpression1
+  xpos -150
+  ypos -444
+  addUserKnob {20 User}
+  addUserKnob {7 tolerance l Tolerance R 0 0.1}
+  tolerance 0.0001
+ }
+ Output {
+  name Output1
+  xpos -150
+  ypos -284
+ }
+end_group

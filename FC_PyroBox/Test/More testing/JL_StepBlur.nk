@@ -1,0 +1,285 @@
+Group {
+ name JL_StepBlur
+ knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\n\nmethod = n\['Method']\n\nif k == method:\n    \n    if method.value() == \"Global\":\n        \n        n\['Size'].setValue(0)\n        n\['Size'].setVisible(True)\n        \n        n\['Rotate'].setValue(0)\n        n\['Rotate'].setVisible(False)\n        \n        n\['Normalize'].setValue(1)\n        n\['Normalize'].setVisible(False)\n        \n        n\['Extend'].setValue(1)\n        n\['Extend'].setVisible(False)\n        \n        n\['Result'].setValue(0)\n        n\['Result'].setVisible(False)\n        \n        try:\n        \n            inputtarget = nuke.toNode('OpenSpline')\n            nuke.delete(inputtarget)\n            \n        except:\n            pass\n        \n    if method.value() == \"Directional\":\n        \n        n\['Size'].setValue(0)\n        n\['Size'].setVisible(True)\n        \n        n\['Rotate'].setValue(0)\n        n\['Rotate'].setVisible(True)\n        \n        n\['Normalize'].setValue(1)\n        n\['Normalize'].setVisible(False)\n        \n        n\['Extend'].setValue(1)\n        n\['Extend'].setVisible(False)\n        \n        n\['Result'].setValue(0)\n        n\['Result'].setVisible(False)\n        \n        try:\n        \n            inputtarget = nuke.toNode('OpenSpline')\n            nuke.delete(inputtarget)\n            \n            nuke.toNode('VectorBlur3').knob('motion_falloff').setValue(0.33)\n   \n        except:\n            pass\n        \n    if method.value() == \"Open Spline Directional\":\n        \n        n\['Size'].setValue(0)\n        n\['Size'].setVisible(True)\n        \n        n\['Rotate'].setValue(0)\n        n\['Rotate'].setVisible(True)\n        \n        n\['Normalize'].setValue(1)\n        n\['Normalize'].setVisible(True)\n        \n        n\['Extend'].setValue(1)\n        n\['Extend'].setVisible(True)\n        \n        n\['Result'].setValue(0)\n        n\['Result'].setVisible(True)\n        \n        \n        #nuke.message( str(nuke.toNode('Dot7').knob('ypos').value()) )\n        try:\n            inputtarget = nuke.nodes.Input()\n            inputtarget\['name'].setValue(\"OpenSpline\")\n            inputtarget.setXYpos(-644,-346)\n        \n            dot = nuke.toNode('Dot5')\n            dot.setInput(0,inputtarget)\n            \n            nuke.toNode('VectorBlur3').knob('motion_falloff').setValue(1)\n\n        except:\n            pass"
+ tile_color 0x923b00ff
+ selected true
+ addUserKnob {20 JL_StepBlur}
+ addUserKnob {4 Method M {Global Directional "Open Spline Directional" ""}}
+ addUserKnob {4 Result l "Result View" -STARTLINE +HIDDEN M {Source Vectors ""}}
+ addUserKnob {26 ""}
+ addUserKnob {7 Size R 0 100}
+ addUserKnob {7 Rotate +HIDDEN R 0 180}
+ addUserKnob {6 Normalize +HIDDEN +STARTLINE}
+ Normalize true
+ addUserKnob {6 Extend -STARTLINE +HIDDEN}
+ Extend true
+ addUserKnob {26 ""}
+ addUserKnob {26 text l "" +STARTLINE T "JL_StepBlur v1.2  | Joserra Lastras 2023"}
+ addUserKnob {26 text_1 l "" +STARTLINE T "<a href=\"https://www.joserralastras.com/\"><span style=\"color:#5f5f5f;\">www.joserralastras.com</a>"}
+}
+ Axis3 {
+  inputs 0
+  rotate {0 0 {parent.Rotate}}
+  name Axis1
+  xpos -779
+  ypos 715
+ }
+ Input {
+  inputs 0
+  name Mask
+  xpos 238
+  ypos 1203
+  number 1
+ }
+ Invert {
+  name Invert1
+  xpos 238
+  ypos 1281
+ }
+ Input {
+  inputs 0
+  name Source
+  xpos 23
+  ypos 341
+ }
+ Dot {
+  name Dot8
+  xpos 57
+  ypos 594
+ }
+set Nb452a800 [stack 0]
+ Dot {
+  name Dot7
+  xpos -156
+  ypos 1290
+ }
+ Dot {
+  inputs 0
+  name Dot5
+  xpos -610
+  ypos -287
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.alpha 0 3 rgba.green 0 1 rgba.alpha 0 3 rgba.red 0 0 rgba.alpha 0 3 rgba.alpha 0 3 rgba.alpha 0 3 rgba.blue 0 2"
+  name Shuffle2
+  xpos -644
+  ypos -228
+ }
+ Dot {
+  name Dot1
+  xpos -610
+  ypos -135
+ }
+set Nb4529400 [stack 0]
+ Matrix {
+  matrix {
+      {1 2 1}
+      {0 0 0}
+      {-1 -2 -1}
+    }
+  name Matrix1
+  tile_color 0xff0000ff
+  xpos -700
+  ypos -34
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 rgba.red 0 0 black -1 -1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3"
+  name Shuffle1
+  xpos -700
+  ypos 41
+ }
+push $Nb4529400
+ Matrix {
+  matrix {
+      {1 0 -1}
+      {2 0 -2}
+      {1 0 -1}
+    }
+  name Matrix2
+  tile_color 0x1fff00ff
+  xpos -584
+  ypos -33
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3"
+  name Shuffle3
+  xpos -584
+  ypos 41
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge1
+  xpos -639
+  ypos 84
+ }
+ Expression {
+  temp_name0 mag
+  temp_expr0 sqrt((r*r)+(g*g)+(b*b))
+  expr0 r/mag
+  expr1 g/mag
+  expr2 b/mag
+  name Expression1
+  xpos -639
+  ypos 162
+  disable {{!Normalize}}
+ }
+ Expression {
+  expr0 "isnan(r) ? 0 : r"
+  expr1 "isnan(g) ? 0 : g"
+  expr2 0
+  expr3 0
+  name Expression4
+  xpos -639
+  ypos 198
+  disable {{!Normalize}}
+ }
+ Expression {
+  expr3 "clamp(ceil(r) + ceil (g) )"
+  name Expression6
+  xpos -639
+  ypos 255
+ }
+ FilterErode {
+  channels alpha
+  size 2
+  name FilterErode1
+  xpos -639
+  ypos 327
+  disable {{!Extend}}
+ }
+ Inpaint2 {
+  fillRegion "Source Inverted Alpha"
+  center {{input.width/2} {input.height/2}}
+  name Inpaint2
+  xpos -639
+  ypos 421
+  disable {{!Extend}}
+ }
+push $Nb4529400
+ Dot {
+  name Dot3
+  xpos -928
+  ypos -135
+ }
+ Expression {
+  expr0 1
+  expr1 0
+  expr2 0
+  expr3 0
+  name Expression2
+  xpos -962
+  ypos 328
+ }
+ Dot {
+  name Dot4
+  xpos -928
+  ypos 594
+ }
+push $Nb452a800
+ Blur {
+  size {{Size}}
+  name Blur1
+  xpos -277
+  ypos 585
+ }
+set Nb4b35400 [stack 0]
+ Switch {
+  inputs 3
+  which {{Method}}
+  name Switch2
+  xpos -639
+  ypos 591
+ }
+ ColorMatrix {
+  matrix {
+      {{parent.Axis1.matrix.0} {parent.Axis1.matrix.1} {parent.Axis1.matrix.2}}
+      {{parent.Axis1.matrix.4} {parent.Axis1.matrix.5} {parent.Axis1.matrix.6}}
+      {{parent.Axis1.matrix.8} {parent.Axis1.matrix.9} {parent.Axis1.matrix.10}}
+    }
+  name ColorMatrix1
+  xpos -639
+  ypos 735
+ }
+set Nb4b34c00 [stack 0]
+push $Nb4b34c00
+ ShuffleCopy {
+  inputs 2
+  in2 none
+  red red
+  green green
+  blue blue
+  out motion
+  name ShuffleCopy1
+  xpos -639
+  ypos 784
+ }
+ Dot {
+  name Dot2
+  xpos -605
+  ypos 839
+ }
+set Nb4b34400 [stack 0]
+push $Nb4b34400
+push $Nb452a800
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels motion
+  name Copy1
+  xpos 23
+  ypos 824
+ }
+ VectorBlur2 {
+  channels rgb
+  uv motion
+  scale {{Size}}
+  motion_falloff 1
+  blur_inside false
+  name VectorBlur3
+  xpos 23
+  ypos 932
+ }
+ Switch {
+  inputs 2
+  which {{Result}}
+  name Switch1
+  xpos 23
+  ypos 1030
+ }
+set Nb4acb000 [stack 0]
+push $Nb4acb000
+push $Nb4b35400
+ Dot {
+  name Dot6
+  xpos -243
+  ypos 1119
+ }
+ Switch {
+  inputs 3
+  which {{Method}}
+  name Switch3
+  xpos 23
+  ypos 1116
+ }
+ Merge2 {
+  inputs 2+1
+  operation copy
+  name Merge2
+  xpos 23
+  ypos 1287
+  disable {{"!\[exists parent.input1]"}}
+ }
+ Output {
+  name Output1
+  xpos 23
+  ypos 1416
+ }
+end_group

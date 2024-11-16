@@ -1,0 +1,179 @@
+Group {
+ name JL_MergeLuma
+ tile_color 0x45a1ff
+ selected true
+ addUserKnob {20 JL_MergeLuma}
+ addUserKnob {4 Method M {Saturation YCbCr "" ""}}
+ addUserKnob {41 mix T Merge1.mix}
+ addUserKnob {26 ""}
+ addUserKnob {26 text_1 l "" +STARTLINE T "JL_MergeLuma v1.1 | Joserra Lastras 2023"}
+ addUserKnob {26 text l "" +STARTLINE T "<a href=\"https://www.joserralastras.com/\"><span style=\"color:#5f5f5f;\">www.joserralastras.com</a>"}
+}
+ Input {
+  inputs 0
+  name Color
+  xpos 791
+  ypos -19
+ }
+ Dot {
+  name Dot3
+  xpos 825
+  ypos 222
+ }
+set Nb45d2800 [stack 0]
+ Dot {
+  name Dot6
+  xpos -758
+  ypos 221
+ }
+ Dot {
+  name Dot7
+  xpos -758
+  ypos 1729
+ }
+ Input {
+  inputs 0
+  name Mask
+  xpos 1702
+  ypos 1420
+  number 2
+ }
+push $Nb45d2800
+ Dot {
+  name Dot9
+  xpos 825
+  ypos 578
+ }
+set Nb45d1800 [stack 0]
+ Colorspace {
+  colorspace_out YCbCr
+  name Colorspace2
+  xpos 322
+  ypos 575
+ }
+ Dot {
+  name Dot10
+  xpos 356
+  ypos 729
+ }
+ Input {
+  inputs 0
+  name Luma
+  xpos -247
+  ypos 316
+  number 1
+ }
+ Dot {
+  name Dot2
+  xpos -213
+  ypos 578
+ }
+set Nb45d0800 [stack 0]
+ Colorspace {
+  colorspace_out YCbCr
+  name Colorspace1
+  xpos 134
+  ypos 575
+ }
+ Copy {
+  inputs 2
+  from0 rgba.green
+  to0 rgba.green
+  from1 rgba.blue
+  to1 rgba.blue
+  name Copy2
+  xpos 134
+  ypos 714
+ }
+ Colorspace {
+  colorspace_in YCbCr
+  name Colorspace3
+  xpos 134
+  ypos 797
+ }
+ Dot {
+  name Dot11
+  xpos 168
+  ypos 1261
+ }
+push $Nb45d2800
+ Dot {
+  name Dot4
+  xpos 990
+  ypos 222
+ }
+set Nb4587000 [stack 0]
+push $Nb45d1800
+ Saturation {
+  saturation 0
+  mode Average
+  name Saturation13
+  xpos 791
+  ypos 774
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge36
+  xpos 956
+  ypos 774
+ }
+ Dot {
+  name Dot8
+  xpos 990
+  ypos 1084
+ }
+push $Nb45d0800
+ Saturation {
+  saturation 0
+  mode Average
+  name Saturation12
+  xpos -247
+  ypos 937
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge37
+  xpos -247
+  ypos 1079
+ }
+ Switch {
+  inputs 2
+  which {{Method}}
+  name Switch1
+  xpos -247
+  ypos 1258
+ }
+ Dot {
+  name Dot5
+  xpos -213
+  ypos 1423
+ }
+push $Nb4587000
+ Dot {
+  name Dot1
+  xpos 1537
+  ypos 222
+ }
+ Merge2 {
+  inputs 2+1
+  operation copy
+  name Merge1
+  xpos 1503
+  ypos 1420
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy1
+  xpos 1503
+  ypos 1720
+ }
+ Output {
+  name Output1
+  xpos 1503
+  ypos 1820
+ }
+end_group

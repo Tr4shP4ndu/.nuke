@@ -1,0 +1,66 @@
+Group {
+ name GrainBalance
+ tile_color 0x7aa9ffff
+ note_font "Bitstream Vera Sans"
+ addUserKnob {20 GrainBalance}
+ addUserKnob {41 size T Blur1.size}
+ addUserKnob {20 Version}
+ addUserKnob {26 Description l "" +STARTLINE T "Plug this gizmo in to the end of your comp to help visualise grain levels."}
+ addUserKnob {26 ""}
+ addUserKnob {26 ReleaseNotes l "" +STARTLINE T "<font>Version Release: 1.0\n<br><br>\nRelease Notes: Initial release\n<br><br>\nAuthor: Tim Adams\n<br><br>\nLast Updated: 2021/04/09\n<br><br>\nRelease Date: 2021/04/09</font>"}
+}
+ Input {
+  inputs 0
+  name input
+  xpos -171
+  ypos 62
+ }
+ Log2Lin {
+  operation lin2log
+  name Log2Lin1
+  xpos -171
+  ypos 114
+ }
+ Dot {
+  name Dot1
+  xpos -137
+  ypos 160
+ }
+set N1cf5eef0 [stack 0]
+ Blur {
+  size 10
+  name Blur1
+  xpos -171
+  ypos 225
+ }
+push $N1cf5eef0
+ Dot {
+  name Dot2
+  xpos 14
+  ypos 160
+ }
+ Merge2 {
+  inputs 2
+  operation difference
+  name Merge1
+  xpos -20
+  ypos 229
+ }
+ Grade {
+  white 5
+  multiply 5
+  name Grade1
+  xpos -20
+  ypos 253
+ }
+ Output {
+  name Output1
+  xpos -20
+  ypos 317
+ }
+ Output {
+  name Output2
+  xpos -20
+  ypos 417
+ }
+end_group

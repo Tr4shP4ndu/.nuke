@@ -1,3 +1,3 @@
 import nuke
 
-nuke.pluginAddPath(["./TP_PyroBox"])
+nuke.pluginAddPath(["./FC_PyroBox"])

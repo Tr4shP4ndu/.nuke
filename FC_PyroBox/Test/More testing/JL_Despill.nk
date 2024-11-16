@@ -1,0 +1,382 @@
+Group {
+ name JL_Despill
+ knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\n\n\n\nif k == n\['Target']:\n    \n    if n\['Target'].value()==\"Color\":\n        n.knobs()\[\"whitepoint\"].setVisible(True)\n        n.knobs()\[\"which\"].setVisible(False)\n        n\[\"whitepoint\"].setValue(\[0.5,0.5,0.5,0])\n    if n\['Target'].value()==\"Input\":\n        n.knobs()\[\"whitepoint\"].setVisible(False)\n        n.knobs()\[\"which\"].setVisible(False)\n        n\[\"whitepoint\"].setValue(\[0.5,0.5,0.5,0])\n    if n\['Target'].value()==\"Color + Input\":\n        n.knobs()\[\"whitepoint\"].setVisible(True)\n        n.knobs()\[\"which\"].setVisible(True) \n        n\[\"whitepoint\"].setValue(\[0.5,0.5,0.5,0])\n        n\[\"which\"].setValue(0.5) \n\nif k == n\['Magic']:\n    \n    if n\['Magic'].value()==\"Magic\":\n        n.knobs()\[\"alphaBias\"].setVisible(True)\n        \n        try:\n            inputtarget = nuke.toNode('Magic_Input')\n            nuke.delete(inputtarget)\n            \n        except:\n            pass    \n\n    if n\['Magic'].value()==\"Off\":\n        n.knobs()\[\"alphaBias\"].setVisible(False)\n        n\[\"alphaBias\"].setValue(\[0.5,0.5,0.5])\n        try:\n            inputtarget = nuke.toNode('Magic_Input')\n            nuke.delete(inputtarget)\n            \n        except:\n            pass    \n        \n    if n\['Magic'].value()==\"Magic Input\":\n        n.knobs()\[\"alphaBias\"].setVisible(False)\n        n\[\"alphaBias\"].setValue(\[0.5,0.5,0.5])\n        \n        try:\n            inputtarget = nuke.nodes.Input()\n            inputtarget\['name'].setValue(\"Magic_Input\")\n            \n        \n            dot = nuke.toNode('Dot16')\n            dot.setInput(0,inputtarget)\n            \n            inputtarget.setXYpos(dot.xpos(),dot.ypos() - 50)\n\n        except:\n            pass        "
+ tile_color 0x45a1ff
+ selected true
+ addUserKnob {20 JL_Despill}
+ addUserKnob {41 screenColour l "Screen Color" t "Pick your screen color" T Keylight1.screenColour}
+ addUserKnob {41 mode l " " T Saturation1.mode}
+ addUserKnob {26 ""}
+ addUserKnob {4 Target M {Color Input "Color + Input" "" "" "" ""}}
+ addUserKnob {41 whitepoint l "" t "Select the colour it will be replaced by" +STARTLINE T Grade1.whitepoint}
+ addUserKnob {41 which l "Color + Input" t "Mix between Color and Input" +HIDDEN T Dissolve1.which}
+ addUserKnob {26 ""}
+ addUserKnob {4 Magic M {Off Magic "Magic Input" "" "" "" "" "" "" ""}}
+ addUserKnob {41 alphaBias l "" t "Select the color that you want to preserve during  despill" +STARTLINE +HIDDEN T Keylight1.alphaBias}
+ addUserKnob {26 ""}
+ addUserKnob {41 mix_1 l "Luma Restore" t "Recover original luma" T Merge2.mix}
+ addUserKnob {41 red l "Force Luma" T Exposure1.red}
+ addUserKnob {26 ""}
+ addUserKnob {26 Joserra l "" +STARTLINE T "JL_Despill v1.3 | Joserra Lastras 2022"}
+ addUserKnob {26 web l "" +STARTLINE T "<a href=\"https://www.joserralastras.com/\"><span style=\"color:#5f5f5f;\">www.joserralastras.com</a>"}
+}
+ Constant {
+  inputs 0
+  channels rgb
+  color {{parent.Grade1.whitepoint} {parent.Grade1.whitepoint} {parent.Grade1.whitepoint} 1}
+  name Constant2
+  xpos 968
+  ypos -668
+ }
+ Reformat {
+  type "to box"
+  box_width {{parent.Reformat1.box_width}}
+  box_height {{parent.Reformat1.box_height}}
+  box_fixed true
+  box_pixel_aspect {{parent.Reformat1.box_pixel_aspect}}
+  name Reformat3
+  xpos 968
+  ypos -596
+ }
+ Dot {
+  name Dot14
+  xpos 1002
+  ypos -398
+ }
+set Nd3629400 [stack 0]
+ Input {
+  inputs 0
+  name lnput
+  xpos 1463
+  ypos -621
+  number 1
+ }
+ Dot {
+  name Dot15
+  xpos 1497
+  ypos -398
+ }
+set Nd3628c00 [stack 0]
+ Dissolve {
+  inputs 2
+  which 0.5
+  name Dissolve1
+  xpos 1243
+  ypos -407
+ }
+push $Nd3628c00
+ Dot {
+  name Dot8
+  xpos 1497
+  ypos -223
+ }
+push $Nd3629400
+ Switch {
+  inputs 3
+  which {{Target}}
+  name Switch1
+  xpos 968
+  ypos -226
+ }
+ Dot {
+  name Dot5
+  xpos 1002
+  ypos -162
+ }
+ Constant {
+  inputs 0
+  channels rgb
+  color {{parent.Keylight1.screenColour} {parent.Keylight1.screenColour} {parent.Keylight1.screenColour} 1}
+  name Constant1
+  xpos 560
+  ypos -669
+ }
+ Reformat {
+  type "to box"
+  box_width {{parent.Reformat1.box_width}}
+  box_height {{parent.Reformat1.box_height}}
+  box_fixed true
+  box_pixel_aspect {{parent.Reformat1.box_pixel_aspect}}
+  name Reformat2
+  xpos 560
+  ypos -597
+ }
+ Saturation {
+  saturation 0
+  name Saturation1
+  xpos 560
+  ypos -486
+ }
+ set Cb68ce800 [stack 0]
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge4
+  xpos 560
+  ypos -165
+ }
+ EXPTool {
+  mode Stops
+  gang false
+  green {{red}}
+  blue {{red}}
+  name Exposure1
+  xpos 560
+  ypos 28
+ }
+ Dot {
+  name Dot4
+  xpos 594
+  ypos 441
+ }
+ Dot {
+  inputs 0
+  name Dot16
+  xpos -1238
+  ypos -660
+ }
+ Blur {
+  size 20
+  name Blur2
+  xpos -1272
+  ypos -570
+ }
+ Reformat {
+  type "to box"
+  box_width {{parent.Reformat1.box_width}}
+  box_height {{parent.Reformat1.box_height}}
+  box_fixed true
+  box_pixel_aspect {{parent.Reformat1.box_pixel_aspect}}
+  resize none
+  name Reformat4
+  xpos -1272
+  ypos -524
+ }
+ Dot {
+  name Dot11
+  xpos -1238
+  ypos -446
+ }
+set Nb68cc800 [stack 0]
+ Dot {
+  name Dot12
+  xpos -1238
+  ypos -278
+ }
+ Input {
+  inputs 0
+  name Source
+  xpos -617
+  ypos -863
+ }
+ Dot {
+  name Dot1
+  xpos -583
+  ypos -609
+ }
+set Nb688b800 [stack 0]
+ Dot {
+  name Dot10
+  xpos -917
+  ypos -609
+ }
+push $Nb68cc800
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge5
+  xpos -951
+  ypos -449
+ }
+ OFXuk.co.thefoundry.keylight.keylight_v201 {
+  show "Final Result"
+  unPreMultiply false
+  screenColour {{parent.Keylight1.screenColour x1 0.01958388835} {parent.Keylight1.screenColour x1 0.2655755281} {parent.Keylight1.screenColour x1 0.05663888529}}
+  screenGain 1
+  screenBalance 0.5
+  alphaBias {0.5 0.5 0.5}
+  despillBias {0.5 0.5 0.5}
+  gangBiases true
+  preBlur 0
+  "Screen Matte" 0
+  screenClipMin 0
+  screenClipMax 1
+  screenClipRollback 0
+  screenGrowShrink 0
+  screenSoftness 0
+  screenDespotBlack 0
+  screenDespotWhite 0
+  screenReplaceMethod "Soft Colour"
+  screenReplaceColour {0.5 0.5 0.5}
+  Tuning 0
+  midPoint 0.5
+  lowGain 1
+  midGain 1
+  highGain 1
+  "Inside Mask" 0
+  sourceAlphaHandling Ignore
+  insideReplaceMethod "Soft Colour"
+  insideReplaceColour {0.5 0.5 0.5}
+  Crops 0
+  SourceXMethod Colour
+  SourceYMethod Colour
+  SourceEdgeColour 0
+  SourceCropL 0
+  SourceCropR 1
+  SourceCropB 0
+  SourceCropT 1
+  balanceSet false
+  insideComponent None
+  outsideComponent None
+  cacheBreaker true
+  name Keylight2
+  xpos -951
+  ypos -360
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge6
+  xpos -951
+  ypos -281
+ }
+ Dot {
+  name Dot13
+  xpos -917
+  ypos -159
+ }
+push $Nb688b800
+ OFXuk.co.thefoundry.keylight.keylight_v201 {
+  show "Final Result"
+  unPreMultiply false
+  screenColour {0 0 0}
+  screenGain 1
+  screenBalance 0.5
+  alphaBias {0.5 0.5 0.5}
+  despillBias {0.5 0.5 0.5}
+  gangBiases true
+  preBlur 0
+  "Screen Matte" 0
+  screenClipMin 0
+  screenClipMax 1
+  screenClipRollback 0
+  screenGrowShrink 0
+  screenSoftness 0
+  screenDespotBlack 0
+  screenDespotWhite 0
+  screenReplaceMethod "Soft Colour"
+  screenReplaceColour {0.5 0.5 0.5}
+  Tuning 0
+  midPoint 0.5
+  lowGain 1
+  midGain 1
+  highGain 1
+  "Inside Mask" 0
+  sourceAlphaHandling Ignore
+  insideReplaceMethod "Soft Colour"
+  insideReplaceColour {0.5 0.5 0.5}
+  Crops 0
+  SourceXMethod Colour
+  SourceYMethod Colour
+  SourceEdgeColour 0
+  SourceCropL 0
+  SourceCropR 1
+  SourceCropB 0
+  SourceCropT 1
+  balanceSet false
+  insideComponent None
+  outsideComponent None
+  cacheBreaker true
+  name Keylight1
+  xpos -617
+  ypos -363
+ }
+set Nb688a000 [stack 0]
+push $Nb688a000
+ Switch {
+  inputs 3
+  which {{Magic}}
+  name Switch2
+  xpos -617
+  ypos -162
+ }
+ Dot {
+  name Dot9
+  xpos -583
+  ypos -82
+ }
+set Nb6889800 [stack 0]
+push $Nb688b800
+ Dot {
+  name Dot2
+  xpos -25
+  ypos -609
+ }
+set Nb6889400 [stack 0]
+ Merge2 {
+  inputs 2
+  operation from
+  name Merge1
+  xpos -59
+  ypos -85
+ }
+clone $Cb68ce800 {
+  xpos -59
+  ypos -38
+  selected false
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge3
+  xpos -59
+  ypos 438
+ }
+ Dot {
+  name Dot3
+  xpos -25
+  ypos 600
+ }
+push $Nb6889800
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge2
+  xpos -617
+  ypos 597
+ }
+ Output {
+  name Output1
+  xpos -617
+  ypos 877
+ }
+push $Nb6889400
+ Dot {
+  name Dot7
+  xpos 67
+  ypos -609
+ }
+set Nb681f400 [stack 0]
+ Grade {
+  whitepoint {0.5 0.5 0.5 0}
+  name Grade1
+  xpos 33
+  ypos -591
+ }
+push $Nb681f400
+ Dot {
+  name Dot6
+  xpos 195
+  ypos -609
+ }
+ Reformat {
+  type "to box"
+  box_width {{input.width}}
+  box_height {{input.height}}
+  box_fixed true
+  box_pixel_aspect {{input.pixel_aspect}}
+  name Reformat1
+  xpos 161
+  ypos -591
+ }
+end_group

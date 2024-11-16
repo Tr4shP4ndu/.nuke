@@ -1,0 +1,126 @@
+Group {
+ name JL_EasyEdge
+ tile_color 0x923b00ff
+ selected true
+ addUserKnob {20 JL_EasyEdge}
+ addUserKnob {7 Out R 0 50}
+ Out 5
+ addUserKnob {41 size_2 l "Blur Out" T Blur3_OUT.size}
+ addUserKnob {26 ""}
+ addUserKnob {7 In R 0 50}
+ In 5
+ addUserKnob {41 size_3 l "Blur In" T Blur15_IN.size}
+ addUserKnob {26 ""}
+ addUserKnob {41 size_4 l "Blur Global" T Blur16_GLOBAL.size}
+ addUserKnob {26 ""}
+ addUserKnob {26 _1 l "" +STARTLINE T "JL_EasyEdge v1.0 | Joserra Lastras 2022"}
+ addUserKnob {26 web l "" +STARTLINE T "<a href=\"https://www.joserralastras.com/\"><span style=\"color:#5f5f5f;\">www.joserralastras.com</a>"}
+}
+ Input {
+  inputs 0
+  name Mask
+  xpos 969
+  ypos 1140
+  number 1
+ }
+ Dot {
+  name Dot1
+  xpos 1003
+  ypos 1191
+ }
+ Input {
+  inputs 0
+  name Src
+  selected true
+  xpos 566
+  ypos 560
+ }
+set Nb4793c00 [stack 0]
+ Dot {
+  name Dot3
+  xpos 1024
+  ypos 564
+ }
+ Dot {
+  name Dot2
+  xpos 1024
+  ypos 976
+ }
+push $Nb4793c00
+ Dot {
+  name Dot115
+  xpos 600
+  ypos 645
+ }
+set Nb4793000 [stack 0]
+ Dot {
+  name Dot116
+  xpos 792
+  ypos 645
+ }
+ FilterErode {
+  size {{In}}
+  name FilterErode3_IN
+  xpos 758
+  ypos 696
+ }
+ Blur {
+  name Blur15_IN
+  xpos 758
+  ypos 743
+ }
+push $Nb4793000
+ FilterErode {
+  size {{Out*(-1)}}
+  name FilterErode2_OUT
+  xpos 566
+  ypos 721
+ }
+ Blur {
+  name Blur3_OUT
+  xpos 566
+  ypos 792
+ }
+ Merge2 {
+  inputs 2
+  operation stencil
+  name Merge33
+  xpos 758
+  ypos 798
+ }
+ Blur {
+  name Blur16_GLOBAL
+  xpos 758
+  ypos 887
+ }
+ ShuffleCopy {
+  inputs 2
+  red red
+  green green
+  blue blue
+  alpha alpha2
+  name ShuffleCopy1
+  xpos 758
+  ypos 972
+ }
+ Crop {
+  box {0 0 {Src.width} {Src.height}}
+  name Crop1
+  xpos 758
+  ypos 1104
+ }
+ Merge2 {
+  inputs 2
+  operation mask
+  name Merge1
+  label "\n\n"
+  xpos 758
+  ypos 1188
+  disable {{"!\[exists parent.input1]" x1 0}}
+ }
+ Output {
+  name Output1
+  xpos 758
+  ypos 1248
+ }
+end_group

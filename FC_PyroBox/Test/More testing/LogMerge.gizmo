@@ -1,0 +1,133 @@
+Group {
+ name LogMerge
+ inputs 3
+ tile_color 0x4b5ec6ff
+ note_font "Bitstream Vera Sans"
+ addUserKnob {20 LogMerge}
+ addUserKnob {41 operation T Merge.operation}
+ addUserKnob {41 sRGB l "Video colorspace" -STARTLINE T Merge.sRGB}
+ addUserKnob {41 screen_alpha l "alpha masking" -STARTLINE T Merge.screen_alpha}
+ addUserKnob {41 bbox l "set bbox to " T Merge.bbox}
+ addUserKnob {41 metainput l "metadata from" -STARTLINE T Merge.metainput}
+ addUserKnob {41 rangeinput l "range from" -STARTLINE T Merge.rangeinput}
+ addUserKnob {26 ""}
+ addUserKnob {41 Achannels l "A channels" T Merge.Achannels}
+ addUserKnob {41 Bchannels l "B channels" T Merge.Bchannels}
+ addUserKnob {41 output T Merge.output}
+ addUserKnob {41 also_merge l "also merge" T Merge.also_merge}
+ addUserKnob {26 ""}
+ addUserKnob {41 maskChannelInput l mask -STARTLINE T Merge.maskChannelInput}
+ addUserKnob {41 inject -STARTLINE T Merge.inject}
+ addUserKnob {41 invert_mask l invert -STARTLINE T Merge.invert_mask}
+ addUserKnob {41 fringe -STARTLINE T Merge.fringe}
+ addUserKnob {41 mix T Merge.mix}
+ addUserKnob {20 Version}
+ addUserKnob {26 Description l "" +STARTLINE T "This node merges the A and B input through an OCIOLogConvert."}
+ addUserKnob {26 ""}
+ addUserKnob {26 ReleaseNotes l "" +STARTLINE T "<font>Version Release: 1.0\n<br><br>\nRelease Notes: Initial release\n<br><br>\nAuthor: Tim Adams\n<br><br>\nLast Updated: 2023/05/17\n<br><br>\nRelease Date: 2023/05/17</font>"}
+}
+ Input {
+  inputs 0
+  name B
+  note_font "Bitstream Vera Sans"
+  xpos 665
+  ypos -527
+ }
+set N345f5800 [stack 0]
+ Viewer {
+  frame 1001
+  frame_range 1001-1238
+  center_fstop 0
+  name Viewer1
+  note_font "Bitstream Vera Sans"
+  xpos 509
+  ypos -124
+ }
+ Input {
+  inputs 0
+  name mask
+  note_font "Bitstream Vera Sans"
+  xpos 860
+  ypos -319
+  number 2
+ }
+ Input {
+  inputs 0
+  name A
+  note_font "Bitstream Vera Sans"
+  xpos 493
+  ypos -526
+  number 1
+ }
+ Unpremult {
+  name Unpremult
+  note_font "Bitstream Vera Sans"
+  xpos 493
+  ypos -448
+  disable {{"!(\[string first \".alpha\" \[channels \[input this 0]]]>-1)"}}
+ }
+ OCIOLogConvert {
+  operation "lin to log"
+  name OCIOLogConvert
+  note_font "Bitstream Vera Sans"
+  xpos 493
+  ypos -424
+ }
+ Premult {
+  name Premult
+  note_font "Bitstream Vera Sans"
+  xpos 493
+  ypos -400
+  disable {{"!(\[string first \".alpha\" \[channels \[input this 0]]]>-1)"}}
+ }
+ Dot {
+  name Dot236
+  note_font "Bitstream Vera Sans"
+  xpos 527
+  ypos -316
+ }
+push $N345f5800
+ Unpremult {
+  name Unpremult1
+  note_font "Bitstream Vera Sans"
+  xpos 665
+  ypos -449
+  disable {{"!(\[string first \".alpha\" \[channels \[input this 0]]]>-1)"}}
+ }
+ OCIOLogConvert {
+  operation "lin to log"
+  name OCIOLogConvert1
+  note_font "Bitstream Vera Sans"
+  xpos 665
+  ypos -425
+ }
+ Premult {
+  name Premult1
+  note_font "Bitstream Vera Sans"
+  xpos 665
+  ypos -401
+  disable {{"!(\[string first \".alpha\" \[channels \[input this 0]]]>-1)"}}
+ }
+ Merge2 {
+  inputs 2+1
+  bbox B
+  maskChannelMask none
+  name Merge
+  note_font "Bitstream Vera Sans"
+  xpos 665
+  ypos -319
+ }
+ OCIOLogConvert {
+  operation "log to lin"
+  name OCIOLogConvert2
+  note_font "Bitstream Vera Sans"
+  xpos 665
+  ypos -240
+ }
+ Output {
+  name Output1
+  note_font "Bitstream Vera Sans"
+  xpos 665
+  ypos -148
+ }
+end_group

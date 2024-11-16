@@ -1,0 +1,169 @@
+Group {
+ name JL_CleanplateMatrix
+ knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\nChannel = n\['Channel']\n\n\n\nif k == Channel:\n    \n    \n    method = n\['Channel'].value()\n\n    list_red = \[n\['R'],n\['RtoG'],n\['RtoB']]\n    list_green = \[n\['G'],n\['GtoR'],n\['GtoB']]\n    list_blue = \[n\['B'],n\['BtoR'],n\['BtoG']]\n    \n    if method == \"Red\":\n        \n        for i in list_red:\n            i.setVisible(True)\n            if i == n\['R']:\n                i.setValue(1)\n            else:\n                i.setValue(0)\n                \n        for i in list_green:\n            i.setVisible(False)\n        for i in list_blue:\n            i.setVisible(False)\n            \n    if method == \"Green\":\n        \n        for i in list_green:\n            i.setVisible(True)\n            if i == n\['G']:\n                i.setValue(1)\n            else:\n                i.setValue(0)\n                \n        for i in list_red:\n            i.setVisible(False)\n        for i in list_blue:\n            i.setVisible(False)\n            \n    if method == \"Blue\":\n        \n        for i in list_blue:\n            i.setVisible(True)\n            if i == n\['B']:\n                i.setValue(1)\n            else:\n                i.setValue(0)\n                \n        for i in list_red:\n            i.setVisible(False)\n        for i in list_green:\n            i.setVisible(False)"
+ tile_color 0x45a1ff
+ selected true
+ addUserKnob {20 JL_CleanplateMatrix}
+ addUserKnob {68 Channel t "Select the channel to be modified" M {Red Green Blue "" ""}}
+ addUserKnob {6 Result -STARTLINE}
+ Result true
+ addUserKnob {26 ""}
+ addUserKnob {41 white l "Match pick" t "Match luma and color with original" T Grade17.white}
+ addUserKnob {26 ""}
+ addUserKnob {7 R R -1 1}
+ R 1
+ addUserKnob {7 G +HIDDEN R -1 1}
+ G 1
+ addUserKnob {7 B +HIDDEN R -1 1}
+ B 1
+ addUserKnob {26 ""}
+ addUserKnob {7 GtoR +HIDDEN R -1 1}
+ addUserKnob {7 BtoR +HIDDEN R -1 1}
+ addUserKnob {7 RtoG R -1 1}
+ addUserKnob {7 BtoG +HIDDEN R -1 1}
+ addUserKnob {7 RtoB R -1 1}
+ addUserKnob {7 GtoB +HIDDEN R -1 1}
+ addUserKnob {26 ""}
+ addUserKnob {26 _2 l "" +STARTLINE T "JL_CleanplateMatrix v1.1 | Joserra Lastras 2023"}
+ addUserKnob {26 web l "" +STARTLINE T "<a href=\"https://www.joserralastras.com/\"><span style=\"color:#5f5f5f;\">www.joserralastras.com</a>"}
+}
+ Input {
+  inputs 0
+  name Source
+  xpos -657
+  ypos 418
+ }
+ Dot {
+  name Dot4
+  xpos -623
+  ypos 492
+ }
+set Nb472b800 [stack 0]
+ Dot {
+  name Dot29
+  xpos -390
+  ypos 492
+ }
+push $Nb472b800
+ ColorMatrix {
+  matrix {
+      {{parent.R} {parent.RtoG} {parent.RtoB}}
+      {{parent.GtoR} {parent.G} {parent.GtoB}}
+      {{parent.BtoR} {parent.BtoG} {parent.B}}
+    }
+  name ColorMatrix1
+  xpos -657
+  ypos 560
+ }
+ Dot {
+  name Dot30
+  xpos -623
+  ypos 613
+ }
+set Nb472ac00 [stack 0]
+ Shuffle {
+  red blue
+  green blue
+  alpha black
+  name Shuffle4
+  tile_color 0x9fffff
+  label "\[value in]"
+  xpos -559
+  ypos 770
+ }
+push $Nb472ac00
+ Shuffle {
+  red green
+  blue green
+  alpha black
+  name Shuffle3
+  tile_color 0x7fff00ff
+  label "\[value in]"
+  xpos -657
+  ypos 771
+ }
+push $Nb472ac00
+ Shuffle {
+  green red
+  blue red
+  alpha black
+  name Shuffle2
+  tile_color 0xff0000ff
+  label "\[value in]"
+  xpos -755
+  ypos 769
+ }
+ Switch {
+  inputs 3
+  which {{Channel}}
+  name Switch1
+  label "\[value which]"
+  xpos -657
+  ypos 894
+ }
+set Nb4729c00 [stack 0]
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge17
+  xpos -424
+  ypos 900
+ }
+ Grade {
+  white {1 1 1 1}
+  black_clamp false
+  name Grade17
+  xpos -424
+  ypos 968
+ }
+ set Cb4729400 [stack 0]
+push $Nb472b800
+ Dot {
+  name Dot5
+  xpos -1086
+  ypos 492
+ }
+ Dot {
+  name Dot3
+  xpos -1086
+  ypos 1150
+ }
+push $Nb472ac00
+ Dot {
+  name Dot2
+  xpos -877
+  ypos 613
+ }
+ Dot {
+  name Dot1
+  xpos -877
+  ypos 1035
+ }
+push $Nb4729c00
+clone $Cb4729400 {
+  xpos -657
+  ypos 968
+  selected false
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy1
+  xpos -657
+  ypos 1025
+ }
+ Switch {
+  inputs 2
+  which {{!Result}}
+  name Switch2
+  label "\[value which]"
+  xpos -657
+  ypos 1140
+ }
+ Output {
+  name Output1
+  xpos -657
+  ypos 1236
+ }
+end_group

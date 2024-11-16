@@ -1,0 +1,614 @@
+Group {
+ name LightBlur
+ inputs 2
+ tile_color 0xcc804eff
+ note_font "Bitstream Vera Sans"
+ addUserKnob {20 LightBlur}
+ addUserKnob {14 blur R 0 100}
+ blur 100
+ addUserKnob {41 filter T Blur1.filter}
+ addUserKnob {41 quality l "" -STARTLINE T Blur1.quality}
+ addUserKnob {26 ""}
+ addUserKnob {6 anamorphic +STARTLINE}
+ addUserKnob {6 normalize +STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {4 output M {result "effect only" "" "" ""}}
+ addUserKnob {20 Version}
+ addUserKnob {26 Description l "" +STARTLINE T "This node creates an exponential blur and plusses the value to your input."}
+ addUserKnob {26 ""}
+ addUserKnob {26 ReleaseNotes l "" +STARTLINE T "<font>Version Release: 1.0\n<br><br>\nRelease Notes: Initial release\n<br><br>\nAuthor: Tim Adams\n<br><br>\nLast Updated: 2024/08/24\n<br><br>\nRelease Date: 2024/08/24</font>"}
+}
+ Input {
+  inputs 0
+  name input
+  note_font "Bitstream Vera Sans"
+  xpos 685
+  ypos -1179
+ }
+ Dot {
+  name Dot23
+  note_font "Bitstream Vera Sans"
+  xpos 719
+  ypos -1043
+ }
+set N3573a8c0 [stack 0]
+ Dot {
+  name Dot21
+  note_font "Bitstream Vera Sans"
+  xpos 975
+  ypos -1043
+ }
+ Dot {
+  name Dot31
+  note_font "Bitstream Vera Sans"
+  xpos 975
+  ypos 296
+ }
+set N80b331a0 [stack 0]
+ Dot {
+  name Dot24
+  note_font "Bitstream Vera Sans"
+  xpos 975
+  ypos 547
+ }
+set N29662740 [stack 0]
+ Dot {
+  name Dot28
+  note_font "Bitstream Vera Sans"
+  xpos 975
+  ypos 728
+ }
+ Dot {
+  name Dot22
+  note_font "Bitstream Vera Sans"
+  xpos 975
+  ypos 942
+ }
+set Nb5f21660 [stack 0]
+ Dot {
+  name Dot30
+  note_font "Bitstream Vera Sans"
+  xpos 975
+  ypos 1289
+ }
+ Input {
+  inputs 0
+  name mask
+  note_font "Bitstream Vera Sans"
+  xpos -805
+  ypos 544
+  number 1
+ }
+ Dot {
+  name Dot25
+  note_font "Bitstream Vera Sans"
+  xpos -771
+  ypos 728
+ }
+set Nd87f3710 [stack 0]
+push $N29662740
+push $N3573a8c0
+add_layer {normalize normalize.red normalize.green normalize.blue normalize.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 normalize
+  fromInput2 {{0} B}
+  mappings "4 white -1 -1 normalize.red 0 0 white -1 -1 normalize.green 0 1 white -1 -1 normalize.blue 0 2 white -1 -1 normalize.alpha 0 3"
+  name Shuffle1
+  label "\[value in1]-->\[value out1]"
+  note_font "Bitstream Vera Sans"
+  xpos 685
+  ypos -983
+ }
+ Crop {
+  box {0 0 {input.width} {input.height}}
+  crop false
+  name Crop1
+  tile_color 0xa57aaaff
+  note_font "Bitstream Vera Sans"
+  xpos 685
+  ypos -904
+ }
+ Dot {
+  name Dot19
+  note_font "Bitstream Vera Sans"
+  xpos 719
+  ypos -805
+ }
+set N87f2720 [stack 0]
+ Blur {
+  channels rgba
+  size {{parent.Blur9.size.w/2} {parent.Blur9.size.h/2}}
+  filter {{Blur1.filter}}
+  quality {{Blur1.quality}}
+  crop false
+  name Blur10
+  note_font "Bitstream Vera Sans"
+  xpos 685
+  ypos -787
+ }
+ Multiply {
+  value {{Blur10.size>1?1:0}}
+  name Multiply1
+  note_font "Bitstream Vera Sans"
+  xpos 685
+  ypos -749
+ }
+ Dot {
+  name Dot20
+  note_font "Bitstream Vera Sans"
+  xpos 719
+  ypos 164
+ }
+push $N87f2720
+ Dot {
+  name Dot17
+  note_font "Bitstream Vera Sans"
+  xpos 589
+  ypos -805
+ }
+set N9cbdec20 [stack 0]
+ Blur {
+  channels rgba
+  size {{parent.Blur8.size.w/2} {parent.Blur8.size.h/2}}
+  filter {{Blur1.filter}}
+  quality {{Blur1.quality}}
+  crop false
+  name Blur9
+  note_font "Bitstream Vera Sans"
+  xpos 555
+  ypos -787
+ }
+ Multiply {
+  value {{Blur9.size>1?1:0}}
+  name Multiply2
+  note_font "Bitstream Vera Sans"
+  xpos 555
+  ypos -749
+ }
+ Dot {
+  name Dot18
+  note_font "Bitstream Vera Sans"
+  xpos 589
+  ypos 66
+ }
+push $N9cbdec20
+ Dot {
+  name Dot15
+  note_font "Bitstream Vera Sans"
+  xpos 472
+  ypos -805
+ }
+set N6085e610 [stack 0]
+ Blur {
+  channels rgba
+  size {{parent.Blur7.size.w/2} {parent.Blur7.size.h/2}}
+  filter {{Blur1.filter}}
+  quality {{Blur1.quality}}
+  crop false
+  name Blur8
+  note_font "Bitstream Vera Sans"
+  xpos 438
+  ypos -787
+ }
+ Multiply {
+  value {{Blur8.size>1?1:0}}
+  name Multiply3
+  note_font "Bitstream Vera Sans"
+  xpos 438
+  ypos -749
+ }
+ Dot {
+  name Dot16
+  note_font "Bitstream Vera Sans"
+  xpos 472
+  ypos -35
+ }
+push $N6085e610
+ Dot {
+  name Dot13
+  note_font "Bitstream Vera Sans"
+  xpos 330
+  ypos -805
+ }
+set Nd87f3110 [stack 0]
+ Blur {
+  channels rgba
+  size {{parent.Blur6.size.w/2} {parent.Blur6.size.h/2}}
+  filter {{Blur1.filter}}
+  quality {{Blur1.quality}}
+  crop false
+  name Blur7
+  note_font "Bitstream Vera Sans"
+  xpos 296
+  ypos -787
+ }
+ Multiply {
+  value {{Blur7.size>1?1:0}}
+  name Multiply4
+  note_font "Bitstream Vera Sans"
+  xpos 296
+  ypos -749
+ }
+ Dot {
+  name Dot14
+  note_font "Bitstream Vera Sans"
+  xpos 330
+  ypos -124
+ }
+push $Nd87f3110
+ Dot {
+  name Dot11
+  note_font "Bitstream Vera Sans"
+  xpos 203
+  ypos -805
+ }
+set Nea640660 [stack 0]
+ Blur {
+  channels rgba
+  size {{parent.Blur5.size.w/2} {parent.Blur5.size.h/2}}
+  filter {{Blur1.filter}}
+  quality {{Blur1.quality}}
+  crop false
+  name Blur6
+  note_font "Bitstream Vera Sans"
+  xpos 169
+  ypos -787
+ }
+ Multiply {
+  value {{Blur6.size>1?1:0}}
+  name Multiply5
+  note_font "Bitstream Vera Sans"
+  xpos 169
+  ypos -749
+ }
+ Dot {
+  name Dot12
+  note_font "Bitstream Vera Sans"
+  xpos 203
+  ypos -212
+ }
+push $Nea640660
+ Dot {
+  name Dot9
+  note_font "Bitstream Vera Sans"
+  xpos 93
+  ypos -805
+ }
+set N94b1c040 [stack 0]
+ Blur {
+  channels rgba
+  size {{parent.Blur4.size.w/2} {parent.Blur4.size.h/2}}
+  filter {{Blur1.filter}}
+  quality {{Blur1.quality}}
+  crop false
+  name Blur5
+  note_font "Bitstream Vera Sans"
+  xpos 59
+  ypos -787
+ }
+ Multiply {
+  value {{Blur5.size>1?1:0}}
+  name Multiply6
+  note_font "Bitstream Vera Sans"
+  selected true
+  xpos 59
+  ypos -749
+ }
+ Dot {
+  name Dot10
+  note_font "Bitstream Vera Sans"
+  xpos 93
+  ypos -311
+ }
+push $N94b1c040
+ Dot {
+  name Dot7
+  note_font "Bitstream Vera Sans"
+  xpos -17
+  ypos -805
+ }
+set N8a2bf2f0 [stack 0]
+ Blur {
+  channels rgba
+  size {{parent.Blur3.size.w/2} {parent.Blur3.size.h/2}}
+  filter {{Blur1.filter}}
+  quality {{Blur1.quality}}
+  crop false
+  name Blur4
+  note_font "Bitstream Vera Sans"
+  xpos -51
+  ypos -787
+ }
+ Multiply {
+  value {{Blur4.size>1?1:0}}
+  name Multiply7
+  note_font "Bitstream Vera Sans"
+  xpos -51
+  ypos -749
+ }
+ Dot {
+  name Dot8
+  note_font "Bitstream Vera Sans"
+  xpos -17
+  ypos -413
+ }
+push $N8a2bf2f0
+ Dot {
+  name Dot5
+  note_font "Bitstream Vera Sans"
+  xpos -127
+  ypos -805
+ }
+set Nc0231ed0 [stack 0]
+ Blur {
+  channels rgba
+  size {{parent.Blur2.size.w/2} {parent.Blur2.size.h/2}}
+  filter {{Blur1.filter}}
+  quality {{Blur1.quality}}
+  crop false
+  name Blur3
+  note_font "Bitstream Vera Sans"
+  xpos -161
+  ypos -787
+ }
+ Multiply {
+  value {{Blur3.size>1?1:0}}
+  name Multiply8
+  note_font "Bitstream Vera Sans"
+  xpos -161
+  ypos -749
+ }
+ Dot {
+  name Dot6
+  note_font "Bitstream Vera Sans"
+  xpos -127
+  ypos -509
+ }
+push $Nc0231ed0
+ Dot {
+  name Dot3
+  note_font "Bitstream Vera Sans"
+  xpos -237
+  ypos -805
+ }
+set Nb882beb0 [stack 0]
+ Blur {
+  channels rgba
+  size {{parent.Blur1.size.w/2} {parent.Blur1.size.h/2}}
+  filter {{Blur1.filter x1 3}}
+  quality {{Blur1.quality}}
+  crop false
+  name Blur2
+  note_font "Bitstream Vera Sans"
+  xpos -271
+  ypos -787
+ }
+ Multiply {
+  value {{Blur2.size>1?1:0}}
+  name Multiply9
+  note_font "Bitstream Vera Sans"
+  xpos -271
+  ypos -749
+ }
+ Dot {
+  name Dot4
+  note_font "Bitstream Vera Sans"
+  xpos -237
+  ypos -604
+ }
+push $Nb882beb0
+ Dot {
+  name Dot2
+  note_font "Bitstream Vera Sans"
+  xpos -347
+  ypos -805
+ }
+ Blur {
+  channels rgba
+  size {{parent.blur} {"parent.anamorphic? parent.blur/2 : parent.blur"}}
+  crop false
+  name Blur1
+  note_font "Bitstream Vera Sans"
+  xpos -381
+  ypos -787
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  bbox B
+  also_merge normalize
+  name Merge1
+  note_font "Bitstream Vera Sans"
+  xpos -381
+  ypos -608
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  bbox B
+  also_merge normalize
+  name Merge2
+  note_font "Bitstream Vera Sans"
+  xpos -381
+  ypos -513
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  bbox B
+  also_merge normalize
+  name Merge3
+  note_font "Bitstream Vera Sans"
+  xpos -381
+  ypos -417
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  bbox B
+  also_merge normalize
+  name Merge4
+  note_font "Bitstream Vera Sans"
+  xpos -381
+  ypos -315
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  bbox B
+  also_merge normalize
+  name Merge5
+  note_font "Bitstream Vera Sans"
+  xpos -381
+  ypos -216
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  bbox B
+  also_merge normalize
+  name Merge6
+  note_font "Bitstream Vera Sans"
+  xpos -381
+  ypos -128
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  bbox B
+  also_merge normalize
+  name Merge7
+  note_font "Bitstream Vera Sans"
+  xpos -381
+  ypos -39
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  bbox B
+  also_merge normalize
+  name Merge8
+  note_font "Bitstream Vera Sans"
+  xpos -381
+  ypos 62
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  bbox B
+  also_merge normalize
+  name Merge9
+  note_font "Bitstream Vera Sans"
+  xpos -381
+  ypos 160
+ }
+ Clamp {
+  channels alpha
+  name Clamp1
+  note_font "Bitstream Vera Sans"
+  xpos -381
+  ypos 207
+ }
+ Expression {
+  expr0 r/normalize.red
+  expr1 g/normalize.green
+  expr2 b/normalize.blue
+  name Expression1
+  note_font "Bitstream Vera Sans"
+  xpos -381
+  ypos 245
+  disable {{!parent.normalize}}
+ }
+push $N80b331a0
+ Switch {
+  inputs 2
+  which {{"!parent.blur? 0 : 1"}}
+  name Switch2
+  note_font "Bitstream Vera Sans"
+  xpos -381
+  ypos 292
+ }
+ Remove {
+  operation keep
+  channels rgba
+  name Remove1
+  note_font "Bitstream Vera Sans"
+  xpos -381
+  ypos 346
+ }
+ Dot {
+  name Dot26
+  note_font "Bitstream Vera Sans"
+  xpos -347
+  ypos 389
+ }
+set Nb1a2cb80 [stack 0]
+ Dot {
+  name Dot27
+  note_font "Bitstream Vera Sans"
+  xpos -537
+  ypos 389
+ }
+ Merge2 {
+  inputs 2
+  operation from
+  bbox B
+  name Merge10
+  note_font "Bitstream Vera Sans"
+  xpos -571
+  ypos 543
+ }
+push 0
+ Dissolve {
+  inputs 2+1
+  which 1
+  name Dissolve2
+  note_font "Bitstream Vera Sans"
+  xpos -571
+  ypos 718
+ }
+ Dot {
+  name Dot29
+  note_font "Bitstream Vera Sans"
+  xpos -537
+  ypos 1128
+ }
+push $Nd87f3710
+ Dot {
+  name Dot1
+  note_font "Bitstream Vera Sans"
+  xpos -771
+  ypos 942
+ }
+push $Nb1a2cb80
+push $Nb5f21660
+ Dissolve {
+  inputs 2+1
+  which 1
+  name Dissolve1
+  note_font "Bitstream Vera Sans"
+  xpos -381
+  ypos 932
+ }
+ Switch {
+  inputs 2
+  which {{parent.output}}
+  name Switch1
+  note_font "Bitstream Vera Sans"
+  xpos -381
+  ypos 1124
+ }
+ CopyBBox {
+  inputs 2
+  name CopyBBox1
+  note_font "Bitstream Vera Sans"
+  xpos -381
+  ypos 1285
+ }
+ Output {
+  name Output1
+  xpos -381
+  ypos 1483
+ }
+end_group
