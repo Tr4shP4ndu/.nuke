@@ -1,0 +1,545 @@
+Group {
+name SegmentAnything
+addUserKnob {20 SegmentAnythingTab l "Segment Anything" t "Segment Anything"}
+addUserKnob {26 outputOptions_divider l "<b>Output Options</b>"}
+addUserKnob {4 view l View M {"Final Result" "Encoded Matte" "" "" ""}}
+addUserKnob {6 detail_control l "Fast mode" +STARTLINE}
+detail_control true
+addUserKnob {6 detail l "Detail level" +INVISIBLE +STARTLINE}
+detail {{"\[\n    if \[exists this.input1] \{\n        if \[string equal \[metadata -n \[node this.input1] exr/nuke/sam/detailLevel] high] \{\n            return 0\n        \} else \{\n            return 1;\n        \}\n    \} else \{\n        return \[value detail_control]\n    \}\n]"}}
+addUserKnob {6 bypass_srgb l "Bypass sRGB conversion" +STARTLINE}
+addUserKnob {26 _1 l "<b>Control Points</b>"}
+addUserKnob {22 addPoint l "Add Point" T sam.add_point() +STARTLINE}
+addUserKnob {22 removePoint l "Remove Point" -STARTLINE T sam.remove_point()}
+addUserKnob {22 resetAllPoints l "Reset All" -STARTLINE T sam.reset_points()}
+addUserKnob {26 point_01_l l "Point 1" T " "}
+addUserKnob {12 point_01 l "" -STARTLINE}
+addUserKnob {6 point_01_e l enabled -STARTLINE}
+point_01_e true
+addUserKnob {6 point_01_s l subtractive -STARTLINE}
+addUserKnob {26 point_02_l l "Point 2" T " "}
+addUserKnob {12 point_02 l "" -STARTLINE}
+point_02 {0 25}
+addUserKnob {6 point_02_e l enabled -STARTLINE}
+point_02_e true
+addUserKnob {6 point_02_s l subtractive -STARTLINE}
+addUserKnob {26 point_03_l l "Point 3" T " "}
+addUserKnob {12 point_03 l "" -STARTLINE}
+point_03 {0 50}
+addUserKnob {6 point_03_e l enabled -STARTLINE}
+point_03_e true
+addUserKnob {6 point_03_s l subtractive -STARTLINE}
+addUserKnob {26 point_04_l l "Point 4" T " "}
+addUserKnob {12 point_04 l "" -STARTLINE}
+point_04 {0 75}
+addUserKnob {6 point_04_e l enabled -STARTLINE}
+point_04_e true
+addUserKnob {6 point_04_s l subtractive -STARTLINE}
+addUserKnob {26 point_05_l l "Point 5" +HIDDEN T " "}
+addUserKnob {12 point_05 l "" -STARTLINE +HIDDEN}
+point_05 {0 100}
+addUserKnob {6 point_05_e l enabled -STARTLINE +HIDDEN}
+point_05_e true
+addUserKnob {6 point_05_s l subtractive -STARTLINE +HIDDEN}
+addUserKnob {26 point_06_l l "Point 6" +HIDDEN T " "}
+addUserKnob {12 point_06 l "" -STARTLINE +HIDDEN}
+point_06 {0 125}
+addUserKnob {6 point_06_e l enabled -STARTLINE +HIDDEN}
+point_06_e true
+addUserKnob {6 point_06_s l subtractive -STARTLINE +HIDDEN}
+addUserKnob {26 point_07_l l "Point 7" +HIDDEN T " "}
+addUserKnob {12 point_07 l "" -STARTLINE +HIDDEN}
+point_07 {0 150}
+addUserKnob {6 point_07_e l enabled -STARTLINE +HIDDEN}
+point_07_e true
+addUserKnob {6 point_07_s l subtractive -STARTLINE +HIDDEN}
+addUserKnob {26 point_08_l l "Point 8" +HIDDEN T " "}
+addUserKnob {12 point_08 l "" -STARTLINE +HIDDEN}
+point_08 {0 175}
+addUserKnob {6 point_08_e l enabled -STARTLINE +HIDDEN}
+point_08_e true
+addUserKnob {6 point_08_s l subtractive -STARTLINE +HIDDEN}
+addUserKnob {26 overlay_controls l "<b>Overlay Controls</b>"}
+addUserKnob {41 white l "Overlay Colors" T Grade_Overlay.white}
+addUserKnob {41 disableOverlay l "Disable Overlay" T Grade_Overlay.disable}
+addUserKnob {26 preprocessing l <b>Pre-Processing</b>}
+addUserKnob {22 export_encoded_matte l "Export Encoded Matte" t "\t" T "sam_node = nuke.thisNode()\nsam_node.knob(\"view\").setValue(\"Encoded Matte\")\nwith nuke.root():\n  sam_node.setSelected(False)\n  text = nuke.createNode(\"Text2\", inpanel=False)\n  text.knob(\"message\").setValue(\"SAM - ENCODED MATTE\\ndetail level: \[metadata sam/detailLevel]\\nsource: \[file tail \[value \[topnode].file]]\")\n  text.knob(\"output\").setValue(\"rgb\")\n  text.knob(\"global_font_scale\").setValue(0.25)\n  text.knob(\"box\").setValue(\[128, 128, 1024, 1024])\n  text.knob(\"leading\").setValue(0.2)\n  text.knob(\"yjustify\").setValue(\"bottom\")\n  text.knob(\"enable_background\").setValue(True)\n  text.knob(\"background_color\").setValue(\[1, 0, 0, 1])\n  text.knob(\"background_border_x\").setValue(1024)\n  text.knob(\"background_border_y\").setValue(24)\n  text.setXYpos(sam_node.xpos() + 60, sam_node.ypos() + 60)\n  text.setInput(0, sam_node)\n  try:\n    text.knob(\"font\").setValue(\"Arial\", \"Regular\")\n  except ValueError:\n    pass\n  write = nuke.createNode(\"Write\", inpanel=False)\n  write.knob(\"channels\").setValue(\"rgba\")\n  write.knob(\"file_type\").setValue(\"exr\")\n  write.knob(\"datatype\").setValue(\"32 bit float\")\n  write.knob(\"metadata\").setValue(\"all metadata\")\n  write.setXYpos(sam_node.xpos() + 60, sam_node.ypos() + 120)\n  write.setInput(0, text)\n  sam_node.setSelected(True)\n" +STARTLINE}
+addUserKnob {20 "" n -1}
+addUserKnob {20 infoTab l Info}
+addUserKnob {26 toolName l "" +STARTLINE T "<font size='7'>SEGMENT ANYTHING</font><br>v1.0.0 | Released 2024-04-16"}
+addUserKnob {26 ""}
+addUserKnob {26 authorName l "" +STARTLINE T "Rafael Silva"}
+addUserKnob {26 authorMail l "" +STARTLINE T "<a href=\"mailto:rafael@rafael.ai\"><span style=\"color:#C8C8C8;\">rafael@rafael.ai</a>"}
+addUserKnob {26 ""}
+addUserKnob {26 credit l "" +STARTLINE T "<br>TorchScript port based on the official <b>Meta</b> implementation.<br><a href=\"https://github.com/facebookresearch/segment-anything\"><span style=\"color:#C8C8C8;\">https://segment-anything.com/</a><br>"}
+addUserKnob {26 ""}
+addUserKnob {26 thanks l "" +STARTLINE T "Don't hesitate to reach out with any bugs, suggestions, or questions."}
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode1
+ tile_color 0x444444ff
+ label "<center>ENCODED MATTE</center>"
+ note_font_size 24
+ note_font_color 0xddddddff
+ xpos 392
+ ypos 593
+ bdwidth 537
+ bdheight 398
+}
+Input {
+ inputs 0
+ name encoded_matte
+ xpos 730
+ ypos -1114
+ number 1
+}
+Assert {
+ expression {{"width == 1024 && height == 1024"}}
+ message "Please connect an 'encoded matte' generated by the SAM tool."
+ name Assert2
+ label "Is 1024x1024?"
+ xpos 730
+ ypos -832
+ disable {{"!\[exists parent.input1]"}}
+}
+Dot {
+ name Dot5
+ xpos 764
+ ypos -366
+}
+set Nf380450 [stack 0]
+Input {
+ inputs 0
+ name img
+ xpos 510
+ ypos -1114
+}
+Assert {
+ expression {{"\$nuke_version > 13.2"}}
+ message "Nuke13.2 or higher required."
+ name Assert1
+ xpos 510
+ ypos -970
+}
+Shuffle2 {
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ name Shuffle1
+ label "ensure rgba"
+ xpos 510
+ ypos -904
+}
+Crop {
+ box {0 0 {width} {height}}
+ crop false
+ name Crop1
+ xpos 510
+ ypos -826
+}
+Dot {
+ name Dot4
+ xpos 544
+ ypos -630
+}
+set Nf24e4b0 [stack 0]
+Reformat {
+ format "1024 1024 0 0 1024 1024 1 square_1K"
+ box_width 1024
+ box_height 1024
+ box_fixed true
+ resize distort
+ name Reformat1
+ xpos 620
+ ypos -616
+}
+Colorspace {
+ colorspace_out sRGB
+ name Colorspace1
+ xpos 620
+ ypos -538
+ disable {{parent.bypass_srgb x65 1 1}}
+}
+Dot {
+ name Dot3
+ xpos 654
+ ypos -462
+}
+set Nf8875f0 [stack 0]
+Dot {
+ name Dot1
+ xpos 874
+ ypos -462
+}
+Inference {
+ modelFile "\[lsearch -inline \[plugins -all sam_encoder_large.cat] *.cat]"
+ serialiseKnob {}
+ name Inference_SAM_Encoder_Large
+ tile_color 0xff8466ff
+ xpos 840
+ ypos -394
+}
+Switch {
+ inputs 2
+ which {{"\[exists parent.input1]"}}
+ name Switch2
+ xpos 840
+ ypos -298
+}
+Crop {
+ box {0 -16 1024 1024}
+ reformat true
+ intersect true
+ crop false
+ name Crop3
+ xpos 840
+ ypos -226
+}
+BlackOutside {
+ name BlackOutside2
+ xpos 840
+ ypos -130
+}
+set Nf76a780 [stack 0]
+Dot {
+ name Dot8
+ xpos 984
+ ypos -30
+}
+Dot {
+ name Dot9
+ xpos 984
+ ypos 42
+}
+Reformat {
+ inputs 0
+ type "to box"
+ box_width 48
+ box_height 2
+ box_fixed true
+ resize none
+ center false
+ name Reformat_points_row
+ xpos 290
+ ypos -945
+ postage_stamp true
+}
+Rectangle {
+ area {0 0 1 2}
+ color {{parent.point_01_e*parent.point_01/parent.width*1024} {parent.point_01_e*parent.point_01/parent.height*1024} {parent.point_01_s} 0}
+ name Rectangle1
+ xpos 290
+ ypos -850
+}
+Rectangle {
+ area {3 0 4 2}
+ color {{parent.point_02_e*parent.point_02/parent.width*1024} {parent.point_02_e*parent.point_02/parent.height*1024} {parent.point_02_s} 0}
+ name Rectangle2
+ xpos 290
+ ypos -802
+}
+Rectangle {
+ area {6 0 7 2}
+ color {{parent.point_03_e*parent.point_03/parent.width*1024} {parent.point_03_e*parent.point_03/parent.height*1024} {parent.point_03_s} 0}
+ name Rectangle3
+ xpos 290
+ ypos -754
+}
+Rectangle {
+ area {9 0 10 2}
+ color {{parent.point_04_e*parent.point_04/parent.width*1024} {parent.point_04_e*parent.point_04/parent.height*1024} {parent.point_04_s} 0}
+ name Rectangle4
+ xpos 290
+ ypos -706
+}
+Rectangle {
+ area {12 0 13 2}
+ color {{parent.point_05_e*parent.point_05/parent.width*1024} {parent.point_05_e*parent.point_05/parent.height*1024} {parent.point_05_s} 0}
+ name Rectangle5
+ xpos 290
+ ypos -658
+}
+Rectangle {
+ area {15 0 16 2}
+ color {{parent.point_06_e*parent.point_06/parent.width*1024} {parent.point_06_e*parent.point_06/parent.height*1024} {parent.point_06_s} 0}
+ name Rectangle6
+ xpos 290
+ ypos -610
+}
+Rectangle {
+ area {18 0 19 2}
+ color {{parent.point_07_e*parent.point_07/parent.width*1024} {parent.point_07_e*parent.point_07/parent.height*1024} {parent.point_07_s} 0}
+ name Rectangle7
+ xpos 290
+ ypos -562
+}
+Rectangle {
+ area {21 0 22 2}
+ color {{parent.point_08_e*parent.point_08/parent.width*1024} {parent.point_08_e*parent.point_08/parent.height*1024} {parent.point_08_s} 0}
+ name Rectangle8
+ xpos 290
+ ypos -514
+}
+TransformMasked {
+ channels {-rgba.red rgba.green -rgba.blue none}
+ translate {1 0}
+ center {512 1.5}
+ name Transform1
+ xpos 290
+ ypos -466
+}
+TransformMasked {
+ channels {-rgba.red -rgba.green rgba.blue none}
+ translate {2 0}
+ center {512 1.5}
+ name Transform2
+ xpos 290
+ ypos -418
+}
+Expression {
+ expr3 "r + g + b"
+ name Expression1
+ label "squash all into alpha"
+ xpos 290
+ ypos -376
+}
+Reformat {
+ type "to box"
+ box_width 1024
+ box_height 1040
+ box_fixed true
+ resize none
+ center false
+ black_outside true
+ name Reformat5
+ xpos 290
+ ypos -322
+}
+Dot {
+ name Dot2
+ xpos 764
+ ypos -126
+}
+set Na399b350 [stack 0]
+push $Nf76a780
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge3
+ xpos 840
+ ypos -58
+}
+Crop {
+ box {0 0 1024 1040}
+ crop false
+ name Crop5
+ xpos 840
+ ypos -10
+}
+Inference {
+ modelFile "\[lsearch -inline \[plugins -all sam_decoder_large.cat] *.cat]"
+ serialiseKnob {}
+ name Inference_SAM_Decoder_Large
+ tile_color 0xff8466ff
+ xpos 840
+ ypos 38
+}
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 mask.a
+ bbox B
+ name Copy3
+ xpos 840
+ ypos 104
+}
+push $Nf380450
+push $Nf8875f0
+Inference {
+ modelFile "\[lsearch -inline \[plugins -all sam_encoder_small.cat] *.cat]"
+ serialiseKnob {}
+ name Inference_SAM_Encoder_Small
+ tile_color 0xff8466ff
+ xpos 620
+ ypos -394
+}
+Switch {
+ inputs 2
+ which {{"\[exists parent.input1]"}}
+ name Switch1
+ xpos 620
+ ypos -298
+}
+Crop {
+ box {0 -16 1024 1024}
+ reformat true
+ intersect true
+ crop false
+ name Crop2
+ xpos 620
+ ypos -226
+}
+BlackOutside {
+ name BlackOutside1
+ xpos 620
+ ypos -130
+}
+set Nee91de0 [stack 0]
+Dot {
+ name Dot7
+ xpos 764
+ ypos -30
+}
+Dot {
+ name Dot6
+ xpos 764
+ ypos 66
+}
+push $Na399b350
+push $Nee91de0
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge1
+ xpos 620
+ ypos -58
+}
+Crop {
+ box {0 0 1024 1040}
+ crop false
+ name Crop4
+ xpos 620
+ ypos -10
+}
+Inference {
+ modelFile "\[lsearch -inline \[plugins -all sam_decoder_small.cat] *.cat]"
+ serialiseKnob {}
+ name Inference_SAM_Decoder_Small
+ tile_color 0xff8466ff
+ xpos 620
+ ypos 38
+}
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 mask.a
+ bbox B
+ name Copy2
+ xpos 620
+ ypos 104
+}
+Switch {
+ inputs 2
+ which {{!parent.detail}}
+ name Switch_Detail
+ xpos 620
+ ypos 206
+}
+Crop {
+ box {0 16 1024 1040}
+ reformat true
+ intersect true
+ crop false
+ name Crop6
+ xpos 620
+ ypos 278
+}
+set Neee2930 [stack 0]
+Reformat {
+ type "to box"
+ box_width {{parent.width}}
+ box_height {{parent.height}}
+ box_fixed true
+ resize distort
+ name Reformat2
+ xpos 620
+ ypos 350
+}
+push $Neee2930
+push $Nf24e4b0
+Copy {
+ inputs 2
+ from0 mask.a
+ to0 mask.a
+ from1 -mask.a
+ to1 -mask.a
+ bbox B
+ name Copy4
+ xpos 510
+ ypos 320
+}
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 rgba.alpha
+ from1 -mask.a
+ to1 -mask.a
+ bbox B
+ name Copy1
+ xpos 510
+ ypos 392
+}
+Grade {
+ white {0.1 0.1 1.5 1}
+ maskChannelInput rgba.alpha
+ name Grade_Overlay
+ xpos 510
+ ypos 488
+}
+Crop {
+ box {0 0 1024 1024}
+ reformat true
+ intersect true
+ crop false
+ name Crop7
+ xpos 510
+ ypos 686
+ disable {{!parent.view}}
+}
+Shuffle2 {
+ fromInput1 {{0} B}
+ in1 mask
+ fromInput2 {{0} B}
+ mappings "4 white -1 -1 rgba.red 0 0 mask.a 0 0 rgba.alpha 0 3 mask.a 0 0 rgba.green 0 1 mask.a 0 0 rgba.blue 0 2"
+ name Shuffle4
+ xpos 510
+ ypos 734
+ disable {{!parent.view}}
+}
+Grid {
+ output rgb
+ opacity 0.4
+ number 16
+ name Grid1
+ xpos 510
+ ypos 782
+ disable {{!parent.view}}
+}
+ModifyMetaData {
+ metadata {
+  {set sam/detailLevel "\[expr \{\[value parent.detail] == \"false\" ? \"high\": \" low\"\}]"}
+ }
+ name ModifyMetaData1
+ xpos 510
+ ypos 854
+}
+Output {
+ name Output1
+ xpos 510
+ ypos 1046
+}
+StickyNote {
+ inputs 0
+ name StickyNote1
+ label "<Left>\nSome of this is not really needed, but now\nthe encoded matte looks fancy!\n\nFile size stays almost the same\ndue to the compression."
+ xpos 657
+ ypos 771
+}
+StickyNote {
+ inputs 0
+ name StickyNote2
+ label "<left><h3>Ugly hack</h3>\n\nIt's not the prettiest solution, but other methods,\nlike directly linking points in the Inference node,\nwouldn't reload the model quickly enough. This\nwould cause Nuke to completely skip the Inference step.\n\nUsing a clever trick like a single Expression to draw\nall points as pixels, instead of stacking Rectangles,\nmight also lead to a problem where no points are\nsent to the Inference node, resulting in an empty mask.\n\n"
+ xpos -38
+ ypos -953
+}
+end_group

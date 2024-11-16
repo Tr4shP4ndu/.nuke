@@ -1,3 +1,3 @@
 import nuke
 
-nuke.pluginAddPath(["./PyroBox", "./Resources", "./PyroThon"])
+nuke.pluginAddPath(["./PyroBox", "./Resources", "./PyroThon", "Cattery"])

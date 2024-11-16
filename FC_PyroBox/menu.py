@@ -4,6 +4,7 @@ import os
 import glob
 import sys
 from pathlib import Path
+nuke.pluginAddPath('Cattery')
 nuke.pluginAddPath('PyroThon')
 import load_pyrobox
 
