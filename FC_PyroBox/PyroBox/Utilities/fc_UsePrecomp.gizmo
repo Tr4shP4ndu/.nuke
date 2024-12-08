@@ -1,0 +1,52 @@
+Group {
+ inputs 2
+ name fc_UsePrecomp
+ tile_color 0x215e1300
+ label "\[if \{\[value this.which] == 0 || \[value this.disable] == \"true\"\} \{\n    return \"\[knob this.tile_color 0x9c0000ff]\"\n\} else \{\n    return \"\[knob this.tile_color 0x215e1300]\"\n\}]"
+ note_font "Verdana Bold"
+ note_font_color 0xffb800ff
+ selected true
+ addUserKnob {20 Version}
+ addUserKnob {26 node_title l "" +STARTLINE T "<font size = 5>Use PreComp\n"}
+ addUserKnob {26 made_by l "" +STARTLINE T "<font color = '#eba834'><b>by Filipe Correia                           "}
+ addUserKnob {26 text l "" +STARTLINE}
+ addUserKnob {22 on l "<p style='color:#07911a'>ON</p>" T "thisKnob = nuke.thisKnob()\nswitch = nuke.toNode('UsePrecomp')\n\n\n# Toggle the label and switch value\nstates = \{\n    \"ON\": (\"<p style='color:#e31414'>OFF</p>\", 0),\n    \"OFF\": (\"<p style='color:#07911a'>ON</p>\", 1)\n\}\n\n\nfor state, (label, value) in states.items():\n    if state in thisKnob.label():\n        thisKnob.setLabel(label)\n        switch.knob('which').setValue(value)\n        break" +STARTLINE}
+ addUserKnob {41 which l "" -STARTLINE T UsePrecomp.which}
+ addUserKnob {26 ""}
+}
+ Input {
+  inputs 0
+  name precomp
+  tile_color 0x215e13ff
+  note_font "Verdana Bold"
+  note_font_color 0xffb800ff
+  xpos -21
+  ypos 13
+  number 1
+ }
+ Input {
+  inputs 0
+  name comp
+  tile_color 0x9c0000ff
+  note_font "Verdana Bold"
+  note_font_color 0xffb800ff
+  xpos -195
+  ypos -65
+ }
+ Switch {
+  inputs 2
+  which 1
+  name UsePrecomp
+  tile_color 0x9c0000ff
+  label "\[if \{\[value this.which] == 0 || \[value this.disable] == \"true\"\} \{\n    return \"\[knob this.tile_color 0x9c0000ff]\"\n\} else \{\n    return \"\[knob this.tile_color 0x215e1300]\"\n\}]"
+  note_font "Verdana Bold"
+  note_font_color 0xffb800ff
+  xpos -195
+  ypos 13
+ }
+ Output {
+  name Output1
+  xpos -195
+  ypos 95
+ }
+end_group

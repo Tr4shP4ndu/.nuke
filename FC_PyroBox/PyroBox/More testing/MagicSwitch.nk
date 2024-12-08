@@ -1,0 +1,54 @@
+set cut_paste_input [stack 0]
+version 12.2 v11
+push $cut_paste_input
+Group {
+ name MagicSwitch
+ onCreate "## Fixed variables\n#this_node = nuke.thisNode()\n\n## Dynamic variables\n#inputCheck0 = nuke.thisNode().input(0)\n#inputCheck1 = nuke.thisNode().input(1)\n\n#if inputCheck0 != None:\n#    dependant0 = nuke.thisNode().input(0).name()\n#    nuke.thisNode().knob('input0UTXT').setValue(dependant0)\n#else:\n#    this_node.knob('input0UTXT').setValue(\"Connect input 0 to set link\")\n#if inputCheck1 != None:\n#    dependant1 = nuke.thisNode().input(1).name()\n#    nuke.thisNode().knob('input1UTXT').setValue(dependant1)\n#else:\n#    this_node.knob('input1UTXT').setValue(\"Connect input 1 to set link\")"
+ knobChanged "## Fixed variables\nthis_node = nuke.thisNode()\nthis_knob = nuke.thisKnob()\nwhich = int(this_node.knob('whichKNB').getValue())\ninput0 = this_node.knob('input0UTXT').getValue()\ninput1 = this_node.knob('input1UTXT').getValue()\ntarget0 = nuke.toNode(input0)\ntarget1 = nuke.toNode(input1)\nstate = this_node.knob('disable').getValue()\n\n## Dynamic variables\nif this_knob.name() in (\"inputChange\"):\n    inputCheck0 = nuke.thisNode().input(0)\n    inputCheck1 = nuke.thisNode().input(1)\n    \n    if inputCheck0 != None:\n        dependant0 = nuke.thisNode().input(0).name()\n        nuke.thisNode().knob('input0UTXT').setValue(dependant0)\n    if inputCheck1 != None:\n        dependant1 = nuke.thisNode().input(1).name()\n        nuke.thisNode().knob('input1UTXT').setValue(dependant1)\n\n## Checks if the which knob has been used and sets input to match\nif this_knob.name() in (\"whichKNB\"):\n    if state == False:\n        if which == 0:\n            this_node.setInput(0, target0)\n            this_node.setInput(1, None)\n        elif which == 1:\n            this_node.setInput(0, None)   \n            this_node.setInput(1, target1)   \n        else:\n            this_node.setInput(0, None)  \n\n## Checks if the disable knob has been used and sets input to match which value\nif this_knob.name() in (\"disable\"):\n    if state == True:\n        if input0 != \"\":\n            this_node.setInput(0, target0)\n            this_node.setInput(1, None)\n        else:\n            this_node.setInput(0, None)  \n    elif state == False:\n        if which == 0:\n            this_node.setInput(0, target0)\n            this_node.setInput(1, None)\n        elif which == 1:\n            this_node.setInput(0, None)\n            this_node.setInput(1, target1)   \n        else:\n            this_node.setInput(0, None)  \n            this_node.setInput(1, None)"
+ autolabel "nuke.thisNode().name() + ('\\n' + str(int(nuke.thisNode()\['whichKNB'].getValue())))"
+ selected true
+ xpos -106
+ ypos -189
+ addUserKnob {20 optionsTAB l Options}
+ addUserKnob {7 whichKNB l Witch t "Pick which input to use for the linked nodes below"}
+ whichKNB 1
+ addUserKnob {26 ""}
+ addUserKnob {1 input0UTXT l "Link 0" t "Type in the node name you want this input to connect to, or connect the input to the node and hit link to automatically populate the field"}
+ input0UTXT "Connect input 0 to set link"
+ addUserKnob {1 input1UTXT l "Link 1" t "Type in the node name you want this input to connect to, or connect the input to the node and hit link to automatically populate the field"}
+ input1UTXT "Connect input 1 to set link"
+ addUserKnob {22 resetBTN l Reset T "nuke.thisNode().setInput(0, None)\nnuke.thisNode().setInput(1, None)\nnuke.thisNode().knob('input0UTXT').setValue(\"Connect input 0 to set link\")\nnuke.thisNode().knob('input1UTXT').setValue(\"Connect input 1 to set link\")\n" +STARTLINE}
+ addUserKnob {20 infoTAB l Info}
+ addUserKnob {26 aboutTXT l "&nbsp;" T "<h3>About</h3> \n<p>This is a switch that uses two dynamically connecting inputs.\n<br>Because it can disconnect a pipe completely, it is often faster to use in large scripts</p> \n<hr>\n <h3>How To Use</h3> \n<p>Step 1: Connect the 0 input to the node you want the 0 input to be</p>\n<p>Step 2: Connect the 1 input to the node you want the 1 input to be </p>\n<p>Step 3: Change the Which knob to toggle between inputs and/or disable the node</p>\n<hr>\n\n"}
+ addUserKnob {26 help1TXT l "&nbsp;" T "Press the "}
+ addUserKnob {22 helpBTN l Help -STARTLINE T "nukescripts.start(\"https://www.hiramgifford.com/nuke-tools-and-scripts/nuke-magic-switch\")"}
+ addUserKnob {26 help2TXT l "&nbsp;" -STARTLINE T "button to view the full documentation"}
+ addUserKnob {26 classTXT l "&nbsp;" T "<font color=grey><i>MagicSwitch</i>"}
+ addUserKnob {26 versionTXT l "&nbsp;" -STARTLINE T "<font color=grey><i>v1.0</i>"}
+ addUserKnob {26 infoTXT l "&nbsp;" T "<font color=grey><i>Hiram Gifford - 02/10/2023 - hiramgifford.com</i>"}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos 178
+  ypos -1
+  number 1
+ }
+ Input {
+  inputs 0
+  name Input0
+  xpos 0
+ }
+ Switch {
+  inputs 2
+  which {{whichKNB}}
+  name InternalSwitch
+  xpos 86
+  ypos 168
+ }
+ Output {
+  name Output
+  xpos 86
+  ypos 315
+ }
+end_group

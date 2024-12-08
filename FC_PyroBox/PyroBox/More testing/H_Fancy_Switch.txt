@@ -1,0 +1,106 @@
+set cut_paste_input [stack 0]
+version 11.3 v3
+push $cut_paste_input
+Group {
+ name H_Fancy_Switch
+ tile_color 0x607aadff
+ gl_color 0xff
+ selected true
+ xpos -410
+ ypos -91
+ addUserKnob {20 User}
+ addUserKnob {41 Input0 l "Input 0 Properbility" T Switch_Ctrl.Input0}
+ addUserKnob {41 Input1 l "Input 1 Properbility" T Switch_Ctrl.Input1}
+ addUserKnob {41 Input2 l "Input 2 Properbility" T Switch_Ctrl.Input2}
+ addUserKnob {41 Input3 l "Input 3 Properbility" T Switch_Ctrl.Input3}
+ addUserKnob {26 ""}
+ addUserKnob {41 seed T Switch_Ctrl.seed}
+ addUserKnob {41 frequency l "switch every this many frames" T Switch_Ctrl.frequency}
+ addUserKnob {41 invalid l "Invalid Properbility check" T Switch_Ctrl.invalid}
+ addUserKnob {26 ""}
+ addUserKnob {41 Switch l "Switch output" T Switch_Ctrl.Switch}
+ addUserKnob {26 ""}
+ addUserKnob {26 about l "" +STARTLINE T "by Han Cao\nhancaofx@gmail.com\nShoot me ideas and be friends.\nHappy Comping"}
+}
+ Input {
+  inputs 0
+  name Input3
+  xpos -418
+  ypos -237
+  number 3
+ }
+ Dot {
+  name Dot6
+  xpos -405
+  ypos -160
+ }
+ Input {
+  inputs 0
+  name Input2
+  xpos -493
+  ypos -245
+  number 2
+ }
+ Dot {
+  name Dot5
+  xpos -459
+  ypos -163
+ }
+ Input {
+  inputs 0
+  name Input1
+  xpos -563
+  ypos -241
+  number 1
+ }
+ Dot {
+  name Dot4
+  xpos -511
+  ypos -170
+ }
+ Input {
+  inputs 0
+  name Input0
+  xpos -642
+  ypos -242
+ }
+ Dot {
+  name Dot1
+  xpos -571
+  ypos -165
+ }
+ Switch {
+  inputs 4
+  which {{parent.Switch_Ctrl.Switch}}
+  name Switch3
+  xpos -493
+  ypos -72
+ }
+ Output {
+  name Output1
+  xpos -493
+  ypos 28
+ }
+ NoOp {
+  inputs 0
+  name Switch_Ctrl
+  xpos -703
+  ypos -78
+  addUserKnob {20 User}
+  addUserKnob {7 Input0 l "Input 0 Properbility"}
+  Input0 {{(1-Input1-Input2-Input3)>=0?(1-Input1-Input2-Input3):0}}
+  addUserKnob {7 Input1 l "Input 1 Properbility"}
+  addUserKnob {7 Input2 l "Input 2 Properbility"}
+  addUserKnob {7 Input3 l "Input 3 Properbility"}
+  addUserKnob {26 ""}
+  addUserKnob {7 seed R 0 1000}
+  seed 180
+  addUserKnob {3 frequency l "switch every this many frames"}
+  frequency 1
+  addUserKnob {6 invalid l "Invalid Properbility check" +STARTLINE}
+  invalid {{(1-Input1-Input2-Input3)<0||Input1<0||Input2<0||Input3<0}}
+  addUserKnob {26 ""}
+  addUserKnob {3 Switch l "Switch output"}
+  Switch {{"random((int(frame/frequency)*frequency+seed*100))<Input0?0:\nrandom((int(frame/frequency)*frequency+seed*100))<(Input0+Input1)?1:\nrandom((int(frame/frequency)*frequency+seed*100))<(Input0+Input1+Input2)?2:3"}}
+ }
+end_group
