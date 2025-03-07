@@ -1,0 +1,368 @@
+set cut_paste_input [stack 0]
+version 14.0 v6
+push $cut_paste_input
+Group {
+ name EZ_EdgeRoughen1
+ knobChanged "import nuke\n\ngroup = nuke.thisNode()\nk = nuke.thisKnob()\naddTrack = group\['addtrack']\nreference_name = group\['trackerName'].value()\ntracker_node = nuke.toNode(reference_name)\nblank = \"noTracker\"\n\nif k.name() == \"addtrack\":\n    group\['selectNode'].setVisible(k.value())\n    group\['trackerName'].setVisible(k.value())      \n    group\['mb'].setVisible(k.value())       \n    group\['shutter'].setVisible(k.value())  \n    if addTrack.value() and group\['exists'].value():\n        group\['label'].setValue(\"Tracking:\"+ reference_name)          \n        group\['tile_color'].setValue(0x5e192eff)\n        group\['trackingData'].setVisible(True)\n    else:\n        group\['label'].setValue(\"\")          \n        group\['tile_color'].setValue(0x992a4bff)                              \n        group\['trackingData'].setVisible(False)        \n        \nif k.name() == \"trackerName\":\n    if k.value() != \"\":\n        group.node('NoisePattern1')\['trackerName'].setValue(reference_name)\n    else:\n        group.node('NoisePattern1')\['trackerName'].setValue(blank)\n        \n    if tracker_node is None:\n        group\['trackerName'].setLabel(\"<font color=#FA466A><b> ><b\\>\")\n        group\['label'].setValue(\"\")            \n        group\['exists'].setValue(False)\n        group\['tile_color'].setValue(0x992a4bff)  \n        group\['trackingData'].setVisible(False)        \n    else:\n        group\['trackerName'].setLabel(\" >\")\n        group\['label'].setValue(\"Tracking:\"+ reference_name)         \n        group\['exists'].setValue(True)\n        if addTrack.value() == True:\n            group\['tile_color'].setValue(0x5e192eff)\n            group\['trackingData'].setVisible(True)\n\n"
+ tile_color 0x992a4bff
+ note_font "DejaVu Sans"
+ selected true
+ xpos -1329
+ ypos -763
+ addUserKnob {20 User l EdgeRoughen}
+ addUserKnob {26 text l "<font color=#D58989> @b;Fractal Distort"}
+ addUserKnob {41 size_1 l "Noise Size" T NoisePattern1.size}
+ addUserKnob {41 uv_scale l "Distort Amount" T IDistortPixels.uv_scale}
+ addUserKnob {41 mix l "Core Mix" T MergeCore1.mix}
+ addUserKnob {7 PreErode l "Erode/Dilate Core" R -5 5}
+ addUserKnob {41 size l Blur T Blur1.size}
+ addUserKnob {26 text_2 l "" +STARTLINE T " "}
+ addUserKnob {26 text_1 l "<font color=#D58989> @b;Noise Parameters"}
+ addUserKnob {41 type l Type T NoisePattern1.type}
+ addUserKnob {41 zoffset l Z T NoisePattern1.zoffset}
+ addUserKnob {41 octaves l Octaves T NoisePattern1.octaves}
+ addUserKnob {41 nyquist l "clip at Nyquist limit" -STARTLINE T NoisePattern1.nyquist}
+ addUserKnob {41 lacunarity l Lacunarity T NoisePattern1.lacunarity}
+ addUserKnob {41 gain l Gain T NoisePattern1.gain}
+ addUserKnob {41 gamma l Gamma T NoisePattern1.gamma}
+ addUserKnob {26 text_4 l "" +STARTLINE T " "}
+ addUserKnob {26 text_3 l "<font color=#D58989> @b; Tracking"}
+ addUserKnob {6 addtrack l "Track Pattern?" +STARTLINE}
+ addUserKnob {1 trackerName l "<font color=#FA466A><b> ><b\\>" -STARTLINE +HIDDEN}
+ addUserKnob {22 selectNode l "Select 2D" -STARTLINE +HIDDEN T "group = nuke.thisNode()\nwith nuke.root():\n\tTracker = nuke.selectedNode()\['name'].value()\ngroup\['trackerName'].setValue(Tracker)"}
+ addUserKnob {6 exists -STARTLINE +INVISIBLE}
+ addUserKnob {26 text_19 l "" +STARTLINE T " "}
+ addUserKnob {6 mb l "Add Motionblur?" +HIDDEN +STARTLINE}
+ addUserKnob {7 shutter l Shutter -STARTLINE +HIDDEN R 0 2}
+ shutter 0.5
+ addUserKnob {20 trackingData l "" +STARTLINE +HIDDEN n 1}
+ trackingData 0
+ addUserKnob {41 translate l Translate T NoisePattern1.translate}
+ addUserKnob {41 rotate l Rotate T NoisePattern1.rotate}
+ addUserKnob {41 scale l Scale T NoisePattern1.scale}
+ addUserKnob {41 skewX l "Skew X" T NoisePattern1.skewX}
+ addUserKnob {41 skewY l "Skew Y" T NoisePattern1.skewY}
+ addUserKnob {26 ""}
+ addUserKnob {41 center l Center T NoisePattern1.center}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {26 ""}
+ addUserKnob {26 txt l "" +STARTLINE T "<font color=#E3C0C0> <font size=3> v4.3 | <font size=1> Victor Rouillard &copy; "}
+ addUserKnob {20 About}
+ addUserKnob {26 text_5 l "<font color=#D58989> @b;About"}
+ addUserKnob {26 text_6 l "" +STARTLINE T "This tool is part of the <strong>EZ_Toolset</strong> & was made to allow its users to have\n"}
+ addUserKnob {26 text_20 l "" +STARTLINE T "control over breaking up edges that are too clean (i.e. a roto that lacks detail).\n"}
+ addUserKnob {26 text_7 l "<font color=#D58989> @b;Inputs"}
+ addUserKnob {26 text_8 l Matte: T "This input serves as the main input of the node. This will input the\nMatte data to be broken down through the processes of this tool."}
+ addUserKnob {26 text_10 l "" +STARTLINE T " "}
+ addUserKnob {26 text_9 l Mask: T "The second input serves as the guidelines on where the node will apply\nits process over the source. If left empty, the Mask input will do nothing."}
+ addUserKnob {26 text_11 l "" +STARTLINE T " "}
+ addUserKnob {26 text_12 l "<font color=#D58989> @b;Knobs"}
+ addUserKnob {26 text_13 l Fractal: T "These knobs allow the user to tweak the size and strength of\nthe distorsion that will be applied to the Matte. You can also bring\nback the core of the input Matte and blur the result in this section."}
+ addUserKnob {26 text_14 l "" +STARTLINE T " "}
+ addUserKnob {26 text_15 l Noise: T "This section of knobs serve as the main parameters of the noise\npattern applied to the Matte. You can change its Seed (through\nchanging the Z knob), type of noise and so on with these knobs."}
+ addUserKnob {26 text_16 l "" +STARTLINE T " "}
+ addUserKnob {26 text_17 l "<font color=#D58989> @b;Tracking"}
+ addUserKnob {26 text_18 l "" +STARTLINE T "This section allows the user to track the distorsion applied to the matte directly\nin this node. Checking \"Track Pattern?\" will reveal a string knob where you can\nset the name of the 2D node that you wish to apply tracking from. \n\nIf you wish to use tracking data from a non-tracked roto, I strongly suggest\nusing the EZ_RotoTracker in order to export tracking data from roto\npoints and then using the processed Tracker as tracking data for this tool."}
+}
+ Transform {
+  inputs 0
+  translate {{parent.NoisePattern1.translate} {parent.NoisePattern1.translate}}
+  rotate {{parent.NoisePattern1.rotate}}
+  scale {{parent.NoisePattern1.scale}}
+  skewX {{parent.NoisePattern1.skewX}}
+  skewY {{parent.NoisePattern1.skewY}}
+  center {2093 846}
+  shutteroffset centred
+  name Transform2D_1
+  xpos -190
+  ypos 155
+ }
+ Dot {
+  name Dot5
+  xpos -156
+  ypos 915
+ }
+ Input {
+  inputs 0
+  name InputMatte
+  xpos 0
+  ypos -666
+ }
+ Dot {
+  name Dot7
+  xpos 34
+  ypos -307
+ }
+set N72830000 [stack 0]
+ AdjBBox {
+  name AdjBBox1
+  xpos 0
+  ypos -194
+ }
+ Dilate {
+  channels alpha
+  size {{parent.PreErode}}
+  name DilateMatte1
+  xpos 0
+  ypos -133
+ }
+ Dot {
+  name Dot2
+  xpos 34
+  ypos -20
+ }
+set N72830c00 [stack 0]
+ Dot {
+  name Dot4
+  xpos 372
+  ypos -20
+ }
+set N72831000 [stack 0]
+ Dilate {
+  channels alpha
+  size 0.05
+  name DilateCore1
+  xpos 529
+  ypos -30
+ }
+ Grade {
+  channels alpha
+  blackpoint 0.8
+  white_clamp true
+  name GradeCore1
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 529
+  ypos 614
+ }
+ Blur {
+  channels alpha
+  size 1
+  name BlurCore1
+  knobChanged "if nuke.thisKnob().name() == 'useLifetime':\n    expression = '\\n' + 'Lifetime \[value this.lifetimeStart] - \[value this.lifetimeEnd]'\n    label = nuke.thisNode().knob('label').value()\n    if nuke.thisKnob().value() == 1:\n        nuke.thisNode().knob('label').setValue(label + expression)\n    else:\n        label = label.replace(expression, '')\n        nuke.thisNode().knob('label').setValue(label)"
+  label "\[value size]"
+  selected true
+  xpos 529
+  ypos 736
+ }
+ Input {
+  inputs 0
+  name InputMask
+  xpos -629
+  ypos -666
+  number 1
+ }
+ Invert {
+  name InvertMask1
+  xpos -629
+  ypos 506
+ }
+push $N72831000
+ Dot {
+  name Dot9
+  xpos 372
+  ypos 316
+ }
+set N27b0e800 [stack 0]
+ Expression {
+  expr0 "x / (width-0.5)"
+  expr1 "y / (height-0.5)"
+  expr2 0
+  expr3 1
+  name ExpressionSTMAP1
+  xpos 209
+  ypos 312
+ }
+set N27b0ec00 [stack 0]
+ Dot {
+  name Dot8
+  xpos 243
+  ypos 516
+ }
+push $N72830c00
+ Remove {
+  channels alpha
+  name RemoveAlpha1
+  xpos 0
+  ypos 52
+ }
+add_layer {noiseUV noiseUV.u noiseUV.v}
+ Noise {
+  output {noiseUV.u -noiseUV.v}
+  cliptype none
+  type turbulence
+  size 10
+  octaves 2
+  lacunarity 5
+  gain 1
+  gamma 1
+  translate {{"trackCheck + trackerExists + trackerTranslateExists == 3 ? \[value trackerName].translate.x : 0"} {"trackCheck + trackerExists + trackerTranslateExists == 3 ? \[value trackerName].translate.y : 0"}}
+  rotate {{"trackCheck + trackerExists + trackerTranslateExists == 3 ? \[value trackerName].rotate : 0"}}
+  scale {{"trackerExists == 1 ? trackerScaleRef.w : 1"} {"trackerExists == 1 ? trackerScaleRef.h : 1"}}
+  skewX {{"trackCheck + trackerExists + trackerTranslateExists == 3 ? \[value trackerName].skewX : 0"}}
+  skewY {{"trackCheck + trackerExists + trackerTranslateExists == 3 ? \[value trackerName].skewY : 0"}}
+  center {{"trackerExists == 1 ? trackerCenterRef.w : input.format.w/2"} {"trackerExists == 1 ? trackerCenterRef.h : input.format.h/2"}}
+  name NoisePattern1
+  xpos 0
+  ypos 149
+  addUserKnob {20 User}
+  addUserKnob {3 trackCheck}
+  trackCheck {{"\[value parent.addtrack] == 0 ? 0 : 1"}}
+  addUserKnob {3 trackerExists}
+  trackerExists {{"\[exists \[value trackerName]]"}}
+  addUserKnob {3 trackerTranslateExists}
+  trackerTranslateExists {{"\[exists \[value trackerName].translate]"}}
+  addUserKnob {1 trackerName}
+  trackerName noTracker
+  addUserKnob {26 ""}
+  addUserKnob {14 trackerScaleRef R 0 100}
+  trackerScaleRef {{"trackerExists ? \[value trackerName].scale.w : 1"} {"trackerExists ? \[value trackerName].scale.h : 1"}}
+  addUserKnob {26 ""}
+  addUserKnob {14 trackerCenterRef R 0 100}
+  trackerCenterRef {{"trackerExists ? \[value trackerName].center.x : 1"} {"trackerExists ? \[value trackerName].center.y : 1"}}
+ }
+ Noise {
+  output {-noiseUV.u noiseUV.v}
+  cliptype none
+  type {{parent.type}}
+  size {{parent.NoisePattern1.size}}
+  zoffset {{parent.NoisePattern1.zoffset+100}}
+  octaves {{parent.NoisePattern1.octaves}}
+  nyquist {{parent.NoisePattern1.nyquist}}
+  lacunarity {{parent.NoisePattern1.lacunarity}}
+  gain {{parent.NoisePattern1.gain}}
+  gamma {{parent.NoisePattern1.gamma}}
+  translate {{parent.NoisePattern1.translate} {parent.NoisePattern1.translate}}
+  rotate {{parent.NoisePattern1.rotate}}
+  scale {{parent.NoisePattern1.scale} {parent.NoisePattern1.scale}}
+  skewX {{parent.NoisePattern1.skewX}}
+  skewY {{parent.NoisePattern1.skewY}}
+  center {{parent.NoisePattern1.center} {parent.NoisePattern1.center}}
+  name NoisePattern2
+  xpos 0
+  ypos 202
+  addUserKnob {20 User}
+  addUserKnob {3 trackCheck}
+  trackCheck {{"\[value parent.addtrack] == 0 ? 0 : 1"}}
+  addUserKnob {3 trackerExists}
+  trackerExists {{"\[exists \[value trackerName]]"}}
+  addUserKnob {3 trackerTranslateExists}
+  trackerTranslateExists {{"\[exists \[value trackerName].translate]"}}
+  addUserKnob {26 ""}
+  addUserKnob {14 trackerScaleRef R 0 100}
+  trackerScaleRef {{"trackerExists ? \[value trackerName].scale.w : 1"} {"trackerExists ? \[value trackerName].scale.h : 1"}}
+  addUserKnob {26 ""}
+  addUserKnob {14 trackerCenterRef R 0 100}
+  trackerCenterRef {{"trackerExists ? \[value trackerName].center.x : 1"} {"trackerExists ? \[value trackerName].center.y : 1"}}
+ }
+push $N27b0ec00
+ Copy {
+  inputs 2
+  channels noiseUV
+  name CopyFWD
+  knobChanged "if nuke.thisKnob().name() == 'useLifetime':\n    expression = 'Lifetime \[value this.lifetimeStart] - \[value this.lifetimeEnd]'\n    label = nuke.thisNode().knob('label').value()\n    if nuke.thisKnob().value() == 1:\n        nuke.thisNode().knob('label').setValue(label + expression)\n    else:\n        label = label.replace(expression, '')\n        nuke.thisNode().knob('label').setValue(label)"
+  xpos 0
+  ypos 300
+ }
+ IDistort {
+  channels rgb
+  uv noiseUV
+  uv_offset 0.2
+  uv_scale 10
+  blur_scale 0
+  filter Mitchell
+  name IDistortPixels
+  xpos 0
+  ypos 425
+ }
+ Keymix {
+  inputs 3
+  channels rgba
+  name KeymixMask1
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 0
+  ypos 512
+ }
+push $N27b0e800
+ Dot {
+  name Dot3
+  xpos 372
+  ypos 597
+ }
+ STMap {
+  inputs 2
+  uv rgb
+  blur_scale 0
+  filter impulse
+  name STMap1
+  xpos 0
+  ypos 587
+ }
+ Clamp {
+  channels rgba
+  name Clamp1
+  xpos 0
+  ypos 637
+ }
+ Blur {
+  name Blur1
+  xpos 0
+  ypos 682
+ }
+ Merge2 {
+  inputs 2
+  operation screen
+  mix 0
+  name MergeCore1
+  knobChanged "if nuke.thisKnob().name() == 'useLifetime':\n    expression = 'Lifetime \[value this.lifetimeStart] - \[value this.lifetimeEnd]'\n    label = nuke.thisNode().knob('label').value()\n    if nuke.thisKnob().value() == 1:\n        nuke.thisNode().knob('label').setValue(label + expression)\n    else:\n        label = label.replace(expression, '')\n        nuke.thisNode().knob('label').setValue(label)"
+  xpos 0
+  ypos 748
+ }
+ MotionBlur2D {
+  inputs 2
+  shutteroffset centred
+  name MotionBlur2DNoise
+  xpos 0
+  ypos 911
+  disable {{"1 - (mb && addtrack && NoisePattern1.trackerExists && NoisePattern1.trackerTranslateExists)" x1116 1}}
+ }
+ VectorBlur {
+  uv motion
+  name VectorBlurNoise
+  xpos 0
+  ypos 948
+  disable {{"1 - (mb && addtrack && NoisePattern1.trackerExists && NoisePattern1.trackerTranslateExists)" x1116 1}}
+ }
+push $N72830000
+ Dot {
+  name Dot6
+  xpos 794
+  ypos -307
+ }
+ Dot {
+  name Dot1
+  xpos 794
+  ypos 1055
+ }
+ Copy {
+  inputs 2
+  channels alpha
+  name CopyRGB_1
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 0
+  ypos 1045
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.alpha 0 3 rgba.alpha 0 3 rgba.alpha 0 3 rgba.blue 0 2 rgba.alpha 0 3 rgba.green 0 1 rgba.alpha 0 3 rgba.red 0 0"
+  name Shuffle1
+  label "\[if \{\[value in1] != \"none\"\} \{return \"\[value in1] > \"\} \{return \"\"\}] \[if \{\[value out1] != \"none\"\} \{return \"\[value out1]\"\} \{return \"\"\}]\n\[if \{\[value in2] != \"none\"\} \{return \"\[value in2] > \"\} \{return \"\"\}]  \[if \{\[value out2] != \"none\"\} \{return \"\[value out2]\"\} \{return \"\"\}]"
+  xpos 0
+  ypos 1095
+ }
+ Output {
+  name Output1
+  xpos 0
+  ypos 1319
+ }
+end_group

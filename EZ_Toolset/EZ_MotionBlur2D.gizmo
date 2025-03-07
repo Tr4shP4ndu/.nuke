@@ -1,0 +1,83 @@
+set cut_paste_input [stack 0]
+version 14.0 v6
+push $cut_paste_input
+Group {
+ name EZ_MotionBlur2D_1
+ tile_color 0xc95a14ff
+ note_font "Bitstream Vera Sans"
+ selected true
+ xpos 137
+ ypos -397
+ addUserKnob {20 Shutter l Motionblur}
+ addUserKnob {26 text l "<font color=#C4722A> @b;Controls"}
+ addUserKnob {26 text_1 l "" +STARTLINE T " "}
+ addUserKnob {7 shutter l Shutter R 0 2}
+ shutter 0.5
+ addUserKnob {41 shutteroffset l Offset T MotionBlur2D1.shutteroffset}
+ addUserKnob {41 shuttercustomoffset l "" -STARTLINE T MotionBlur2D1.shuttercustomoffset}
+ addUserKnob {26 text_2 l "" +STARTLINE T " "}
+ addUserKnob {26 ""}
+ addUserKnob {41 channels l Channels T VectorBlur1.channels}
+ addUserKnob {41 grow_bbox l "Grow bbox" T VectorBlur1.grow_bbox}
+ addUserKnob {26 ""}
+ addUserKnob {26 About l "" +STARTLINE T "<font color=#C8976B> <font size=3> v1.7 | <font size=1> Victor Rouillard &copy; "}
+}
+ Input {
+  inputs 0
+  name InputMask
+  xpos 835
+  ypos 573
+  number 2
+ }
+ Input {
+  inputs 0
+  name Input2D_Transf
+  xpos 835
+  ypos 473
+  number 1
+ }
+ Input {
+  inputs 0
+  name InputSource
+  xpos 587
+  ypos 323
+ }
+ NoOp {
+  name FormatTranslator1
+  note_font "DejaVu Sans Bold Italic"
+  xpos 587
+  ypos 403
+  addUserKnob {20 User}
+  addUserKnob {16 PAR}
+  PAR {{input.pixel_aspect}}
+  addUserKnob {14 reformater R 0 100}
+  reformater {{input.format.w} {input.format.h}}
+ }
+ MotionBlur2D {
+  inputs 2
+  shutter {{parent.shutter}}
+  shutteroffset centred
+  name MotionBlur2D1
+  xpos 587
+  ypos 473
+ }
+ VectorBlur {
+  inputs 1+1
+  channels rgba
+  uv motion
+  name VectorBlur1
+  xpos 587
+  ypos 573
+ }
+ Crop {
+  box {0 0 {parent.FormatTranslator1.reformater.w} {parent.FormatTranslator1.reformater.h}}
+  name Crop1
+  xpos 587
+  ypos 644
+ }
+ Output {
+  name Output1
+  xpos 587
+  ypos 729
+ }
+end_group

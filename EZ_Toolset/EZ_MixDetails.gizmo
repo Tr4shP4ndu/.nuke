@@ -1,0 +1,938 @@
+set cut_paste_input [stack 0]
+version 14.0 v6
+push $cut_paste_input
+Group {
+ name EZ_MixDetails1
+ tile_color 0xa56300ff
+ note_font "DejaVu Sans"
+ selected true
+ xpos -74
+ ypos -387
+ addUserKnob {20 details l Details}
+ addUserKnob {26 Sharpening l "<font color=#EEBB75> @b;Frequencies"}
+ addUserKnob {41 colorspace_out_1 l Colorspace T ColorspaceIN.colorspace_out}
+ addUserKnob {6 Liftblacks l "Lift Blacks?" -STARTLINE}
+ Liftblacks true
+ addUserKnob {26 ""}
+ addUserKnob {26 freqRangeText l "<font color=#EEBB75> @b;Frequency Range"}
+ addUserKnob {20 LowFreq l "" +STARTLINE n 1}
+ LowFreq 0
+ addUserKnob {41 which l "Detail from: Self" t "0 = From source input\n1 = From external input" T DissolveLOW.which}
+ addUserKnob {26 OrInput l "Or Input LowF" t "0 = From source input\n1 = From external input" -STARTLINE}
+ addUserKnob {26 FreqRange l Range}
+ addUserKnob {7 LowTOLf l From: R 10 100}
+ LowTOLf 10
+ addUserKnob {7 LowTOLt l To: -STARTLINE R 20 500}
+ LowTOLt 20
+ addUserKnob {26 ""}
+ addUserKnob {41 LOWShar l "Sharpen Size" T SharpenLOWF.size}
+ addUserKnob {41 amount l Amount -STARTLINE T SharpenLOWF.amount}
+ addUserKnob {7 feedSat l "Feed Saturation"}
+ addUserKnob {20 endGroup_1 l endGroup n -1}
+ addUserKnob {26 ""}
+ addUserKnob {26 highFreqText l "<font color=#EEBB75> @b;High Frequency"}
+ addUserKnob {20 HighFreq l "" +STARTLINE n 1}
+ HighFreq 0
+ addUserKnob {41 detailsfrom l "Detail from: Self" T DissolveHIGH.which}
+ addUserKnob {26 orrinput l "Or input HighF" -STARTLINE}
+ addUserKnob {41 HighTOL l Tolerance T BlurHIGHTOL.size}
+ addUserKnob {26 ""}
+ addUserKnob {41 HIGHShar l "Sharpen Size" T SharpenHIGHF.size}
+ addUserKnob {41 amount_1 l Amount -STARTLINE T SharpenHIGHF.amount}
+ addUserKnob {7 feedSatHigh l "Feed Saturation"}
+ addUserKnob {14 blurHigh l Blur R 0 100}
+ addUserKnob {6 UseMedian l "Use median?" t "Watch out, will be heavy!" -STARTLINE}
+ UseMedian true
+ addUserKnob {20 endGroup_2 l endGroup n -1}
+ addUserKnob {26 ""}
+ addUserKnob {26 text_1 l "" +STARTLINE T " "}
+ addUserKnob {26 weights l "<font color=#EEBB75> @b;Weights"}
+ addUserKnob {7 whiteWeight l "White Weight" R 0 15}
+ whiteWeight 1
+ addUserKnob {7 blackWeight l "Black Weight" R 0 15}
+ blackWeight 1
+ addUserKnob {26 text_3 l "" +STARTLINE T " "}
+ addUserKnob {26 ""}
+ addUserKnob {41 mix l Mix T Keymix3.mix}
+ addUserKnob {26 ""}
+ addUserKnob {26 About_1 l "" +STARTLINE T "<font color=#EEBB75> <font size=3> v2.6 | <font size=1> Victor Rouillard &copy; "}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {20 About}
+ addUserKnob {26 Inputs l "<font color=#EEBB75>@b;Inputs"}
+ addUserKnob {26 Source -STARTLINE T ": Plug the source to redetail"}
+ addUserKnob {26 LowF -STARTLINE T ": Extra input for an external low frequency tweak to your source."}
+ addUserKnob {26 HighF -STARTLINE T ": Extra input for an external high frequency tweak to your source."}
+ addUserKnob {26 blanc l " " T "\n\n"}
+ addUserKnob {26 Knobs l "<font color=#EEBB75>@b;Knobs"}
+ addUserKnob {26 DetailFrom l "Detail From" T ": Dissolve between 0 (detail from self) and 1 (detail from HighF/LowF inputs) to tweak."}
+ addUserKnob {26 Tolerance -STARTLINE T ": Define the threshold, or tolerance, of the alteration to particular frequencies."}
+ addUserKnob {26 Median -STARTLINE T ": Check box if you wan't a more precise calculation mode of extracting frequencies.\nWILL BE A LOT HEAVIER!"}
+ addUserKnob {26 Weights -STARTLINE T ": Adjust the amount of tweaked whites and blacks without altering the originals."}
+}
+ Input {
+  inputs 0
+  name Mask
+  xpos -2053
+  ypos 250
+  number 3
+ }
+ Invert {
+  name Invert1
+  xpos -2053
+  ypos 4740
+ }
+ Input {
+  inputs 0
+  name Source
+  xpos -588
+  ypos 297
+ }
+ Dot {
+  name Dot112
+  note_font_size 40
+  xpos -554
+  ypos 604
+ }
+set N84b47400 [stack 0]
+ Dot {
+  name Dot113
+  note_font_size 40
+  xpos 1102
+  ypos 604
+ }
+set N84b47800 [stack 0]
+ ColorLookup {
+  channels rgb
+  lut {master {curve L l 0.01391470432 k x0.03524386138 0.03524386138 l x1 1}
+    red {}
+    green {}
+    blue {}
+    alpha {}}
+  unpremult -rgba.alpha
+  name ColorLookupLIFT
+  xpos 1068
+  ypos 852
+  disable {{1-parent.Liftblacks}}
+ }
+ set C84b47c00 [stack 0]
+ Colorspace {
+  colorspace_out AlexaV3LogC
+  name ColorspaceIN
+  xpos 1068
+  ypos 878
+ }
+ set C8722a000 [stack 0]
+set N8722a000 [stack 0]
+ Dot {
+  name Dot29
+  xpos 1657
+  ypos 882
+ }
+ Dot {
+  name Dot21
+  xpos 1657
+  ypos 1882
+ }
+set N8722a800 [stack 0]
+push $N8722a800
+ Dot {
+  name Dot30
+  xpos 1439
+  ypos 1882
+ }
+ Saturation {
+  saturation 0
+  name Saturation8
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 1405
+  ypos 1994
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge14
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 1623
+  ypos 1994
+ }
+ Dot {
+  name Dot32
+  xpos 1657
+  ypos 2071
+ }
+set N8722b800 [stack 0]
+ Dot {
+  name Dot31
+  xpos 1441
+  ypos 2071
+ }
+ Input {
+  inputs 0
+  name HighF
+  xpos -146
+  ypos 279
+  number 2
+ }
+clone $C84b47c00 {
+  xpos -146
+  ypos 852
+  selected false
+ }
+clone $C8722a000 {
+  xpos -146
+  ypos 878
+  selected false
+ }
+set N87256800 [stack 0]
+ Dot {
+  name Dot38
+  xpos 210
+  ypos 882
+ }
+push $N84b47400
+clone $C84b47c00 {
+  xpos -588
+  ypos 852
+  selected false
+ }
+clone $C8722a000 {
+  xpos -588
+  ypos 878
+  selected false
+ }
+ Dot {
+  name Dot39
+  xpos -554
+  ypos 1055
+ }
+set N87257800 [stack 0]
+ Dissolve {
+  inputs 2
+  which {{parent.DissolveHIGH.which}}
+  name Dissolve2
+  label "input:\[value which]"
+  xpos 176
+  ypos 1039
+ }
+set N87257c00 [stack 0]
+push $N87257c00
+ Dot {
+  name Dot36
+  xpos 404
+  ypos 1055
+ }
+ Saturation {
+  saturation 0
+  name Saturation6
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 370
+  ypos 1343
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge9
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 176
+  ypos 1343
+ }
+ Dot {
+  name Dot18
+  note_font_size 40
+  xpos 210
+  ypos 1579
+ }
+set N8728cc00 [stack 0]
+ Dot {
+  name Dot19
+  note_font_size 40
+  xpos 81
+  ypos 1579
+ }
+ Blur {
+  name BlurHIGHTOL
+  xpos 47
+  ypos 1665
+ }
+ set C8728d400 [stack 0]
+push $N8728cc00
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge8
+  xpos 176
+  ypos 1671
+ }
+ Dot {
+  name Dot26
+  xpos 210
+  ypos 2166
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge12
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 1407
+  ypos 2162
+ }
+push $N8722b800
+ Dissolve {
+  inputs 2
+  channels rgba
+  which {{parent.feedSatHigh}}
+  name Dissolve3
+  label "input:\[value which]"
+  xpos 1623
+  ypos 2156
+ }
+ Dot {
+  name Dot34
+  xpos 1657
+  ypos 2245
+ }
+set N84d76800 [stack 0]
+ Dot {
+  name Dot33
+  xpos 1444
+  ypos 2245
+ }
+ Input {
+  inputs 0
+  name RangeF
+  xpos -1012
+  ypos 292
+  number 1
+ }
+ Dot {
+  name Dot4
+  xpos -978
+  ypos 508
+ }
+clone $C84b47c00 {
+  xpos -1012
+  ypos 852
+  selected false
+ }
+clone $C8722a000 {
+  xpos -1012
+  ypos 878
+  selected false
+ }
+set N84d77c00 [stack 0]
+ Dot {
+  name Dot37
+  xpos -1777
+  ypos 882
+ }
+push $N87257800
+ Dissolve {
+  inputs 2
+  which {{parent.DissolveLOW.which}}
+  name Dissolve1
+  label "input:\[value which]"
+  xpos -1811
+  ypos 1039
+ }
+set N84daa400 [stack 0]
+push $N84daa400
+ Dot {
+  name Dot35
+  xpos -1916
+  ypos 1055
+ }
+ Saturation {
+  saturation 0
+  name Saturation4
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos -1950
+  ypos 1343
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge7
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos -1811
+  ypos 1343
+ }
+ Dot {
+  name Dot11
+  xpos -1777
+  ypos 1506
+ }
+set N84dab400 [stack 0]
+ Dot {
+  name Dot16
+  xpos -1660
+  ypos 1506
+ }
+ Blur {
+  size {{parent.LowTOLt}}
+  name Blur3
+  xpos -1694
+  ypos 1665
+ }
+push $N84dab400
+ Blur {
+  size {{parent.LowTOLf}}
+  name BlurLOWTOL
+  xpos -1811
+  ypos 1568
+ }
+ set C84dd6000 [stack 0]
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge6
+  xpos -1811
+  ypos 1671
+ }
+ Dot {
+  name Dot17
+  xpos -1777
+  ypos 2330
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge15
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 1410
+  ypos 2326
+ }
+push $N84d76800
+ Dissolve {
+  inputs 2
+  channels rgba
+  which {{parent.feedSat}}
+  name Dissolve4
+  label "input:\[value which]"
+  xpos 1623
+  ypos 2320
+ }
+ Dot {
+  name Dot22
+  xpos 1657
+  ypos 4401
+ }
+push $N84d77c00
+ Saturation {
+  saturation 0
+  name Saturation10
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos -1012
+  ypos 1330
+ }
+ Dot {
+  name Dot7
+  xpos -978
+  ypos 1506
+ }
+set N84dd7c00 [stack 0]
+clone $C84dd6000 {
+  xpos -1012
+  ypos 1569
+  selected false
+ }
+push $N84dd7c00
+ Dot {
+  name Dot6
+  xpos -1106
+  ypos 1506
+ }
+ Blur {
+  size {{parent.LowTOLt}}
+  name Blur1
+  xpos -1140
+  ypos 1665
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge27
+  xpos -1012
+  ypos 1671
+ }
+push $N87257800
+ Saturation {
+  saturation 0
+  name Saturation2
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos -588
+  ypos 1330
+ }
+ Dot {
+  name Dot10
+  xpos -554
+  ypos 1402
+ }
+set N8c579400 [stack 0]
+ Dot {
+  name Dot9
+  xpos -1357
+  ypos 1402
+ }
+ Dot {
+  name Dot3
+  xpos -1357
+  ypos 1506
+ }
+set N8c579c00 [stack 0]
+clone $C84dd6000 {
+  xpos -1391
+  ypos 1568
+  selected false
+ }
+push $N8c579c00
+ Dot {
+  name Dot5
+  xpos -1240
+  ypos 1506
+ }
+ Blur {
+  size {{parent.LowTOLt}}
+  name Blur2
+  xpos -1274
+  ypos 1665
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge2
+  xpos -1391
+  ypos 1671
+ }
+ Dot {
+  name Dot13
+  xpos -1357
+  ypos 1796
+ }
+ Dissolve {
+  inputs 2
+  name DissolveLOW
+  xpos -1012
+  ypos 1787
+ }
+ Dot {
+  name Dot28
+  xpos -978
+  ypos 2871
+ }
+set N8c5a5800 [stack 0]
+ Sharpen {
+  size 0
+  name SharpenLOWF
+  xpos -1012
+  ypos 2994
+ }
+ Saturation {
+  name Saturation7
+  xpos -1012
+  ypos 3384
+ }
+ Dot {
+  name Dot23
+  xpos -978
+  ypos 3572
+ }
+set N8c5dc400 [stack 0]
+ Dot {
+  name Dot24
+  xpos -1131
+  ypos 3572
+ }
+ Clamp {
+  minimum -1
+  name Clamp5
+  xpos -1165
+  ypos 3626
+ }
+ Invert {
+  name Invert6
+  xpos -1165
+  ypos 3662
+ }
+ Grade {
+  white {{parent.blackWeight}}
+  black_clamp false
+  name Grade5
+  xpos -1165
+  ypos 3698
+ }
+ Invert {
+  name Invert7
+  xpos -1165
+  ypos 3722
+ }
+ Dot {
+  name Dot25
+  xpos -1131
+  ypos 3789
+ }
+push $N8c5dc400
+ Clamp {
+  minimum 1
+  maximum 10
+  name Clamp6
+  xpos -1012
+  ypos 3622
+ }
+ Add {
+  value -1
+  name Add5
+  xpos -1012
+  ypos 3658
+ }
+ Grade {
+  white {{parent.whiteWeight}}
+  name Grade6
+  xpos -1012
+  ypos 3694
+ }
+ Add {
+  value 1
+  name Add6
+  xpos -1012
+  ypos 3718
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge10
+  xpos -1012
+  ypos 3786
+ }
+ Dot {
+  name Dot12
+  xpos -978
+  ypos 4129
+ }
+push $N8722a000
+ Saturation {
+  saturation 0
+  name Saturation5
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 1068
+  ypos 976
+ }
+ Dot {
+  name Dot20
+  xpos 1111
+  ypos 2539
+ }
+set N8c60fc00 [stack 0]
+push $N87256800
+ Saturation {
+  saturation 0
+  name Saturation3
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos -146
+  ypos 1330
+ }
+ Dot {
+  name Dot96
+  note_font_size 40
+  xpos -112
+  ypos 1579
+ }
+set N8a766400 [stack 0]
+push $N8a766400
+ Dot {
+  name Dot98
+  note_font_size 40
+  xpos -241
+  ypos 1579
+ }
+clone $C8728d400 {
+  xpos -275
+  ypos 1665
+  selected false
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge1
+  xpos -146
+  ypos 1671
+ }
+ Dot {
+  name Dot99
+  note_font_size 40
+  xpos -112
+  ypos 1797
+ }
+push $N8c579400
+ Dot {
+  name Dot97
+  note_font_size 40
+  xpos -554
+  ypos 1579
+ }
+set N8a767800 [stack 0]
+push $N8a767800
+ Dot {
+  name Dot8
+  xpos -433
+  ypos 1579
+ }
+clone $C8728d400 {
+  xpos -467
+  ypos 1665
+  selected false
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge29
+  xpos -588
+  ypos 1671
+ }
+ Dissolve {
+  inputs 2
+  name DissolveHIGH
+  xpos -588
+  ypos 1787
+ }
+ Dot {
+  name Dot27
+  xpos -554
+  ypos 2715
+ }
+set N8a792c00 [stack 0]
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge11
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 911
+  ypos 2711
+ }
+push $N8c60fc00
+ Dissolve {
+  inputs 2
+  channels rgba
+  which {{1-parent.DissolveHIGH.which}}
+  name Dissolve6
+  label "input:\[value which]"
+  xpos 1077
+  ypos 2705
+ }
+set N8a793400 [stack 0]
+push $N8c5a5800
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge13
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 911
+  ypos 2867
+ }
+push $N8a793400
+ Dissolve {
+  inputs 2
+  channels rgba
+  which {{1-parent.DissolveLOW.which}}
+  name Dissolve5
+  label "input:\[value which]"
+  xpos 1077
+  ypos 2861
+ }
+ Dot {
+  name Dot1
+  xpos 1111
+  ypos 3970
+ }
+push $N8a792c00
+ Sharpen {
+  size 0
+  name SharpenHIGHF
+  xpos -588
+  ypos 2993
+ }
+ Dot {
+  name Dot102
+  note_font_size 40
+  xpos -554
+  ypos 3075
+ }
+set N8a7d2800 [stack 0]
+ Blur {
+  size {{parent.blurHigh}}
+  name Blur19
+  xpos -588
+  ypos 3129
+ }
+push $N8a7d2800
+ Dot {
+  name Dot110
+  note_font_size 40
+  xpos -739
+  ypos 3075
+ }
+ Median {
+  size {{parent.blurHigh}}
+  ignore_top_line false
+  name Median1
+  xpos -773
+  ypos 3135
+ }
+ Dot {
+  name Dot101
+  note_font_size 40
+  xpos -739
+  ypos 3197
+ }
+ Switch {
+  inputs 2
+  which {{1-parent.UseMedian}}
+  name SwitchMED
+  xpos -588
+  ypos 3194
+ }
+ Saturation {
+  saturation {{parent.feedSatHigh}}
+  name Saturation1
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos -588
+  ypos 3384
+ }
+ Dot {
+  name Dot14
+  xpos -554
+  ypos 3562
+ }
+set N8a7f8400 [stack 0]
+ Dot {
+  name Dot15
+  xpos -707
+  ypos 3562
+ }
+ Clamp {
+  minimum -1
+  name Clamp1
+  xpos -741
+  ypos 3616
+ }
+ Invert {
+  name Invert2
+  xpos -741
+  ypos 3652
+ }
+ Grade {
+  white {{parent.blackWeight}}
+  black_clamp false
+  name Grade1
+  xpos -741
+  ypos 3688
+ }
+ Invert {
+  name Invert3
+  xpos -741
+  ypos 3712
+ }
+ Dot {
+  name Dot2
+  xpos -707
+  ypos 3779
+ }
+push $N8a7f8400
+ Clamp {
+  minimum 1
+  maximum 10
+  name Clamp2
+  xpos -588
+  ypos 3612
+ }
+ Add {
+  value -1
+  name Add1
+  xpos -588
+  ypos 3648
+ }
+ Grade {
+  white {{parent.whiteWeight}}
+  name Grade2
+  xpos -588
+  ypos 3684
+ }
+ Add {
+  value 1
+  name Add2
+  xpos -588
+  ypos 3708
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge5
+  xpos -588
+  ypos 3776
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge3
+  xpos -588
+  ypos 3966
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge4
+  xpos -588
+  ypos 4125
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge16
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos -588
+  ypos 4397
+ }
+ Colorspace {
+  colorspace_in {{ColorspaceIN.colorspace_out}}
+  name ColorspacePY
+  xpos -588
+  ypos 4626
+ }
+ ColorLookup {
+  channels rgb
+  lut {master {curve L l -0.0229867585 k x0.03524386138 0.03524386138 l x1 1}
+    red {}
+    green {}
+    blue {}
+    alpha {}}
+  maskChannelInput -rgba.alpha
+  mix {{parent.ColorLookupLIFT.mix}}
+  name ColorLookupLOWER
+  xpos -588
+  ypos 4652
+  disable {{1-parent.Liftblacks}}
+ }
+push $N84b47800
+ Dot {
+  name Dot40
+  xpos 2152
+  ypos 604
+ }
+ Dot {
+  name Dot114
+  note_font_size 40
+  xpos 2152
+  ypos 4750
+ }
+ Keymix {
+  inputs 3
+  invertMask true
+  name Keymix3
+  xpos -588
+  ypos 4740
+ }
+ Output {
+  name Output1
+  xpos -588
+  ypos 5431
+ }
+end_group

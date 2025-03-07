@@ -1,0 +1,181 @@
+set cut_paste_input [stack 0]
+version 13.2 v3
+push $cut_paste_input
+Group {
+ name EZ_Murk1
+ tile_color 0x85e03eff
+ selected true
+ xpos -1271
+ ypos -74
+ addUserKnob {20 User l Murk}
+ addUserKnob {26 MurkText l "<font color=#7EB57B> @b;Murk Controls"}
+ addUserKnob {26 text l "" +STARTLINE T " "}
+ addUserKnob {41 colorspace_out l Colorspace T ColorspaceIN.colorspace_out}
+ addUserKnob {41 MurkControl l Blur T Controls.MurkControl}
+ addUserKnob {41 MurkMix l Mix T Controls.MurkMix}
+ addUserKnob {26 text_1 l "" +STARTLINE T " "}
+ addUserKnob {6 murkmask l "Murk mask ?" +STARTLINE}
+ murkmask true
+ addUserKnob {26 ""}
+ addUserKnob {26 text_2 l "" +STARTLINE T "<font color=#C6E9C4> <font size=3> v2.2 | <font size=1> Victor Rouillard &copy; "}
+}
+ Input {
+  inputs 0
+  name Mask
+  xpos 955
+  ypos -688
+  number 1
+ }
+ Blur {
+  channels alpha
+  size {{parent.Blur9.size}}
+  name Blur2
+  knobChanged "if nuke.thisKnob().name() == 'useLifetime':\n    expression = '\\n' + 'Lifetime \[value this.lifetimeStart] - \[value this.lifetimeEnd]'\n    label = nuke.thisNode().knob('label').value()\n    if nuke.thisKnob().value() == 1:\n        nuke.thisNode().knob('label').setValue(label + expression)\n    else:\n        label = label.replace(expression, '')\n        nuke.thisNode().knob('label').setValue(label)"
+  xpos 955
+  ypos -84
+  disable {{1-parent.murkmask}}
+ }
+ Invert {
+  name Invert1
+  xpos 955
+  ypos 324
+ }
+ Input {
+  inputs 0
+  name Input
+  xpos 396
+  ypos -688
+ }
+ Dot {
+  name Dot6
+  xpos 430
+  ypos -464
+  addUserKnob {20 User}
+  addUserKnob {14 xy l "" +STARTLINE R 0 100}
+  xy {{input.format.w} {input.format.h}}
+  addUserKnob {3 connected}
+  connected {{"\[exists parent.input1]"}}
+ }
+set N1418f340 [stack 0]
+ Colorspace {
+  colorspace_out AlexaV3LogC
+  name ColorspaceIN
+  xpos 396
+  ypos -341
+ }
+ NoOp {
+  name Controls
+  xpos 396
+  ypos -220
+  addUserKnob {20 User}
+  addUserKnob {26 MurkText l "Murk Controls"}
+  addUserKnob {7 MurkControl l Blur R 0 10}
+  MurkControl 5
+  addUserKnob {7 MurkMix l Mix}
+  MurkMix 1
+ }
+set N141bea60 [stack 0]
+ Blur {
+  channels rgba
+  size {{parent.Blur8.size*2}}
+  name Blur9
+  xpos 726
+  ypos -77
+ }
+push $N141bea60
+ Blur {
+  channels rgba
+  size {{parent.Blur7.size*2}}
+  name Blur8
+  xpos 616
+  ypos -77
+ }
+push $N141bea60
+ Blur {
+  channels rgba
+  size {{parent.Blur6.size*2}}
+  name Blur7
+  xpos 505
+  ypos -77
+ }
+push $N141bea60
+ Blur {
+  channels rgba
+  size {{parent.Blur5.size*2}}
+  name Blur6
+  xpos 396
+  ypos -77
+ }
+push $N141bea60
+ Blur {
+  channels rgba
+  size {{parent.Blur4.size*2}}
+  name Blur5
+  xpos 286
+  ypos -77
+ }
+push $N141bea60
+ Blur {
+  channels rgba
+  size {{parent.Blur1.size*2}}
+  name Blur4
+  xpos 176
+  ypos -77
+ }
+push 0
+push $N141bea60
+ Blur {
+  channels rgba
+  size {{parent.Controls.MurkControl}}
+  name Blur1
+  xpos 66
+  ypos -77
+ }
+push $N141bea60
+ Merge2 {
+  inputs 8+1
+  operation average
+  mix {{parent.Controls.MurkMix}}
+  name Merge8
+  xpos 396
+  ypos 64
+ }
+ Colorspace {
+  colorspace_in {{ColorspaceIN.colorspace_out}}
+  name ColorspaceOUT
+  xpos 396
+  ypos 211
+ }
+push $N1418f340
+ Dot {
+  name Dot1
+  xpos -97
+  ypos -464
+ }
+ Dot {
+  name Dot2
+  xpos -97
+  ypos 333
+ }
+ Keymix {
+  inputs 3
+  channels rgba
+  invertMask true
+  name Keymix1
+  knobChanged "if nuke.thisKnob().name() == 'useLifetime':\n    expression = 'Lifetime \[value this.lifetimeStart] - \[value this.lifetimeEnd]'\n    label = nuke.thisNode().knob('label').value()\n    if nuke.thisKnob().value() == 1:\n        nuke.thisNode().knob('label').setValue(label + expression)\n    else:\n        label = label.replace(expression, '')\n        nuke.thisNode().knob('label').setValue(label)"
+  xpos 396
+  ypos 330
+ }
+ Crop {
+  box {0 0 {parent.Dot6.xy.w} {parent.Dot6.xy.h}}
+  crop false
+  name Crop1
+  xpos 396
+  ypos 438
+ }
+ Output {
+  name Output1
+  xpos 396
+  ypos 599
+ }
+end_group

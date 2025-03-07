@@ -1,0 +1,150 @@
+set cut_paste_input [stack 0]
+version 14.0 v6
+push 0
+push $cut_paste_input
+Group {
+ inputs 2
+ name EZ_Dissolve1
+ tile_color 0x5f6e9bff
+ note_font "DejaVu Sans"
+ selected true
+ xpos 1415
+ ypos -267
+ addUserKnob {20 User l Dissolve}
+ addUserKnob {41 channels l "<font color=#A9C4F6> @b;Channel" T Remove1.channels}
+ addUserKnob {26 ""}
+ addUserKnob {3 OmitFrom1 l From}
+ OmitFrom1 1
+ addUserKnob {3 OmitTo1 l "  To  " -STARTLINE}
+ OmitTo1 100
+ addUserKnob {7 Tangent t "Keep at 1 for a linear transition, play around with the knob for more control." R 0 2}
+ Tangent 1
+ addUserKnob {26 ""}
+ addUserKnob {7 TangentStrength +INVISIBLE}
+ TangentStrength {{"frame > OmitTo1 ? 1 : (frame < OmitFrom1 ? 1 : (-(abs(sin(pi*(OmitTo1-frame)/(2.66*(OmitFrom1-OmitTo1))))*(1-Tangent)))+1)"}}
+ addUserKnob {41 which l Which T Dissolve1.which}
+ addUserKnob {6 NumInputs l "Only Sample Input0" t "Checking this box will dissolve between the FrameHolded given values!" +STARTLINE}
+ addUserKnob {26 blankk l "" +STARTLINE T "       \n"}
+ addUserKnob {41 maskChannel l "Mask Channel" T KeyMask1.maskChannel}
+ addUserKnob {41 invertMask l Invert -STARTLINE T KeyMask1.invertMask}
+ addUserKnob {26 ""}
+ addUserKnob {26 About_1 l "" +STARTLINE T "<font color=#A9C4F6> <font size=3> v1.5 | <font size=1> Victor Rouillard &copy; "}
+}
+ Input {
+  inputs 0
+  name Mask
+  xpos -105
+  ypos 10
+  number 2
+ }
+ Invert {
+  name Invert1
+  xpos -105
+  ypos 701
+ }
+ Input {
+  inputs 0
+  name Input0
+  xpos 380
+  ypos 2
+ }
+set N80204400 [stack 0]
+ Dot {
+  name Dot1
+  note_font_size 40
+  xpos 414
+  ypos 163
+ }
+set N80204800 [stack 0]
+ Dot {
+  name Dot2
+  note_font_size 40
+  xpos 774
+  ypos 163
+ }
+ Dot {
+  name Dot3
+  note_font_size 40
+  xpos 774
+  ypos 711
+ }
+push $N80204800
+ Remove {
+  operation keep
+  name Remove1
+  xpos 380
+  ypos 237
+ }
+ set C80205400 [stack 0]
+ Dot {
+  name Dot26
+  note_font_size 40
+  xpos 414
+  ypos 331
+ }
+set N80205800 [stack 0]
+ Input {
+  inputs 0
+  name Input1
+  xpos 168
+  ypos 1
+  number 1
+ }
+clone $C80205400 {
+  xpos 168
+  ypos 237
+  selected false
+ }
+ Switch {
+  inputs 2
+  which {{NumInputs}}
+  name SwitchInputs
+  xpos 168
+  ypos 328
+ }
+ FrameHold {
+  firstFrame {{parent.OmitTo1}}
+  name FrameHoldOUT1
+  xpos 168
+  ypos 410
+  disable {{1-NumInputs}}
+ }
+ Dot {
+  name Dot5
+  xpos 202
+  ypos 536
+ }
+push $N80205800
+ FrameHold {
+  firstFrame {{parent.OmitFrom1 i}}
+  name FrameHoldIN1
+  xpos 380
+  ypos 410
+  disable {{1-NumInputs i}}
+ }
+ Dissolve {
+  inputs 2
+  which {{"clamp( frame > OmitTo1 ? 1 :(frame < OmitFrom1 ? 0 : ((frame-OmitFrom1)/(OmitTo1-OmitFrom1))*TangentStrength))"}}
+  name Dissolve1
+  xpos 380
+  ypos 527
+ }
+ Keymix {
+  inputs 3
+  name KeyMask1
+  xpos 380
+  ypos 701
+ }
+ Output {
+  name Output1
+  xpos 380
+  ypos 878
+ }
+push $N80204400
+ Viewer {
+  frame_range 1-100
+  name Viewer1
+  xpos 509
+  ypos 60
+ }
+end_group

@@ -1,0 +1,1219 @@
+set cut_paste_input [stack 0]
+version 14.0 v6
+push $cut_paste_input
+Group {
+ name EZ_EdgeBlend1
+ onCreate "import nuke\n\ndef set_knobs_invisible():\n    n = nuke.thisNode()\n    n\['screenAvg'].setVisible(False)\n    n\['textArrow'].setVisible(False)\n\nn = nuke.thisNode()\nk = nuke.thisKnob()\n\nn\['go1'].setLabel('Calculate Screen Color')\nn\['screenAvg'].setLabel('<font size=8>▣</font>')\n\n# Schedule the setVisible(False) commands to be executed in the main thread\nnuke.executeInMainThreadWithResult(set_knobs_invisible)\n"
+ knobChanged "import nuke\n\nn = nuke.thisNode()\nk = nuke.thisKnob()\n\n   "
+ tile_color 0xd1441dff
+ label "\[value Output]\n"
+ note_font "DejaVu Sans"
+ note_font_size 10
+ selected true
+ xpos -1221
+ ypos -208
+ addUserKnob {20 EdgeBlend}
+ addUserKnob {26 textScreen l "@b; <font color=#EB906D><font size=4>Plate"}
+ addUserKnob {41 go1 l "Calculate Screen Color" T CurveTool1.go}
+ addUserKnob {26 textArrow l "" -STARTLINE +HIDDEN T " >"}
+ addUserKnob {22 screenAvg l "<font size=8>▣</font>" -STARTLINE +HIDDEN}
+ addUserKnob {4 cleanPlate l "Clean plate" M {Keymix Screenclean "" ""}}
+ cleanPlate Screenclean
+ addUserKnob {41 screen_type l Type -STARTLINE T PxF_ScreenClean.screen_type}
+ addUserKnob {26 textMatte l "@b; <font color=#EB906D><font size=4>Matte"}
+ addUserKnob {41 size_3 l Erode -STARTLINE T FilterErode6.size}
+ addUserKnob {41 size_4 l Blur T exp_blur6.size}
+ addUserKnob {26 textWeights l "@b; <font size=4><font color=#EB906D>Weights"}
+ addUserKnob {41 gamma l "White Gamma" T Grade5.gamma}
+ addUserKnob {41 maximum l Ceiling T Clamp1.maximum}
+ addUserKnob {41 gamma_1 l "Black Gamma" T Grade4.gamma}
+ addUserKnob {41 lift l Floor T Toe1.lift}
+ addUserKnob {26 textBlend l "@b; <font size=4><font color=#EB906D>Blending"}
+ addUserKnob {41 size l Blend1 T FilterErode3.size}
+ addUserKnob {41 mix_1 l " >" -STARTLINE T FilterErode3.mix}
+ addUserKnob {41 size_1 l Blend2 T FilterErode4.size}
+ addUserKnob {41 mix_2 l " >" -STARTLINE T FilterErode4.mix}
+ addUserKnob {41 size_2 l Blend3 T FilterErode5.size}
+ addUserKnob {41 mix_3 l " >" -STARTLINE T FilterErode5.mix}
+ addUserKnob {26 ""}
+ addUserKnob {41 mix l Mix T Keymix2.mix}
+ addUserKnob {6 checkInvert l "Invert Mask" -STARTLINE}
+ addUserKnob {68 Output M {"Despilled composition" "Premulted zone" ""}}
+ addUserKnob {26 ""}
+ addUserKnob {26 textAbout l "" +STARTLINE T "<font color=#EB906D> <font size=3> v1.2 | <font size=1> Victor Rouillard &copy; "}
+}
+ Input {
+  inputs 0
+  name Source
+  xpos 349
+  ypos -780
+ }
+ Dot {
+  name Dot17
+  xpos 383
+  ypos -105
+  addUserKnob {20 User}
+  addUserKnob {15 bbox}
+  bbox {0 0 {input.width} {input.height}}
+ }
+set N8ca82000 [stack 0]
+ Dot {
+  name Dot8
+  xpos 638
+  ypos -105
+ }
+set N8ca82400 [stack 0]
+ Dot {
+  name Dot52
+  note_font_size 40
+  xpos 953
+  ypos -105
+ }
+ Dot {
+  name Dot35
+  note_font_size 40
+  xpos 953
+  ypos 2161
+ }
+set N8ca82c00 [stack 0]
+ Dot {
+  name Dot9
+  xpos 953
+  ypos 2593
+ }
+set N8ca83000 [stack 0]
+ Dot {
+  name Dot3
+  note_font_size 40
+  xpos 953
+  ypos 3261
+ }
+ Input {
+  inputs 0
+  name Matte
+  xpos -746
+  ypos -780
+  number 1
+ }
+ Dot {
+  name Dot49
+  note_font_size 40
+  xpos -712
+  ypos -30
+ }
+set N8ca83c00 [stack 0]
+ Dot {
+  name Dot6
+  xpos -712
+  ypos 242
+ }
+set N8ca9c000 [stack 0]
+ Dot {
+  name Dot18
+  xpos -712
+  ypos 569
+ }
+set N8ca9c400 [stack 0]
+ Dot {
+  name Dot1
+  xpos -712
+  ypos 1923
+ }
+set N8ca9c800 [stack 0]
+ Dot {
+  name Dot16
+  xpos -712
+  ypos 2822
+ }
+ Input {
+  inputs 0
+  name Mask
+  xpos -1617
+  ypos -780
+  number 3
+ }
+ Invert {
+  name Invert1
+  xpos -1617
+  ypos 2583
+ }
+push $N8ca9c800
+ FilterErode {
+  size 0
+  name FilterErode6
+  xpos -402
+  ypos 1913
+ }
+ Group {
+  name exp_blur6
+  xpos -402
+  ypos 1984
+  addUserKnob {20 exponentialblur l expBlur}
+  addUserKnob {41 channels T Blur1.channels}
+  addUserKnob {41 size T Blur1.size}
+  addUserKnob {41 choke T Gradeexp.gamma}
+  addUserKnob {26 ""}
+  addUserKnob {26 credit l "" +STARTLINE T "by Cedric Tremblay"}
+ }
+  Input {
+   inputs 0
+   name mask
+   xpos 779
+   ypos -344
+   number 1
+  }
+  Dot {
+   name Dot1
+   note_font_size 40
+   xpos 813
+   ypos -249
+  }
+set N8cabe000 [stack 0]
+push $N8cabe000
+push $N8cabe000
+push $N8cabe000
+push $N8cabe000
+push $N8cabe000
+  Input {
+   inputs 0
+   name source
+   xpos 620
+   ypos -417
+  }
+  Blur {
+   inputs 1+1
+   channels rgba
+   size 1
+   name Blur1
+   xpos 620
+   ypos -368
+  }
+  Blur {
+   inputs 1+1
+   channels {{{parent.Blur1.channels}}}
+   size {{parent.Blur1.size}}
+   name Blur2
+   xpos 620
+   ypos -330
+  }
+  Blur {
+   inputs 1+1
+   channels {{{parent.Blur1.channels}}}
+   size {{parent.Blur1.size}}
+   name Blur3
+   xpos 620
+   ypos -292
+  }
+  Blur {
+   inputs 1+1
+   channels {{{parent.Blur1.channels}}}
+   size {{parent.Blur1.size}}
+   name Blur4
+   xpos 620
+   ypos -254
+  }
+  Blur {
+   inputs 1+1
+   channels {{{parent.Blur1.channels}}}
+   size {{parent.Blur1.size}}
+   name Blur5
+   xpos 620
+   ypos -217
+  }
+  Grade {
+   inputs 1+1
+   channels {{{parent.Blur2.channels}}}
+   name Gradeexp
+   xpos 620
+   ypos -167
+  }
+  Output {
+   name Output1
+   xpos 620
+   ypos -113
+  }
+ end_group
+ ColorLookup {
+  lut {master {}
+    red {}
+    green {}
+    blue {}
+    alpha {curve 0 s3.900000095 x0.8999999762 0.5 x1 1}}
+  mix 0.5
+  name ColorLookup1
+  xpos -402
+  ypos 2035
+ }
+ Group {
+  name exp_blur1
+  xpos -402
+  ypos 2093
+  addUserKnob {20 exponentialblur l expBlur}
+  addUserKnob {41 channels T Blur1.channels}
+  addUserKnob {41 size T Blur1.size}
+  addUserKnob {41 choke T Gradeexp.gamma}
+  addUserKnob {26 ""}
+  addUserKnob {26 credit l "" +STARTLINE T "by Cedric Tremblay"}
+ }
+  Input {
+   inputs 0
+   name mask
+   xpos 779
+   ypos -344
+   number 1
+  }
+  Dot {
+   name Dot1
+   note_font_size 40
+   xpos 813
+   ypos -249
+  }
+set N8cb02c00 [stack 0]
+push $N8cb02c00
+push $N8cb02c00
+push $N8cb02c00
+push $N8cb02c00
+push $N8cb02c00
+  Input {
+   inputs 0
+   name source
+   xpos 620
+   ypos -417
+  }
+  Blur {
+   inputs 1+1
+   channels rgba
+   size 1
+   name Blur1
+   xpos 620
+   ypos -368
+  }
+  Blur {
+   inputs 1+1
+   channels {{{parent.Blur1.channels}}}
+   size {{parent.Blur1.size}}
+   name Blur2
+   xpos 620
+   ypos -330
+  }
+  Blur {
+   inputs 1+1
+   channels {{{parent.Blur1.channels}}}
+   size {{parent.Blur1.size}}
+   name Blur3
+   xpos 620
+   ypos -292
+  }
+  Blur {
+   inputs 1+1
+   channels {{{parent.Blur1.channels}}}
+   size {{parent.Blur1.size}}
+   name Blur4
+   xpos 620
+   ypos -254
+  }
+  Blur {
+   inputs 1+1
+   channels {{{parent.Blur1.channels}}}
+   size {{parent.Blur1.size}}
+   name Blur5
+   xpos 620
+   ypos -217
+  }
+set N8cb30400 [stack 0]
+  Grade {
+   inputs 1+1
+   channels {{{parent.Blur2.channels}}}
+   name Gradeexp
+   xpos 620
+   ypos -167
+  }
+set N8cb30800 [stack 0]
+push $N8cb30400
+  Viewer {
+   inputs 2
+   frame_range 1001-1107
+   input_number 1
+   viewerProcess rec709
+   name Viewer1
+   xpos 375
+   ypos -217
+  }
+push $N8cb30800
+  Output {
+   name Output1
+   xpos 620
+   ypos -113
+  }
+ end_group
+ FilterErode {
+  size 2
+  filter gaussian
+  mix 0.2
+  name FilterErode3
+  xpos -402
+  ypos 2151
+ }
+set N8cb67400 [stack 0]
+ FilterErode {
+  size 6
+  filter gaussian
+  mix 0.1
+  name FilterErode4
+  xpos -402
+  ypos 2234
+ }
+set N8cb67800 [stack 0]
+ FilterErode {
+  size 48
+  filter gaussian
+  mix 0.05
+  name FilterErode5
+  xpos -402
+  ypos 2322
+ }
+push $N8ca83c00
+ Grade {
+  channels alpha
+  whitepoint 0.025
+  white_clamp true
+  name Grade2
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos -361
+  ypos -40
+ }
+ FilterErode {
+  size -2
+  name FilterErode1
+  xpos -240
+  ypos -40
+ }
+push $N8ca82000
+ Colorspace {
+  colorspace_out AlexaV3LogC
+  name Colorspace3
+  label "\[value colorspace_in] >> \[value colorspace_out]"
+  xpos -116
+  ypos -115
+ }
+ Inpaint2 {
+  inputs 2
+  fillRegion "Matte Alpha"
+  center {{parent.Dot17.bbox.r/2} {parent.Dot17.bbox.t/2}}
+  name Inpaint1
+  xpos -116
+  ypos -34
+ }
+ Colorspace {
+  colorspace_in AlexaV3LogC
+  name Colorspace4
+  label "\[value colorspace_in] >> \[value colorspace_out]"
+  xpos -116
+  ypos 23
+ }
+ Dot {
+  name Dot7
+  xpos -82
+  ypos 445
+ }
+ CurveTool {
+  ROI {0 0 {parent.Dot17.bbox.r} {parent.Dot17.bbox.t}}
+  autocropdata {10 10 {parent.Dot17.bbox.r-10} {parent.Dot17.bbox.t-10}}
+  intensitydata {{curve x1001 0.7249052445 x1020 1.18153401} {curve x1001 0.8593132711 x1020 1.750170084} {curve x1001 0.9044700864 x1020 2.048977117} {curve x1001 0.1065980121}}
+  afterRender "import nuke\n\ndef after_render(node):\n    # Get the parent main group node\n    main_group_node = node.parent()\n\n    # Get the intensity data\n    intensity_data = node\['intensitydata'].value()\n\n    # Separate the RGB values\n    r_value, g_value, b_value = intensity_data\[:3]\n\n    # Print the RGB values\n    print(\"R Value: \", r_value)\n    print(\"G Value: \", g_value)\n    print(\"B Value: \", b_value)\n\n    # Scale the RGB values from 0-1 to 0-255\n    r_value_scaled = int(r_value * 255)\n    g_value_scaled = int(g_value * 255)\n    b_value_scaled = int(b_value * 255)\n\n    # Convert the scaled RGB values to HTML color code\n    html_color_code = \"#\{:02x\}\{:02x\}\{:02x\}\".format(r_value_scaled, g_value_scaled, b_value_scaled)\n\n    # Print the HTML color code\n    print(\"HTML Color Code: \", html_color_code)\n\n    # Change the label of the 'screenAvg' knob in the main group node\n    main_group_node\['screenAvg'].setLabel('<font size=8><font color=\{\}>▣</font>'.format(html_color_code))\n    main_group_node\['screenAvg'].setVisible(True)\n    main_group_node\['textArrow'].setVisible(True)\n\n    return html_color_code\n\n# Call the function with the current node\nafter_render(nuke.thisNode())\n"
+  name CurveTool1
+  onCreate "import nuke\n\nn = nuke.thisNode()\nk = nuke.thisKnob()\n\nn\['go'].setLabel('<font color=#EB6D6D>Calculate Screen Color')"
+  xpos 349
+  ypos 441
+ }
+push $N8ca82400
+ Dot {
+  name Dot15
+  xpos 638
+  ypos 321
+ }
+set N8cbe8000 [stack 0]
+ Group {
+  inputs 2
+  name PxF_ScreenClean
+  help "Clean chroma key background imperfections using a clean plate."
+  tile_color 0x733520ff
+  xpos 604
+  ypos 441
+  addUserKnob {20 PxF_ScreenClean}
+  addUserKnob {4 screen_type l ScreenType t "The color of the chroma key background." M {Red Green Blue "" "" ""}}
+  screen_type Green
+  addUserKnob {18 screen_color l ScreenColor t "The color that will be used to repair the chroma key background (usually the average color of the greenscreen on the plate).\n\nWhen using the color picker, use Ctrl+Alt+Shift to avoid looping values."}
+  screen_color {{parent.CurveTool1.intensitydata.g}}
+  addUserKnob {6 screen_color_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  screen_color_panelDropped true
+  addUserKnob {7 mix t "Dissolve between the original (0) and the full effect (1)."}
+  mix 1
+  addUserKnob {26 ""}
+  addUserKnob {26 Credits l "" t "PxF_ScreenClean 2.0.5 - &copy; 2012-2023 - Xavier Bourque - pixelfudger.com \n\nPixelfudger gizmos are free to use for personal and commercial use as long as you leave the credit text intact in the gizmo's knobs and in the source files. " +STARTLINE T "<font size=2>PxF_ScreenClean 2.0.5 - &copy; 2012-2023 - </font><a href=\"http://www.xavierbourque.com\"><font color=\"#bbbbbb\" size=2>Xavier Bourque</a></font> - <a href=\"http://www.pixelfudger.com\"><font color=\"#bbbbbb\" size=2>pixelfudger.com</a></font> - <a href=\"http://www.pixelfudger.com/userguides/PxF_ScreenClean.html\"><font color=\"#bbbbbb\" size=2>Video Tutorial</a></font>"}
+ }
+  Input {
+   inputs 0
+   name mask
+   xpos 419
+   ypos 274
+   number 2
+  }
+  Input {
+   inputs 0
+   name plate
+   xpos 203
+   ypos -448
+  }
+  Dot {
+   name Dot1
+   xpos 209
+   ypos -347
+  }
+set N8cbe8c00 [stack 0]
+  Dot {
+   name Dot2
+   xpos -64
+   ypos -202
+  }
+  Dot {
+   name Dot3
+   xpos -57
+   ypos 214
+  }
+set N8cbe9400 [stack 0]
+push $N8cbe9400
+push $N8cbe8c00
+  Shuffle {
+   red blue
+   green blue
+   alpha black
+   name Blue
+   xpos 203
+   ypos -187
+  }
+set N8cbe9800 [stack 0]
+push $N8cbe8c00
+  Shuffle {
+   red green
+   blue green
+   alpha black
+   name Green
+   xpos 112
+   ypos -179
+  }
+set N8cbe9c00 [stack 0]
+push $N8cbe8c00
+  Shuffle {
+   green red
+   blue red
+   alpha black
+   name Red
+   xpos 17
+   ypos -180
+  }
+set N8cc0e000 [stack 0]
+  Switch {
+   inputs 3
+   which {{screen_type i x1 0}}
+   name High
+   xpos 17
+   ypos -99
+  }
+push $N8cbe9c00
+push $N8cc0e000
+  Switch {
+   inputs 2
+   which {{"screen_type == 0 ? 1 : screen_type == 1 ? 0 : 0" i x1 0}}
+   name LowA
+   xpos 145
+   ypos -108
+  }
+push $N8cbe9800
+push $N8cbe9c00
+push 0
+  Switch {
+   inputs 3
+   which {{"screen_type == 0 ? 2 : screen_type == 1 ? 2 : 1" i x1 1}}
+   name LowB
+   xpos 261
+   ypos -107
+  }
+  Merge2 {
+   inputs 2
+   operation max
+   name Merge1
+   xpos 217
+   ypos -59
+  }
+  Merge2 {
+   inputs 2
+   operation minus
+   name Merge2
+   xpos 116
+   ypos -20
+  }
+  Input {
+   inputs 0
+   name clean_plate
+   xpos 462
+   ypos -437
+   number 1
+  }
+  Dot {
+   name Dot4
+   xpos 530
+   ypos -235
+  }
+set N8cc0fc00 [stack 0]
+  Shuffle {
+   red blue
+   green blue
+   alpha black
+   name Blue1
+   xpos 570
+   ypos -194
+  }
+set N8cc3e000 [stack 0]
+push $N8cc0fc00
+  Shuffle {
+   red green
+   blue green
+   alpha black
+   name Green1
+   xpos 481
+   ypos -195
+  }
+set N8cc3e400 [stack 0]
+push $N8cc0fc00
+  Shuffle {
+   green red
+   blue red
+   alpha black
+   name Red1
+   xpos 382
+   ypos -194
+  }
+set N8cc3e800 [stack 0]
+  Switch {
+   inputs 3
+   which {{screen_type i x1 0}}
+   name High1
+   xpos 401
+   ypos -130
+  }
+push $N8cc3e400
+push $N8cc3e800
+  Switch {
+   inputs 2
+   which {{"screen_type == 0 ? 1 : screen_type == 1 ? 0 : 0" i}}
+   name LowA1
+   xpos 498
+   ypos -131
+  }
+push $N8cc3e000
+push $N8cc3e400
+push 0
+  Switch {
+   inputs 3
+   which {{"screen_type == 0 ? 2 : screen_type == 1 ? 2 : 1" i}}
+   name LowB1
+   xpos 592
+   ypos -128
+  }
+  Merge2 {
+   inputs 2
+   operation max
+   name Merge3
+   xpos 532
+   ypos -73
+  }
+  Merge2 {
+   inputs 2
+   operation minus
+   name Merge4
+   xpos 429
+   ypos -19
+  }
+  Merge2 {
+   inputs 2
+   operation divide
+   name Merge5
+   xpos 309
+   ypos 87
+  }
+  Clamp {
+   name Clamp1
+   xpos 309
+   ypos 114
+  }
+push $N8cc0fc00
+  Dot {
+   name Dot5
+   xpos 720
+   ypos -198
+  }
+push $N8cbe8c00
+  Dot {
+   name Dot7
+   xpos 845
+   ypos -231
+  }
+  ColorCorrect {
+   gain 0
+   offset {{parent.parent.CurveTool1.intensitydata} {parent.parent.CurveTool1.intensitydata} {parent.parent.CurveTool1.intensitydata} {parent.parent.CurveTool1.intensitydata}}
+   name ColorCorrect1
+   xpos 817
+   ypos -159
+   postage_stamp true
+  }
+  Merge2 {
+   inputs 2
+   operation minus
+   name Merge6
+   xpos 692
+   ypos -24
+  }
+  Dot {
+   name Dot6
+   xpos 688
+   ypos 165
+  }
+  Merge2 {
+   inputs 2
+   operation multiply
+   name Merge7
+   xpos 309
+   ypos 166
+  }
+set N8cc75c00 [stack 0]
+  Merge2 {
+   inputs 2
+   operation minus
+   name Merge8
+   xpos 309
+   ypos 215
+  }
+set N8ccb6000 [stack 0]
+  Keymix {
+   inputs 3
+   invertMask true
+   bbox B
+   name Keymix1
+   xpos 309
+   ypos 299
+   disable {{"\[exists parent.input2] ? 0 : 1" i x1 0}}
+  }
+push $N8cbe9400
+  Dissolve {
+   inputs 2
+   which {{parent.mix}}
+   name Dissolve1
+   xpos 309
+   ypos 403
+  }
+  Output {
+   name Output1
+   xpos 309
+   ypos 503
+  }
+push $N8cc75c00
+push $N8ccb6000
+  Viewer {
+   inputs 2
+   frame_range 1001-1108
+   frame_increment 8
+   overscan 500
+   viewerProcess rec709
+   gl_lighting true
+   name Viewer1
+   xpos 938
+   ypos 69
+  }
+ end_group
+push $N8ca9c400
+push $N8cbe8000
+ Expression {
+  expr0 0
+  expr1 0
+  expr2 0
+  expr3 0
+  name Expression1
+  xpos 761
+  ypos 317
+ }
+ ColorCorrect {
+  gain 0
+  offset {{parent.CurveTool1.intensitydata} {parent.CurveTool1.intensitydata} {parent.CurveTool1.intensitydata} {parent.CurveTool1.intensitydata}}
+  name ColorCorrect1
+  xpos 761
+  ypos 418
+  postage_stamp true
+ }
+ Dot {
+  name Dot19
+  xpos 795
+  ypos 569
+ }
+push $N8cbe8000
+ Dot {
+  name Dot20
+  xpos 494
+  ypos 321
+ }
+ Keymix {
+  inputs 3
+  channels rgba
+  invertMask true
+  name Keymix3
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 460
+  ypos 565
+ }
+ Dot {
+  name Dot21
+  xpos 494
+  ypos 656
+ }
+ Switch {
+  inputs 2
+  which {{parent.cleanPlate}}
+  name Switch2
+  knobChanged "if nuke.thisKnob().name() == 'useLifetime':\n    expression = '\\n' + 'Lifetime \[value this.lifetimeStart] - \[value this.lifetimeEnd]'\n    label = nuke.thisNode().knob('label').value()\n    if nuke.thisKnob().value() == 1:\n        nuke.thisNode().knob('label').setValue(label + expression)\n    else:\n        label = label.replace(expression, '')\n        nuke.thisNode().knob('label').setValue(label)"
+  label "input:\[value which]"
+  xpos 604
+  ypos 646
+ }
+ Dot {
+  name Dot2
+  xpos 638
+  ypos 854
+ }
+set N8cd31000 [stack 0]
+ Dot {
+  name Dot22
+  xpos 638
+  ypos 964
+ }
+set N8cd31400 [stack 0]
+ Dot {
+  name Dot5
+  xpos 638
+  ypos 1074
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.alpha 0 3 rgba.blue 0 2 rgba.red 0 0 rgba.blue 0 2 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2"
+  name Shuffle3
+  label "\[if \{\[value in1] != \"none\"\} \{return \"\[value in1] > \"\} \{return \"\"\}] \[if \{\[value out1] != \"none\"\} \{return \"\[value out1]\"\} \{return \"\"\}]\n\[if \{\[value in2] != \"none\"\} \{return \"\[value in2] > \"\} \{return \"\"\}]  \[if \{\[value out2] != \"none\"\} \{return \"\[value out2]\"\} \{return \"\"\}]"
+  xpos 459
+  ypos 1064
+ }
+ Add {
+  channels rgba
+  value {{1-parent.CurveTool1.intensitydata.b}}
+  name Add3
+  xpos 349
+  ypos 1070
+ }
+push $N8cd31400
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.alpha 0 3 rgba.green 0 1 rgba.green 0 1 rgba.green 0 1 rgba.red 0 0 rgba.green 0 1 rgba.blue 0 2"
+  name Shuffle2
+  label "\[if \{\[value in1] != \"none\"\} \{return \"\[value in1] > \"\} \{return \"\"\}] \[if \{\[value out1] != \"none\"\} \{return \"\[value out1]\"\} \{return \"\"\}]\n\[if \{\[value in2] != \"none\"\} \{return \"\[value in2] > \"\} \{return \"\"\}]  \[if \{\[value out2] != \"none\"\} \{return \"\[value out2]\"\} \{return \"\"\}]"
+  xpos 459
+  ypos 954
+ }
+ Add {
+  channels rgba
+  value {{1-parent.CurveTool1.intensitydata.g}}
+  name Add2
+  xpos 349
+  ypos 960
+ }
+push $N8cd31000
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 rgba.red 0 0 black -1 -1 rgba.alpha 0 3 rgba.red 0 0 rgba.green 0 1 rgba.red 0 0 rgba.blue 0 2"
+  name Shuffle1
+  label "\[if \{\[value in1] != \"none\"\} \{return \"\[value in1] > \"\} \{return \"\"\}] \[if \{\[value out1] != \"none\"\} \{return \"\[value out1]\"\} \{return \"\"\}]\n\[if \{\[value in2] != \"none\"\} \{return \"\[value in2] > \"\} \{return \"\"\}]  \[if \{\[value out2] != \"none\"\} \{return \"\[value out2]\"\} \{return \"\"\}]"
+  xpos 459
+  ypos 844
+ }
+ Add {
+  channels rgba
+  value {{1-parent.CurveTool1.intensitydata.r}}
+  name Add1
+  xpos 349
+  ypos 850
+ }
+ Dot {
+  name Dot11
+  xpos 256
+  ypos 854
+ }
+ Shuffle2 {
+  inputs 2
+  fromInput1 {{0} B A}
+  in1 rgb
+  out1 rgb
+  fromInput2 {{1} B A}
+  in2 rgb
+  out2 rgb
+  mappings "6 rgba.red 0 0 rgba.red 0 0 black -1 -1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.red 1 0 black -1 -1 rgba.blue 1 2 rgba.green 1 1 rgba.green 1 1"
+  name Shuffle4
+  label "\[if \{\[value in1] != \"none\"\} \{return \"\[value in1] > \"\} \{return \"\"\}] \[if \{\[value out1] != \"none\"\} \{return \"\[value out1]\"\} \{return \"\"\}]\n\[if \{\[value in2] != \"none\"\} \{return \"\[value in2] > \"\} \{return \"\"\}]  \[if \{\[value out2] != \"none\"\} \{return \"\[value out2]\"\} \{return \"\"\}]"
+  xpos 222
+  ypos 948
+ }
+ Shuffle2 {
+  inputs 2
+  fromInput1 {{0} B A}
+  in1 rgb
+  out1 rgb
+  fromInput2 {{1} B A}
+  in2 rgb
+  out2 rgb
+  mappings "6 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.red 1 0 black -1 -1 rgba.green 1 1 rgba.blue 1 2 rgba.blue 1 2"
+  name Shuffle5
+  label "\[if \{\[value in1] != \"none\"\} \{return \"\[value in1] > \"\} \{return \"\"\}] \[if \{\[value out1] != \"none\"\} \{return \"\[value out1]\"\} \{return \"\"\}]\n\[if \{\[value in2] != \"none\"\} \{return \"\[value in2] > \"\} \{return \"\"\}]  \[if \{\[value out2] != \"none\"\} \{return \"\[value out2]\"\} \{return \"\"\}]"
+  xpos 222
+  ypos 1058
+ }
+ Dot {
+  name Dot10
+  xpos 256
+  ypos 1324
+ }
+set N8cd7e000 [stack 0]
+ Dot {
+  name Dot28
+  xpos -72
+  ypos 1324
+ }
+push $N8cd7e000
+ Saturation {
+  saturation 0
+  name Saturation3
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 222
+  ypos 1437
+ }
+set N8cd7e800 [stack 0]
+ Dot {
+  name Dot26
+  xpos 95
+  ypos 1441
+ }
+set N8cd7ec00 [stack 0]
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge13
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos -106
+  ypos 1437
+ }
+ Dot {
+  name Dot29
+  xpos -72
+  ypos 1795
+ }
+push $N8cd7ec00
+ Clamp {
+  channels rgba
+  minimum -0.5
+  name Clamp5
+  tile_color 0xff
+  xpos 61
+  ypos 1491
+ }
+ Grade {
+  name Grade4
+  tile_color 0xff
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 61
+  ypos 1563
+ }
+ Grade {
+  gamma {{parent.Grade4.gamma}}
+  name Grade7
+  tile_color 0x2d2d2dff
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 61
+  ypos 1589
+ }
+ Grade {
+  gamma {{parent.Grade4.gamma}}
+  name Grade8
+  tile_color 0x2d2d2dff
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 61
+  ypos 1615
+ }
+ Toe2 {
+  name Toe1
+  tile_color 0x2d2d2dff
+  xpos 61
+  ypos 1641
+ }
+ Dot {
+  name Dot27
+  xpos 95
+  ypos 1725
+ }
+push $N8cd7e800
+ Clamp {
+  channels rgba
+  minimum 1
+  maximum 55
+  name Clamp4
+  tile_color 0xffffffff
+  xpos 222
+  ypos 1491
+ }
+ Grade {
+  name Grade5
+  tile_color 0xffffffff
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 222
+  ypos 1563
+ }
+ Grade {
+  gamma {{parent.Grade5.gamma}}
+  name Grade6
+  tile_color 0x9e9e9eff
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 222
+  ypos 1589
+ }
+ Grade {
+  gamma {{parent.Grade5.gamma}}
+  name Grade9
+  tile_color 0x9e9e9eff
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 222
+  ypos 1615
+ }
+ Clamp {
+  channels rgba
+  maximum 10
+  name Clamp1
+  tile_color 0x9e9e9eff
+  xpos 222
+  ypos 1641
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge12
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 222
+  ypos 1721
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge14
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 222
+  ypos 1791
+ }
+push $N8ca9c000
+ Input {
+  inputs 0
+  name BG
+  xpos 1180
+  ypos -780
+  number 2
+ }
+ Crop {
+  box {0 0 {parent.Dot17.bbox.r} {parent.Dot17.bbox.t}}
+  crop false
+  name Crop1
+  xpos 1180
+  ypos -109
+ }
+ Colorspace {
+  colorspace_out AlexaV3LogC
+  name Colorspace1
+  label "\[value colorspace_in] >> \[value colorspace_out]"
+  xpos 1180
+  ypos 171
+ }
+ Inpaint2 {
+  inputs 2
+  fillRegion "Matte Alpha"
+  center {{parent.Dot17.bbox.r/2} {parent.Dot17.bbox.t/2}}
+  name Inpaint2
+  xpos 1180
+  ypos 238
+ }
+ Colorspace {
+  colorspace_in AlexaV3LogC
+  name Colorspace2
+  label "\[value colorspace_in] >> \[value colorspace_out]"
+  xpos 1180
+  ypos 286
+ }
+ Dot {
+  name Dot24
+  xpos 1214
+  ypos 1877
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge11
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 222
+  ypos 1873
+ }
+ Colorspace {
+  colorspace_out AlexaV3LogC
+  name Colorspace8
+  label "\[value colorspace_in] >> \[value colorspace_out]"
+  xpos 222
+  ypos 2073
+ }
+set N8ce30c00 [stack 0]
+ Dot {
+  name Dot14
+  xpos 614
+  ypos 2083
+ }
+ Dot {
+  name Dot13
+  xpos 614
+  ypos 2244
+ }
+set N8ce31400 [stack 0]
+ Dot {
+  name Dot12
+  xpos 614
+  ypos 2332
+ }
+push $N8cb67800
+push $N8ce31400
+push $N8cb67400
+push $N8ce30c00
+push $N8ca82c00
+ Colorspace {
+  colorspace_out AlexaV3LogC
+  name Colorspace6
+  label "\[value colorspace_in] >> \[value colorspace_out]"
+  xpos 714
+  ypos 2151
+ }
+ Keymix {
+  inputs 3
+  channels rgba
+  invertMask true
+  name Keymix1
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 222
+  ypos 2157
+ }
+ Keymix {
+  inputs 3
+  channels rgba
+  invertMask true
+  name Keymix4
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 222
+  ypos 2240
+ }
+ Keymix {
+  inputs 3
+  channels rgba
+  invertMask true
+  name Keymix5
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 222
+  ypos 2328
+ }
+ Colorspace {
+  colorspace_in AlexaV3LogC
+  name Colorspace7
+  label "\[value colorspace_in] >> \[value colorspace_out]"
+  xpos 222
+  ypos 2397
+ }
+push $N8ca83000
+ Keymix {
+  inputs 3
+  channels rgba
+  invertMask {{1-parent.checkInvert}}
+  name Keymix2
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 222
+  ypos 2589
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy1
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 222
+  ypos 2812
+ }
+ Dot {
+  name Dot4
+  note_font_size 40
+  xpos 256
+  ypos 3261
+ }
+set N8ce61800 [stack 0]
+ Difference {
+  inputs 2
+  gain 1000000
+  name Difference1
+  xpos 518
+  ypos 3251
+ }
+ Premult {
+  name Premult1
+  xpos 518
+  ypos 3346
+ }
+push $N8ce61800
+ Switch {
+  inputs 2
+  which {{parent.Output}}
+  name Switch1
+  xpos 222
+  ypos 3346
+ }
+ Output {
+  name Output1
+  xpos 222
+  ypos 3626
+ }
+ Expression {
+  inputs 0
+  name Expression1_R
+  xpos 421
+  ypos 735
+ }
+push $N8cbe8000
+push $N8cd7e000
+ Viewer {
+  inputs 2
+  frame_range 1001-1066
+  frame_increment 8
+  input_number 1
+  overscan 500
+  colour_sample_bbox {0.1323459148 0.2981366515 0.1328236908 0.2986144423}
+  viewerProcess rec709
+  gl_lighting true
+  name Viewer1
+  selected true
+  xpos 222
+  ypos 1342
+ }
+end_group

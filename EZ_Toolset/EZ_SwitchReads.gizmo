@@ -1,0 +1,28 @@
+set cut_paste_input [stack 0]
+version 14.0 v6
+push $cut_paste_input
+Switch {
+ which {{WhichKnob}}
+ name EZ_SwitchReads1
+ knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\nif k.name() == \"WhichKnob\":\n    if k.value() == 0:\n        n\[\"text_1\"].setLabel(\"<font color=#ABD8A2> <b>Control Switch</b>\")\n        n\[\"text_2\"].setLabel(\"<font color=#ABD8A2> <b>Input Names</b>\")\n        n\[\"About\"].setValue(\"<font color=#9AB89A> <font size=3> v2.5 | <font size=1> Victor Rouillard &copy; \")\n        \n    else:\n        n\[\"text_1\"].setLabel(\"<font color=#FA2D25> <b>Control Switch</b>\")\n        n\[\"text_2\"].setLabel(\"<font color=#FA2D25> <b>Input Names</b>\")\n        n\[\"About\"].setValue(\"<font color=#AA4239> <font size=3> v2.5 | <font size=1> Victor Rouillard &copy; \")"
+ tile_color 0xff00ff
+ label "\[if \{\[value which]==\"1\"\} \{return \"\[value Value1] \[knob this.tile_color 0xff000000]\"\} \{return \"\[value Value0] \[knob this.tile_color 0xff00ff]\"\}]"
+ note_font "DejaVu Sans"
+ selected true
+ xpos -1156
+ ypos 131
+ addUserKnob {20 Switch}
+ addUserKnob {26 text_1 l "<font color=#ABD8A2> <b>Control Switch</b>"}
+ addUserKnob {26 empty3 l "" +STARTLINE T " "}
+ addUserKnob {3 WhichKnob l Which}
+ addUserKnob {26 ""}
+ addUserKnob {26 text_2 l "<font color=#ABD8A2> <b>Input Names</b>"}
+ addUserKnob {26 empty1 l "" +STARTLINE T " "}
+ addUserKnob {1 Value0 l "Input 0:"}
+ Value0 Stepsaver
+ addUserKnob {1 Value1 l "Input 1:" -STARTLINE}
+ Value1 Processing
+ addUserKnob {26 text l "" +STARTLINE T "\n"}
+ addUserKnob {26 ""}
+ addUserKnob {26 About l "" +STARTLINE T "<font color=#9AB89A> <font size=3> v2.5 | <font size=1> Victor Rouillard &copy; "}
+}
