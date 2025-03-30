@@ -1,0 +1,656 @@
+set cut_paste_input [stack 0]
+version 14.0 v6
+push $cut_paste_input
+Group {
+ name EZ_ColorMatcher1
+ knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\nif k.name() == \"refPatch\":\n    if k.value():\n        n\[\"sourcePatch\"].setFlag(nuke.STARTLINE)\n    else:\n        n\[\"sourcePatch\"].clearFlag(nuke.STARTLINE)\n    n\[\"RefFrameHold\"].setVisible(k.value())\n    \nelif k.name() == \"sourcePatch\":\n    if k.value():\n        n\[\"sourcePatch\"].setFlag(nuke.STARTLINE)\n    else:\n        n\[\"sourcePatch\"].clearFlag(nuke.STARTLINE)\n    n\[\"PatchFrameHold\"].setVisible(k.value())\n    \n"
+ tile_color 0xeabd00ff
+ label Sampling:1
+ selected true
+ xpos -52
+ ypos -137
+ addUserKnob {20 ColorMatcher l "Color Matcher"}
+ addUserKnob {26 flickerMatcher l "<font color=#DFC55A> @b;Color Matcher"}
+ addUserKnob {3 zones_int l Zones}
+ zones_int 1
+ addUserKnob {22 updateZones l Update -STARTLINE T "import nuke\nimport math\n\nprint(\"_________________________________________________________________________________________\")\n\ndef offset_nodes_position(nodes, offset, center_node=None):\n    try:\n        if center_node:\n            center = (center_node.xpos(), center_node.ypos())\n        else:\n            i = math.ceil(len(nodes) / 2) - 1\n            center = (nodes\[i].xpos(), nodes\[i].ypos())\n        for node in nodes:\n            position = (node.xpos() - center\[0], node.ypos() - center\[1])\n            node.setXYpos(offset\[0] + position\[0], offset\[1] + position\[1])\n        return nodes\n    except:\n        return nodes\n\ngroup        = nuke.thisNode()\nint_value    = int(max(0, nuke.thisNode().knob('zones_int').getValue()))\nprevious_int_value    = int(nuke.thisNode().knob('previous_zones_int').getValue())\nAbout        = group\['About']\nAbout_Text   = nuke.Text_Knob(\"About\", \"\", \"<font color=#FFEB99> <font size=3> v5 | <font size=1> Victor Rouillard &copy; 2018-2024\")\nloopStart = previous_int_value\nloopEnd = int_value    \n\nif int_value > previous_int_value:\n    loopStart, loopEnd = previous_int_value, int_value\n    print(f\"Loops start at \{loopStart\} and end at \{loopEnd\}\")\nelif int_value < previous_int_value:\n    loopStart, loopEnd = int_value, previous_int_value\n    print(f\"Loops start at \{loopStart\} and end at \{loopEnd\}\")\nelse:\n    loopStart, loopEnd = 0, 0\n    print(\"Nothing done\")\n    \nfor i in range(loopStart+1, loopEnd+1):\n    divider_knob_name = \"Divider_\{\}\".format(i)\n    if divider_knob_name in group.knobs():\n        group.removeKnob(group.knob(divider_knob_name))\n     \nwith group:\n\n    for n in group.nodes():  \n        if loopStart == loopEnd:\n            break                \n        if n.knob(\"label\").value() == \"keep\":\n            continue\n                      \n        for i in range(loopStart+1, loopEnd+1):  \n            sample_target_knob_name = \"Sample\{\}\".format(i)\n            sample_group_knob_name = \"Sample\{\}\".format(i)\n            sample_target_node = nuke.toNode(\"SampleNode\{\}\".format(i))\n            if sample_group_knob_name in group.knobs():\n                group\['Sample\{\}'.format(i)].setExpression(\"\")\n                group.removeKnob(group.knob(sample_group_knob_name))\n                \n            gain_target_knob_name = \"multiply\"\n            gain_group_knob_name = \"gain_\{\}\".format(i)\n            gain_target_node = nuke.toNode(\"GradeZone\{\}\".format(i))\n            if gain_group_knob_name in group.knobs():\n                group\['gain_\{\}'.format(i)].setExpression(\"\")                \n                group.removeKnob(group.knob(gain_group_knob_name)) \n                \n            omitFrom_target_knob_name = \"OmitFrom1\"\n            omitFrom_group_knob_name = \"OmitFrom_\{\}\".format(i)\n            omitFrom_target_node = nuke.toNode(\"Omit\{\}\".format(i))\n            if omitFrom_group_knob_name in group.knobs():\n                group\['OmitFrom_\{\}'.format(i)].setExpression(\"\")                \n                group.removeKnob(group.knob(omitFrom_group_knob_name)) \n                \n            omitTo_target_knob_name = \"OmitTo1\"\n            omitTo_group_knob_name = \"OmitTo_\{\}\".format(i)\n            omitTo_target_node = nuke.toNode(\"Omit\{\}\".format(i))\n            if omitTo_group_knob_name in group.knobs():\n                group\['OmitTo_\{\}'.format(i)].setExpression(\"\")                \n                group.removeKnob(group.knob(omitTo_group_knob_name))                  \n                \n        iteration_knob = n.knob(\"iteration\")\n        for i in range(loopStart+1, loopEnd+1):\n            if iteration_knob is not None:\n                if int(iteration_knob.value()) == i:\n                    n.setSelected(True)\n                    nuke.delete(n)\n        \n    nukescripts.clear_selection_recursive()\n    template_nodes = nuke.toNode(\"template\").nodes()\n    with nuke.toNode(\"template\"):\n        for node in template_nodes:\n            if node.Class() in \[\"Output\", \"Input\"]:\n                continue\n            node.setSelected(True)\n        nuke.nodeCopy(\"%clipboard%\")\n\n    \n    last_output =  nuke.toNode(\"output_dot1\")\n    keymix = None\n    connect_Keymix = None\n    Zone = None\n    input_node = nuke.toNode(\"RefDot1\")\n    source_node = nuke.toNode(\"SourceDot1\")  \n          \n    for i in range(loopStart, loopEnd):\n        if loopStart == loopEnd:\n            break    \n        if previous_int_value > int_value:\n            continue\n        else:      \n            nukescripts.clear_selection_recursive()\n            if i >= 1:\n                zone_input = nuke.nodes.Input()\n                zone_input.setName(\"Zone\{\}\".format(i+1)) \n                zone_input.setXYpos(input_node.xpos()-500,input_node.ypos()+3506+(i*100))\n                zone_iteration_knob = nuke.Int_Knob('iteration', 'iteration')\n                zone_iteration_knob.setValue(i+1)\n                zone_input.addKnob(zone_iteration_knob)                \n            nuke.nodePaste(\"%clipboard%\")\n            pasted_nodes = nuke.selectedNodes()\n            \n            for node in pasted_nodes:\n                if \"input_dot\" in node.name():\n                    node.setInput(0, input_node)\n                elif \"source_dot\" in node.name():\n                    node.setInput(0, source_node)\n                elif \"output_dot\" in node.name():\n                    output_node = node\n            \n                for knob_name in \[\"SampleNode\", \"RefCrop\", \"SourceCrop\"]:\n                    if knob_name + str(i+1) in node.name():\n                        if knob_name == \"SampleNode\":\n                            node.knob(\"Sample0\").setName(\"Sample\{\}\".format(i+1))\n                            sample_knob = nuke.XY_Knob('Sample\{\}'.format(i+1), f\"<font color=#DFC55A>@b;Sample\{i+1\}\")\n                            gain_knob = nuke.Color_Knob(\"gain_\{\}\".format(i+1), \"Gain\")\n                            divider_knob = nuke.Text_Knob(\"Divider_\{\}\".format(i+1), \" \")\n                            omit_from_knob = nuke.Int_Knob(\"OmitFrom_\{\}\".format(i+1), \"Omit From\")\n                            omit_to_knob = nuke.Int_Knob(\"OmitTo_\{\}\".format(i+1), \"to\")\n            \n                            knobs_to_add = \[sample_knob, gain_knob, omit_from_knob, omit_to_knob, divider_knob]\n                            for knob in knobs_to_add:\n                                group.addKnob(knob)\n                            \n                            sample_default_x = (i+1)*250\n                            sample_knob.setValue(\[sample_default_x, 500])\n                            node\['Sample\{\}'.format(i+1)].setExpression(\"parent.Sample\{\}\".format(i+1))\n                            gain_knob.setValue(1)\n                            gain_knob.setRange(0, 4)\n                            gain_target_node = nuke.toNode(\"GradeZone\{\}\".format(i+1))\n                            gain_target_node\['multiply'].setExpression(\"parent.gain_\{\}.r\".format(i+1), 0)\n                            gain_target_node\['multiply'].setExpression(\"parent.gain_\{\}.g\".format(i+1), 1)\n                            gain_target_node\['multiply'].setExpression(\"parent.gain_\{\}.b\".format(i+1), 2)\n                            omit_to_target_node = nuke.toNode(\"Omit\{\}\".format(i+1))\n                            omit_to_target_node\['OmitTo1'].setExpression(\"parent.OmitTo_\{\}\".format(i+1))\n                            omit_from_target_node = nuke.toNode(\"Omit\{\}\".format(i+1))\n                            omit_from_target_node\['OmitFrom1'].setExpression(\"parent.OmitFrom_\{\}\".format(i+1))                            \n                            omit_from_knob.setValue(1000)\n                            omit_to_knob.setValue(1001)\n                            omit_to_knob.clearFlag(nuke.STARTLINE)\n                            group.removeKnob(group\['About'])\n                            group.addKnob(About_Text)\n            \n                        elif knob_name in \[\"RefCrop\", \"SourceCrop\"]:\n                            sample_from = \"SampleNode\{\}\".format(i+1)\n                            sample_knob = \"Sample\{\}\".format(i+1)\n                            node\['SampleFrom'].setValue(sample_from)\n                            node\['SampleKnob'].setValue(sample_knob)   \n                    \n                if \"iteration\" in node.knobs():\n                    iteration_value = i+1\n                    node\['iteration'].setValue(i+1)\n            \n        if i >= 1:\n            if previous_int_value < int_value:\n                if previous_int_value == 1:\n                    keymix = nuke.nodes.Keymix(inputs=\[keymix or last_output , output_node, zone_input], xpos=input_node.xpos()-35, ypos = input_node.ypos()+3500+(i*100))\n                else:\n                    last_output = nuke.toNode(\"Keymix\{\}\".format(previous_int_value - 1))\n                    keymix = nuke.nodes.Keymix(inputs=\[keymix or last_output , output_node, zone_input], xpos=input_node.xpos()-35, ypos = input_node.ypos()+3500+(i*100))\n            else:\n                keymix = nuke.nodes.Keymix(inputs=\[keymix or last_output , output_node, zone_input], xpos=input_node.xpos()-35, ypos = input_node.ypos()+3500+(i*100))\n            keymix_iteration_knob = nuke.Int_Knob('iteration', 'iteration')\n            keymix_iteration_knob.setValue(i+1)\n            keymix.addKnob(keymix_iteration_knob)\n        else:\n            keymix = output_node\n        offset_nodes_position(pasted_nodes, (source_node.xpos() + (i*750)+392 , 300))\n        nuke.toNode(\"Output1\").setInput(0, nuke.toNode(\"InputFormat1\"))\n        \n    if previous_int_value > int_value:\n        connect_Keymix = nuke.toNode(\"Keymix\{\}\".format(int_value - 1))\n    else:\n        connect_Keymix = keymix\n    if int_value == 1:\n        connect_Keymix = nuke.toNode(\"output_dot1\")\n    if loopStart != loopEnd:\n        nuke.toNode(\"MultiplyPatch1\").setInput(1, connect_Keymix)   \n    group\['label'].setValue(\"Sampling:\"+str(int_value))\n    group\['previous_zones_int'].setValue(int_value)\n    group\['zones_int'].setValue(int_value)    "}
+ addUserKnob {3 previous_zones_int -STARTLINE +INVISIBLE}
+ previous_zones_int 1
+ addUserKnob {26 ""}
+ addUserKnob {41 Colorspace l "<font color=#DFC55A>@b;Colorspace" T ColorspaceIN.colorspace_out}
+ addUserKnob {6 refPatch l "Framehold Ref ?" +STARTLINE}
+ addUserKnob {3 RefFrameHold l "      ➤" -STARTLINE +HIDDEN}
+ RefFrameHold 1001
+ addUserKnob {6 sourcePatch l "Framehold Source?" -STARTLINE}
+ addUserKnob {3 PatchFrameHold l ➤ -STARTLINE +HIDDEN}
+ PatchFrameHold 1001
+ addUserKnob {26 ""}
+ addUserKnob {6 gain_1_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 gain_2_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {12 Sample1 l "<font color=#DFC55A>@b;Sample1"}
+ Sample1 {250 500}
+ addUserKnob {18 gain_1 l Gain R 0 4}
+ gain_1 1
+ addUserKnob {6 gain_1_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {3 OmitFrom_1 l "Omit From"}
+ OmitFrom_1 1000
+ addUserKnob {3 OmitTo_1 l to -STARTLINE}
+ OmitTo_1 1001
+ addUserKnob {26 Divider_1 l " "}
+ addUserKnob {26 About l "" +STARTLINE T "<font color=#FFEB99> <font size=3> v5 | <font size=1> Victor Rouillard &copy; 2018-2024"}
+}
+ Input {
+  inputs 0
+  name Mask
+  label keep
+  xpos 7754
+  ypos 3848
+  number 2
+ }
+ Invert {
+  name InvertMask1
+  label keep
+  xpos 7279
+  ypos 3842
+ }
+ Input {
+  inputs 0
+  name Source
+  label keep
+  xpos 6419
+  ypos -1985
+ }
+ Colorspace {
+  name ColorspaceIN
+  label keep
+  xpos 6419
+  ypos -1727
+ }
+ set C1bca6000 [stack 0]
+ Dot {
+  name SourceDot1
+  label keep
+  xpos 6453
+  ypos -1353
+ }
+set N1bca6400 [stack 0]
+ Dot {
+  name Dot10
+  label keep
+  xpos 5989
+  ypos -1353
+ }
+ Dot {
+  name Dot11
+  label keep
+  xpos 5989
+  ypos 3592
+ }
+set N1bca6c00 [stack 0]
+ Dot {
+  name Dot3
+  label keep
+  xpos 5989
+  ypos 3858
+ }
+set N1bca7000 [stack 0]
+ Input {
+  inputs 0
+  name Ref
+  label keep
+  xpos 6845
+  ypos -1990
+  number 1
+ }
+clone $C1bca6000 {
+  xpos 6845
+  ypos -1727
+  selected false
+ }
+ Dot {
+  name RefDot1
+  label keep
+  xpos 6879
+  ypos -1353
+ }
+ Dot {
+  name input_dot1
+  xpos 6879
+  ypos -723
+  addUserKnob {20 User}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+ Blur {
+  size 15
+  name Preblur1
+  knobChanged "if nuke.thisKnob().name() == 'useLifetime':\n    expression = 'Lifetime \[value this.lifetimeStart] - \[value this.lifetimeEnd]'\n    label = nuke.thisNode().knob('label').value()\n    if nuke.thisKnob().value() == 1:\n        nuke.thisNode().knob('label').setValue(label + expression)\n    else:\n        label = label.replace(expression, '')\n        nuke.thisNode().knob('label').setValue(label)"
+  xpos 6845
+  ypos -492
+  addUserKnob {20 User}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+ Crop {
+  box {{"parent.\[value SampleFrom].\[value SampleKnob].x-1"} {"parent.\[value SampleFrom].\[value SampleKnob].y-1"} {"parent.\[value SampleFrom].\[value SampleKnob].x+1"} {"parent.\[value SampleFrom].\[value SampleKnob].y+1"}}
+  crop false
+  name RefCrop1
+  xpos 6845
+  ypos -297
+  addUserKnob {20 User}
+  addUserKnob {1 SampleFrom}
+  SampleFrom SampleNode1
+  addUserKnob {1 SampleKnob}
+  SampleKnob Sample1
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+set N1bccc800 [stack 0]
+ FrameHold {
+  firstFrame {{parent.RefFrameHold}}
+  name RefFrameHold1
+  xpos 6845
+  ypos -171
+  disable {{1-parent.refPatch}}
+  addUserKnob {20 User}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+push $N1bca6400
+ Dot {
+  name source_dot1
+  xpos 6453
+  ypos -723
+  addUserKnob {20 User}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+ Crop {
+  box {{"parent.\[value SampleFrom].\[value SampleKnob].x-1"} {"parent.\[value SampleFrom].\[value SampleKnob].y-1"} {"parent.\[value SampleFrom].\[value SampleKnob].x+1"} {"parent.\[value SampleFrom].\[value SampleKnob].y+1"}}
+  crop false
+  name SourceCrop1
+  xpos 6419
+  ypos -297
+  addUserKnob {20 User}
+  addUserKnob {1 SampleFrom}
+  SampleFrom SampleNode1
+  addUserKnob {1 SampleKnob}
+  SampleKnob Sample1
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+ FrameHold {
+  firstFrame {{parent.PatchFrameHold}}
+  name SourceFrameHold1
+  xpos 6419
+  ypos -169
+  disable {{1-parent.sourcePatch}}
+  addUserKnob {20 User}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+ Dot {
+  name Dot1
+  xpos 6453
+  ypos -33
+  addUserKnob {20 User}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  name DivideSampler1
+  knobChanged "if nuke.thisKnob().name() == 'useLifetime':\n    expression = 'Lifetime \[value this.lifetimeStart] - \[value this.lifetimeEnd]'\n    label = nuke.thisNode().knob('label').value()\n    if nuke.thisKnob().value() == 1:\n        nuke.thisNode().knob('label').setValue(label + expression)\n    else:\n        label = label.replace(expression, '')\n        nuke.thisNode().knob('label').setValue(label)"
+  xpos 6845
+  ypos -37
+  addUserKnob {20 User}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+ Blur {
+  channels rgba
+  size 500
+  name Postblur1
+  label "size:\[value size]\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 6845
+  ypos 115
+  addUserKnob {20 User}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+ Grade {
+  multiply {{parent.gain_1.r} {parent.gain_1.g} {parent.gain_1.b} 1}
+  multiply_panelDropped true
+  name GradeZone1
+  label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+  xpos 6845
+  ypos 300
+  addUserKnob {20 User}
+  addUserKnob {6 gainKnob_panelDropped l "panel dropped state" +HIDDEN +STARTLINE}
+  gainKnob_panelDropped true
+  addUserKnob {3 iteration}
+  iteration 1
+  addUserKnob {3 gainKnob}
+  gainKnob 1
+ }
+ Dot {
+  name Dot17
+  note_font_size 40
+  xpos 6879
+  ypos 555
+  addUserKnob {20 User}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+set N1bd0a400 [stack 0]
+ Dot {
+  name Dot18
+  note_font_size 40
+  xpos 6755
+  ypos 555
+  addUserKnob {20 User}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+set N1bd0a800 [stack 0]
+ FrameHold {
+  firstFrame {{parent.Omit1.OmitTo1}}
+  name FrameHoldOUT1
+  xpos 6721
+  ypos 634
+  addUserKnob {20 User}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+push $N1bd0a800
+ Dot {
+  name Dot16
+  note_font_size 40
+  xpos 6645
+  ypos 555
+  addUserKnob {20 User}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+ FrameHold {
+  firstFrame {{parent.Omit1.OmitFrom1}}
+  name FrameHoldIN1
+  xpos 6611
+  ypos 634
+  addUserKnob {20 User}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+ Dot {
+  name Dot19
+  note_font_size 40
+  xpos 6645
+  ypos 729
+  addUserKnob {20 User}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+ Dissolve {
+  inputs 2
+  which {{"\[python (nuke.frame()\\ -\\ nuke.thisNode().knob(\\\"OmitFrom1\\\").value())/(nuke.thisNode().knob(\\\"OmitTo1\\\").value()\\ -\\ nuke.thisNode().knob(\\\"OmitFrom1\\\").value())]"}}
+  name DissolveOmit1
+  xpos 6721
+  ypos 720
+  addUserKnob {20 User}
+  addUserKnob {3 OmitFrom1 l "Omit From"}
+  OmitFrom1 {{parent.Omit1.OmitFrom1}}
+  addUserKnob {3 OmitTo1 l to -STARTLINE}
+  OmitTo1 {{parent.Omit1.OmitTo1}}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+push $N1bd0a400
+ Switch {
+  inputs 2
+  which {{parent.Omit1.OmitSwitch1}}
+  name SwitchOmit1
+  xpos 6845
+  ypos 726
+  addUserKnob {20 User}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+ Dot {
+  name output_dot1
+  xpos 6879
+  ypos 1692
+  addUserKnob {20 User}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+push $N1bca6c00
+ Merge2 {
+  inputs 2
+  operation multiply
+  name MultiplyPatch1
+  label keep
+  xpos 6845
+  ypos 3582
+ }
+ Colorspace {
+  colorspace_in {{ColorspaceIN.colorspace_out}}
+  name ColorspaceOUT
+  label keep
+  xpos 6845
+  ypos 3716
+ }
+ Keymix {
+  inputs 3
+  channels rgba
+  name KeymixMask1
+  label keep
+  xpos 6845
+  ypos 3848
+ }
+ Crop {
+  box {{(DotFormat1.InputFormat.w)} {(DotFormat1.InputFormat.h)} {curve} {curve}}
+  name InputFormat1
+  label keep
+  xpos 6845
+  ypos 4141
+ }
+ Output {
+  name Output1
+  label keep
+  xpos 6845
+  ypos 4687
+ }
+ Group {
+  inputs 0
+  name template
+  knobChanged "n = nuke.thisNode()\\nk = nuke.thisKnob()\\nif k.name() == \"refPatch\" and k.value() == 1:\\n    n\[\"RefFrameHold\"].setVisible(False)\\nelse:\\n    n\[\"RefFrameHold\"].setVisible(True)"
+  tile_color 0x3a8e3aff
+  label keep
+  xpos 7297
+  ypos -1907
+ }
+  Output {
+   inputs 0
+   name Output1
+   xpos -448
+   ypos 1019
+  }
+  Dot {
+   inputs 0
+   name input_dot1
+   selected true
+   xpos 509
+   ypos 145
+   addUserKnob {20 User}
+   addUserKnob {3 iteration}
+  }
+  Blur {
+   size 15
+   name Preblur1
+   knobChanged "if nuke.thisKnob().name() == 'useLifetime':\n    expression = 'Lifetime \[value this.lifetimeStart] - \[value this.lifetimeEnd]'\n    label = nuke.thisNode().knob('label').value()\n    if nuke.thisKnob().value() == 1:\n        nuke.thisNode().knob('label').setValue(label + expression)\n    else:\n        label = label.replace(expression, '')\n        nuke.thisNode().knob('label').setValue(label)"
+   selected true
+   xpos 475
+   ypos 376
+   addUserKnob {20 User}
+   addUserKnob {3 iteration}
+  }
+  Crop {
+   box {{"parent.\[value SampleFrom].\[value SampleKnob].x-1"} {"parent.\[value SampleFrom].\[value SampleKnob].y-1"} {"parent.\[value SampleFrom].\[value SampleKnob].x+1"} {"parent.\[value SampleFrom].\[value SampleKnob].y+1"}}
+   crop false
+   name RefCrop1
+   selected true
+   xpos 475
+   ypos 571
+   addUserKnob {20 User}
+   addUserKnob {1 SampleFrom}
+   SampleFrom SampleNode1
+   addUserKnob {1 SampleKnob}
+   SampleKnob Sample0
+   addUserKnob {3 iteration}
+  }
+set N1bd6e000 [stack 0]
+  NoOp {
+   name SampleNode1
+   selected true
+   xpos 620
+   ypos 571
+   addUserKnob {20 User}
+   addUserKnob {12 Sample0}
+   Sample0 {0 1080}
+   addUserKnob {3 iteration}
+  }
+push $N1bd6e000
+  FrameHold {
+   firstFrame {{parent.RefFrameHold}}
+   name RefFrameHold1
+   selected true
+   xpos 475
+   ypos 697
+   disable {{1-parent.refPatch}}
+   addUserKnob {20 User}
+   addUserKnob {3 iteration}
+   iteration 1
+  }
+  Dot {
+   inputs 0
+   name source_dot1
+   selected true
+   xpos 83
+   ypos 145
+   addUserKnob {20 User}
+   addUserKnob {3 iteration}
+  }
+  Crop {
+   box {{"parent.\[value SampleFrom].\[value SampleKnob].x-1"} {"parent.\[value SampleFrom].\[value SampleKnob].y-1"} {"parent.\[value SampleFrom].\[value SampleKnob].x+1"} {"parent.\[value SampleFrom].\[value SampleKnob].y+1"}}
+   crop false
+   name SourceCrop1
+   selected true
+   xpos 49
+   ypos 571
+   addUserKnob {20 User}
+   addUserKnob {1 SampleFrom}
+   SampleFrom SampleNode1
+   addUserKnob {1 SampleKnob}
+   SampleKnob Sample0
+   addUserKnob {3 iteration}
+  }
+  FrameHold {
+   firstFrame {{parent.PatchFrameHold}}
+   name SourceFrameHold1
+   selected true
+   xpos 49
+   ypos 699
+   disable {{1-parent.sourcePatch}}
+   addUserKnob {20 User}
+   addUserKnob {3 iteration}
+   iteration 1
+  }
+  Dot {
+   name Dot1
+   selected true
+   xpos 83
+   ypos 835
+   addUserKnob {20 User}
+   addUserKnob {3 iteration}
+  }
+  Merge2 {
+   inputs 2
+   operation divide
+   name DivideSampler1
+   knobChanged "if nuke.thisKnob().name() == 'useLifetime':\n    expression = 'Lifetime \[value this.lifetimeStart] - \[value this.lifetimeEnd]'\n    label = nuke.thisNode().knob('label').value()\n    if nuke.thisKnob().value() == 1:\n        nuke.thisNode().knob('label').setValue(label + expression)\n    else:\n        label = label.replace(expression, '')\n        nuke.thisNode().knob('label').setValue(label)"
+   selected true
+   xpos 475
+   ypos 831
+   addUserKnob {20 User}
+   addUserKnob {3 iteration}
+  }
+  Blur {
+   channels rgba
+   size 500
+   name Postblur1
+   label "size:\[value size]\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+   selected true
+   xpos 475
+   ypos 983
+   addUserKnob {20 User}
+   addUserKnob {3 iteration}
+  }
+  Grade {
+   multiply {1 1 1 1}
+   multiply_panelDropped true
+   name GradeZone1
+   label "\n\[if \{\[value useLifetime]\} \{return \"lifetime: \[value this.lifetimeStart] - \[value this.lifetimeEnd]]\"\} \{return \"\"\}]\n"
+   selected true
+   xpos 475
+   ypos 1168
+   addUserKnob {20 User}
+   addUserKnob {6 gainKnob_panelDropped l "panel dropped state" +HIDDEN +STARTLINE}
+   gainKnob_panelDropped true
+   addUserKnob {3 iteration}
+   addUserKnob {3 gainKnob}
+   gainKnob 1
+  }
+  Dot {
+   name Dot17
+   note_font_size 40
+   selected true
+   xpos 509
+   ypos 1423
+   addUserKnob {20 User}
+   addUserKnob {3 iteration}
+  }
+set N1bdae000 [stack 0]
+  NoOp {
+   name Omit1
+   selected true
+   xpos 691
+   ypos 1419
+   addUserKnob {20 User}
+   addUserKnob {3 OmitFrom1 l "Omit From"}
+   OmitFrom1 30
+   addUserKnob {3 OmitTo1 l to -STARTLINE}
+   OmitTo1 50
+   addUserKnob {3 OmitSwitch1 l which}
+   OmitSwitch1 {{"inrange ( frame, OmitFrom1, OmitTo1)"}}
+   addUserKnob {3 iteration}
+  }
+push $N1bdae000
+  Dot {
+   name Dot18
+   note_font_size 40
+   selected true
+   xpos 385
+   ypos 1423
+   addUserKnob {20 User}
+   addUserKnob {3 iteration}
+  }
+set N1bdae800 [stack 0]
+  FrameHold {
+   firstFrame {{parent.Omit1.OmitTo1}}
+   name FrameHoldOUT1
+   selected true
+   xpos 351
+   ypos 1502
+   addUserKnob {20 User}
+   addUserKnob {3 iteration}
+  }
+push $N1bdae800
+  Dot {
+   name Dot16
+   note_font_size 40
+   selected true
+   xpos 275
+   ypos 1423
+   addUserKnob {20 User}
+   addUserKnob {3 iteration}
+  }
+  FrameHold {
+   firstFrame {{parent.Omit1.OmitFrom1}}
+   name FrameHoldIN1
+   selected true
+   xpos 241
+   ypos 1502
+   addUserKnob {20 User}
+   addUserKnob {3 iteration}
+  }
+  Dot {
+   name Dot19
+   note_font_size 40
+   selected true
+   xpos 275
+   ypos 1597
+   addUserKnob {20 User}
+   addUserKnob {3 iteration}
+  }
+  Dissolve {
+   inputs 2
+   which {{"\[python (nuke.frame()\\ -\\ nuke.thisNode().knob(\\\"OmitFrom1\\\").value())/(nuke.thisNode().knob(\\\"OmitTo1\\\").value()\\ -\\ nuke.thisNode().knob(\\\"OmitFrom1\\\").value())]"}}
+   name DissolveOmit1
+   selected true
+   xpos 351
+   ypos 1588
+   addUserKnob {20 User}
+   addUserKnob {3 OmitFrom1 l "Omit From"}
+   OmitFrom1 {{parent.Omit1.OmitFrom1}}
+   addUserKnob {3 OmitTo1 l to -STARTLINE}
+   OmitTo1 {{parent.Omit1.OmitTo1}}
+   addUserKnob {3 iteration}
+  }
+push $N1bdae000
+  Switch {
+   inputs 2
+   which {{parent.Omit1.OmitSwitch1}}
+   name SwitchOmit1
+   selected true
+   xpos 475
+   ypos 1594
+   addUserKnob {20 User}
+   addUserKnob {3 iteration}
+  }
+  Dot {
+   name output_dot1
+   selected true
+   xpos 509
+   ypos 2560
+   addUserKnob {20 User}
+   addUserKnob {3 iteration}
+  }
+ end_group
+push $N1bca7000
+ Dot {
+  name DotFormat1
+  label keep
+  xpos 5989
+  ypos 4151
+  addUserKnob {20 User}
+  addUserKnob {14 InputFormat R 0 100}
+  InputFormat {{input.format.w} {input.format.h}}
+ }
+push $N1bccc800
+ NoOp {
+  name SampleNode1
+  xpos 6990
+  ypos -297
+  addUserKnob {20 User}
+  addUserKnob {12 Sample1}
+  Sample1 {{parent.Sample1} {parent.Sample1}}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+push $N1bd0a400
+ NoOp {
+  name Omit1
+  xpos 7061
+  ypos 551
+  addUserKnob {20 User}
+  addUserKnob {3 OmitFrom1 l "Omit From"}
+  OmitFrom1 {{parent.OmitFrom_1}}
+  addUserKnob {3 OmitTo1 l to -STARTLINE}
+  OmitTo1 {{parent.OmitTo_1}}
+  addUserKnob {3 OmitSwitch1 l which}
+  OmitSwitch1 {{"inrange ( frame, OmitFrom1, OmitTo1)"}}
+  addUserKnob {3 iteration}
+  iteration 1
+ }
+end_group

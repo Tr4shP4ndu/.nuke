@@ -1,0 +1,44 @@
+set cut_paste_input [stack 0]
+version 14.0 v6
+push $cut_paste_input
+Group {
+ name EZ_TimeOffset1
+ knobChanged "import nuke\n\nn = nuke.thisNode()\nk = nuke.thisKnob()\n\nInframe = n\['Inframe'].value()\nOutframe = n\['Outframe'].value()\nresultOffset = Inframe - Outframe\n\nif k.name() == \"Inframe\":\n    n\['result'].setValue(resultOffset)\n    \nif k.name() == \"Outframe\":\n    n\['result'].setValue(resultOffset)\n    \nif k.name() == \"result\":\n    n\['prevNeg'].setVisible(False)\n    n\['prevPos'].setVisible(False)    \n    if k.value() < 0:\n        n\['Outframe'].setValue(Inframe - k.value())\n        n\['prevNeg'].setValue(True)\n        n\['prevPos'].setValue(False)        \n    if k.value() > 0:\n        n\['Inframe'].setValue(Outframe + k.value())\n        n\['prevNeg'].setValue(False)\n        n\['prevPos'].setValue(True)          \n    if k.value() == 0:\n        if n\['prevNeg'].value() == True:\n            n\['Outframe'].setValue(Inframe) \n        if n\['prevPos'].value() == True: \n            n\['Inframe'].setValue(Outframe)"
+ tile_color 0x4301a8ff
+ label "Offset: \[value result] "
+ selected true
+ xpos 132
+ ypos -230
+ addUserKnob {20 TimeOffset}
+ addUserKnob {26 text l "<font color=#BFAAD6> @b;Time Offset"}
+ addUserKnob {3 Inframe l "In > "}
+ Inframe 1001
+ addUserKnob {3 Outframe l "Out >"}
+ Outframe 1001
+ addUserKnob {26 ""}
+ addUserKnob {3 result l Offset:}
+ addUserKnob {6 prevNeg -STARTLINE +HIDDEN}
+ addUserKnob {6 prevPos -STARTLINE +HIDDEN}
+ prevPos true
+ addUserKnob {26 ""}
+ addUserKnob {26 About l "" +STARTLINE T "<font color=#BFAAD6> <font size=3> v2.2 | <font size=1> Victor Rouillard &copy; "}
+}
+ Input {
+  inputs 0
+  name Input
+  xpos -533
+  ypos 23
+ }
+ TimeOffset {
+  time_offset {{-(parent.Inframe-parent.Outframe)}}
+  time ""
+  name TimeOffset1
+  xpos -533
+  ypos 123
+ }
+ Output {
+  name Output1
+  xpos -533
+  ypos 209
+ }
+end_group

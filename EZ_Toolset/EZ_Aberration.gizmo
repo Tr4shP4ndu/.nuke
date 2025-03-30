@@ -1,0 +1,135 @@
+set cut_paste_input [stack 0]
+version 14.0 v6
+push $cut_paste_input
+Group {
+ name EZ_Aberration1
+ tile_color 0x9e2c07ff
+ label "\[value Operation]"
+ selected true
+ xpos 98
+ ypos 17
+ addUserKnob {20 User l Aberration}
+ addUserKnob {41 Operation l "<font color=#C86A4A>@b;Operation" T Controls1.Operation}
+ addUserKnob {26 ""}
+ addUserKnob {41 Amount T Controls1.Amount}
+ addUserKnob {26 text l "" +STARTLINE T "\n\n"}
+ addUserKnob {26 "" +STARTLINE}
+ addUserKnob {26 About_1 l "" +STARTLINE T "<font color=#E79C83> <font size=3> v1.1 | <font size=1> Victor Rouillard &copy; "}
+}
+ Input {
+  inputs 0
+  name Input
+  xpos -588
+  ypos 21
+ }
+ Dot {
+  name Dot4
+  xpos -554
+  ypos 186
+  addUserKnob {20 User}
+  addUserKnob {14 format l Format R 0 100}
+  format {{input.format.w} {input.format.h}}
+ }
+set N9360dc00 [stack 0]
+ Dot {
+  name Dot6
+  xpos -336
+  ypos 186
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.red 0 0 black -1 -1 rgba.green 0 1 black -1 -1 rgba.alpha 0 3 rgba.blue 0 2 rgba.blue 0 2"
+  name Shuffle3
+  xpos -370
+  ypos 258
+ }
+ Colorspace {
+  colorspace_out AlexaV3LogC
+  name Colorspace2
+  xpos -370
+  ypos 314
+ }
+ Transform {
+  scale {{parent.Transform1.scale}}
+  center {{parent.Dot4.format/2} {parent.Dot4.format/2}}
+  invert_matrix {{1-parent.Transform1.invert_matrix}}
+  filter Lanczos4
+  name Transform2
+  xpos -370
+  ypos 356
+ }
+ Colorspace {
+  colorspace_in AlexaV3LogC
+  name Colorspace4
+  xpos -370
+  ypos 409
+ }
+push 0
+push $N9360dc00
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 black -1 -1 rgba.red 0 0 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3 rgba.green 0 1 rgba.green 0 1"
+  name Shuffle2
+  xpos -588
+  ypos 260
+ }
+push $N9360dc00
+ Dot {
+  name Dot5
+  xpos -768
+  ypos 186
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 rgba.red 0 0 black -1 -1 rgba.green 0 1 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3"
+  name Shuffle1
+  xpos -802
+  ypos 260
+ }
+ Colorspace {
+  colorspace_out AlexaV3LogC
+  name Colorspace1
+  xpos -802
+  ypos 314
+ }
+ Transform {
+  scale {{"(parent.Controls1.Amount*0.01) + 1"}}
+  center {{parent.Dot4.format/2} {parent.Dot4.format/2}}
+  invert_matrix {{Controls1.Operation}}
+  filter Lanczos4
+  name Transform1
+  xpos -802
+  ypos 357
+ }
+ Colorspace {
+  colorspace_in AlexaV3LogC
+  name Colorspace3
+  xpos -802
+  ypos 409
+ }
+ Merge2 {
+  inputs 3+1
+  operation plus
+  name Merge1
+  xpos -588
+  ypos 409
+ }
+ Output {
+  name Output1
+  xpos -588
+  ypos 667
+ }
+ NoOp {
+  inputs 0
+  name Controls1
+  xpos -1032
+  ypos 357
+  addUserKnob {20 User}
+  addUserKnob {4 Operation M {"Add Aberration" "Remove Aberration" "" ""}}
+  addUserKnob {7 Amount R -1 1}
+  Amount 0.1
+ }
+end_group

@@ -1,0 +1,54 @@
+set cut_paste_input [stack 0]
+version 14.0 v6
+push $cut_paste_input
+Group {
+ name EZ_Parallax1
+ tile_color 0x6d1270ff
+ label "Linked to: \[value trackerName]"
+ note_font "DejaVu Sans"
+ selected true
+ xpos 0
+ ypos 25
+ addUserKnob {20 User l Parallax}
+ addUserKnob {26 Reference l "<font color=#D6BDE5> @b;Reference Node"}
+ addUserKnob {26 text_2 l "" +STARTLINE T " "}
+ addUserKnob {1 trackerName l "" +STARTLINE}
+ addUserKnob {22 selectNode l "Select Node" -STARTLINE T "group = nuke.thisNode()\nwith nuke.root():\n\tTracker = nuke.selectedNode()\['name'].value()\nprint (group)\nprint (Tracker)\ngroup\['trackerName'].setValue(Tracker)"}
+ addUserKnob {26 ""}
+ addUserKnob {26 text_1 l "" +STARTLINE T "   "}
+ addUserKnob {26 text l "<font color=#D6BDE5> @b;Parallax"}
+ addUserKnob {26 text_3 l "" +STARTLINE T " "}
+ addUserKnob {7 conversionNear l "Near parameter" t "Element  to be transformed is ''x'' times closer to the camera than the tracked element" R 1 10}
+ conversionNear 1
+ addUserKnob {7 conversionFar l "Far parameter" t "Element  to be transformed is ''x'' times further from the camera than the tracked element" R 1 10}
+ conversionFar 1
+ addUserKnob {26 text_4 l "" +STARTLINE T " "}
+ addUserKnob {26 ""}
+ addUserKnob {26 txt l "" +STARTLINE T "<font color=#D6BDE5> <font size=3> v1.2 | <font size=1> Victor Rouillard &copy; "}
+}
+ Input {
+  inputs 0
+  name Input
+  xpos 0
+ }
+ Transform {
+  translate {{"(\[value trackerName].translate/conversionFar)*conversionNear"} {"(\[value trackerName].translate/conversionFar)*conversionNear"}}
+  rotate {{"\[value trackerName].rotate"}}
+  scale {{"(((\[value trackerName].scale-1)/conversionFar)*conversionNear)+1"} {"(((\[value trackerName].scale-1)/conversionFar)*conversionNear)+1"}}
+  skewX {{"(\[value trackerName].skewX/conversionFar)*conversionNear"}}
+  skewY {{"(\[value trackerName].skewY/conversionFar)*conversionNear"}}
+  center {{"\[value trackerName].center"} {"\[value trackerName].center"}}
+  motionblur {{"\[value trackerName].motionblur"}}
+  shutter {{"\[value trackerName].shutter"}}
+  name TransformMULT
+  xpos 0
+  ypos 160
+  addUserKnob {20 User}
+  addUserKnob {26 trackerSnipped l "" +STARTLINE}
+ }
+ Output {
+  name Output1
+  xpos 0
+  ypos 300
+ }
+end_group

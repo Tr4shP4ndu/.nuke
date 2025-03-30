@@ -1,0 +1,115 @@
+set cut_paste_input [stack 0]
+version 14.0 v6
+push $cut_paste_input
+Group {
+ name EZ_Difference1
+ tile_color 0x335668ff
+ selected true
+ xpos -1172
+ ypos -355
+ addUserKnob {20 User l Difference}
+ addUserKnob {26 difference l "<font color=#5DA5A3> @b;Difference"}
+ addUserKnob {26 text l "" +STARTLINE T " "}
+ addUserKnob {41 offset l Offset T Difference1.offset}
+ addUserKnob {41 gain l Gain T Difference1.gain}
+ addUserKnob {26 text_1 l "" +STARTLINE T " "}
+ addUserKnob {26 ""}
+ addUserKnob {41 output l Preview T Difference1.output}
+ addUserKnob {41 which l "Mix Comp" T Dissolve1.which}
+ addUserKnob {26 ""}
+ addUserKnob {6 premult l "Premult ?" +STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {26 About l "" +STARTLINE T "<font color=#9CC8C6> <font size=3> v2.1 | <font size=1> Victor Rouillard &copy; "}
+}
+ Input {
+  inputs 0
+  name Input2
+  xpos 668
+  ypos 569
+  number 1
+ }
+ Dot {
+  name Dot1
+  xpos 702
+  ypos 819
+ }
+set N8c9d4c00 [stack 0]
+ Input {
+  inputs 0
+  name Input1
+  xpos 862
+  ypos 576
+ }
+ Dot {
+  name Dot2
+  xpos 896
+  ypos 720
+ }
+set N8c9d5400 [stack 0]
+ Dot {
+  name Dot5
+  xpos 523
+  ypos 720
+ }
+ Dot {
+  name Dot6
+  xpos 523
+  ypos 984
+ }
+ Difference {
+  inputs 2
+  gain {{parent.Difference1.gain}}
+  name Difference2
+  xpos 668
+  ypos 974
+ }
+push $N8c9d5400
+ Dot {
+  name Dot3
+  xpos 1046
+  ypos 720
+ }
+ Dot {
+  name Dot4
+  xpos 1046
+  ypos 909
+ }
+push $N8c9d4c00
+push $N8c9d5400
+ Difference {
+  inputs 2
+  gain 1000000
+  output rgba.red
+  name Difference1
+  xpos 862
+  ypos 810
+ }
+ Dissolve {
+  inputs 2
+  channels rgba
+  name Dissolve1
+  label "input:\[value which]"
+  xpos 862
+  ypos 900
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy1
+  knobChanged "if nuke.thisKnob().name() == 'useLifetime':\n    expression = 'Lifetime \[value this.lifetimeStart] - \[value this.lifetimeEnd]'\n    label = nuke.thisNode().knob('label').value()\n    if nuke.thisKnob().value() == 1:\n        nuke.thisNode().knob('label').setValue(label + expression)\n    else:\n        label = label.replace(expression, '')\n        nuke.thisNode().knob('label').setValue(label)"
+  xpos 862
+  ypos 974
+ }
+ Premult {
+  name Premult1
+  xpos 862
+  ypos 1050
+  disable {{1-parent.premult}}
+ }
+ Output {
+  name Output1
+  xpos 862
+  ypos 1154
+ }
+end_group

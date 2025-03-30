@@ -1,0 +1,113 @@
+set cut_paste_input [stack 0]
+version 14.0 v6
+push $cut_paste_input
+Group {
+ name EZ_Erode1
+ tile_color 0xff6100ff
+ label "\[value Filter] : \[value size]"
+ note_font "DejaVu Sans"
+ selected true
+ xpos -688
+ ypos 116
+ addUserKnob {20 Erode}
+ addUserKnob {26 text l "<font color=#C88A4C> @b;Channel"}
+ addUserKnob {41 channels l "" +STARTLINE T ErodeBOX.channels}
+ addUserKnob {26 ""}
+ addUserKnob {26 text_1 l "<font color=#C88A4C> @b;Erode"}
+ addUserKnob {68 Filter M {Box Gaussian}}
+ Filter Gaussian
+ addUserKnob {14 size l Amount t "You can enter positive or negative values" R 0 100}
+ size 10
+ addUserKnob {41 quality l Quality t "Default is 12" T ErodeBOX.quality}
+ addUserKnob {26 ""}
+ addUserKnob {20 Ramp t "Here you can play around with the alpha gradient" n 1}
+ Ramp 0
+ addUserKnob {41 lut l "" -STARTLINE T ColorLookupRamp.lut}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {26 ""}
+ addUserKnob {41 maskChannel l "Mask Channel" T Keymix1.maskChannel}
+ addUserKnob {41 invertMask l invert -STARTLINE T Keymix1.invertMask}
+ addUserKnob {41 mix l Mix T Keymix1.mix}
+ addUserKnob {26 ""}
+ addUserKnob {26 About l "" +STARTLINE T "<font color=#C8976B> <font size=3> v2.9 | <font size=1> Victor Rouillard &copy; "}
+}
+ Input {
+  inputs 0
+  name Mask
+  xpos 312
+  ypos 186
+  number 1
+ }
+ Invert {
+  name Invert1
+  xpos 312
+  ypos 741
+ }
+ Input {
+  inputs 0
+  name Input
+  xpos 509
+  ypos 186
+ }
+ Dot {
+  name Dot2
+  note_font_size 40
+  xpos 543
+  ypos 337
+ }
+set N1d0f000 [stack 0]
+ Dot {
+  name Dot5
+  note_font_size 40
+  xpos 700
+  ypos 337
+ }
+ Erode {
+  channels rgba
+  size {{parent.size.w} {parent.size.h}}
+  quality 12
+  name ErodeBOX
+  xpos 666
+  ypos 460
+ }
+ Blur {
+  channels {{{parent.ErodeBOX.channels}}}
+  size {{(parent.size.w)/0.8} {(parent.size.h)/0.8}}
+  name BlurMATCH
+  knobChanged "if nuke.thisKnob().name() == 'useLifetime':\n    expression = 'Lifetime \[value this.lifetimeStart] - \[value this.lifetimeEnd]'\n    label = nuke.thisNode().knob('label').value()\n    if nuke.thisKnob().value() == 1:\n        nuke.thisNode().knob('label').setValue(label + expression)\n    else:\n        label = label.replace(expression, '')\n        nuke.thisNode().knob('label').setValue(label)"
+  xpos 666
+  ypos 534
+  disable {{1-(parent.Filter)}}
+ }
+ ColorLookup {
+  lut {master {curve C x0.01999999955 0 x0.2785710096 0.3488209133 x0.5 0.56 s0.8500000238 x1 1 s1.399999976}
+    red {}
+    green {}
+    blue {}
+    alpha {}}
+  name ColorLookupRamp
+  xpos 666
+  ypos 598
+  disable {{1-(parent.Filter)}}
+ }
+ Dot {
+  name Dot4
+  note_font_size 40
+  xpos 700
+  ypos 751
+ }
+push $N1d0f000
+ Keymix {
+  inputs 3
+  invertMask true
+  name Keymix1
+  knobChanged "if nuke.thisKnob().name() == 'useLifetime':\n    expression = 'Lifetime \[value this.lifetimeStart] - \[value this.lifetimeEnd]'\n    label = nuke.thisNode().knob('label').value()\n    if nuke.thisKnob().value() == 1:\n        nuke.thisNode().knob('label').setValue(label + expression)\n    else:\n        label = label.replace(expression, '')\n        nuke.thisNode().knob('label').setValue(label)"
+  xpos 509
+  ypos 741
+ }
+ Output {
+  name Output1
+  xpos 509
+  ypos 878
+ }
+end_group
