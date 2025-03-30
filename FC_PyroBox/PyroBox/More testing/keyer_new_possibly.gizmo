@@ -1,0 +1,2325 @@
+
+push $cut_paste_input
+Dot {
+name Dot12
+selected true
+xpos -3248
+ypos 323
+}
+set N1e9a5000 [stack 0]
+Dot {
+name Dot8
+selected true
+xpos -3688
+ypos 323
+}
+set N1e9a5400 [stack 0]
+Colorspace {
+colorspace_out YCbCr
+name Colorspace1
+selected true
+xpos -3722
+ypos 396
+}
+Shuffle {
+red green
+green blue
+blue red
+name Shuffle2
+selected true
+xpos -3722
+ypos 457
+}
+Dot {
+name Dot9
+selected true
+xpos -3688
+ypos 516
+}
+set N1e9a5800 [stack 0]
+Dot {
+name Dot10
+selected true
+xpos -3502
+ypos 516
+}
+Roto {
+inputs 0
+output alpha
+curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 2097664}
+    {t x44800000 x44428000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}
+    {curvegroup BSpline1 512 bspline
+     {{cc
+       {f 8192}
+       {px x42100000
+        {{a t
+       {{x42100000 x3f7f2e4a}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x4466e57c x44131332}
+        {{a t
+       {{x42100000 x3f7f7cee}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x446418af x4412dfff}
+        {{a t
+       {{x42100000 x3f801a37}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x4463d8af x44112ccc}
+        {{a t
+       {{x42100000 x3f802753}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x4464a57c x44100665}
+        {{a t
+       {{x42100000 x3f801a37}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x44657249 x440f2ccc}
+        {{a t
+       {{x42100000 x3f809d49}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x4466cbe3 x440edfff}
+        {{a t
+       {{x42100000 x3f804189}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x44688be3 x440e7999}
+        {{a t
+       {{x42100000 x3f804189}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x446a3249 x440db999}
+        {{a t
+       {{x42100000 x3f804ea5}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x446aff16 x440d1332}
+        {{a t
+       {{x42100000 x3f80b780}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x446c3249 x440cdfff}
+        {{a t
+       {{x42100000 x3f801a36}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x446cff16 x440cb999}
+        {{a t
+       {{x42100000 x3f801a37}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x446df249 x440d3999}
+        {{a t
+       {{x42100000 x3f80346e}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x446f3f16 x440c2ccc}
+        {{a t
+       {{x42100000 x3f80902e}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x447018af x440a9fff}
+        {{a t
+       {{x42100000 x3f8147ae}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x44717f16 x440a8665}
+        {{a t
+       {{x42100000 x3f7fb15a}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x44748be3 x440bc665}
+        {{a t
+       {{x42100000 x3f7f1412}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x447458af x440eeccc}
+        {{a t
+       {{x42100000 x3f7d21fe}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x44720be3 x44151fff}
+        {{a t
+       {{x42100000 x3f7b15b4}}	 rp
+       {{x42100000 1}}	 te
+       {{x42100000 x40800000}}}     x446d8be3 x44168665}}}     idem}
+     {tx x42100000 x446dbbf6 x440f9fa9}
+     {a osw x41200000 osf 0 str 1 spx x44700000 spy x44070000 sb 1 ltn x42100000 ltm x42100000 tt x40c00000}}}}}}
+toolbox {selectAll {
+  { selectAll str 1 ssx 1 ssy 1 sf 1 }
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 tt 5 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 tt 6 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 tt 7 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 tt 8 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 tt 9 }
+  { createOpenSpline str 1 ssx 1 ssy 1 sf 1 sb 1 tt 10 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+toolbar_brush_hardness 0.200000003
+toolbar_source_transform_scale {1 1}
+toolbar_source_transform_center {960 540}
+colorOverlay {0 0 0 0}
+lifetime_type "all frames"
+lifetime_start 36
+lifetime_end 36
+motionblur_shutter_offset_type centred
+source_black_outside true
+name Roto1
+selected true
+xpos -3948
+ypos 1017
+}
+Dot {
+name Dot11
+selected true
+xpos -3914
+ypos 1098
+}
+push $N1e9a5800
+Clamp {
+channels rgb
+name Clamp1
+selected true
+xpos -3722
+ypos 580
+}
+BlinkScript {
+recompileCount 472
+ProgramGroup 1
+KernelDescription "2 \"STUnMapKernel\" iterate pixelWise e7759160adb2e1c499e99d4fcbdfa6e7c3501fe1c9cff6463cdfd15d654cca92 2 \"STMap\" Read Random \"dst\" Write Random 2 \"resolution\" Int 2 AAAAAAAAAAA= \"slider\" Float 1 AAAAAA== 2 \"resolution\" 2 1 \"slider\" 1 1 1 \"BBox\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA=="
+kernelSource "kernel STUnMapKernel : ImageComputationKernel<ePixelWise>\n\{\n  //Image<eRead, eAccessRandom, eEdgeClamped> src; // the input image\n  Image<eRead, eAccessRandom, eEdgeClamped> STMap; // the input image\n  Image<eWrite, eAccessRandom> dst; // the output image\n\n  param:\n    // This parameter is made available to the user.\n    int2 resolution;\n    float slider;\n\n  local:\n    // This local variable is not exposed to the user.\n    //float4 pixelArray\[9999];\n    float4 BBox;\n\n  // In define(), parameters can be given labels and default values.\n  void define() \{\n    \n  \}\n\n  // The init() function is run before any calls to process().\n  // Local variables can be initialized here.\n  void init() \{\n    BBox = \{STMap.bounds.x1, STMap.bounds.x2, STMap.bounds.y1, STMap.bounds.y2\};\n  \}\n\n  void process(int2 pos)\{  \n\n    float4 STMapValue = STMap(pos.x,pos.y);\n    float2 outputCoords = \{STMap(pos.x,pos.y).x*(resolution.x),STMap(pos.x,pos.y).y*(resolution.y)\};\n\n    float2 sourceCoords = \{pos.x,pos.y\};\n\n    if(outputCoords.x != 0 && outputCoords.y != 0 && outputCoords.x <= resolution.x && outputCoords.y <= resolution.y)\{\n      dst(outputCoords.x,outputCoords.y) = \{(sourceCoords.x+.5f)/resolution.x,(sourceCoords.y+.5f)/resolution.y,0,1\};\n    \}\n    \n    \n  \}\n\};"
+rebuild ""
+STUnMapKernel_resolution {{width} {height}}
+STUnMapKernel_slider 100
+format "3840 2160 0 0 3840 2160 1 UHD_4K"
+rebuild_finalise ""
+name BlinkScript8
+selected true
+xpos -3722
+ypos 661
+}
+Dot {
+name Dot13
+selected true
+xpos -3688
+ypos 741
+}
+set N1ea3a400 [stack 0]
+Dot {
+name Dot14
+selected true
+xpos -3811
+ypos 741
+}
+Dot {
+name Dot15
+selected true
+xpos -3811
+ypos 878
+}
+push $N1ea3a400
+push $N1e9a5400
+Dot {
+name Dot16
+selected true
+xpos -3923
+ypos 323
+}
+BlackOutside {
+name BlackOutside1
+selected true
+xpos -3957
+ypos 550
+}
+Dot {
+name Dot17
+selected true
+xpos -3923
+ypos 815
+}
+STMap {
+inputs 2
+uv rgb
+name STMap2
+selected true
+xpos -3722
+ypos 805
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy2
+selected true
+xpos -3722
+ypos 869
+}
+EdgeExtend {
+detailAmount 0
+premultiply false
+name EdgeExtend1
+selected true
+xpos -3722
+ypos 989
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy1
+selected true
+xpos -3722
+ypos 1088
+}
+Dot {
+name Dot18
+selected true
+xpos -3688
+ypos 1198
+}
+STMap {
+inputs 2
+uv rgb
+name STMap3
+selected true
+xpos -3536
+ypos 1189
+}
+Dot {
+name Dot1
+selected true
+xpos -3502
+ypos 1349
+}
+push $N1e9a5000
+Dot {
+name Dot5
+selected true
+xpos -3248
+ypos 1166
+}
+set N1a99cc00 [stack 0]
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy4
+selected true
+xpos -3282
+ypos 1340
+}
+Premult {
+name Premult2
+selected true
+xpos -3282
+ypos 1438
+}
+Group {
+inputs 0
+name NR_Track_Correction_flw3
+knobChanged "\n\n\nv = nuke.thisNode().knobs()\['roto_switch'].getValue()\nleft = nuke.thisNode().knobs()\['group_left_cheek']\nright = nuke.thisNode().knobs()\['group_right_cheek']\nnose = nuke.thisNode().knobs()\['group_nose']\nblur = nuke.thisNode().knobs()\['alpha_chocker_pre']\n\n\nif v == 0:\n    left.setVisible(True)\n    right.setVisible(False)\n    nose.setVisible(False)\n    blur.setVisible(True)\nelif v == 1:\n    left.setVisible(False)\n    right.setVisible(True)\n    nose.setVisible(False)\n    blur.setVisible(True)\nelif v == 2:\n    left.setVisible(True)\n    right.setVisible(True)\n    nose.setVisible(False)\n    blur.setVisible(True)\nelif v == 3:\n    left.setVisible(False)\n    right.setVisible(False)\n    nose.setVisible(True)\n    blur.setVisible(True)\nelif v == 4:\n    left.setVisible(True)\n    right.setVisible(True)\n    nose.setVisible(True)\n    blur.setVisible(True)\nelif v == 5:\n    left.setVisible(False)\n    right.setVisible(False)\n    nose.setVisible(False)\n    blur.setVisible(False)\nelse:\n    left.setVisible(False)\n    right.setVisible(False)\n    nose.setVisible(False)\n    blur.setVisible(False)\n"
+tile_color 0x513a00ff
+label "Overlay: \[value  check_roto]\nRoto Type: \[value  roto_switch]"
+note_font_color 0xffb800ff
+selected true
+xpos -3038
+ypos 65
+addUserKnob {20 user l "Position Correction"}
+addUserKnob {26 node_title l "" t "This tool will help you reposition your neural render to your plate if it jitters or tracking is slightly off. " +STARTLINE T "<font size = 5>Position Correction NR"}
+addUserKnob {26 made_by l "" +STARTLINE T "<font color = '#eba834'><b>by Filipe Correia"}
+addUserKnob {26 _1 l "" +STARTLINE}
+addUserKnob {4 check_roto l <b>Overlay M {Comp Alpha "STMap Overlay" "Comp Overlay" "" "" "" "" ""}}
+addUserKnob {6 switch_nr_plate l "Switch A/B Input" -STARTLINE}
+switch_nr_plate true
+addUserKnob {41 mask_colour l "Mask Colour" T Grade1.multiply}
+addUserKnob {20 alpha_chocker l "STmap Alpha Mask Chocker" n 1}
+addUserKnob {7 edge_balance_st l "Edge Balance" R -1 1}
+addUserKnob {7 edge_choke_st l "Edge Choke"}
+addUserKnob {7 edge_smoothing_st l "Edge Smoothing" R 0 100}
+addUserKnob {7 edge_blur_st l "Edge Blur" R 0 100}
+edge_blur_st 62.4
+addUserKnob {7 expand_shrink_st l Expand/Contract R -100 100}
+expand_shrink_st -18.5
+addUserKnob {20 endGroup_5 n -1}
+addUserKnob {26 _2 l "" +STARTLINE}
+addUserKnob {4 roto_switch l "<b>Switch Roto" M {"Left Cheek" "Right Cheek" "Merged Cheeks" Nose "Nose + Cheecks" Custom "" "" "" ""}}
+roto_switch Custom
+addUserKnob {26 _7 l "" +STARTLINE}
+addUserKnob {26 _3 l "" +STARTLINE T "<font color = '#eba834'><b>Premade Roto Settings "}
+addUserKnob {20 group_left_cheek l "Left Cheek" +HIDDEN n 1}
+group_left_cheek 0
+addUserKnob {12 left_cheek_pos l Position}
+left_cheek_pos {204 504}
+addUserKnob {7 left_cheek_shape l Squeeze/Squash R 0 50}
+left_cheek_shape 18
+addUserKnob {7 left_cheek_size l Size R 0.1 1000}
+left_cheek_size 180
+addUserKnob {7 left_cheek_blur l Blur R 0.2 100}
+left_cheek_blur 0.2
+addUserKnob {20 endGroup_1 n -1}
+addUserKnob {20 group_right_cheek l "Right Cheek" +HIDDEN n 1}
+addUserKnob {12 right_cheek_pos l Position}
+right_cheek_pos {508 -582}
+addUserKnob {7 right_cheek_shape l Squeeze/Squash R 0 100}
+right_cheek_shape 0.3
+addUserKnob {7 right_cheek_size l Size R 0.1 1000}
+right_cheek_size 514
+addUserKnob {7 right_cheek_blur l Blur R 0.2 100}
+right_cheek_blur 0.2
+addUserKnob {20 endGroup_2 n -1}
+addUserKnob {20 group_nose l Nose +HIDDEN n 1}
+group_nose 0
+addUserKnob {12 nose_pos l Position}
+nose_pos {440 584}
+addUserKnob {7 nose_shape l Squeeze/Squash R 0 100}
+nose_shape 0.378
+addUserKnob {7 nose_size l Size R 0.1 1000}
+nose_size 56
+addUserKnob {7 nose_blur l Blur R 0.2 100}
+nose_blur 0.2
+addUserKnob {20 endGroup_3 n -1}
+addUserKnob {20 alpha_chocker_pre l "Alpha Choker" +HIDDEN n 1}
+addUserKnob {7 edge_balance_pre l "Edge Balance" R -1 1}
+addUserKnob {7 edge_choke_pre l "Edge Choke"}
+addUserKnob {7 edge_smoothing_pre l "Edge Smoothing" R 0 100}
+addUserKnob {7 edge_blur_pre l "Edge Blur" R 0 100}
+edge_blur_pre 30
+addUserKnob {7 expand_shrink_pre l Expand/Contract R -100 100}
+addUserKnob {20 endGroup_4 n -1}
+addUserKnob {20 AutoMorph_settings l AutoMorph}
+addUserKnob {26 _3_1 l "" +STARTLINE T "<font color = '#eba834'><b>Morph Settings"}
+addUserKnob {41 morph l Morph/Warp T AutoMorph_Masked_flw.morph}
+addUserKnob {41 mix_dissolve l "Mix Dissolve" T AutoMorph_Masked_flw.mix_dissolve}
+addUserKnob {41 disable_bbox_copy l "Bbox Copy" T AutoMorph_Masked_flw.disable_bbox_copy}
+addUserKnob {26 _1_1 l "" +STARTLINE}
+addUserKnob {26 vector_gen_text l "" +STARTLINE T "<font color = '#eba834'><b>Vector Generator Settings"}
+addUserKnob {20 settings_vector l Settings n 1}
+addUserKnob {26 "" l "Local GPU:" T ""}
+addUserKnob {26 gpuName l "" -STARTLINE T "NVIDIA A10G"}
+addUserKnob {41 motionEstimation l Motion T AutoMorph_Masked_flw.motionEstimation}
+addUserKnob {41 useGPUIfAvailable l "Use GPU if available" -STARTLINE T AutoMorph_Masked_flw.useGPUIfAvailable}
+addUserKnob {41 vector_detail l "Vector Detail" T AutoMorph_Masked_flw.vector_detail}
+addUserKnob {41 vector_strength l Strength T AutoMorph_Masked_flw.vector_strength}
+addUserKnob {20 endGroup n -1}
+addUserKnob {26 _2_1 l "" +STARTLINE}
+addUserKnob {26 mask_text l "" +STARTLINE T "<font color = '#eba834'><b>Mask Settings"}
+addUserKnob {41 invertMask l "Invert Morph Mask" T AutoMorph_Masked_flw.invertMask}
+addUserKnob {41 output_morph_mask l "Output Morph Mask" -STARTLINE T AutoMorph_Masked_flw.output_morph_mask}
+addUserKnob {41 fringe_switch l Fringe -STARTLINE T AutoMorph_Masked_flw.fringe_switch}
+addUserKnob {20 info l Info}
+addUserKnob {26 _4 l "" +STARTLINE T "<font size = 5>Position Correction NR"}
+addUserKnob {26 _5 l "" +STARTLINE}
+addUserKnob {26 _6 l "" +STARTLINE T "This tool will help you select the cheeks or nose region to correct the Neural Render track \nto match plate alignment.\n\n"}
+}
+BackdropNode {
+inputs 0
+name BackdropNode3
+tile_color 0x40674000
+label Cheeks
+note_font_size 42
+note_font_color 0xffffffff
+xpos 185
+ypos -24
+appearance Border
+border_width 20
+bdwidth 473
+bdheight 604
+}
+BackdropNode {
+inputs 0
+name BackdropNode4
+tile_color 0x14143aff
+label "Nose mask"
+note_font_size 42
+note_font_color 0xffffffff
+xpos 776
+ypos -35
+appearance Border
+border_width 20
+bdwidth 470
+bdheight 631
+z_order 1
+}
+BackdropNode {
+inputs 0
+name BackdropNode7
+tile_color 0x47726100
+label Custom
+note_font_size 42
+note_font_color 0xffffffff
+xpos 1343
+ypos -19
+appearance Border
+border_width 20
+bdwidth 360
+bdheight 281
+z_order 1
+}
+Input {
+inputs 0
+name PRECOMP_NR
+label "(input \[value number])"
+xpos 2160
+ypos -588
+}
+Dot {
+name Dot31
+label NR
+note_font_size 30
+xpos 2194
+ypos -504
+}
+Dot {
+name Dot37
+xpos 2194
+ypos -355
+}
+set N80889800 [stack 0]
+Dot {
+name Dot33
+xpos -116
+ypos -367
+}
+Dot {
+name Dot32
+label PRECOMP
+note_font_size 30
+xpos -116
+ypos -271
+}
+add_layer {fotd_stmap fotd_stmap.red fotd_stmap.green fotd_stmap.blue fotd_stmap.alpha}
+Shuffle2 {
+fromInput1 {
+ {0}
+ B
+}
+in1 fotd_stmap
+fromInput2 {
+ {0}
+ B
+}
+mappings "4 fotd_stmap.red 0 0 rgba.red 0 0 fotd_stmap.green 0 1 rgba.green 0 1 fotd_stmap.blue 0 2 rgba.blue 0 2 fotd_stmap.alpha 0 3 rgba.alpha 0 3"
+name Shuffle2
+label "SHUFFLE FOSD STMAP"
+xpos -150
+ypos 199
+}
+Dot {
+name Dot34
+xpos -116
+ypos 1073
+}
+set N80888800 [stack 0]
+Input {
+inputs 0
+name MASK
+label "(input \[value number])"
+xpos 1500
+ypos 45
+number 2
+}
+Dot {
+name Dot62
+xpos 1534
+ypos 178
+}
+Dot {
+name Dot4
+xpos 1534
+ypos 813
+}
+set N809b8000 [stack 0]
+STMap {
+inputs 2
+uv rgb
+name STMap1
+xpos 1500
+ypos 1064
+}
+Dot {
+name Dot3
+xpos 1534
+ypos 1170
+}
+push $N80888800
+push $N809b8000
+Constant {
+inputs 0
+channels rgb
+format "1024 1024 0 0 1024 1024 1 square_1K"
+name Constant2
+xpos 400
+ypos -568
+}
+Dot {
+name Dot50
+xpos 434
+ypos -102
+}
+set N809b8800 [stack 0]
+Dot {
+name Dot59
+xpos 214
+ypos -102
+}
+Expression {
+expr3 "clamp((size - sqrt( (x-center.x) * (x-center.x) + (y-center.y) * aspectratio * (y-center.y) ) ) / blur)"
+name roto_shape_circle3
+xpos 180
+ypos 86
+addUserKnob {20 User}
+addUserKnob {12 center}
+center {{left_cheek_pos.x} {left_cheek_pos.y}}
+addUserKnob {7 aspectratio}
+aspectratio {{left_cheek_shape}}
+addUserKnob {7 size R 0.1 1000}
+size {{left_cheek_size}}
+addUserKnob {7 blur R 0.2 100}
+blur {{left_cheek_blur}}
+}
+Dot {
+name Dot52
+xpos 214
+ypos 353
+}
+set N809b9000 [stack 0]
+push $N809b8800
+Expression {
+expr3 "clamp((size - sqrt( (x-center.x) * (x-center.x) + (y-center.y) * aspectratio * (y-center.y) ) ) / blur)"
+name roto_shape_circle2
+xpos 400
+ypos 86
+addUserKnob {20 User}
+addUserKnob {12 center}
+center {{right_cheek_pos} {right_cheek_pos}}
+addUserKnob {7 aspectratio}
+aspectratio {{right_cheek_shape}}
+addUserKnob {7 size R 0.1 1000}
+size {{right_cheek_size}}
+addUserKnob {7 blur R 0.2 100}
+blur {{right_cheek_blur}}
+}
+Dot {
+name Dot53
+xpos 434
+ypos 258
+}
+set N809b9400 [stack 0]
+Dot {
+name Dot54
+xpos 654
+ypos 258
+}
+ChannelMerge {
+inputs 2
+name ChannelMerge1
+xpos 620
+ypos 337
+}
+Dot {
+name Dot56
+xpos 654
+ypos 690
+}
+set N809b9c00 [stack 0]
+push $N809b8800
+Dot {
+name Dot60
+xpos 984
+ypos -102
+}
+Expression {
+expr3 "clamp((size - sqrt( (x-center.x) * (x-center.x) + (y-center.y) * aspectratio * (y-center.y) ) ) / blur)"
+name roto_shape_circle
+xpos 950
+ypos 85
+addUserKnob {20 User}
+addUserKnob {12 center}
+center {{nose_pos} {nose_pos}}
+addUserKnob {7 aspectratio}
+aspectratio {{nose_shape}}
+addUserKnob {7 size R 0.1 1000}
+size {{nose_size}}
+addUserKnob {7 blur R 0.2 100}
+blur {{nose_blur}}
+}
+Dot {
+name Dot10
+xpos 984
+ypos 546
+}
+set N82080400 [stack 0]
+Dot {
+name Dot11
+xpos 1094
+ypos 546
+}
+ChannelMerge {
+inputs 2
+name ChannelMerge2
+xpos 1060
+ypos 674
+}
+push $N82080400
+push $N809b9c00
+push $N809b9400
+Dot {
+name Dot64
+xpos 434
+ypos 738
+}
+push $N809b9000
+Dot {
+name Dot63
+xpos 214
+ypos 810
+}
+Switch {
+inputs 6
+which {{roto_switch}}
+name Switch1
+xpos 1060
+ypos 809
+}
+Group {
+name Alpha_Chocker
+tile_color 0xffc300ff
+xpos 1060
+ypos 926
+addUserKnob {20 User}
+addUserKnob {7 balance l "Edge Balance" R -1 1}
+balance {{edge_balance_pre}}
+addUserKnob {7 choke l "Edge Choke"}
+choke {{edge_choke_pre}}
+addUserKnob {7 smoothing l "Edge Smoothing" R 0 100}
+smoothing {{edge_smoothing_pre}}
+addUserKnob {7 blur l "Edge Blur" R 0 100}
+blur {{edge_blur_pre}}
+addUserKnob {7 expand l "Edge Contract / Expand" R -100 100}
+expand {{expand_shrink_pre}}
+}
+Input {
+ inputs 0
+ name Mask
+ xpos -480
+ ypos -9
+ number 1
+}
+Shuffle {
+ inputs 0
+ alpha white
+ name Shuffle2
+ xpos -590
+ ypos 111
+}
+ChannelMerge {
+ inputs 2
+ name ChannelMerge1
+ xpos -480
+ ypos 99
+}
+Input {
+ inputs 0
+ name Source
+ xpos -208
+ ypos -441
+}
+Dot {
+ name Dot1
+ xpos -174
+ ypos -342
+}
+set N82081400 [stack 0]
+Remove {
+ operation keep
+ channels alpha
+ name Remove1
+ xpos -208
+ ypos -303
+}
+Blur {
+ size {{parent.smoothing}}
+ quality 5
+ name Blur1
+ xpos -208
+ ypos -255
+}
+Grade {
+ channels alpha
+ blackpoint {{parent.choke*.49+parent.balance*.49}}
+ whitepoint {{1-parent.choke*.49+parent.balance*.49}}
+ name Grade1
+ xpos -208
+ ypos -201
+}
+FilterErode {
+ size {{parent.expand}}
+ name FilterErode1
+ xpos -208
+ ypos -145
+}
+Clamp {
+ name Clamp1
+ xpos -208
+ ypos -87
+}
+Blur {
+ size {{parent.blur}}
+ name Blur2
+ xpos -208
+ ypos -39
+}
+push $N82081400
+Dot {
+ name Dot2
+ xpos -6
+ ypos -342
+}
+Dot {
+ name Dot3
+ xpos -6
+ ypos 30
+}
+set N82081c00 [stack 0]
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 rgba.alpha
+ name Copy1
+ xpos -208
+ ypos 21
+}
+push $N82081c00
+Dot {
+ name Dot4
+ xpos -6
+ ypos 114
+}
+Keymix {
+ inputs 3
+ name Keymix1
+ xpos -208
+ ypos 105
+}
+Output {
+ name Output1
+ xpos -208
+ ypos 159
+}
+end_group
+STMap {
+inputs 2
+uv rgb
+name STMap3
+xpos 1060
+ypos 1063
+}
+Switch {
+inputs 2
+which {{"roto_switch >= 5"}}
+name Switch3
+xpos 1060
+ypos 1166
+}
+FilterErode {
+size 1.9
+name FilterErode1
+xpos 1060
+ypos 1192
+}
+Group {
+name Alpha_Chocker1
+tile_color 0xffc300ff
+xpos 1060
+ypos 1238
+addUserKnob {20 User}
+addUserKnob {7 balance l "Edge Balance" R -1 1}
+balance {{edge_balance_st}}
+addUserKnob {7 choke l "Edge Choke"}
+choke {{edge_choke_st}}
+addUserKnob {7 smoothing l "Edge Smoothing" R 0 100}
+smoothing {{edge_smoothing_st}}
+addUserKnob {7 blur l "Edge Blur" R 0 100}
+blur {{edge_blur_st}}
+addUserKnob {7 expand l "Edge Contract / Expand" R -100 100}
+expand {{expand_shrink_st}}
+}
+Input {
+ inputs 0
+ name Mask
+ xpos -480
+ ypos -9
+ number 1
+}
+Shuffle {
+ inputs 0
+ alpha white
+ name Shuffle2
+ xpos -590
+ ypos 111
+}
+ChannelMerge {
+ inputs 2
+ name ChannelMerge1
+ xpos -480
+ ypos 99
+}
+Input {
+ inputs 0
+ name Source
+ xpos -208
+ ypos -441
+}
+Dot {
+ name Dot1
+ xpos -174
+ ypos -342
+}
+set N820fc800 [stack 0]
+Remove {
+ operation keep
+ channels alpha
+ name Remove1
+ xpos -208
+ ypos -303
+}
+Blur {
+ size {{parent.smoothing}}
+ quality 5
+ name Blur1
+ xpos -208
+ ypos -255
+}
+Grade {
+ channels alpha
+ blackpoint {{parent.choke*.49+parent.balance*.49}}
+ whitepoint {{1-parent.choke*.49+parent.balance*.49}}
+ name Grade1
+ xpos -208
+ ypos -201
+}
+FilterErode {
+ size {{parent.expand}}
+ name FilterErode1
+ xpos -208
+ ypos -145
+}
+Clamp {
+ name Clamp1
+ xpos -208
+ ypos -87
+}
+Blur {
+ size {{parent.blur}}
+ name Blur2
+ xpos -208
+ ypos -39
+}
+push $N820fc800
+Dot {
+ name Dot2
+ xpos -6
+ ypos -342
+}
+Dot {
+ name Dot3
+ xpos -6
+ ypos 30
+}
+set N820fd000 [stack 0]
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 rgba.alpha
+ name Copy1
+ xpos -208
+ ypos 21
+}
+push $N820fd000
+Dot {
+ name Dot4
+ xpos -6
+ ypos 114
+}
+Keymix {
+ inputs 3
+ name Keymix1
+ xpos -208
+ ypos 105
+}
+Output {
+ name Output1
+ xpos -208
+ ypos 159
+}
+end_group
+set N809bf500 [stack 0]
+Dot {
+name Dot35
+xpos 1094
+ypos 1338
+}
+set N820fdc00 [stack 0]
+Dot {
+name Dot5
+xpos 1534
+ypos 1340
+}
+set N1a6ca000 [stack 0]
+Invert {
+name Invert1
+xpos 1648
+ypos 1496
+}
+push $N80889800
+Dot {
+name Dot9
+xpos 2194
+ypos 1207
+}
+set N1a6ca400 [stack 0]
+Input {
+inputs 0
+name PLATE_DNS
+label "(input \[value number])"
+xpos 1720
+ypos -582
+number 1
+}
+Dot {
+name Dot65
+label PLATE/DNS
+note_font_size 30
+xpos 1754
+ypos -509
+}
+Dot {
+name Dot36
+xpos 1754
+ypos -295
+}
+Dot {
+name Dot7
+xpos 1755
+ypos 1127
+}
+set N1a6cb000 [stack 0]
+Switch {
+inputs 2
+which {{switch_nr_plate}}
+name Switch4
+xpos 1721
+ypos 1203
+}
+set N1a69f900 [stack 0]
+push $N1a6ca000
+push $N1a6ca000
+push $N1a69f900
+Premult {
+name Premult1
+xpos 1786
+ypos 1264
+}
+push $N1a6cb000
+Dot {
+name Dot8
+xpos 1961
+ypos 1127
+}
+push $N1a6ca400
+Dot {
+name Dot38
+xpos 2194
+ypos 1340
+}
+set N1a6cb800 [stack 0]
+Switch {
+inputs 2
+which {{switch_nr_plate}}
+name Switch5
+xpos 1927
+ypos 1336
+}
+set N1a6a0300 [stack 0]
+Merge2 {
+inputs 2
+name Merge1
+xpos 1831
+ypos 1302
+}
+push $N1a6a0300
+Group {
+inputs 3
+name AutoMorph_Masked_flw
+tile_color 0x513a00ff
+note_font_color 0xffb800ff
+xpos 1721
+ypos 1336
+addUserKnob {20 user l User}
+addUserKnob {26 _3 l "" +STARTLINE T "<font color = '#eba834'><b>Morph Settings"}
+addUserKnob {7 morph l Morph/Warp t "Morph/Warp: Intensity amount of morph/warp from image 0 towards image 1."}
+morph 1
+addUserKnob {7 mix_dissolve l "Mix Dissolve" t "Mix Dissolve: It's linked to the morph/wrap sliders by default. This dissolves from image 0 to image 1. \nTo unlink - right-click and choose \"no animation\""}
+addUserKnob {6 disable_bbox_copy l "Bbox Copy" t "Bbox Copy: Enables and disables CopyBbox&Blackoutside nodes from transfering from Comp to Plate" +STARTLINE}
+addUserKnob {26 _1 l "" +STARTLINE}
+addUserKnob {26 vector_gen_text l "" +STARTLINE T "<font color = '#eba834'><b>Vector Generator Settings"}
+addUserKnob {20 settings_vector l Settings n 1}
+addUserKnob {26 "" l "Local GPU:" T ""}
+addUserKnob {26 gpuName l "" -STARTLINE T "NVIDIA A10G"}
+addUserKnob {41 motionEstimation l Motion T VectorGenerator1.motionEstimation}
+addUserKnob {41 useGPUIfAvailable l "Use GPU if available" -STARTLINE T VectorGenerator1.useGPUIfAvailable}
+addUserKnob {7 vector_detail l "Vector Detail" t "Use this to adjust the density of the calculated motion vector field. Higher details capture finer movements, but take will longer to calculate." R 0.01 1}
+vector_detail 1
+addUserKnob {7 vector_strength l Strength}
+vector_strength 1.5
+addUserKnob {20 endGroup n -1}
+addUserKnob {26 _2 l "" +STARTLINE}
+addUserKnob {26 mask_text l "" +STARTLINE T "<font color = '#eba834'><b>Mask Settings"}
+addUserKnob {41 invertMask l "Invert Morph Mask" t "Invert Morph Mask: Flips the in/out of your morph masking. " T Keymix1.invertMask}
+addUserKnob {6 output_morph_mask l "Output Morph Mask" -STARTLINE}
+output_morph_mask true
+addUserKnob {6 fringe_switch l Fringe -STARTLINE}
+fringe_switch true
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode7
+ tile_color 0x5b664800
+ label "<center> MASK"
+ note_font_size 100
+ xpos -3279
+ ypos 468
+ appearance Border
+ border_width 20
+ bdwidth 2334
+ bdheight 3158
+ z_order -1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode1
+ tile_color 0x40674000
+ label "<center> Prevents nodes downstream from asking for fractional or multiple frames"
+ note_font_size 42
+ xpos 1060
+ ypos -1152
+ appearance Border
+ border_width 20
+ bdwidth 1531
+ bdheight 201
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode2
+ tile_color 0x282828ff
+ label "<center> FrameHold"
+ note_font_size 42
+ xpos 1371
+ ypos -730
+ appearance Border
+ border_width 20
+ bdwidth 776
+ bdheight 440
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode5
+ tile_color 0xb8872a00
+ label "<center>Warp Strength"
+ note_font_size 20
+ xpos -1929
+ ypos 1984
+ appearance Border
+ border_width 20
+ bdwidth 282
+ bdheight 188
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode6
+ tile_color 0x44415100
+ label "<center>Mix Strength"
+ note_font_size 20
+ xpos -2611
+ ypos 2494
+ appearance Border
+ border_width 20
+ bdwidth 282
+ bdheight 188
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode8
+ tile_color 0x1e2228ff
+ label <center>FrameHold/Increment
+ note_font_size 100
+ xpos 767
+ ypos 1210
+ appearance Border
+ border_width 20
+ bdwidth 1262
+ bdheight 2083
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode10
+ tile_color 0x201a3400
+ label "<center> Mask Driven Morph"
+ note_font_size 42
+ xpos 1573
+ ypos 2035
+ appearance Border
+ border_width 20
+ bdwidth 422
+ bdheight 1215
+ z_order 1
+}
+Input {
+ inputs 0
+ name MASK
+ label "(input \[value number])"
+ xpos -2520
+ ypos 733
+ number 2
+}
+add_layer {morph_mask morph_mask.a}
+Shuffle2 {
+ fromInput1 {
+  {0}
+  B
+ }
+ out1 morph_mask
+ fromInput2 {
+  {0}
+  B
+ }
+ mappings "1 rgba.alpha 0 3 morph_mask.a 0 0"
+ name Shuffle3
+ xpos -2520
+ ypos 931
+}
+Dot {
+ name Dot37
+ xpos -2484
+ ypos 1934
+}
+set N1a6cbc00 [stack 0]
+Multiply {
+ value {{parent.mix_dissolve}}
+ name Multiply2
+ xpos -2518
+ ypos 2581
+ disable {{"1-\[exists parent.input2]"}}
+}
+Dot {
+ name Dot41
+ xpos -2484
+ ypos 2923
+}
+set N1a738000 [stack 0]
+Dot {
+ name Dot54
+ xpos -2484
+ ypos 3414
+}
+push $N1a738000
+Dot {
+ name Dot35
+ xpos 1784
+ ypos 2923
+}
+push $N1a6cbc00
+Dot {
+ name Dot38
+ xpos -1805
+ ypos 1932
+}
+Multiply {
+ value {{parent.morph}}
+ name Multiply1
+ xpos -1839
+ ypos 2113
+ disable {{"1-\[exists parent.input2]"}}
+}
+Dot {
+ name Dot39
+ xpos -1805
+ ypos 2194
+}
+set N1a739000 [stack 0]
+Invert {
+ mix {{invertMask}}
+ name Invert1
+ xpos -1839
+ ypos 2321
+ disable {{"1-\[exists input2]"}}
+}
+Dot {
+ name Dot40
+ xpos -1805
+ ypos 2468
+}
+Input {
+ inputs 0
+ name A
+ label "(input \[value number])"
+ xpos 1104
+ ypos -1398
+}
+Dot {
+ name Dot68
+ xpos 1138
+ ypos -1304
+}
+set N1a739800 [stack 0]
+Input {
+ inputs 0
+ name B
+ label "(input \[value number])"
+ xpos 2422
+ ypos -1408
+ number 1
+}
+CopyBBox {
+ inputs 2
+ name CopyBBox1
+ xpos 2422
+ ypos -1308
+ disable {{disable_bbox_copy}}
+}
+BlackOutside {
+ name BlackOutside1
+ xpos 2422
+ ypos -1272
+ disable {{disable_bbox_copy}}
+}
+Dot {
+ name Dot17
+ xpos 2456
+ ypos -1194
+}
+NoTimeBlur {
+ rounding floor
+ single false
+ name NoTimeBlur1
+ xpos 2422
+ ypos -1029
+}
+Dot {
+ name Dot13
+ xpos 2456
+ ypos -694
+}
+Dot {
+ name Dot18
+ xpos 1962
+ ypos -694
+}
+FrameHold {
+ firstFrame {{t//2+1}}
+ name FrameHold2
+ label "PLATE/DNS - \[frame]"
+ xpos 1928
+ ypos -622
+}
+Text2 {
+ font_size_toolbar 100
+ font_width_toolbar 100
+ font_height_toolbar 100
+ message "PLATE/DNS - \[frame]"
+ old_message {
+  {80 76 65 84 69 47 68 78 83 32 45 32 49 48 48 49}
+ }
+ old_expression_markers {
+  {12 15}
+ }
+ box {0 0 4096 1716}
+ xjustify center
+ yjustify center
+ transforms {
+  {0 2}
+ }
+ center {2048 858}
+ cursor_initialised true
+ autofit_bbox false
+ initial_cursor_position {
+  {2048 858}
+ }
+ group_animations {
+  {0}
+  imported:
+  0
+  selected:
+  items:
+  "root transform/"
+ }
+ animation_layers {
+  {1 11 2048 858 0 0 1 1 0 0 0 0}
+ }
+ name Text4
+ label "PLATE/DNS - \[frame]"
+ xpos 1928
+ ypos -502
+ disable true
+}
+Dot {
+ name Dot14
+ label "\[frame]"
+ xpos 1962
+ ypos -371
+}
+push $N1a739800
+Dot {
+ name Dot16
+ xpos 1138
+ ypos -1194
+}
+NoTimeBlur {
+ rounding floor
+ single false
+ name NoTimeBlur
+ xpos 1104
+ ypos -1029
+}
+Dot {
+ name Dot1
+ xpos 1138
+ ypos -694
+}
+Dot {
+ name Dot8
+ xpos 1592
+ ypos -694
+}
+FrameHold {
+ firstFrame {{t//2}}
+ name FrameHold1
+ label "Precomp/NR - \[frame]"
+ xpos 1558
+ ypos -619
+}
+Text2 {
+ font_size_toolbar 100
+ font_width_toolbar 100
+ font_height_toolbar 100
+ message "Precomp/NR - \[frame]"
+ old_message {
+  {80 114 101 99 111 109 112 47 78 82 32 45 32 49 48 51 48}
+ }
+ old_expression_markers {
+  {13 16}
+ }
+ box {0 0 4096 1716}
+ xjustify center
+ yjustify center
+ transforms {
+  {0 2}
+ }
+ center {2048 858}
+ cursor_initialised true
+ autofit_bbox false
+ initial_cursor_position {
+  {2048 858}
+ }
+ group_animations {
+  {0}
+  imported:
+  0
+  selected:
+  items:
+  "root transform/"
+ }
+ animation_layers {
+  {1 11 2048 858 0 0 1 1 0 0 0 0}
+ }
+ name Text2
+ label "Precomp/NR - \[frame]"
+ xpos 1558
+ ypos -502
+ disable true
+}
+Dot {
+ name Dot4
+ label "\[frame]"
+ xpos 1592
+ ypos -371
+}
+Switch {
+ inputs 2
+ which {{(frame-1000)%2}}
+ name Switch1
+ label "\[frame]"
+ xpos 1753
+ ypos -381
+}
+Dot {
+ name Dot20
+ tile_color 0xcccccc00
+ xpos 1787
+ ypos -103
+}
+set N1a777c00 [stack 0]
+push $N1a777c00
+Dot {
+ name Dot2
+ xpos 1652
+ ypos -103
+}
+VectorGenerator {
+ motionEstimation Regularized
+ vectorDetailReg {{vector_detail}}
+ strengthReg {{vector_strength}}
+ name VectorGenerator1
+ xpos 1618
+ ypos -5
+}
+Blur {
+ size 10
+ name Blur2
+ xpos 1618
+ ypos 33
+}
+Dot {
+ name Dot3
+ xpos 1652
+ ypos 141
+}
+Copy {
+ inputs 2
+ from0 -rgba.alpha
+ to0 -rgba.alpha
+ channels rgba
+ name Copy2
+ xpos 1753
+ ypos 125
+}
+Dot {
+ name Dot43
+ xpos 1787
+ ypos 607
+}
+Dot {
+ name Dot26
+ xpos 1787
+ ypos 1290
+}
+set N1a7cec00 [stack 0]
+Dot {
+ name Dot28
+ xpos 1894
+ ypos 1290
+}
+FrameHold {
+ firstFrame {{(t*2)-1}}
+ name FrameHold4
+ label "\[frame]"
+ xpos 1860
+ ypos 1407
+}
+set N809c1100 [stack 0]
+Dot {
+ name Dot57
+ xpos 1894
+ ypos 1738
+}
+set N1a7cf400 [stack 0]
+Copy {
+ inputs 2
+ from0 morph_mask.a
+ to0 morph_mask.a
+ name Copy4
+ xpos 1860
+ ypos 2458
+ disable {{"1-\[exists parent.input2]"}}
+}
+Premult {
+ channels forward
+ alpha morph_mask.a
+ name Premult1
+ xpos 1860
+ ypos 2642
+ disable {{"1-\[exists parent.input2]"}}
+}
+set N1a7b6800 [stack 0]
+IDistort {
+ uv forward
+ uv_scale -1
+ name IDistort4
+ xpos 1860
+ ypos 2861
+ disable {{"1-\[exists parent.input2]"}}
+}
+Dot {
+ name Dot33
+ xpos 1894
+ ypos 3022
+}
+push $N1a7b6800
+push $N1a739000
+push $N1a7cec00
+Dot {
+ name Dot27
+ xpos 1674
+ ypos 1290
+}
+FrameHold {
+ firstFrame {{t*2}}
+ name FrameHold3
+ label "\[frame]"
+ xpos 1640
+ ypos 1404
+}
+Dot {
+ name Dot58
+ xpos 1675
+ ypos 1811
+}
+set N1a818000 [stack 0]
+Copy {
+ inputs 2
+ from0 morph_mask.a
+ to0 morph_mask.a
+ name Copy3
+ xpos 1640
+ ypos 2184
+ disable {{"1-\[exists parent.input2]"}}
+}
+Premult {
+ channels forward
+ alpha morph_mask.a
+ name Premult2
+ xpos 1640
+ ypos 2567
+ disable {{"1-\[exists parent.input2]" x99 1}}
+}
+Copy {
+ inputs 2
+ from0 -rgba.alpha
+ to0 -rgba.alpha
+ channels motion
+ name Copy1
+ xpos 1640
+ ypos 2636
+}
+Blur {
+ channels motion
+ size 60
+ name Blur1
+ xpos 1640
+ ypos 2709
+}
+Multiply {
+ channels forward
+ value -1
+ name Multiply3
+ xpos 1640
+ ypos 2773
+}
+set N1a828a00 [stack 0]
+IDistort {
+ uv forward
+ uv_scale -1
+ name IDistort3
+ xpos 1640
+ ypos 2842
+ disable {{"1-\[exists parent.input2]" x99 1}}
+}
+Dot {
+ name Dot34
+ xpos 1674
+ ypos 3022
+}
+Keymix {
+ inputs 3
+ bbox B
+ name Keymix1
+ xpos 1750
+ ypos 3012
+ disable {{"1-\[exists parent.input2]"}}
+}
+Dot {
+ name Dot53
+ tile_color 0xcccccc00
+ xpos 1784
+ ypos 3103
+}
+Copy {
+ inputs 2
+ from0 morph_mask.a
+ to0 morph_mask.a
+ name Copy7
+ xpos 1750
+ ypos 3404
+ disable {{fringe_switch}}
+}
+Remove {
+ channels morph_mask
+ name Remove1
+ xpos 1750
+ ypos 3475
+ disable {{parent.output_morph_mask}}
+}
+push $N1a7cf400
+Dot {
+ name Dot60
+ xpos 1112
+ ypos 1738
+}
+IDistort {
+ uv forward
+ uv_scale {{-(1-(morph))}}
+ name IDistort5
+ xpos 1078
+ ypos 2696
+ disable {{"\[exists parent.input2]"}}
+}
+Dot {
+ name Dot56
+ xpos 1112
+ ypos 3022
+}
+push $N1a818000
+Dot {
+ name Dot59
+ xpos 892
+ ypos 1811
+}
+IDistort {
+ uv forward
+ uv_scale {{-(morph)}}
+ name IDistort6
+ xpos 858
+ ypos 2694
+ disable {{"\[exists parent.input2]"}}
+}
+BlackOutside {
+ name BlackOutside2
+ xpos 858
+ ypos 2774
+}
+Dot {
+ name Dot55
+ xpos 892
+ ypos 3022
+}
+Dissolve {
+ inputs 2
+ channels {{{Keymix1.channels}}}
+ which {{mix_dissolve}}
+ name Dissolve4
+ label "channels from Keymix1"
+ xpos 968
+ ypos 3006
+ disable {{"\[exists parent.input2]"}}
+}
+Dot {
+ name Dot67
+ tile_color 0xcccccc00
+ xpos 1002
+ ypos 3103
+}
+Dot {
+ name Dot69
+ xpos 1002
+ ypos 3541
+}
+Switch {
+ inputs 2
+ which {{"\[exists parent.input2]"}}
+ name Switch8
+ label "\[value which]"
+ xpos 1750
+ ypos 3531
+}
+Dot {
+ name Dot49
+ xpos 1784
+ ypos 3801
+}
+Output {
+ name Output1
+ xpos 1750
+ ypos 4471
+}
+push $N809c1100
+push $N1a828a00
+Viewer {
+ inputs 2
+ frame_range 1-128
+ channels forward
+ gain 7.2
+ name Viewer1
+ xpos 4030
+ ypos -10
+ hide_input true
+}
+end_group
+Dot {
+name Dot6
+xpos 1755
+ypos 1434
+}
+set N1a888c00 [stack 0]
+Grade {
+inputs 1+1
+multiply {0 2.5 0 0}
+black_clamp false
+name Grade1
+xpos 1500
+ypos 1430
+}
+set C1a88f700 [stack 0]
+push $N809bf500
+push $N80888800
+clone $C1a88f700 {
+inputs 1+1
+xpos -150
+ypos 1238
+selected false
+}
+Dot {
+name Dot2
+xpos -116
+ypos 1649
+}
+push $N820fdc00
+Shuffle2 {
+fromInput1 {
+ {0}
+ B
+}
+fromInput2 {
+ {0}
+ B
+}
+mappings "4 rgba.alpha 0 3 rgba.alpha 0 3 rgba.alpha 0 3 rgba.red 0 0 rgba.alpha 0 3 rgba.green 0 1 rgba.alpha 0 3 rgba.blue 0 2"
+name Shuffle1
+xpos 1060
+ypos 1430
+}
+Dot {
+name Dot1
+xpos 1094
+ypos 1495
+}
+push $N1a888c00
+Switch {
+inputs 4
+which {{check_roto}}
+name Switch2
+xpos 1720
+ypos 1647
+}
+Dot {
+name Dot39
+xpos 1754
+ypos 1770
+}
+Keymix {
+inputs 3
+channels rgb
+name Keymix1
+xpos 1884
+ypos 1766
+}
+push $N1a6cb800
+Copy {
+inputs 2
+from0 -rgba.alpha
+to0 -rgba.alpha
+channels rgb
+bbox B
+name Copy2
+xpos 2160
+ypos 1754
+}
+Output {
+name Output1
+xpos 2160
+ypos 1866
+}
+push $N1a69f900
+Viewer {
+frame_range 59-59
+name Viewer1
+xpos 1500
+ypos -10
+hide_input true
+}
+end_group
+push $N1e9a5000
+Dot {
+name Dot19
+selected true
+xpos -2995
+ypos 323
+}
+set N9c7fc000 [stack 0]
+Expression {
+expr0 r/g
+expr1 r/b
+name Expression1
+selected true
+xpos -3029
+ypos 421
+}
+Grade {
+white 0.15
+black_clamp false
+name Grade1
+selected true
+xpos -3029
+ypos 463
+}
+Clamp {
+name Clamp3
+selected true
+xpos -3029
+ypos 509
+}
+set N1eb1be00 [stack 0]
+Dot {
+name Dot3
+selected true
+xpos -3151
+ypos 518
+}
+Dot {
+name Dot4
+selected true
+xpos -3151
+ypos 1040
+}
+Roto {
+inputs 0
+output alpha
+cliptype none
+curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 2097664}
+    {t x45000000 x44568000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}
+    {curvegroup BSpline1 512 bspline
+     {{cc
+       {f 8192}
+       {px x41a80000
+        {{a t
+       {{x41a80000 x3f76e2ec -}}	 rp
+       {{x41a80000 1 -}}	 te
+       {{x41a80000 x40800000 -}}}
+      {{x43ea22a3 0 1 xc0830c2f 1}}
+      {{x436c1988 0 1 xc0355555 1}}}
+        {{a t
+       {{x41a80000 x3f7bcd35 -}}	 rp
+       {{x41a80000 1 -}}	 te
+       {{x41a80000 x40800000 -}}}
+      {{x440220f3 0 1 xc1073cfa 1}}
+      {{x43888e30 0 1 xc0992491 1}}}
+        {{a t
+       {{x41a80000 x3f7c1bd9 -}}	 rp
+       {{x41a80000 1 -}}	 te
+       {{x41a80000 x40800000 -}}}
+      {{x43f6c317 0 1 xc0e74e22 1}}
+      {{x43ac74b4 0 1 xc11662f5 1}}}
+        {{a t
+       {{x41a80000 x3f7ae149 -}}	 rp
+       {{x41a80000 1 -}}	 te
+       {{x41a80000 x40800000 -}}}
+      {{x43de10bb 0 1 xc08c30c4 1}}
+      {{x43976e28 0 1 xc0d18615 1}}}
+        {{a t
+       {{x41a80000 x3f7851ec -}}	 rp
+       {{x41a80000 1 -}}	 te
+       {{x41a80000 x40800000 -}}}
+      {{x43d15a64 0 1 xc056db6f 1}}
+      {{x43843780 0 1 xc07e79e6 1}}}
+        {{a t
+       {{x41a80000 x3f786c23 -}}	 rp
+       {{x41a80000 1 -}}	 te
+       {{x41a80000 x40800000 -}}}
+      {{x43ccf55c 0 1 xc05e79de 1}}
+      {{x437ba414 0 1 xc04aaaab 1}}}
+        {{a t
+       {{x41a80000 x3f797248 -}}	 rp
+       {{x41a80000 1 -}}	 te
+       {{x41a80000 x40800000 -}}}
+      {{x43cbade6 0 1 xc0830c2f 1}}
+      {{x436e8df6 0 1 xc0355555 1}}}
+        {{a t
+       {{x41a80000 x3f7c01a3 -}}	 rp
+       {{x41a80000 1 -}}	 te
+       {{x41a80000 x40800000 -}}}
+      {{x43c788ad 0 1 xc0830c2f 1}}
+      {{x43662de8 0 1 xc0355555 1}}}
+        {{a t
+       {{x41a80000 x3f79f55a -}}	 rp
+       {{x41a80000 1 -}}	 te
+       {{x41a80000 x40800000 -}}}
+      {{x43c487d5 0 1 xc0830c2f 1}}
+      {{x435b90e0 0 1 xc0355555 1}}}
+        {{a t
+       {{x41a80000 x3f7bcd35 -}}	 rp
+       {{x41a80000 1 -}}	 te
+       {{x41a80000 x40800000 -}}}
+      {{x43c08318 0 1 xc0830c2f 1}}
+      {{x4354c776 0 1 xc0355555 1}}}
+        {{a t
+       {{x41a80000 x3f804ea5 -}}	 rp
+       {{x41a80000 1 -}}	 te
+       {{x41a80000 x40800000 -}}}
+      {{x43beb175 0 1 xc0830c2f 1}}
+      {{x434927aa 0 1 xc0355555 1}}}
+        {{a t
+       {{x41a80000 x3f7fcb92 -}}	 rp
+       {{x41a80000 1 -}}	 te
+       {{x41a80000 x40800000 -}}}
+      {{x43beb175 0 1 xc0830c2f 1}}
+      {{x43424bc2 0 1 xc0355555 1}}}
+        {{a t
+       {{x41a80000 x3f84d014 -}}	 rp
+       {{x41a80000 1 -}}	 te
+       {{x41a80000 x40800000 -}}}
+      {{x43bf9fb1 0 1 xc0830c2f 1}}
+      {{x433e532e 0 1 xc0355555 1}}}
+        {{a t
+       {{x41a80000 x3f8594b0 -}}	 rp
+       {{x41a80000 1 -}}	 te
+       {{x41a80000 x40800000 -}}}
+      {{x43ca6909 0 1 xc0830c2f 1}}
+      {{x433b8256 0 1 xc0355555 1}}}
+        {{a t
+       {{x41a80000 x3f85f070 -}}	 rp
+       {{x41a80000 1 -}}	 te
+       {{x41a80000 x40800000 -}}}
+      {{x43d5a97f 0 1 xc0830c2f 1}}
+      {{x433c3b2c 0 1 xc0355555 1}}}
+        {{a t
+       {{x41a80000 x3f81d7dc -}}	 rp
+       {{x41a80000 1 -}}	 te
+       {{x41a80000 x40800000 -}}}
+      {{x43decc84 0 1 xc0830c2f 1}}
+      {{x4347349e 0 1 xc0355555 1}}}
+        {{a t
+       {{x41a80000 x3f81b08a -}}	 rp
+       {{x41a80000 1 -}}	 te
+       {{x41a80000 x40800000 -}}}
+      {{x43e3f5a1 0 1 xc0830c2f 1}}
+      {{x4355804a 0 1 xc0355555 1}}}}}     idem}
+     {tx x42100000 x43eb28a8 x438bb939}
+     {a osw x41200000 osf 0 str 1 spx x44700000 spy x44070000 sb 1 ltn x42100000 ltm x42100000 tt x40c00000}}}}}}
+toolbox {selectAll {
+  { selectAll str 1 ssx 1 ssy 1 sf 1 }
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 tt 6 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createOpenSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+toolbar_brush_hardness 0.200000003
+toolbar_source_transform_scale {1 1}
+toolbar_source_transform_center {960 540}
+colorOverlay {0 0 0 0}
+lifetime_type "all frames"
+lifetime_start 36
+lifetime_end 36
+motionblur_shutter_offset_type centred
+source_black_outside true
+name Roto2
+selected true
+xpos -2732
+ypos 884
+}
+push $N1eb1be00
+BlinkScript {
+recompileCount 472
+ProgramGroup 1
+KernelDescription "2 \"STUnMapKernel\" iterate pixelWise e7759160adb2e1c499e99d4fcbdfa6e7c3501fe1c9cff6463cdfd15d654cca92 2 \"STMap\" Read Random \"dst\" Write Random 2 \"resolution\" Int 2 AAAAAAAAAAA= \"slider\" Float 1 AAAAAA== 2 \"resolution\" 2 1 \"slider\" 1 1 1 \"BBox\" Float 4 1 AAAAAAAAAAAAAAAAAAAAAA=="
+kernelSource "kernel STUnMapKernel : ImageComputationKernel<ePixelWise>\n\{\n  //Image<eRead, eAccessRandom, eEdgeClamped> src; // the input image\n  Image<eRead, eAccessRandom, eEdgeClamped> STMap; // the input image\n  Image<eWrite, eAccessRandom> dst; // the output image\n\n  param:\n    // This parameter is made available to the user.\n    int2 resolution;\n    float slider;\n\n  local:\n    // This local variable is not exposed to the user.\n    //float4 pixelArray\[9999];\n    float4 BBox;\n\n  // In define(), parameters can be given labels and default values.\n  void define() \{\n    \n  \}\n\n  // The init() function is run before any calls to process().\n  // Local variables can be initialized here.\n  void init() \{\n    BBox = \{STMap.bounds.x1, STMap.bounds.x2, STMap.bounds.y1, STMap.bounds.y2\};\n  \}\n\n  void process(int2 pos)\{  \n\n    float4 STMapValue = STMap(pos.x,pos.y);\n    float2 outputCoords = \{STMap(pos.x,pos.y).x*(resolution.x),STMap(pos.x,pos.y).y*(resolution.y)\};\n\n    float2 sourceCoords = \{pos.x,pos.y\};\n\n    if(outputCoords.x != 0 && outputCoords.y != 0 && outputCoords.x <= resolution.x && outputCoords.y <= resolution.y)\{\n      dst(outputCoords.x,outputCoords.y) = \{(sourceCoords.x+.5f)/resolution.x,(sourceCoords.y+.5f)/resolution.y,0,1\};\n    \}\n    \n    \n  \}\n\};"
+rebuild ""
+STUnMapKernel_resolution {{width} {height}}
+STUnMapKernel_slider 100
+format "3840 2160 0 0 3840 2160 1 UHD_4K"
+rebuild_finalise ""
+name BlinkScript2
+selected true
+xpos -3029
+ypos 573
+}
+set N1eb38f00 [stack 0]
+Dot {
+name Dot2
+selected true
+xpos -2995
+ypos 693
+}
+push $N1eb38f00
+push $N9c7fc000
+Dot {
+name Dot20
+selected true
+xpos -2836
+ypos 323
+}
+STMap {
+inputs 2
+uv rgb
+name STMap5
+selected true
+xpos -2870
+ypos 573
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy5
+selected true
+xpos -2870
+ypos 684
+}
+EdgeExtend {
+detailAmount 0
+premultiply false
+name EdgeExtend2
+selected true
+xpos -2870
+ypos 785
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy6
+selected true
+xpos -2870
+ypos 884
+}
+STMap {
+inputs 2
+uv rgb
+filter Lanczos6
+name STMap6
+selected true
+xpos -2870
+ypos 1031
+}
+Grade {
+channels rgba
+blackpoint 0.021
+whitepoint 0.04
+black_clamp false
+name Grade3
+selected true
+xpos -2870
+ypos 1150
+}
+Clamp {
+name Clamp2
+selected true
+xpos -2870
+ypos 1263
+}
+Dot {
+name Dot6
+selected true
+xpos -2836
+ypos 1349
+}
+push $N1a99cc00
+Dot {
+name Dot7
+selected true
+xpos -3065
+ypos 1166
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy7
+selected true
+xpos -3099
+ypos 1340
+}
+Premult {
+name Premult8
+selected true
+xpos -3099
+ypos 1443
+}
+Constant {
+inputs 0
+channels rgb
+format "1024 1024 0 0 1024 1024 1 square_1K"
+name Constant2
+selected true
+xpos -2700
+ypos -24
+}
+Expression {
+expr3 "clamp((size - sqrt( (x-center.x) * (x-center.x) + (y-center.y) * aspectratio * (y-center.y) ) ) / blur)"
+name roto_shape_circle2
+selected true
+xpos -2700
+ypos 76
+addUserKnob {20 User}
+addUserKnob {12 center}
+center {411 564}
+addUserKnob {7 aspectratio}
+aspectratio 1
+addUserKnob {7 size R 0.1 1000}
+size 0.5
+addUserKnob {7 blur R 0.2 100}
+}
+Group {
+name Alpha_Chocker2
+tile_color 0xffc300ff
+selected true
+xpos -2700
+ypos 102
+addUserKnob {20 User}
+addUserKnob {7 balance l "Edge Balance" R -1 1}
+addUserKnob {7 choke l "Edge Choke"}
+addUserKnob {7 smoothing l "Edge Smoothing" R 0 100}
+addUserKnob {7 blur l "Edge Blur" R 0 100}
+blur 47.5
+addUserKnob {7 expand l "Edge Contract / Expand" R -100 100}
+expand -31
+}
+Input {
+inputs 0
+name Mask
+xpos -480
+ypos -9
+number 1
+}
+Shuffle {
+inputs 0
+alpha white
+name Shuffle2
+xpos -590
+ypos 111
+}
+ChannelMerge {
+inputs 2
+name ChannelMerge1
+xpos -480
+ypos 99
+}
+Input {
+inputs 0
+name Source
+xpos -208
+ypos -441
+}
+Dot {
+name Dot1
+xpos -174
+ypos -342
+}
+set N1ee71400 [stack 0]
+Remove {
+operation keep
+channels alpha
+name Remove1
+xpos -208
+ypos -303
+}
+Blur {
+size {{parent.smoothing}}
+quality 5
+name Blur1
+xpos -208
+ypos -255
+}
+Grade {
+channels alpha
+blackpoint {{parent.choke*.49+parent.balance*.49}}
+whitepoint {{1-parent.choke*.49+parent.balance*.49}}
+name Grade1
+xpos -208
+ypos -201
+}
+FilterErode {
+size {{parent.expand}}
+name FilterErode1
+xpos -208
+ypos -145
+}
+Clamp {
+name Clamp1
+xpos -208
+ypos -87
+}
+Blur {
+size {{parent.blur}}
+quality 5
+name Blur2
+xpos -208
+ypos -39
+}
+push $N1ee71400
+Dot {
+name Dot2
+xpos -6
+ypos -342
+}
+Dot {
+name Dot3
+xpos -6
+ypos 30
+}
+set N1ee71c00 [stack 0]
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy1
+xpos -208
+ypos 21
+}
+push $N1ee71c00
+Dot {
+name Dot4
+xpos -6
+ypos 114
+}
+Keymix {
+inputs 3
+name Keymix1
+xpos -208
+ypos 105
+}
+Output {
+name Output1
+xpos -208
+ypos 159
+}
+end_group
+Shuffle2 {
+fromInput1 {
+{0}
+B
+}
+fromInput2 {
+{0}
+B
+}
+mappings "4 rgba.alpha 0 3 rgba.red 0 0 rgba.alpha 0 3 rgba.green 0 1 rgba.alpha 0 3 rgba.blue 0 2 rgba.alpha 0 3 rgba.alpha 0 3"
+name Shuffle5
+selected true
+xpos -2700
+ypos 142
+}
