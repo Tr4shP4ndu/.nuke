@@ -1,0 +1,633 @@
+set cut_paste_input [stack 0]
+version 13.1 v2
+BackdropNode {
+ inputs 0
+ name BackdropNode7
+ tile_color 0x627a6d00
+ label Frequency_Wrap
+ note_font_size 42
+ selected true
+ xpos 432
+ ypos -1630
+ bdwidth 916
+ bdheight 1030
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode8
+ tile_color 0x5f6e8100
+ label " "
+ note_font_size 42
+ selected true
+ xpos 1047
+ ypos -2152
+ bdwidth 299
+ bdheight 462
+}
+push $cut_paste_input
+Dot {
+ name Dot29
+ label NR
+ note_font "Bitstream Vera Sans Bold"
+ note_font_size 30
+ selected true
+ xpos 1597
+ ypos -2458
+}
+Dot {
+ name Dot30
+ selected true
+ xpos 1597
+ ypos -2440
+}
+Dot {
+ name Dot23
+ selected true
+ xpos 1597
+ ypos -2308
+}
+set N58494100 [stack 0]
+Dot {
+ name Dot24
+ selected true
+ xpos 811
+ ypos -2308
+}
+Dot {
+ name Dot16
+ selected true
+ xpos 811
+ ypos -1437
+}
+set N58483200 [stack 0]
+Blur {
+ size 9
+ name Blur1
+ selected true
+ xpos 777
+ ypos -980
+}
+Dot {
+ name Dot22
+ selected true
+ xpos 811
+ ypos -717
+}
+push $N58483200
+Dot {
+ inputs 0
+ name Dot27
+ label "PLATE/DNS \nPREPPED"
+ note_font "Bitstream Vera Sans Bold"
+ note_font_size 30
+ selected true
+ xpos 1193
+ ypos -1972
+}
+Dot {
+ name Dot28
+ selected true
+ xpos 1193
+ ypos -1954
+}
+Group {
+ inputs 2
+ name Automorph_masked_flw1
+ help "Morph between image 0 and image 1\n\nIf no morph_mask is used, then morphs the whole image.\n\nWhen using morph_mask, shows image 1 in the masked area, image 0 outside the mask and a morph (a weighted warp/dissolve) in the soft edges of the mask\n\nby Sean Danischevsky and Allar Kaasik at Flawless AI, 2021"
+ tile_color 0xff5555ff
+ selected true
+ xpos 1159
+ ypos -1447
+ addUserKnob {20 Automorph t "by Sean Danischevsky and Allar Kaasik 2021"}
+ addUserKnob {41 channels T Keymix1.channels}
+ addUserKnob {7 warp t "Amount of warp from image 0 towards image 1"}
+ warp 1
+ addUserKnob {7 mix_dissolve l mix t "Dissolve from image 0 to image 1\nLinked to the \"warp\" slider by default\nTo unlink - right-click and choose \"no animation\"\n\n"}
+ addUserKnob {6 smoothstep t "When not using a mask input, adds a smoothstep to the warp and mix sliders.\nMight be helpful when keyframing warps" +STARTLINE}
+ smoothstep true
+ addUserKnob {26 ""}
+ addUserKnob {26 text_morphmask l "" +STARTLINE T "Morph Mask Settings"}
+ addUserKnob {41 invertMask l "invert morph mask" t "Use this to flip the in/out of your morph mask" T Keymix1.invertMask}
+ addUserKnob {41 mask_falloff l "mask falloff" T Dissolve2.which}
+ addUserKnob {6 output_morph_mask l "output morph mask" +STARTLINE}
+ output_morph_mask true
+ addUserKnob {41 fringe -STARTLINE T Copy5.disable}
+ addUserKnob {26 ""}
+ addUserKnob {41 vectorDetailReg l "Vector Detail" T VectorGenerator1.vectorDetailReg}
+ addUserKnob {41 strengthReg l Strength T VectorGenerator1.strengthReg}
+ addUserKnob {26 ""}
+ addUserKnob {41 bbox l "Set BBox to" T Keymix1.bbox}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode7
+  tile_color 0x47726100
+  label "Full Image Morph (no mask)"
+  note_font_size 42
+  xpos -831
+  ypos 1414
+  bdwidth 1034
+  bdheight 780
+  z_order -1
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode8
+  tile_color 0x5b664800
+  label "Mask-driven morph"
+  note_font_size 42
+  xpos 610
+  ypos 467
+  bdwidth 1180
+  bdheight 1543
+  z_order -1
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode1
+  tile_color 0x201a3400
+  label "Adjusts the soft edge of the mask\nto weight towards either the inner\nor the outer edge"
+  note_font_size 20
+  xpos 1309
+  ypos 547
+  bdwidth 471
+  bdheight 306
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode2
+  tile_color 0xd3776a00
+  label "warp strength"
+  note_font_size 20
+  xpos 1278
+  ypos 1098
+  bdwidth 282
+  bdheight 188
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode3
+  tile_color 0x40674000
+  label "mix strength"
+  note_font_size 20
+  xpos 1494
+  ypos 1335
+  bdwidth 282
+  bdheight 188
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode4
+  tile_color 0xd3776a00
+  label "warp strength"
+  note_font_size 20
+  xpos -707
+  ypos 1595
+  bdwidth 438
+  bdheight 191
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode5
+  tile_color 0x40674000
+  label "mix strength"
+  note_font_size 20
+  xpos -651
+  ypos 1821
+  bdwidth 282
+  bdheight 188
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode6
+  tile_color 0x44415100
+  label "Make motion vectors"
+  note_font_size 20
+  xpos 610
+  ypos -923
+  bdwidth 316
+  bdheight 596
+ }
+ Dissolve {
+  inputs 0
+  which 0.5
+  name Dissolve2
+  xpos 1319
+  ypos 766
+ }
+ Input {
+  inputs 0
+  name morph_mask
+  label "(input \[value number])"
+  xpos 1585
+  ypos 209
+  number 2
+ }
+add_layer {morph_mask morph_mask.a}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  out1 morph_mask
+  fromInput2 {{0} B}
+  mappings "1 rgba.alpha 0 3 morph_mask.a 0 0"
+  name Shuffle1
+  xpos 1585
+  ypos 278
+ }
+ Dot {
+  name Dot16
+  xpos 1619
+  ypos 629
+ }
+set N58436b00 [stack 0]
+ Invert {
+  name Invert2
+  xpos 1690
+  ypos 681
+ }
+ Gamma {
+  value {{2*(1-parent.Dissolve2.which) x1061 0.76}}
+  name Gamma2
+  xpos 1690
+  ypos 719
+ }
+ Invert {
+  name Invert3
+  xpos 1690
+  ypos 757
+ }
+push $N58436b00
+ Gamma {
+  value {{parent.Dissolve2.which*2}}
+  name Gamma1
+  xpos 1486
+  ypos 709
+ }
+ Switch {
+  inputs 2
+  which {{parent.Dissolve2.which>0.5}}
+  name Switch4
+  xpos 1587
+  ypos 824
+ }
+ Dot {
+  name Dot3
+  xpos 1621
+  ypos 1048
+ }
+set N5814b200 [stack 0]
+ Multiply {
+  value {{parent.mix_dissolve}}
+  name Multiply2
+  xpos 1587
+  ypos 1460
+ }
+ Dot {
+  name Dot7
+  xpos 1621
+  ypos 1875
+ }
+set N58149d00 [stack 0]
+ Dot {
+  name Dot14
+  xpos 1621
+  ypos 2036
+ }
+push $N58149d00
+push $N5814b200
+ Dot {
+  name Dot4
+  xpos 1402
+  ypos 1046
+ }
+ Multiply {
+  value {{parent.warp}}
+  name Multiply1
+  xpos 1368
+  ypos 1227
+ }
+ Dot {
+  name Dot5
+  xpos 1402
+  ypos 1308
+ }
+set N58127900 [stack 0]
+ Invert {
+  name Invert1
+  xpos 1368
+  ypos 1402
+ }
+ Dot {
+  name Dot6
+  xpos 1402
+  ypos 1498
+ }
+ Input {
+  inputs 0
+  name Input1
+  label "(input \[value number])"
+  xpos 830
+  ypos -1080
+  number 1
+ }
+ Dot {
+  name Dot18
+  xpos 868
+  ypos -972
+ }
+set N58125d00 [stack 0]
+ FrameHold {
+  firstFrame {{t//2}}
+  name FrameHold2
+  label "\[frame]"
+  xpos 830
+  ypos -827
+ }
+ Dot {
+  name Dot2
+  label "\[frame]"
+  xpos 868
+  ypos -756
+ }
+ Input {
+  inputs 0
+  name Input0
+  label "(input \[value number])"
+  xpos 620
+  ypos -1075
+ }
+ Dot {
+  name Dot12
+  xpos 654
+  ypos -957
+ }
+set N58124100 [stack 0]
+ FrameHold {
+  firstFrame {{t//2}}
+  name FrameHold1
+  label "\[frame]"
+  xpos 610
+  ypos -827
+ }
+ Dot {
+  name Dot1
+  label "\[frame]"
+  xpos 648
+  ypos -756
+ }
+ Switch {
+  inputs 2
+  which {{frame%2 x2152 0}}
+  name Switch1
+  label "\[frame]\n"
+  xpos 720
+  ypos -648
+ }
+ VectorGenerator {
+  motionEstimation Regularized
+  vectorDetailReg 1
+  name VectorGenerator1
+  xpos 720
+  ypos -528
+ }
+ Dot {
+  name Dot19
+  xpos 758
+  ypos -474
+ }
+set N58111d00 [stack 0]
+ FrameHold {
+  firstFrame {{(t*2)-1}}
+  name FrameHold4
+  label "\[frame]"
+  xpos 830
+  ypos -371
+ }
+ Dot {
+  name Dot8
+  xpos 870
+  ypos -57
+ }
+set N58110f00 [stack 0]
+ Copy {
+  inputs 2
+  from0 morph_mask.a
+  to0 morph_mask.a
+  name Copy4
+  xpos 836
+  ypos 1488
+ }
+ Premult {
+  channels forward
+  alpha morph_mask.a
+  name Premult1
+  xpos 836
+  ypos 1526
+ }
+ IDistort {
+  uv forward
+  uv_scale -1
+  name IDistort4
+  xpos 830
+  ypos 1560
+ }
+push $N58127900
+ Dot {
+  name Dot13
+  xpos 736
+  ypos 1308
+ }
+push $N58111d00
+ FrameHold {
+  firstFrame {{t*2}}
+  name FrameHold3
+  label "\[frame]"
+  xpos 610
+  ypos -371
+ }
+ Dot {
+  name Dot9
+  xpos 654
+  ypos -190
+ }
+set N580d6400 [stack 0]
+ Copy {
+  inputs 2
+  from0 morph_mask.a
+  to0 morph_mask.a
+  name Copy3
+  xpos 620
+  ypos 1361
+ }
+ Premult {
+  channels forward
+  alpha morph_mask.a
+  name Premult2
+  xpos 620
+  ypos 1399
+ }
+ IDistort {
+  uv forward
+  uv_scale -1
+  name IDistort3
+  xpos 610
+  ypos 1440
+ }
+ Keymix {
+  inputs 3
+  name Keymix1
+  xpos 620
+  ypos 1865
+ }
+ Copy {
+  inputs 2
+  from0 morph_mask.a
+  to0 morph_mask.a
+  name Copy5
+  xpos 620
+  ypos 2026
+  disable true
+ }
+ Remove {
+  channels morph_mask
+  name Remove1
+  xpos 620
+  ypos 2145
+  disable {{parent.output_morph_mask}}
+ }
+push $N58110f00
+ Dot {
+  name Dot11
+  xpos -382
+  ypos -57
+ }
+ IDistort {
+  uv forward
+  uv_scale {{-(1-(parent.smoothstep?smoothstep(0,1,parent.warp):(parent.warp)))}}
+  name IDistort2
+  xpos -380
+  ypos 1728
+ }
+push $N580d6400
+ Dot {
+  name Dot10
+  xpos -602
+  ypos -190
+ }
+ IDistort {
+  uv forward
+  uv_scale {{-(parent.smoothstep?smoothstep(0,1,parent.warp):(parent.warp))}}
+  name IDistort1
+  xpos -636
+  ypos 1728
+ }
+ Dissolve {
+  inputs 2
+  channels {{{Keymix1.channels}}}
+  which {{parent.smoothstep?smoothstep(0,1,parent.mix_dissolve):(parent.mix_dissolve)}}
+  name Dissolve1
+  label "channels from Keymix1"
+  xpos -540
+  ypos 1861
+ }
+ Switch {
+  inputs 2
+  which {{"\[exists parent.input2]"}}
+  name Switch3
+  xpos 170
+  ypos 2459
+ }
+push $N58125d00
+push $N58124100
+ Dot {
+  name Dot15
+  xpos -1100
+  ypos -957
+ }
+ Dissolve {
+  inputs 2
+  channels {{{Keymix1.channels}}}
+  which {{parent.smoothstep?smoothstep(0,1,parent.mix_dissolve):(parent.mix_dissolve)}}
+  name Dissolve3
+  label "channels from Keymix1"
+  xpos -1150
+  ypos 1885
+ }
+ Dot {
+  name Dot17
+  xpos -1100
+  ypos 2589
+ }
+ Switch {
+  inputs 2
+  which {{warp!=0}}
+  name Switch5
+  xpos 170
+  ypos 2579
+ }
+ Output {
+  name Output1
+  xpos 170
+  ypos 2843
+ }
+end_group
+Dot {
+ name Dot20
+ selected true
+ xpos 1193
+ ypos -1075
+}
+set N58082400 [stack 0]
+Dot {
+ name Dot21
+ selected true
+ xpos 990
+ ypos -1075
+}
+Blur {
+ size 10
+ name Blur2
+ selected true
+ xpos 956
+ ypos -980
+}
+Dot {
+ name Dot25
+ selected true
+ xpos 990
+ ypos -851
+}
+push $N58082400
+Merge2 {
+ inputs 2
+ operation from
+ name Merge4
+ selected true
+ xpos 1159
+ ypos -855
+}
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge3
+ selected true
+ xpos 1159
+ ypos -721
+}
+Dot {
+ name Dot26
+ selected true
+ xpos 1193
+ ypos -440
+}
+push $N58494100
+Copy {
+ inputs 2
+ from0 -rgba.alpha
+ to0 -rgba.alpha
+ channels rgb
+ bbox B
+ name Copy2
+ selected true
+ xpos 1563
+ ypos -456
+}

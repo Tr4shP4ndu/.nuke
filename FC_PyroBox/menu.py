@@ -6,8 +6,7 @@ import sys
 from pathlib import Path
 nuke.pluginAddPath('Cattery')
 nuke.pluginAddPath('PyroThon')
-import load_pyrobox
-
+import load_pyrobox, W_hotbox, W_hotboxManager, viewer_caller
 # Constants
 FC_MENU_NAME = 'FC_PyroBox'
 CURRENT_DIR = os.path.dirname(__file__)
@@ -16,6 +15,8 @@ RESOURCES_DIR = os.path.join(CURRENT_DIR, 'Resources')
 tp_top_menu = nuke.menu('Nuke').addMenu(FC_MENU_NAME)
 tp_node_menu = nuke.menu('Nodes').addMenu(FC_MENU_NAME, icon=os.path.join(RESOURCES_DIR, 'tp_logo.png'))
 load_pyrobox.load_gizmos_toolsets(PYROBOX_DIR, tp_node_menu, ['.gizmo', '.nk'])
+
+
 
 
 def get_username():
@@ -37,6 +38,7 @@ def get_username():
 tp_top_menu.addCommand("Hallo Fellow Gremlin",
                        "nuke.message(f'Hello {get_username()}')")
 
+tp_top_menu.addCommand('Viewer Caller', 'viewer_caller.run()', 'Alt+W')
 
 # Define commands to set colorspaces for selected nodes
 tp_top_menu.addCommand("Set Selected Nodes Colorspace to ACES-CC",

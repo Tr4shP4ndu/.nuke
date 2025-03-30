@@ -1,0 +1,274 @@
+Group {
+name HM_MaskTheMask
+ tile_color 0x1d4729ff
+ lock_connections true
+ addUserKnob {20 MaskTheMask l "Mask The Mask"}
+ addUserKnob {4 CalculationMethod l "What's The Input?" t "To use this, you need to calculate the center of the alpha. The first method only works if the input is a Roto or RotoPaint Node. The second method works with any type of alpha but is a bit slower." M {"Roto Or RotoPaint (Faster Method)" "Other (Slower Method)" "" "" "" "" "" "" ""}}
+ CalculationMethod "Other (Slower Method)"
+ addUserKnob {26 ""}
+ addUserKnob {41 CalculateTheCenterPoint l Go! t "Start calculating the center point." T SwitchBetweenMethods_NoOp.CalculateTheCenterPoint}
+ addUserKnob {41 CenterPoint l "Center Point Coordinates" T SwitchBetweenMethods_NoOp.CenterPoint}
+ addUserKnob {26 GradientControl l "Gradient Control"}
+ addUserKnob {41 Rotate t "Control the direction of the selected mask." T Main_Indicators.X}
+ addUserKnob {41 blackpoint T controlValues.blackpoint}
+ addUserKnob {41 whitepoint T controlValues.whitepoint}
+ addUserKnob {26 ""}
+ addUserKnob {41 Erode T Dilate1.size}
+ addUserKnob {41 size l Blur T Main_Blur.size}
+ addUserKnob {41 filter l "Blur filter" T Main_Blur.filter}
+ addUserKnob {26 ""}
+ addUserKnob {41 mix l Mix T OpacityControlSlider.mix}
+ addUserKnob {26 ""}
+ addUserKnob {26 _3 l " " T " "}
+ addUserKnob {26 Creator l "" t "MaskTheMask\nV01" +STARTLINE T "<span style=\"color:#777\"><b>MaskTheMask V01</b> - <a href=\"https://www.linkedin.com/in/hosny-muhammed\" style=\"color:#888;text-decoration: none;\">Hosny Muhammed-Linkedin</a> </span>"}
+}
+ Axis3 {
+  inputs 0
+  rotate {{Main_Indicators.X} {Main_Indicators.Y} {Main_Indicators.Z}}
+  name World_Directions
+  xpos -541
+  ypos 580
+ }
+ Input {
+  inputs 0
+  name Mask
+  label Mask
+  xpos -45
+  ypos -571
+ }
+ Dot {
+  name Dot1
+  xpos -14
+  ypos -436
+ }
+set Nd5cd3800 [stack 0]
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.alpha 0 3 rgba.alpha 0 3 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2"
+  name Shuffle1
+  xpos -585
+  ypos -436
+ }
+ Dot {
+  name Dot4
+  xpos -665
+  ypos -436
+ }
+ Dot {
+  name Dot5
+  xpos -665
+  ypos 1311
+ }
+ Dot {
+  name Dot7
+  xpos -234
+  ypos 1311
+ }
+set Nd5d00800 [stack 0]
+ Dot {
+  name Dot6
+  xpos -234
+  ypos 1621
+ }
+push $Nd5d00800
+push $Nd5cd3800
+ Dot {
+  name Dot8
+  xpos -14
+  ypos -352
+ }
+set Nd5d01000 [stack 0]
+ Dot {
+  name Dot9
+  xpos -301
+  ypos -352
+ }
+ NoOp {
+  name AlphaSample
+  xpos -332
+  ypos -218
+ }
+ CurveTool {
+  operation "Auto Crop"
+  channels alpha
+  ROI {{-AlphaSample.width x50 -1535} {-AlphaSample.height x50 -936} {AlphaSample.width*2 x50 3531} {AlphaSample.height*2 x50 1404}}
+  intensitydata {{curve}}
+  maxlumapixdata {{CenterOfBBox_maxlumapixdata.x} {CenterOfBBox_maxlumapixdata.y}}
+  name CenterOfBBox
+  xpos -332
+  ypos -123
+ }
+ Expression {
+  temp_name0 curve1
+  temp_expr0 "((CenterOfBBox.autocropdata.x + CenterOfBBox.autocropdata.r )) / 2 "
+  temp_name1 curve2
+  temp_expr1 "(CenterOfBBox.autocropdata.y + CenterOfBBox.autocropdata.t) / 2  "
+  expr0 "((x - curve1)+0.5)/width"
+  expr1 "((y - curve2)+0.5 )/height"
+  name STMpForMethod2
+  xpos -332
+  ypos -10
+ }
+ Dot {
+  name Dot10
+  xpos -301
+  ypos 126
+ }
+push $Nd5d01000
+ Expression {
+  name CenterOfMass
+  xpos -45
+  ypos -136
+  addUserKnob {20 User}
+  addUserKnob {22 CalculateCenterOfMass l "Calculate Center Of Mass" T "import nuke\n\ndef find_roto_node(node):\n    \"\"\" Recursively search upstream for a Roto or RotoPaint node. \"\"\"\n    if node is None:\n        return None\n    if node.Class() in \['Roto', 'RotoPaint']:\n        return node\n    for i in range(node.inputs()):\n        found_node = find_roto_node(node.input(i))\n        if found_node:\n            return found_node\n    return None\n\ndef find_node_outside_group(node):\n    \"\"\" Traverse outside the group to find a Roto or RotoPaint node. \"\"\"\n    visited_nodes = set()  # To keep track of visited nodes and avoid infinite loops\n\n    while node is not None and node not in visited_nodes:\n        visited_nodes.add(node)\n        if node.Class() == 'Group':\n            num_inputs = node.inputs()\n            for i in range(num_inputs):\n                input_node = node.input(i)\n                if input_node:\n                    found_node = find_roto_node(input_node)\n                    if found_node:\n                        return found_node\n            # Move to the parent node\n            if node.input(0):\n                node = node.input(0)\n            else:\n                break\n        else:\n            found_node = find_roto_node(node)\n            if found_node:\n                return found_node\n            # Move to the next upstream node\n            if node.input(0):\n                node = node.input(0)\n            else:\n                break\n    return None\n\n# Get the current node\nthis_node = nuke.thisNode()\n\n# Check if this node is within a group\nfullname = this_node.fullName()\nif '.' not in fullname:\n    nuke.message(\"Error: This node is not in a group\")\nelse:\n    # Get the group node\n    group = nuke.toNode(fullname.rsplit('.', 1)\[0])\n    \n    # Get the input node of the group\n    input_node = group.input(0)\n    \n    # Find the Roto or RotoPaint node outside the group\n    outside_node = find_node_outside_group(input_node)\n    \n    if outside_node is None:\n        nuke.message(\"No Roto or RotoPaint node found.\")\n    else:\n        print(f\"Found Roto/RotoPaint node: \{outside_node.name()\} (\{outside_node.Class()\})\")\n\n# If you want to execute your existing logic with the found node, you can do so here:\nif outside_node:\n    def calculate_center_of_mass(input_node, frame):\n        \"\"\" Calculate the center of mass of a Roto or RotoPaint node at a given frame. \"\"\"\n        if not isinstance(input_node, nuke.Node) or input_node.Class() not in \['Roto', 'RotoPaint']:\n            raise ValueError(\"Input node must be a Roto or RotoPaint node.\")\n\n        curve = input_node\['curves']\n        root_layer = curve.rootLayer\n        vertices = \[]\n\n        def extract_points(layer, frame):\n            for shape in layer:\n                if isinstance(shape, nuke.rotopaint.Shape):\n                    for point in shape:\n                        pos = point.center.getPosition(frame)\n                        vertices.append((pos\[0], pos\[1]))\n                elif isinstance(shape, nuke.rotopaint.Layer):\n                    extract_points(shape, frame)\n\n        extract_points(root_layer, frame)\n\n        if not vertices:\n            raise ValueError(\"No vertices found in the Roto or RotoPaint node.\")\n\n        x_coords = \[v\[0] for v in vertices]\n        y_coords = \[v\[1] for v in vertices]\n\n        centroid_x = sum(x_coords) / len(vertices)\n        centroid_y = sum(y_coords) / len(vertices)\n\n        return (centroid_x, centroid_y)\n\n    # Get the frame range\n    start_frame = int(nuke.root().firstFrame())\n    end_frame = int(nuke.root().lastFrame())\n\n    # Get the current frame\n    current_frame = nuke.frame()\n\n    # Iterate through each frame and calculate/set the center of mass\n    for frame in range(start_frame, end_frame + 1):\n        # Set the frame to process\n        nuke.executeInMainThreadWithResult(nuke.frame, (frame,))\n\n        try:\n            # Calculate the centroid for the current frame\n            centroid = calculate_center_of_mass(outside_node, frame)\n\n            # Set the X and Y values to the 2D position knob at the current frame\n            this_node\['translate'].setValueAt(centroid\[0], frame)  # X value\n            this_node\['translate'].setValueAt(centroid\[1], frame, 1)  # Y value\n\n            # Ensure keyframes are created\n            this_node\['translate'].setKeyAt(frame)\n            this_node\['translate'].setKeyAt(frame, 1)  # Ensure both X and Y have keyframes\n\n            print(f\"Frame \{frame\}: Center of Mass - X = \{centroid\[0]\}, Y = \{centroid\[1]\}\")\n\n        except ValueError as e:\n            print(f\"Frame \{frame\}: \{str(e)\}\")\n\n    # Restore the original frame after processing\n    nuke.executeInMainThreadWithResult(nuke.frame, (current_frame,))\n" +STARTLINE}
+  addUserKnob {12 translate t translate}
+ }
+ Expression {
+  temp_name0 curve1
+  temp_expr0 CenterOfMass.translate.x
+  temp_name1 curve2
+  temp_expr1 CenterOfMass.translate.y
+  expr0 "((x - curve1)+0.5)/width"
+  expr1 "((y - curve2)+0.5 )/height"
+  name STMapForMethod0
+  xpos -45
+  ypos -12
+ }
+ Switch {
+  inputs 2
+  which {{"CalculationMethod == 0? 0 : 1"}}
+  name SwitchButtonMethod
+  xpos -45
+  ypos 126
+ }
+ Dot {
+  name Dot3
+  xpos -14
+  ypos 326
+ }
+set Nd5d2d400 [stack 0]
+ Dot {
+  name Dot11
+  xpos -343
+  ypos 326
+ }
+ Expression {
+  channel0 rgba
+  expr0 "red*l.x + green*l.y + blue*l.z"
+  channel1 {-rgba.red rgba.green -rgba.blue none}
+  channel2 {-rgba.red -rgba.green rgba.blue none}
+  name Main_Indicators
+  xpos -374
+  ypos 598
+  addUserKnob {20 User}
+  addUserKnob {7 X R -180 180}
+  addUserKnob {7 Y R 0 180}
+  Y 90
+  addUserKnob {7 Z R 0 180}
+  Z 90
+  addUserKnob {1 Directions_From}
+  Directions_From World_Directions
+  addUserKnob {13 l}
+  l {{"\[knob Directions_From].world_matrix.2"} {"\[knob Directions_From].world_matrix.6"} {"\[knob Directions_From].world_matrix.10"}}
+ }
+ Grade {
+  channels rgba
+  white 10
+  white_clamp true
+  name controlValues
+  xpos -374
+  ypos 689
+ }
+ Dot {
+  name Dot2
+  xpos -343
+  ypos 864
+ }
+push $Nd5d2d400
+ Dilate {
+  size -1
+  name remove_pixel
+  xpos -45
+  ypos 511
+ }
+ Dilate {
+  size 1
+  name remove_pixel1
+  xpos -45
+  ypos 547
+ }
+ ChannelMerge {
+  inputs 2
+  operation multiply
+  name Output_alpha
+  xpos -45
+  ypos 852
+ }
+ CopyBBox {
+  inputs 2
+  name CopyBBox1
+  xpos -45
+  ypos 1311
+ }
+ Dilate {
+  name Dilate1
+  xpos -45
+  ypos 1347
+ }
+ Blur {
+  name Main_Blur
+  xpos -45
+  ypos 1404
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.alpha 0 3 rgba.alpha 0 3 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2"
+  name Shuffle2
+  xpos -45
+  ypos 1471
+ }
+ Multiply {
+  value {{OpacityControlSlider.mix}}
+  name OpacityControl
+  xpos -45
+  ypos 1509
+ }
+ NoOp {
+  name OpacityControlSlider
+  xpos -45
+  ypos 1567
+  addUserKnob {20 User}
+  addUserKnob {7 mix l Mix t "Control the opacity of the mask"}
+  mix 1
+ }
+ Copy {
+  inputs 2
+  from0 rgba.red
+  to0 rgba.red
+  from1 rgba.green
+  to1 rgba.green
+  from2 rgba.blue
+  to2 rgba.blue
+  from3 -rgba.alpha
+  name Copy1
+  xpos -45
+  ypos 1603
+ }
+ Output {
+  name Output1
+  xpos -45
+  ypos 1748
+ }
+ NoOp {
+  inputs 0
+  name SwitchBetweenMethods_NoOp
+  xpos -188
+  ypos 62
+  addUserKnob {20 User}
+  addUserKnob {22 CalculateTheCenterPoint l Go! T "import nuke\n\n# Define the node SwitchButton\nswitch_button_node = nuke.toNode('SwitchButtonMethod')\n\n# Check if SwitchButton node is found\nif switch_button_node is not None:\n\n    # Check the value of the 'which' knob\n    if switch_button_node\['which'].value() == 0:\n\n        # Assuming 'CenterOfMass' is the name of the node containing the script button knob\n        center_of_mass_node = nuke.toNode('CenterOfMass')  # Replace with the actual node name\n\n        if center_of_mass_node is not None:\n            # Assuming 'CalculateCenterPoint' is the Python script knob name\n            knob = center_of_mass_node\['CalculateCenterOfMass']\n            \n            if knob is not None:\n                # Execute the script knob\n                knob.execute()\n            else:\n                nuke.message(\"Knob 'CalculateCenterPoint' not found in 'CenterOfMass'\")\n        else:\n            nuke.message(\"Node 'CenterOfMass' not found\")\n    else:\n        # Execute the 'Go' knob in the 'CurveTool' tab of the 'CalculateBBox' node\n        calculate_bbox_node = nuke.toNode('CenterOfBBox')  # Replace with the actual node name\n\n        if calculate_bbox_node is not None:\n            # Access the 'Go' knob directly within the node\n            go_knob = calculate_bbox_node\['go']\n\n            if go_knob is not None:\n                # Execute the script knob\n                go_knob.execute()\n            else:\n                nuke.message(\"Knob 'Go' not found in 'CurveTool' tab of 'CalculateBBox'\")\n        else:\n            nuke.message(\"Node 'CalculateBBox' not found\")\nelse:\n    nuke.message(\"Node 'SwitchButtonMethod' not found\")\n" +STARTLINE}
+  addUserKnob {12 CenterPoint l "Center Point Coordinates"}
+  CenterPoint {{"SwitchButtonMethod.which == 0 ? CenterOfMass.translate.x :  (CenterOfBBox.autocropdata.x + CenterOfBBox.autocropdata.r) / 2"} {"SwitchButtonMethod.which == 0 ? CenterOfMass.translate.y :  (CenterOfBBox.autocropdata.y + CenterOfBBox.autocropdata.t) / 2"}}
+ }
+end_group

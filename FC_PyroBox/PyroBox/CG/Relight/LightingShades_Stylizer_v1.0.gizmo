@@ -1,0 +1,551 @@
+#! C:/Program Files/Nuke15.0v2/nuke-15.0.2.dll -nx
+version 15.0 v2
+Gizmo {
+inputs 5
+tile_color 0x2e88a5ff
+note_font_color 0xff
+addUserKnob {20 LightShade_Stylizer l "LightShade Stylizer"}
+addUserKnob {26 _TITLE l "" +STARTLINE T "<font color=\"white\" face=\"reem kufi\" size=\"7\">Lighting Shades Stylizer v1.0</font>"}
+addUserKnob {26 ""}
+addUserKnob {6 visualize_mask l "visualize mask" t "checked = visualizing the masks\nunchecked = result" +STARTLINE}
+addUserKnob {26 ""}
+addUserKnob {26 red l "" +STARTLINE T "<font color=\"white\" face=\"reem kufi\" size=\"4\">Red mask</font>"}
+addUserKnob {41 "R_G_B_Masks_keyer_R mask max" l "R mask max" T "BlinkScript1.R_G_B_Masks_keyer_R mask max"}
+addUserKnob {41 "R_G_B_Masks_keyer_R mask min" l "R mask min" T "BlinkScript1.R_G_B_Masks_keyer_R mask min"}
+addUserKnob {41 white l gain T Grade8.white}
+addUserKnob {26 ""}
+addUserKnob {26 green_mask l "" +STARTLINE T "<font color=\"white\" face=\"reem kufi\" size=\"4\">Green mask</font>"}
+addUserKnob {41 "R_G_B_Masks_keyer_G mask max" l "G mask max" T "BlinkScript1.R_G_B_Masks_keyer_G mask max"}
+addUserKnob {41 "R_G_B_Masks_keyer_G mask min" l "G mask min" T "BlinkScript1.R_G_B_Masks_keyer_G mask min"}
+addUserKnob {41 white_1 l gain T Grade7.white}
+addUserKnob {26 ""}
+addUserKnob {26 Blue_mask l "" +STARTLINE T "<font color=\"white\" face=\"reem kufi\" size=\"4\">Blue mask</font>"}
+addUserKnob {41 "R_G_B_Masks_keyer_B mask max" l "B mask max" T "BlinkScript1.R_G_B_Masks_keyer_B mask max"}
+addUserKnob {41 "R_G_B_Masks_keyer_B mask min" l "B mask min" T "BlinkScript1.R_G_B_Masks_keyer_B mask min"}
+addUserKnob {41 white_2 l gain T Grade3.white}
+addUserKnob {26 _4 l "" +STARTLINE}
+addUserKnob {26 _maskGain l "" +STARTLINE T "<font color=\"white\" face=\"reem kufi\" size=\"5\">Masks intensity</font>"}
+addUserKnob {41 red_mask_mult l "red mask mult" T Grade4.multiply}
+addUserKnob {41 green_mask_mult l "green mask mult" T Grade5.multiply}
+addUserKnob {41 multiply_2 l "blue mask mult" T Grade6.multiply}
+addUserKnob {26 ""}
+addUserKnob {41 scale l "global masks scale" t "input a large texture so that if needed you can animate the map before the node" T Transform1.scale}
+addUserKnob {26 _3 l "" +STARTLINE}
+addUserKnob {26 _Kuwahara l "" t "kuwahara filter from Michael Levin\nhttps://github.com/michaellevin" +STARTLINE T "<font color=\"white\" face=\"reem kufi\" size=\"5\">Kuwahara filter</font>"}
+addUserKnob {6 kuwahara l "kuwahara filter" +STARTLINE}
+addUserKnob {41 kuwahara_radius l "kuwahara radius" t "will only affect the stylized lighting, not the texture under" T AnisotropicKuwaharaFilter2.Radius}
+addUserKnob {41 kuwahara_sharpness l "kuwahara sharpness" t "Controls the sharpness of the kuwahara filter" T AnisotropicKuwaharaFilter2.Q}
+addUserKnob {26 ""}
+addUserKnob {26 _Format l "" +STARTLINE T "<font color=\"white\" face=\"reem kufi\" size=\"5\">Format</font>"}
+addUserKnob {41 type T Reformat1.type}
+addUserKnob {41 format l "output format" T Reformat1.format}
+addUserKnob {41 resize l "resize type" T Reformat1.resize}
+addUserKnob {26 ""}
+addUserKnob {26 _ l "" +STARTLINE T "<br><a href=\"https://www.leonelnguyen.fr\"><span><font color=\"white\" size=\"3\">Léonel NGUYEN | 2024</font>"}
+}
+BackdropNode {
+inputs 0
+name BackdropNode1
+tile_color 0x242424ff
+label Kuwahara
+note_font_size 42
+xpos -1808
+ypos 1100
+appearance Border
+bdwidth 200
+bdheight 154
+}
+BackdropNode {
+inputs 0
+name BackdropNode2
+tile_color 0xffffffff
+label Alpha
+note_font_size 42
+xpos -1970
+ypos 1423
+appearance Border
+bdwidth 157
+bdheight 170
+}
+BackdropNode {
+inputs 0
+name BackdropNode3
+label "Red= high values\ngreen=terminator\nblue=shadows\n\n\nEVERYTHING IS MESSY\nBUT ITS NEAR"
+xpos -1114
+ypos -33
+bdwidth 197
+bdheight 248
+}
+Input {
+inputs 0
+name Diffuse
+xpos -1827
+ypos -43
+}
+Reformat {
+format "2048 1080 0 0 2048 1080 1 2K_DCP"
+resize fill
+name Reformat1
+xpos -1827
+ypos 11
+}
+set Cee13d000 [stack 0]
+Dot {
+name Dot16
+xpos -1793
+ypos 91
+}
+set Nee13dc00 [stack 0]
+Dot {
+name Dot20
+xpos -2152
+ypos 91
+}
+Dot {
+name Dot21
+xpos -2152
+ypos 1528
+}
+push $Nee13dc00
+Dot {
+name Dot4
+xpos -1013
+ypos 91
+}
+Saturation {
+saturation 0
+name Saturation1
+xpos -1047
+ypos 122
+}
+BlinkScript {
+recompileCount 13
+ProgramGroup 1
+KernelDescription "3 \"R_G_B_Masks_keyer\" iterate pixelWise 45b845cca66b098f6b16a64a2b9c1ae30c24fa79ab770ee36a0ed3e4832e04e2 2 \"B\" Read Point \"out\" Write Point 7 \"R mask max\" Float 1 AAAAPw== \"R mask min\" Float 1 AAAAPw== \"G mask max\" Float 1 AAAAPw== \"G mask min\" Float 1 AAAAPw== \"B mask max\" Float 1 AAAAPw== \"B mask min\" Float 1 AAAAPw== \"Invert Mask\" Bool 1 AA== 7 \"r_h\" 1 1 Default \"r_l\" 1 1 Default \"g_h\" 1 1 Default \"g_l\" 1 1 Default \"b_h\" 1 1 Default \"b_l\" 1 1 Default \"invert\" 1 1 Default 0"
+kernelSource "// Define a custom lerp function for linear interpolation\nfloat lerp(float start, float end, float factor) \n\{\n    return start + factor * (end - start);\n\}\n\nkernel R_G_B_Masks_keyer: ImageComputationKernel<ePixelWise>\n\{\n    // Define the input and output images\n    Image<eRead, eAccessPoint, eEdgeClamped> B; // Input image\n    Image<eWrite, eAccessPoint> out;           // Output image\n\n    param:\n        // R mask = bright values\n        // G mask = medium values\n        // B mask = dark values\n\n        float r_h; // Red mask high value\n        float r_l; // Red mask low value\n        float g_h; // Green mask high value\n        float g_l; // Green mask low value\n        float b_h; // Blue mask high value\n        float b_l; // Blue mask low value\n        bool invert;    // Boolean parameter to control interpolation\n\n    void define()\n    \{\n        defineParam(r_h, \"R mask max\", 0.5f);\n        defineParam(r_l, \"R mask min\", 0.5f);\n        defineParam(g_h, \"G mask max\", 0.5f);\n        defineParam(g_l, \"G mask min\", 0.5f);\n        defineParam(b_h, \"B mask max\", 0.5f);\n        defineParam(b_l, \"B mask min\", 0.5f);\n        defineParam(invert, \"Invert Mask\", false);\n    \}\n\n    void process()\n    \{\n        // Read the pixel value from the input image B\n        float inputPixel = B(0);\n\n        float r_range = max(r_h - r_l, 1e-5f);\n        float g_range = max(g_h - g_l, 1e-5f);\n        float b_range = max(b_h - b_l, 1e-5f);\n\n        // Determine the interpolation factor based on the input pixel value\n        // Normalize the factor between minValue and maxValue\n        float RMask_factor = clamp((inputPixel - r_l) / r_range, 0.0f, 1.0f);\n        float GMask_factor = clamp((inputPixel - g_l) / g_range, 0.0f, 1.0f);\n        float BMask_factor = clamp((inputPixel - b_l) / b_range, 0.0f, 1.0f);\n\n        // Ensure out-of-bounds values are handled properly\n        float R_grayscaleValue = (inputPixel >= r_l && inputPixel <= r_h)\n            ? lerp(1.0f, 0.0f, invert ? RMask_factor : 1.0f - RMask_factor)\n            : 0.0f;\n\n        float G_grayscaleValue = (inputPixel >= g_l && inputPixel <= g_h)\n            ? lerp(1.0f, 0.0f, invert ? GMask_factor : 1.0f - GMask_factor)\n            : 0.0f;\n\n        float B_grayscaleValue = (inputPixel >= b_l && inputPixel <= b_h)\n            ? lerp(1.0f, 0.0f, invert ? BMask_factor : 1.0f - BMask_factor)\n            : 0.0f;\n\n        // Set the output pixel values for each channel\n        out(0) = R_grayscaleValue;  // Red channel\n        out(1) = G_grayscaleValue;  // Green channel\n        out(2) = B_grayscaleValue;  // Blue channel\n        out(3) = B(3);              // Alpha channel from the original input\n    \}\n\};\n"
+rebuild ""
+rebuild_finalise ""
+name BlinkScript1
+xpos -1047
+ypos 162
+}
+Median {
+size 1
+ignore_top_line false
+name Median1
+xpos -1047
+ypos 198
+}
+Dot {
+name Dot1
+xpos -1013
+ypos 279
+}
+set Nee141c00 [stack 0]
+Dot {
+name Dot8
+xpos -1444
+ypos 279
+}
+set Nee13e000 [stack 0]
+Dot {
+name Dot2
+xpos -1662
+ypos 279
+}
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 rgba.red 0 0 rgba.red 0 0 black -1 -1 rgba.blue 0 2 black -1 -1 rgba.green 0 1 rgba.red 0 0 rgba.alpha 0 3"
+name Shuffle2
+label r
+xpos -1696
+ypos 307
+postage_stamp true
+}
+Grade {
+name Grade8
+label R_Mask_gain
+xpos -1696
+ypos 391
+}
+Dot {
+name Dot17
+xpos -1662
+ypos 621
+}
+Input {
+inputs 0
+name red_mask_tex
+xpos -627
+ypos -25
+number 2
+}
+clone $Cee13d000 {
+xpos -627
+ypos 162
+selected false
+}
+Transform {
+translate {0 -4}
+center {999 540}
+name Transform1
+xpos -627
+ypos 259
+}
+set Cee150000 [stack 0]
+Dot {
+name Dot3
+label Red_mask_tex
+xpos -1554
+ypos 563
+hide_input true
+}
+Merge2 {
+inputs 2
+operation minus
+name Merge6
+xpos -1588
+ypos 618
+}
+Dot {
+name Dot11
+xpos -1554
+ypos 777
+}
+set Nee151800 [stack 0]
+Dot {
+name Dot12
+xpos -1554
+ypos 861
+}
+push $Nee151800
+push $Nee13e000
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 black -1 -1 rgba.blue 0 2 rgba.green 0 1 rgba.green 0 1 black -1 -1 rgba.red 0 0 rgba.green 0 1 rgba.alpha 0 3"
+name Shuffle1
+label g
+xpos -1478
+ypos 308
+postage_stamp true
+}
+Grade {
+name Grade7
+label G_Mask_gain
+xpos -1478
+ypos 392
+}
+Dot {
+name Dot14
+xpos -1444
+ypos 627
+}
+Input {
+inputs 0
+name green_mask_tex
+xpos -470
+ypos -21
+number 3
+}
+clone $Cee13d000 {
+xpos -470
+ypos 162
+selected false
+}
+clone $Cee150000 {
+xpos -470
+ypos 260
+selected false
+}
+Dot {
+name Dot6
+label Green_mask_tex
+xpos -1326
+ypos 567
+hide_input true
+}
+Merge2 {
+inputs 2
+operation minus
+name Merge5
+xpos -1360
+ypos 624
+}
+Dot {
+name Dot19
+xpos -1098
+ypos 627
+}
+set N6e85b800 [stack 0]
+Dot {
+name Dot5
+xpos -1098
+ypos 686
+}
+push $N6e85b800
+push $Nee141c00
+Shuffle2 {
+fromInput1 {{0} B}
+fromInput2 {{0} B}
+mappings "4 black -1 -1 rgba.red 0 0 rgba.blue 0 2 rgba.blue 0 2 black -1 -1 rgba.green 0 1 rgba.blue 0 2 rgba.alpha 0 3"
+name Shuffle3
+label B
+xpos -1047
+ypos 323
+postage_stamp true
+}
+Grade {
+name Grade3
+label B_Mask_gain
+xpos -1047
+ypos 407
+}
+Dot {
+name Dot9
+xpos -1013
+ypos 528
+}
+Input {
+inputs 0
+name blue_mask_tex
+xpos -321
+ypos -17
+number 4
+}
+clone $Cee13d000 {
+xpos -321
+ypos 215
+selected false
+}
+clone $Cee150000 {
+xpos -321
+ypos 260
+selected false
+}
+Dot {
+name Dot18
+label Blue_mask_tex
+xpos -869
+ypos 472
+hide_input true
+}
+Merge2 {
+inputs 2
+operation minus
+name Merge7
+xpos -903
+ypos 525
+}
+Grade {
+inputs 1+1
+multiply 0
+maskChannelMask rgba.green
+name Grade2
+xpos -904
+ypos 624
+}
+Merge2 {
+inputs 2
+Achannels rgb
+Bchannels rgb
+output rgb
+name Merge3
+xpos -904
+ypos 683
+}
+Grade {
+inputs 1+1
+multiply 0
+maskChannelMask rgba.red
+name Grade1
+xpos -904
+ypos 774
+}
+Merge2 {
+inputs 2
+name Merge1
+xpos -904
+ypos 858
+}
+Clamp {
+maximum 100
+name Clamp1
+xpos -904
+ypos 948
+}
+Dot {
+name Dot10
+xpos -870
+ypos 1029
+}
+set N60917800 [stack 0]
+Dot {
+name Dot22
+xpos -870
+ypos 1376
+}
+Input {
+inputs 0
+name Albedo
+xpos -1928
+ypos 129
+number 1
+}
+clone $Cee13d000 {
+xpos -1928
+ypos 153
+selected false
+}
+Dot {
+name Dot23
+xpos -1894
+ypos 263
+}
+set N4ad68c00 [stack 0]
+Dot {
+name Dot13
+xpos -2065
+ypos 263
+}
+Dot {
+name Dot7
+xpos -2065
+ypos 1299
+}
+push $N60917800
+push $N60917800
+push $N60917800
+push $Nee13dc00
+Dot {
+name Dot15
+xpos -1793
+ypos 319
+}
+push $N4ad68c00
+Merge2 {
+inputs 2
+operation divide
+name Merge2
+label "LIGHTING DATA\nDiffuse/Albedo"
+xpos -1928
+ypos 304
+}
+Grade {
+inputs 1+1
+maskChannelMask rgba.red
+name Grade4
+label R_Mask
+xpos -1928
+ypos 949
+}
+Grade {
+inputs 1+1
+maskChannelMask rgba.green
+name Grade5
+label G_Mask
+xpos -1928
+ypos 1006
+}
+Grade {
+inputs 1+1
+maskChannelMask rgba.blue
+name Grade6
+label B_Mask
+xpos -1928
+ypos 1065
+}
+set N63c4e800 [stack 0]
+Group {
+name AnisotropicKuwaharaFilter2
+label "kuwahara filter from Michael Levin\nhttps://github.com/michaellevin"
+xpos -1743
+ypos 1170
+addUserKnob {20 AnisotropicKuwaharaFilter}
+addUserKnob {41 "Local GPU: " T BlinkScript2.gpuName}
+addUserKnob {41 "Use GPU if Available" T BlinkScript2.useGPUIfAvailable}
+addUserKnob {26 ""}
+addUserKnob {20 begin l inputs n 1}
+addUserKnob {41 src T BlinkScript2.AnisotropicKuwaharaFilter_src}
+addUserKnob {26 ""}
+addUserKnob {41 Radius T BlinkScript2.AnisotropicKuwaharaFilter_Radius}
+addUserKnob {41 Q T BlinkScript2.AnisotropicKuwaharaFilter_Q}
+addUserKnob {41 alpha T BlinkScript2.AnisotropicKuwaharaFilter_alpha}
+addUserKnob {41 scale T BlinkScript2.AnisotropicKuwaharaFilter_scale}
+addUserKnob {26 ""}
+addUserKnob {41 output T BlinkScript2.outputChannels}
+}
+Input {
+inputs 0
+name src
+xpos 76
+ypos 5
+}
+BlinkScript {
+kernelSourceFile D:/Sink/_external_tools/kuwahara-filter-nuke-main/kuwahara_filter_buffer_D.blink
+recompileCount 3
+ProgramGroup 1
+KernelDescription "3 \"AnisotropicKuwaharaFilter\" iterate pixelWise 5af1b3a3be570d8831309cefd448915d8011c79d2df4bdb69eae2e0f011d754e 2 \"src\" Read Random \"dst\" Write Point 4 \"Radius\" Int 1 DwAAAA== \"Q\" Float 1 AABAQQ== \"alpha\" Float 1 AACgQA== \"scale\" Float 1 AACAPw== 4 \"radius\" 1 1 Default \"q\" 1 1 Default \"alpha\" 1 1 Default \"scale\" 1 1 Default 2 \"width\" Float 1 1 AAAAAA== \"height\" Float 1 1 AAAAAA=="
+kernelSource "kernel AnisotropicKuwaharaFilter : ImageComputationKernel<ePixelWise>\n\{\n    Image<eRead, eAccessRandom, eEdgeClamped> src; // Input image\n    Image<eWrite> dst; // Output image\n\n    param:\n        int radius; // Radius of the filter\n        float q;\n        float alpha;\n        float scale;\n\n    local:\n        float width;\n        float height;\n\n    void define() \{\n        defineParam(radius, \"Radius\", 15); \n        defineParam(q, \"Q\", 12.0f); \n        defineParam(alpha, \"alpha\", 5.0f); \n        defineParam(scale, \"scale\", 1.0f); \n    \}\n\n    void init() \{\n        width = src.bounds.x2;\n        height = src.bounds.y2;\n    \}\n\n    void process(int2 pos) \{\n        SampleType(src) input = src(pos.x, pos.y);\n        float2 uv = float2(pos.x / float(width), pos.y / float(height));\n\n        float4 m\[4];\n        float4 s\[4];\n        \n        for (int k = 0; k < 4; ++k) \{\n            m\[k] = float4(0.0f, 0.0f, 0.0f, 0.0f);\n            s\[k] = float4(0.0f, 0.0f, 0.0f, 0.0f);\n        \}\n        float piN = 2.0f * PI / 4.0f;\n        \n        \n        float tw = 1.0f; // place texture reading here Alpha channel\n        float a = radius * clamp((alpha + tw) / alpha, 0.1, 2.0); \n        float b = radius * clamp(alpha / (alpha + tw), 0.1, 2.0);\n\n        float tz = 0.0f;\n        float cos_phi = cos(tz); // 1\n        float sin_phi = sin(tz); // 0\n\n        float4 SR = float4(cos_phi/a, -sin_phi/b, \n                            sin_phi/a, cos_phi/b); \n\n        int max_x = int(sqrt(a*a * cos_phi*cos_phi +\n                            b*b * sin_phi*sin_phi));\n        int max_y = int(sqrt(a*a * sin_phi*sin_phi +\n                            b*b * cos_phi*cos_phi));\n        float real_scale = clamp(pow(scale,2), 0.05, 1.0); // TEST\n        for (int j = 0; j <= max_y; ++j) \{\n            for (int i = -max_x; i <= max_x; ++i) \{\n                if ((j != 0) || (i > 0)) \{\n                    // float2 v = float2(float(i), float(j));\n                    float2 v = float2(\n                        SR\[0]*float(i) + SR\[1]*float(j),\n                        SR\[2]*float(i) + SR\[3]*float(j));\n                    float dot_v = dot(v, v);\n                    if (dot_v <= real_scale) \{\n                        int2 coord0 = int2(uv.x * width + i, uv.y * height + j);\n                        int2 coord1 = int2(uv.x * width - i, uv.y * height - j);\n\n                        float4 c0_fix = src(coord0.x, coord0.y);\n                        float3 c0 = float3(c0_fix.x, c0_fix.y, c0_fix.z);\n                        float4 c1_fix = src(coord1.x, coord1.y);\n                        float3 c1 = float3(c1_fix.x, c1_fix.y, c1_fix.z);\n\n                        float3 cc0 = c0 * c0;\n                        float3 cc1 = c1 * c1;\n\n                        float n = 0.0f;\n                        float wx\[4];\n                        \n                        float z;\n                        float xx = 0.33f - 0.84f * v.x * v.x;\n                        float yy = 0.33f - 0.84f * v.y * v.y;\n\n                        z = max(0.0f, v.y + xx);\n                        n += wx\[0] = z * z;\n\n                        z = max(0.0f, -v.x + yy);\n                        n += wx\[1] = z * z;\n\n                        z = max(0.0f, -v.y + xx);\n                        n += wx\[2] = z * z;\n\n                        z = max(0.0f, v.x + yy);\n                        n += wx\[3] = z * z;\n                        \n\n                        float g = exp(-3.125f * dot_v) / n;\n                        for (int k = 0; k < 4; ++k) \{\n                            float w = wx\[k] * g;\n                            m\[k] += float4(c0.x * w, c0.y * w, c0.z * w, w);\n                            // Extend cc0 and cc1 to float4 by adding a default fourth component, here I use 0.0f\n                            s\[k] += float4(cc0.x * w, cc0.y * w, cc0.z * w, 0.0f);\n                            m\[(k + 2) & 3] += float4(c1.x * w, c1.y * w, c1.z * w, w);\n                            s\[(k + 2) & 3] += float4(cc1.x * w, cc1.y * w, cc1.z * w, 0.0f);\n                        \}\n                    \}\n                \}\n            \}\n        \}\n        \n        float4 o = float4(0.0f, 0.0f, 0.0f, 0.0f);\n        for (int k = 0; k < 4; ++k) \{\n            m\[k].x /= m\[k].w;\n            m\[k].y /= m\[k].w;\n            m\[k].z /= m\[k].w;\n\n            float4 temp = s\[k] / m\[k].w - float4(m\[k].x * m\[k].x, m\[k].y * m\[k].y, m\[k].z * m\[k].z, 0.0f);\n            s\[k] = float4(fabs(temp.x), fabs(temp.y), fabs(temp.z), fabs(temp.w));\n            \n            float sigma2 = sqrt(s\[k].x) + sqrt(s\[k].y) + sqrt(s\[k].z);\n            float w =1.0f / (1.0f + pow(255.0f * sigma2, q)); \n\n            // Accumulate the result in o\n            o += float4(m\[k].x * w, m\[k].y * w, m\[k].z * w, w);\n        \}\n\n        dst() = float4(o.x / o.w, o.y / o.w, o.z / o.w, 1.0f);\n        // dst() = input;\n    \}\n\n\};\n"
+rebuild ""
+AnisotropicKuwaharaFilter_Radius 4
+rebuild_finalise ""
+name BlinkScript2
+xpos 76
+ypos 68
+}
+Output {
+name Output1
+xpos 76
+ypos 145
+}
+end_group
+push $N63c4e800
+Switch {
+inputs 2
+which {{parent.kuwahara}}
+name Switch2
+xpos -1928
+ypos 1236
+}
+Merge2 {
+inputs 2
+operation multiply
+name Merge4
+label "LIGHTING BACK"
+xpos -1928
+ypos 1290
+}
+Switch {
+inputs 2
+which {{parent.visualize_mask}}
+name Switch1
+label "0-result | 1-mask"
+xpos -1929
+ypos 1367
+}
+Copy {
+inputs 2
+from0 rgba.alpha
+to0 rgba.alpha
+name Copy1
+xpos -1929
+ypos 1519
+}
+Premult {
+name Premult1
+xpos -1929
+ypos 1555
+}
+clone $Cee13d000 {
+xpos -1931
+ypos 1611
+selected false
+}
+Output {
+name Output1
+xpos -1931
+ypos 1718
+}
+end_group

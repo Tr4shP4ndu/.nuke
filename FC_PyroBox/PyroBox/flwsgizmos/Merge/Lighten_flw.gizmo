@@ -1,0 +1,55 @@
+Group {
+ inputs 2
+ tile_color 0xff5555ff
+ name Lighten_flw1
+ help "A over B if A>B\nUseful for comping rotoed blonde hair and snowflakes\n\nInputs:\nA - unpremultiplied FG\nB - BG\nMask - optional mask"
+ selected true
+ addUserKnob {20 Lighten}
+ addUserKnob {26 Summary l "" +STARTLINE T "A over B if A>B\nUseful for comping rotoed blonde hair and snowflakes\n\nInputs:\nA - unpremultiplied FG\nB - BG\nMask - optional mask"}
+ addUserKnob {26 "" +STARTLINE}
+ addUserKnob {26 "" l mask T ""}
+ addUserKnob {41 maskChannelInput l "" -STARTLINE T MergeExpression1.maskChannelInput}
+ addUserKnob {41 fringe -STARTLINE T MergeExpression1.fringe}
+ addUserKnob {41 inject -STARTLINE T MergeExpression1.inject}
+ addUserKnob {41 invert_mask l invert -STARTLINE T MergeExpression1.invert_mask}
+ addUserKnob {41 mix T MergeExpression1.mix}
+}
+ Input {
+  inputs 0
+  name Mask
+  label "(input \[value number])"
+  selected true
+  xpos -370
+  ypos 152
+  number 2
+ }
+ Input {
+  inputs 0
+  name A
+  xpos -459
+  ypos 110
+  number 1
+ }
+ Input {
+  inputs 0
+  name B
+  xpos -700
+  ypos 86
+ }
+ MergeExpression {
+  inputs 2+1
+  expr0 "Ar>Br ? Ar*Aa + (1-Aa)*Br : Br"
+  expr1 "Ag>Bg ? Ag*Aa + (1-Aa)*Bg : Bg"
+  expr2 "Ab>Bb ? Ab*Aa + (1-Aa)*Bb : Bb"
+  expr3 Aa+Ba+Aa*Ba
+  mix {1}
+  name MergeExpression1
+  xpos -590
+  ypos 158
+ }
+ Output {
+  name Output1
+  xpos -588
+  ypos 237
+ }
+end_group

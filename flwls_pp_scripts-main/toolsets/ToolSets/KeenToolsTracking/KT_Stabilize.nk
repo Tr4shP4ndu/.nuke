@@ -1,0 +1,154 @@
+set cut_paste_input [stack 0]
+version 13.1 v2
+BackdropNode {
+ inputs 0
+ name BackdropNode18
+ tile_color 0xffaaaaff
+ gl_color 0x3a3a24ff
+ label KT_Stabilize
+ note_font_size 42
+ selected true
+ xpos -1474
+ ypos -229
+ bdwidth 827
+ bdheight 827
+ z_order 1
+}
+Dot {
+ inputs 0
+ name Dot66
+ label CAM
+ note_font_size 30
+ selected true
+ xpos -1220
+ ypos -84
+}
+Dot {
+ name Dot11
+ selected true
+ xpos -1220
+ ypos -17
+}
+set Neca92b00 [stack 0]
+Dot {
+ name Dot71
+ selected true
+ xpos -1374
+ ypos -17
+}
+Dot {
+ name Dot72
+ selected true
+ xpos -1374
+ ypos 346
+}
+set Neca91d00 [stack 0]
+push $Neca91d00
+push 0
+push $Neca92b00
+Dot {
+ name Dot67
+ note_font_size 30
+ selected true
+ xpos -1220
+ ypos 50
+}
+set Neca91600 [stack 0]
+Dot {
+ name Dot68
+ selected true
+ xpos -988
+ ypos 50
+}
+Dot {
+ inputs 0
+ name Dot69
+ label SOURCE
+ note_font_size 30
+ selected true
+ xpos -855
+ ypos -83
+}
+Dot {
+ name Dot70
+ selected true
+ xpos -855
+ ypos 125
+}
+set Neca90100 [stack 0]
+Project3D2 {
+ inputs 2
+ name Project3D1
+ selected true
+ xpos -1022
+ ypos 188
+}
+push $Neca91600
+push $Neca90100
+Project3D2 {
+ inputs 2
+ name Project3D2
+ selected true
+ xpos -1254
+ ypos 121
+}
+Card2 {
+ image_aspect false
+ rows 1
+ columns 1
+ control_points {3 3 3 6 
+
+1 {-0.5 -0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0 0 0} 
+1 {0 -0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0.5 0 0} 
+1 {0.5 -0.5 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {1 0 0} 
+1 {-0.5 0 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0 0.5 0} 
+1 {0 0 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0.5 0.5 0} 
+1 {0.5 0 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {1 0.5 0} 
+1 {-0.5 0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0 1 0} 
+1 {0 0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0.5 1 0} 
+1 {0.5 0.5 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {1 1 0} }
+ name Card3
+ selected true
+ xpos -1254
+ ypos 263
+}
+ApplyMaterial {
+ inputs 2
+ name ApplyMaterial2
+ selected true
+ xpos -1022
+ ypos 263
+}
+TransformGeo {
+ inputs 3
+ translate {0 0 0.8}
+ uniform_scale 2
+ name TransformGeo3
+ selected true
+ xpos -1022
+ ypos 342
+}
+push $cut_paste_input
+Reformat {
+ format "1024 1024 0 0 1024 1024 1 square_1K"
+ name Reformat4
+ selected true
+ xpos -855
+ ypos 338
+}
+Dot {
+ name Dot73
+ selected true
+ xpos -821
+ ypos 473
+}
+ScanlineRender {
+ inputs 3
+ conservative_shader_sampling false
+ projection_mode uv
+ motion_vectors_type distance
+ name ScanlineRender5
+ selected true
+ xpos -1022
+ ypos 469
+}

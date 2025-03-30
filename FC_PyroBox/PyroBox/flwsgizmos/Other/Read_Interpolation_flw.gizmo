@@ -1,0 +1,226 @@
+Group {
+ name Read_Interpolation_flw1
+ tile_color 0xff5555ff
+ note_font_size 12
+ selected true
+ addUserKnob {20 Read_Interpolation l "Read Interpolation"}
+ addUserKnob {2 folder}
+ addUserKnob {3 ramp_time l "ramp length"}
+ ramp_time 4
+ addUserKnob {22 runinttxt l run T "import json\nimport nuke\nfrom pathlib import Path\nfrom typing import List, Dict\n\n\n\ndef _get_all_sorted_json_paths_in_folder(folder_path: Path):\n    return sorted(list(folder_path.glob(\"**/*.json\")))\n\n\ndef _import_all_json_files_to_one_large_dictionary(json_paths: List\[Path]) -> Dict:\n    out_dict = \{\}\n    for index, json_path in enumerate(json_paths):\n        with open(json_path, \"r\") as f:\n            data = json.load(f)\n            out_dict\[index] = data\[\"interpolation_value\"]\n    return out_dict\n\n\ndef _get_frames_list(folder_path: Path) -> list:\n    frame_list = \[]\n    for file in os.listdir(folder_path):\n        if file.endswith('.json'):\n            frame_list.append(file.split('.')\[0]\[-3:])\n    frame_list.sort()\n\n\n    return frame_list\n\n\ndef _set_keys_on_interpolation_value_knob(interpolation_value_knob, interpolation_dictionary, frame_list):\n\n\n    frame_list_index = 0\n    interpolation_value_knob.setAnimated()\n    for frame_nr, interpolation_value in interpolation_dictionary.items():\n        interpolation_value_knob.setValueAt(interpolation_value, int(frame_list\[frame_list_index]))\n        frame_list_index = frame_list_index + 1\n    \n\n\ndef populate_noop_with_interpolation_values():\n\n\n    node = nuke.thisNode()\n    folder_path = node\['folder'].getValue()\n\n\n\n    if folder_path:\n        folder_path = Path(folder_path)\n        if folder_path.is_dir():\n            \n            json_paths = _get_all_sorted_json_paths_in_folder(folder_path=folder_path)\n            interpolation_dictionary = _import_all_json_files_to_one_large_dictionary(json_paths=json_paths)\n            frame_list = _get_frames_list(folder_path=folder_path)\n\n\n            interpolation_value_knob = node\['interpolation_curve']\n\n\n            _set_keys_on_interpolation_value_knob(interpolation_value_knob, interpolation_dictionary, frame_list)\n\n\n            pt_interpolation = \[]\n\n\n            for frame_nr, interpolation_value in interpolation_dictionary.items():\n                pt_interpolation.append(interpolation_value)\n\n\n            quantized_interpolation_list = quantize_interpolation_values(interpolation_values=pt_interpolation)\n\n\n            shifted_interpolation_list = shift_list(list_to_shift=quantized_interpolation_list)\n\n\n            ramp_index = generate_interpolation_ramp_index(quantized_interpolation_list=quantized_interpolation_list, shifted_interpolation_list=shifted_interpolation_list)\n\n\n            ramp_time = nuke.thisNode()\['ramp_time'].getValue()\n\n\n            interpolation_ramp_downwards = generate_interpolation_ramps_downwards(interpolation_ramp_index=ramp_index, ramp_time=ramp_time)\n\n\n            interpolation_ramp_upwards = generate_interpolation_ramps_upwards(interpolation_ramp_index=ramp_index,  ramp_time=ramp_time)\n\n\n            warp_curve = \[max(q, rd, ru) for q, rd, ru in zip(quantized_interpolation_list, interpolation_ramp_downwards, interpolation_ramp_upwards)]\n\n\n            populate_warp_curve(warp_values=warp_curve, frame_list=frame_list)\n\n\n            return interpolation_dictionary\n        \n        else:\n            nuke.message(\"Please enter a valid directory.\")\n\n\n\ndef quantize_interpolation_values(interpolation_values: list) -> list:\n    modified_list = \[]\n\n\n    for value in interpolation_values:\n        if value > 0:\n            modified_list.append(1)\n        else:\n            modified_list.append(0)\n\n\n    return modified_list\n\n\ndef shift_list(list_to_shift: list) -> list:\n\n\n    try:\n        return \[list_to_shift\[0]] + list_to_shift\[:-1]\n    except IndexError:\n        return list_to_shift\n\n\ndef generate_interpolation_ramp_index(quantized_interpolation_list: list, shifted_interpolation_list: list) -> list:\n\n\n    ramp_index_list = \[]\n\n\n    for q, s in zip(quantized_interpolation_list, shifted_interpolation_list):\n        ramp_index_list.append(int(q) - int(s))\n    return ramp_index_list\n\n\ndef generate_interpolation_ramps_downwards(interpolation_ramp_index: list, ramp_time: int) -> list:\n    ramp_downwards_list = interpolation_ramp_index.copy()\n\n\n    ramp_increment = 1/ramp_time\n\n\n    if ramp_time <= 1:\n        for index, value in enumerate(ramp_downwards_list): \n            next_index_value = index +1\n\n\n            if value <= 0:\n                ramp_downwards_list\[index] = 0\n            elif value == 1:\n                ramp_downwards_list\[index] = 0\n            elif value == -1:\n                ramp_downwards_list\[index] = 1\n\n\n        return ramp_downwards_list\n\n\n    for index, value in enumerate(ramp_downwards_list):\n        next_index_value = index +1\n\n\n        if value <= 0 and value != -1:\n            ramp_downwards_list\[index] = 0\n        elif value == 1:\n            ramp_downwards_list\[index] = 0\n        elif value == -1:\n            ramp_downwards_list\[index] = 1 - ramp_increment\n            ramp_downwards_list\[next_index_value] = 1 - ramp_increment - ramp_increment\n        else:\n            ramp_downwards_list\[next_index_value] = value - ramp_increment\n\n\n\n    return ramp_downwards_list\n\n\ndef generate_interpolation_ramps_upwards(interpolation_ramp_index: list, ramp_time: int) -> list:\n    ramp_upwards_list = interpolation_ramp_index.copy()\n\n\n    ramp_upwards_list.reverse()\n\n\n    if ramp_time <= 1:\n        for index, value in enumerate(ramp_upwards_list): \n\n\n            if value <= 0:\n                ramp_upwards_list\[index] = 0\n            elif value == -1:\n                ramp_upwards_list\[index] = 0\n            elif value == 1:\n                ramp_upwards_list\[index] = 1\n\n\n        ramp_upwards_list.reverse()\n        return ramp_upwards_list\n\n\n    ramp_increment = 1/ramp_time\n\n\n    for index, value in enumerate(ramp_upwards_list): \n        next_index_value = index +1\n\n\n        if value <= 0:\n            ramp_upwards_list\[index] = 0\n        elif value == -1:\n            ramp_upwards_list\[index] = 0\n        elif value == 1:\n            ramp_upwards_list\[next_index_value] = 1- ramp_increment\n        else:\n            ramp_upwards_list\[next_index_value] = value - ramp_increment\n\n\n    ramp_upwards_list.reverse()\n\n\n    return ramp_upwards_list\n\n\ndef populate_warp_curve(warp_values: list, frame_list: list):\n    \n    node = nuke.thisNode()\n    frame_list_index = 0\n    warp_knob = node\['plate_interpolation']\n    warp_knob.setAnimated()\n\n\n    for warp_value in warp_values:\n        warp_knob.setValueAt(warp_value, int(frame_list\[frame_list_index]))\n        frame_list_index = frame_list_index + 1\n    return\n\n\n\nif __name__ == \"__main__\":\n    \n    populate_noop_with_interpolation_values()\n\n\n#    pt_interpolation = \[]\n#\n#    for frame_nr, interpolation_value in interpolation_dictionary.items():\n#        pt_interpolation.append(interpolation_value)\n#\n#    quantized_interpolation_list = quantize_interpolation_values(interpolation_values=pt_interpolation)\n#\n#    shifted_interpolation_list = shift_list(list_to_shift=quantized_interpolation_list)\n#\n#    ramp_index = generate_interpolation_ramp_index(quantized_interpolation_list=quantized_interpolation_list, shifted_interpolation_list=shifted_interpolation_list)\n#\n#    ramp_time = nuke.thisNode()\['ramp_time'].getValue()\n#\n#    interpolation_ramp_downwards = generate_interpolation_ramps_downwards(interpolation_ramp_index=ramp_index, ramp_time=ramp_time)\n#\n#    interpolation_ramp_upwards = generate_interpolation_ramps_upwards(interpolation_ramp_index=ramp_index,  ramp_time=ramp_time)\n#\n#    warp_curve = \[max(q, rd, ru) for q, rd, ru in zip(quantized_interpolation_list, interpolation_ramp_downwards, interpolation_ramp_upwards)]\n#\n#    populate_warp_curve(warp_values=warp_curve, frame_list)\n#\n#    \n#\n#   \n\n\n\n\n    \n    \n\n" +STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {7 interpolation_curve l "pt interpolation"}
+ interpolation_curve 1
+ addUserKnob {7 plate_interpolation l "plate interpolation"}
+ plate_interpolation 1
+}
+ Input {
+  inputs 0
+  name comp
+  xpos 299
+  ypos 420
+  number 1
+ }
+ Dot {
+  name Dot1
+  xpos 333
+  ypos 597
+ }
+set N35b92400 [stack 0]
+ Dot {
+  name Dot4
+  xpos 333
+  ypos 685
+ }
+push $N35b92400
+ Input {
+  inputs 0
+  name dns_plate
+  xpos 658
+  ypos 427
+ }
+ Group {
+  inputs 2
+  name Morph
+  help "Allows to morph between two moving plates automatically, or can be used to improve manual Morphs."
+  tile_color 0xeeeeeeff
+  label "(Plate \[value morph])"
+  xpos 658
+  ypos 587
+  addUserKnob {20 User}
+  addUserKnob {7 morph l Morph t "Morphs between input 0 and input 1"}
+  morph {{parent.plate_interpolation}}
+  addUserKnob {26 ""}
+  addUserKnob {4 method l "Morph Method" t "Pick which method to use. They may both display artifacts in different areas, try both to see which one produces the best results for your specific morph." M {iDistort Kronos ""}}
+  method Kronos
+  addUserKnob {7 vectorDetail l "Vector Detail" t "Use this to adjust the density of the calculated motion vector field. Higher details capture finer movements, but take will longer to calculate." R 0.01 1}
+  vectorDetail 1
+  addUserKnob {7 strength l Strength t "Match Strength : Stonger values will match larger differences between the two plates." R 0 1.5}
+  strength 1.5
+  addUserKnob {26 ""}
+  addUserKnob {26 copyright l "" +STARTLINE T "v1.0 - by Erwan Leroy - 2017"}
+ }
+  BackdropNode {
+   inputs 0
+   name Backdrop1
+   tile_color 0x5b4e5658
+   label Zipping
+   note_font_size 40
+   xpos 596
+   ypos -63
+   bdwidth 180
+   bdheight 241
+  }
+  Input {
+   inputs 0
+   name Input1
+   xpos 1085
+   ypos -406
+   number 1
+  }
+  Dot {
+   name Dot3
+   tile_color 0xcccccc00
+   xpos 1119
+   ypos -72
+  }
+set N7f6ef900 [stack 0]
+  Dot {
+   name Dot8
+   tile_color 0xcccccc00
+   xpos 1119
+   ypos 547
+  }
+push $N7f6ef900
+  Dot {
+   name Dot13
+   tile_color 0xcccccc00
+   xpos 977
+   ypos -72
+  }
+  NoTimeBlur {
+   rounding floor
+   single false
+   name NoTimeBlur2
+   xpos 943
+   ypos -15
+  }
+  Retime {
+   input.first 1001
+   input.first_lock true
+   input.last 1080
+   output.first 1001
+   output.last 1160
+   speed 0.5
+   before continue
+   after continue
+   filter none
+   time ""
+   name Retime2
+   label "x\[value input.first]-->x\[value output.first]\n\[if \{\[value speed] == 1\} then \{return \"\"\} else \{return \"spd \[value speed]\"\}]"
+   xpos 943
+   ypos 23
+  }
+  Input {
+   inputs 0
+   name Input0
+   xpos 194
+   ypos -397
+  }
+  Dot {
+   name Dot4
+   tile_color 0xcccccc00
+   xpos 228
+   ypos -75
+  }
+set N7f6ecf00 [stack 0]
+  Dot {
+   name Dot14
+   tile_color 0xcccccc00
+   xpos 373
+   ypos -75
+  }
+  NoTimeBlur {
+   rounding floor
+   single false
+   name NoTimeBlur1
+   xpos 339
+   ypos -13
+  }
+  Retime {
+   input.first 1001
+   input.first_lock true
+   input.last 1218
+   output.first 1001
+   output.last 1436
+   speed 0.5
+   before continue
+   after continue
+   filter none
+   time ""
+   name Retime1
+   label "x\[value input.first]-->x\[value output.first]\n\[if \{\[value speed] == 1\} then \{return \"\"\} else \{return \"spd \[value speed]\"\}]"
+   xpos 339
+   ypos 23
+  }
+  Switch {
+   inputs 2
+   which {{(frame-1001)%2}}
+   name Switch1
+   xpos 650
+   ypos 35
+  }
+  Kronos {
+   retimedChannels all
+   timing2 Frame
+   timingFrame2 {{(frame-1001)*2+1001+parent.morph}}
+   motionEstimation Regularized
+   vectorDetailReg {{parent.vectorDetail}}
+   strengthReg {{parent.strength}}
+   name Kronos1
+   xpos 650
+   ypos 283
+  }
+set N8a00ab00 [stack 0]
+push $N7f6ecf00
+  Dot {
+   name Dot7
+   tile_color 0xcccccc00
+   xpos 228
+   ypos 547
+  }
+  Switch {
+   inputs 3
+   which {{parent.morph<=0?0:parent.morph>=1?2:1}}
+   name Switch2
+   xpos 650
+   ypos 543
+  }
+  Output {
+   name Output1
+   xpos 650
+   ypos 637
+  }
+push $N8a00ab00
+  LayerContactSheet {
+   width 1920
+   height 1080
+   showLayerNames true
+   name LayerContactSheet1
+   xpos 856
+   ypos 289
+  }
+ end_group
+ CopyBBox {
+  inputs 2
+  name CopyBBox2
+  xpos 658
+  ypos 681
+ }
+ Output {
+  name Output1
+  xpos 658
+  ypos 772
+ }
+end_group
+

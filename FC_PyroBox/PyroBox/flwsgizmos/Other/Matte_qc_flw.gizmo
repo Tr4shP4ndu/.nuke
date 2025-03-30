@@ -1,0 +1,299 @@
+Group {
+ inputs 2
+ name Matte_qc_flw1
+ tile_color 0xff5555ff
+ selected true
+ addUserKnob {20 User}
+ addUserKnob {6 externalmatte l "external matte" +STARTLINE}
+ externalmatte true
+ addUserKnob {26 ""}
+ addUserKnob {4 outputstyle l "output style" M {"colour overlay" checker grey black none "matte element" review "" ""}}
+ addUserKnob {26 ""}
+ addUserKnob {4 overlaycolour l "overlay colour" M {red blue green ""}}
+ addUserKnob {7 overlaylevel l "overlay level"}
+ overlaylevel 0.5
+}
+ Input {
+  inputs 0
+  name matte
+  label "input \[value number]"
+  xpos -350
+  ypos 459
+  number 1
+ }
+ Dot {
+  name Dot5
+  xpos -316
+  ypos 681
+ }
+set N50386400 [stack 0]
+ Input {
+  inputs 0
+  name plate
+  label "input \[value number]"
+  xpos -170
+  ypos 459
+ }
+set N50385d00 [stack 0]
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy1
+  xpos -170
+  ypos 671
+  disable {{1-externalmatte x1 1}}
+ }
+ Dot {
+  name Dot13
+  xpos -136
+  ypos 784
+ }
+set N50384f00 [stack 0]
+ Dot {
+  name Dot1
+  xpos -136
+  ypos 850
+ }
+set N50384800 [stack 0]
+ Premult {
+  name Premult1
+  xpos -46
+  ypos 846
+ }
+set N50384100 [stack 0]
+ Dot {
+  name Dot11
+  xpos -12
+  ypos 1406
+ }
+set N5035b900 [stack 0]
+ FrameRange {
+  first_frame {{input0.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange4
+  xpos 1134
+  ypos 1191
+  hide_input true
+ }
+ Constant {
+  inputs 0
+  channels rgb
+  name Constant2
+  xpos 172
+  ypos 949
+ }
+ FrameRange {
+  first_frame {{input0.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange5
+  xpos 172
+  ypos 1021
+ }
+push $N50384100
+ Dot {
+  name Dot2
+  xpos 88
+  ypos 850
+ }
+set N50359600 [stack 0]
+ Dot {
+  name Dot3
+  xpos 88
+  ypos 1087
+ }
+set N50358f00 [stack 0]
+ Merge2 {
+  inputs 2
+  operation under
+  name Merge3
+  xpos 172
+  ypos 1083
+ }
+set N50358800 [stack 0]
+ FrameRange {
+  first_frame {{input0.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange3
+  xpos 1005
+  ypos 1224
+  hide_input true
+ }
+ Constant {
+  inputs 0
+  channels rgb
+  color 0.5
+  name Constant1
+  xpos 171
+  ypos 712
+ }
+ FrameRange {
+  first_frame {{input0.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange6
+  xpos 171
+  ypos 784
+ }
+push $N50359600
+ Merge2 {
+  inputs 2
+  operation under
+  name Merge1
+  xpos 171
+  ypos 846
+ }
+set N50346400 [stack 0]
+ FrameRange {
+  first_frame {{input0.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange2
+  xpos 885
+  ypos 1256
+  hide_input true
+ }
+push $N50384f00
+push $N50386400
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy2
+  xpos -350
+  ypos 774
+  disable {{externalmatte}}
+ }
+ Dot {
+  name Dot12
+  xpos -316
+  ypos 1112
+ }
+set N50344f00 [stack 0]
+ Dot {
+  name Dot9
+  xpos -316
+  ypos 1154
+ }
+set N50344800 [stack 0]
+ Dot {
+  name Dot10
+  xpos -316
+  ypos 1200
+ }
+push $N50344800
+push $N50344f00
+push $N50384800
+ Grade {
+  inputs 1+1
+  channels {rgba.red -rgba.green -rgba.blue none}
+  whitepoint {{overlaylevel}}
+  name red
+  xpos -170
+  ypos 1101
+  disable {{"1-(overlaycolour == 0)"}}
+ }
+ Grade {
+  inputs 1+1
+  channels {-rgba.red rgba.green -rgba.blue none}
+  whitepoint {{overlaylevel}}
+  name green
+  xpos -170
+  ypos 1144
+  disable {{"1-(overlaycolour == 2)"}}
+ }
+ Grade {
+  inputs 1+1
+  channels {-rgba.red -rgba.green rgba.blue none}
+  whitepoint {{overlaylevel}}
+  name blue
+  xpos -170
+  ypos 1190
+  disable {{"1-(overlaycolour == 1)"}}
+ }
+ Dot {
+  name Dot7
+  xpos -136
+  ypos 1478
+ }
+set N540e8f00 [stack 0]
+ FrameRange {
+  first_frame {{input0.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange1
+  xpos 766
+  ypos 1278
+  hide_input true
+ }
+ AppendClip {
+  inputs 4
+  firstFrame 1001
+  meta_from_first false
+  time ""
+  name AppendClip1
+  xpos 885
+  ypos 1474
+ }
+push $N5035b900
+push $N50385d00
+ Dot {
+  name Dot8
+  xpos 603
+  ypos 469
+ }
+push $N50358800
+push $N50346400
+ CheckerBoard2 {
+  inputs 0
+  name CheckerBoard1
+  xpos 180
+  ypos 1193
+ }
+ FrameRange {
+  first_frame {{input0.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange7
+  xpos 180
+  ypos 1265
+ }
+push $N50358f00
+ Dot {
+  name Dot4
+  xpos 88
+  ypos 1307
+ }
+ Merge2 {
+  inputs 2
+  operation under
+  name Merge2
+  xpos 180
+  ypos 1303
+ }
+set N540bf200 [stack 0]
+push $N540e8f00
+ Switch {
+  inputs 7
+  which {{outputstyle}}
+  name Switch1
+  xpos 569
+  ypos 1474
+ }
+ Output {
+  name Output1
+  xpos 569
+  ypos 1529
+ }
+push $N540bf200
+ Viewer {
+  frame_range 1001-1259
+  name Viewer1
+  xpos -57
+  ypos 639
+ }
+end_group
+

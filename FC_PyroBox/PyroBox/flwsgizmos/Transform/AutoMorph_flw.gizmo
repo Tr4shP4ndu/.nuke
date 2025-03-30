@@ -1,0 +1,359 @@
+Group {
+ inputs 2
+ name AutoMorph_flw
+ tile_color 0x513a00ff
+ label "<I>AB</I> Morph = \[value morph]\n<I>AB</I> Dissolve = \[value mix_dissolve]"
+ note_font "Bitstream Vera Sans Bold"
+ note_font_color 0xffb800ff
+ selected true
+ xpos -22020
+ ypos 5270
+ addUserKnob {20 user l AutMorph}
+ addUserKnob {26 node_title l "" t " " +STARTLINE T "<font size = 5>AutoMorph"}
+ addUserKnob {26 made_by l "" +STARTLINE T "<font color = '#eba834'><b>by Filipe Correia & Allar Kaasik"}
+ addUserKnob {26 _1 l "" +STARTLINE}
+ addUserKnob {26 _3 l "" +STARTLINE T "<font color = '#eba834'><b>Morph Settings"}
+ addUserKnob {7 morph l Morph t "Morph: Intensity amount of morph/warp from image A towards image B."}
+ morph 1
+ addUserKnob {7 mix_dissolve l Dissolve t "Mix Dissolve: It's linked to the morph/wrap sliders by default. This dissolves from image A to image B. \nTo unlink - right-click and choose \"no animation\""}
+ addUserKnob {26 vector_gen_text l "" +STARTLINE T "<font color = '#eba834'><b>Vector Generator Settings"}
+ addUserKnob {20 settings_vector l Settings n 1}
+ addUserKnob {26 "" l "Local GPU:" T ""}
+ addUserKnob {26 gpuName l "" -STARTLINE T "NVIDIA A10G"}
+ addUserKnob {41 motionEstimation l Motion T VectorGenerator1.motionEstimation}
+ addUserKnob {41 useGPUIfAvailable l "Use GPU if available" -STARTLINE T VectorGenerator1.useGPUIfAvailable}
+ addUserKnob {7 vector_detail l "Vector Detail" t "Use this to adjust the density of the calculated motion vector field. Higher details capture finer movements, but take will longer to calculate." R 0.01 1}
+ vector_detail 1
+ addUserKnob {7 vector_strength l Strength}
+ vector_strength 1.5
+ addUserKnob {7 motion_blur l "Blur Motion Vectors" R 0 100}
+ motion_blur 37
+ addUserKnob {20 endGroup n -1}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode1
+  tile_color 0x40674000
+  label "<center> Prevents nodes downstream from asking for fractional or multiple frames"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 42
+  xpos 1060
+  ypos -1074
+  appearance Border
+  border_width 20
+  bdwidth 1531
+  bdheight 201
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode2
+  tile_color 0x282828ff
+  label "<center> FrameHold"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 42
+  xpos 1399
+  ypos -652
+  appearance Border
+  border_width 20
+  bdwidth 776
+  bdheight 440
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode3
+  tile_color 0xf1814ff
+  label "<center> Vector Generator"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 42
+  xpos 1561
+  ypos 61
+  appearance Border
+  border_width 7.65
+  bdwidth 514
+  bdheight 270
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode8
+  tile_color 0x1e2228ff
+  label <center>FrameHold/Increment
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 100
+  xpos 1188
+  ypos 498
+  appearance Border
+  border_width 20
+  bdwidth 1248
+  bdheight 2324
+ }
+ Input {
+  inputs 0
+  name B
+  label "(input \[value number])"
+  xpos 2422
+  ypos -1330
+  number 1
+ }
+ Dot {
+  name Dot17
+  xpos 2456
+  ypos -1116
+ }
+ NoTimeBlur {
+  rounding floor
+  single false
+  name NoTimeBlur1
+  xpos 2422
+  ypos -951
+ }
+ Dot {
+  name Dot13
+  xpos 2456
+  ypos -616
+ }
+ Dot {
+  name Dot18
+  xpos 1990
+  ypos -616
+ }
+ FrameHold {
+  firstFrame {{t//2+1}}
+  name FrameHold2
+  label "INPUT B - \[frame]"
+  xpos 1956
+  ypos -544
+ }
+ Dot {
+  name Dot14
+  label "\[frame]"
+  xpos 1990
+  ypos -293
+ }
+ Input {
+  inputs 0
+  name A
+  label "(input \[value number])"
+  xpos 1104
+  ypos -1320
+ }
+ Dot {
+  name Dot16
+  xpos 1138
+  ypos -1116
+ }
+ NoTimeBlur {
+  rounding floor
+  single false
+  name NoTimeBlur
+  xpos 1104
+  ypos -951
+ }
+ Dot {
+  name Dot1
+  xpos 1138
+  ypos -616
+ }
+ Dot {
+  name Dot8
+  xpos 1620
+  ypos -616
+ }
+ FrameHold {
+  firstFrame {{t//2}}
+  name FrameHold1
+  label "INPUT A - \[frame]"
+  xpos 1586
+  ypos -541
+ }
+ Dot {
+  name Dot4
+  label "\[frame]"
+  xpos 1620
+  ypos -293
+ }
+ Switch {
+  inputs 2
+  which {{(frame-1000)%2}}
+  name Switch1
+  label "\[frame]"
+  xpos 1781
+  ypos -303
+ }
+ Dot {
+  name Dot20
+  tile_color 0xcccccc00
+  xpos 1815
+  ypos -103
+ }
+ VectorGenerator {
+  motionEstimation Regularized
+  vectorDetailReg {{vector_detail}}
+  strengthReg {{vector_strength}}
+  name VectorGenerator1
+  xpos 1781
+  ypos 190
+ }
+ Dot {
+  name Dot43
+  xpos 1815
+  ypos 400
+ }
+ Dot {
+  name Dot2
+  xpos 1815
+  ypos 672
+ }
+ Dot {
+  name Dot26
+  xpos 1815
+  ypos 853
+ }
+set N70b05600 [stack 0]
+ Dot {
+  name Dot28
+  xpos 2266
+  ypos 853
+ }
+ FrameHold {
+  firstFrame {{(t*2)-1}}
+  name FrameHold4
+  label "\[frame]"
+  xpos 2232
+  ypos 929
+ }
+ Dot {
+  name Dot5
+  xpos 2266
+  ypos 1043
+ }
+ Blur {
+  channels motion
+  size {{motion_blur}}
+  name Blur1
+  xpos 2232
+  ypos 1156
+ }
+ Dot {
+  name Dot57
+  xpos 2266
+  ypos 1279
+ }
+set N580d3200 [stack 0]
+ Multiply {
+  channels forward
+  value -1
+  name Multiply2
+  xpos 2232
+  ypos 1577
+ }
+ Dot {
+  name Dot10
+  xpos 2266
+  ypos 1806
+ }
+ IDistort {
+  uv forward
+  uv_scale {{1-(morph)}}
+  name IDistort5
+  xpos 2232
+  ypos 2036
+  disable {{"\[exists parent.input2]"}}
+ }
+ Dot {
+  name Dot11
+  xpos 2267
+  ypos 2257
+ }
+ BlackOutside {
+  name BlackOutside3
+  xpos 2232
+  ypos 2453
+ }
+ Dot {
+  name Dot56
+  xpos 2266
+  ypos 2580
+ }
+push $N580d3200
+push $N70b05600
+ Dot {
+  name Dot27
+  xpos 1345
+  ypos 853
+ }
+ FrameHold {
+  firstFrame {{t*2}}
+  name FrameHold3
+  label "\[frame]"
+  xpos 1311
+  ypos 926
+ }
+ Dot {
+  name Dot3
+  xpos 1345
+  ypos 1151
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels motion
+  name Copy1
+  xpos 1311
+  ypos 1263
+ }
+ Dot {
+  name Dot6
+  xpos 1345
+  ypos 1451
+ }
+ Dot {
+  name Dot9
+  xpos 1345
+  ypos 1827
+ }
+ IDistort {
+  uv forward
+  uv_scale {{morph}}
+  name IDistort6
+  xpos 1311
+  ypos 2036
+  disable {{"\[exists parent.input2]"}}
+ }
+ Dot {
+  name Dot7
+  xpos 1345
+  ypos 2267
+ }
+ BlackOutside {
+  name BlackOutside2
+  xpos 1311
+  ypos 2457
+ }
+ Dot {
+  name Dot55
+  xpos 1345
+  ypos 2580
+ }
+ Dissolve {
+  inputs 2
+  channels {{{Keymix1.channels}}}
+  which {{mix_dissolve}}
+  name Dissolve4
+  label "channels from Keymix1"
+  xpos 1778
+  ypos 2564
+  disable {{"\[exists parent.input2]"}}
+ }
+ Dot {
+  name Dot67
+  tile_color 0xcccccc00
+  xpos 1812
+  ypos 2777
+ }
+ Output {
+  name Output1
+  xpos 1778
+  ypos 3021
+ }
+end_group

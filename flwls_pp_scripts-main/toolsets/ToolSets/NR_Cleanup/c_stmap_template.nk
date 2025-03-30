@@ -1,0 +1,1391 @@
+#! /opt/Nuke13.1v2/libnuke-13.1.2.so -nx
+version 13.1 v2
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="0" y="28" w="2552" h="1281" maximized="1" screen="0">
+        <splitter orientation="1">
+            <split size="40"/>
+            <dock id="" hideTitles="1" activePageId="Toolbar.1">
+                <page id="Toolbar.1"/>
+            </dock>
+            <split size="1889" stretch="1"/>
+            <splitter orientation="2">
+                <split size="727"/>
+                <dock id="" activePageId="Viewer.1">
+                    <page id="Viewer.1"/>
+                </dock>
+                <split size="511"/>
+                <dock id="" activePageId="DAG.1" focus="true">
+                    <page id="DAG.1"/>
+                    <page id="Curve Editor.1"/>
+                    <page id="DopeSheet.1"/>
+                </dock>
+            </splitter>
+            <split size="615"/>
+            <dock id="" activePageId="Properties.1">
+                <page id="Properties.1"/>
+                <page id="uk.co.thefoundry.backgroundrenderview.1"/>
+            </dock>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name /Volumes/shared/vfx/filipe.correia/repos/c_map/flwls_pp_scripts/nuke/toolsets/ToolSets/NR_Cleanup/c_stmap_template.nk
+ frame 40
+ format "2048 1556 0 0 2048 1556 1 2K_Super_35(full-ap)"
+ proxy_type scale
+ proxy_format "1024 778 0 0 1024 778 1 1K_Super_35(full-ap)"
+ colorManagement OCIO
+ defaultViewerLUT "OCIO LUTs"
+ workingSpaceLUT scene_linear
+ monitorLut ACES/sRGB
+ monitorOutLUT "No Operation"
+ int8Lut matte_paint
+ int16Lut texture_paint
+ logLut compositing_log
+ floatLut scene_linear
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode71
+ tile_color 0x7c1c1bff
+ label "get rid of anti-aliased\nSTMap pixels"
+ note_font_size 42
+ xpos 3825
+ ypos 1253
+ bdwidth 447
+ bdheight 473
+}
+set Cb05fdd00 [stack 0]
+clone $Cb05fdd00 {
+ inputs 0
+ xpos 2945
+ ypos 1251
+ selected false
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode72
+ tile_color 0x40674000
+ label "Nearest Neighbor extend\nto fill the gaps"
+ note_font_size 42
+ xpos 3709
+ ypos 2021
+ bdwidth 662
+ bdheight 522
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode73
+ tile_color 0x1d1c1dff
+ label "Fill gaps with splatting\nand EdgeExtend"
+ note_font_size 42
+ xpos 2513
+ ypos 2120
+ bdwidth 765
+ bdheight 523
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode74
+ tile_color 0xab901e00
+ label "safety crop\n(remove any bounding box)"
+ note_font_size 42
+ xpos 3715
+ ypos 2590
+ bdwidth 659
+ bdheight 217
+ z_order 1
+}
+Group {
+ inputs 0
+ name EdgeExtender_UV
+ tile_color 0xc00caff
+ xpos -26550
+ ypos 7589
+ addUserKnob {20 User}
+ addUserKnob {14 Intensity R 0 100}
+ Intensity 10
+ addUserKnob {7 ErodeIncomingMatte l "Erode Incoming Alpha" R -100 100}
+ addUserKnob {7 Edge_Erode l "Width (erode)" R 0 50}
+ Edge_Erode 10
+ addUserKnob {7 Edge_blur l "Edge Blur" R 0 100}
+ Edge_blur 10
+ addUserKnob {4 Output M {"Edges Extended" "Edge Only" "Area Effected"}}
+ addUserKnob {6 InvertAlpha l "Pull Inward?" +STARTLINE}
+ addUserKnob {6 smearEdge l "smear Edge" -STARTLINE}
+ addUserKnob {6 alphaToo l "alpha too?" -STARTLINE}
+ addUserKnob {7 Pull_Inward_edge_blur l "Pull Inward Edge Blur" R -50 50}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode1
+  tile_color 0x33759101
+  label addon
+  note_font "Helvetica Bold"
+  note_font_size 30
+  xpos 1129
+  ypos 1022
+  bookmark false
+  bdwidth 551
+  bdheight 132
+ }
+ Input {
+  inputs 0
+  name intens
+  label intens
+  xpos 1582
+  ypos 1050
+  number 2
+ }
+ Invert {
+  channels alpha
+  name Invert5
+  xpos 1582
+  ypos 1086
+ }
+ Input {
+  inputs 0
+  name InputINPUT
+  label Input
+  xpos 525
+  ypos 330
+ }
+ Dot {
+  name Dot43
+  xpos 559
+  ypos 391
+ }
+ Dot {
+  name Dot32
+  xpos 559
+  ypos 583
+ }
+set N90906400 [stack 0]
+ Dot {
+  name Dot33
+  xpos 801
+  ypos 583
+ }
+set N90905d00 [stack 0]
+ Dot {
+  name Dot5
+  tile_color 0xd8d8d8ff
+  note_font_size 20
+  xpos 1226
+  ypos 1070
+ }
+ Expression {
+  expr0 x/width
+  expr1 y/height
+  expr2 0
+  channel3 {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+  expr3 0
+  name UV
+  xpos 1296
+  ypos 1073
+ }
+ Transform {
+  translate {-0.5 -0.5}
+  center {1707 1099}
+  shutteroffset centred
+  name Transform1
+  xpos 1296
+  ypos 1097
+ }
+push $N90905d00
+ Dot {
+  name Dot34
+  xpos 1211
+  ypos 583
+ }
+set N90904100 [stack 0]
+ Remove {
+  operation keep
+  channels alpha
+  name Remove4
+  xpos 1177
+  ypos 640
+ }
+ FilterErode {
+  channels rgba
+  size {{parent.ErodeIncomingMatte}}
+  filter gaussian
+  name FilterErode7
+  xpos 1177
+  ypos 713
+ }
+set N908d7200 [stack 0]
+ Invert {
+  name Invert2
+  xpos 1086
+  ypos 781
+ }
+push $N908d7200
+ Switch {
+  inputs 2
+  which {{parent.InvertAlpha}}
+  name Switch2
+  xpos 1177
+  ypos 787
+ }
+push $N90904100
+ Dot {
+  name Dot35
+  xpos 1446
+  ypos 583
+ }
+set N908d5600 [stack 0]
+ Remove {
+  name Remove1
+  xpos 1412
+  ypos 631
+ }
+ Reformat {
+  type "to box"
+  format "720 576 0 0 720 576 1.067 PAL_1"
+  box_width {{InputINPUT.format.w}}
+  box_height {{InputINPUT.format.t}}
+  box_fixed true
+  scale {1 1}
+  name Reformat1
+  xpos 1412
+  ypos 681
+ }
+set N908d4800 [stack 0]
+ Ramp {
+  p0 {-0.5 0}
+  p1 {{parent.Reformat1.box_width-0.5} 0}
+  color {1 0 0 1}
+  name Ramp1
+  xpos 1326
+  ypos 722
+ }
+push $N908d4800
+ Ramp {
+  p0 {0 -0.5}
+  p1 {0 {parent.Reformat1.box_height-0.5 i}}
+  color {0 1 0 1}
+  name Ramp2
+  xpos 1501
+  ypos 727
+ }
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge1
+  xpos 1412
+  ypos 781
+ }
+ Shuffle {
+  alpha white
+  name Shuffle1
+  xpos 1412
+  ypos 817
+ }
+set N908a1d00 [stack 0]
+ Shuffle {
+  alpha white
+  name Shuffle4
+  label "\[value in]"
+  xpos 1412
+  ypos 906
+ }
+set N908a1600 [stack 0]
+ Merge2 {
+  inputs 2
+  operation mask
+  name Merge8
+  label "\[value Achannels]"
+  xpos 1177
+  ypos 906
+ }
+ Blur {
+  channels rgba
+  size {{parent.Intensity}}
+  name Blur1
+  xpos 1177
+  ypos 974
+ }
+set N908a0800 [stack 0]
+push $N908a0800
+push $N908a0800
+push $N908a0800
+push $N908a0800
+push $N908a0800
+push 0
+push $N908a0800
+push $N908a1600
+ Merge2 {
+  inputs 8+1
+  name Merge9
+  label "\[value Achannels]"
+  xpos 1412
+  ypos 968
+ }
+ Keymix {
+  inputs 3
+  name Keymix1
+  xpos 1412
+  ypos 1086
+ }
+ Dot {
+  name Dot44
+  xpos 1440
+  ypos 1165
+ }
+push $N90905d00
+ Invert {
+  channels alpha
+  name Invert4
+  xpos 657
+  ypos 911
+ }
+push $N90905d00
+ Switch {
+  inputs 2
+  which {{parent.InvertAlpha}}
+  name Pull_inward
+  xpos 767
+  ypos 917
+ }
+ STMap {
+  inputs 2
+  uv rgb
+  name STMap2
+  xpos 767
+  ypos 1161
+ }
+ Dot {
+  name Dot45
+  xpos 795
+  ypos 1197
+ }
+set N90875600 [stack 0]
+ Dot {
+  name Dot49
+  xpos 1398
+  ypos 1197
+ }
+set N90874f00 [stack 0]
+ Blur {
+  channels rgba
+  size {{parent.Pull_Inward_edge_blur}}
+  name Blur3
+  xpos 1266
+  ypos 1265
+ }
+push $N90874f00
+ Switch {
+  inputs 2
+  which {{parent.InvertAlpha}}
+  name Pull_inward1
+  xpos 1364
+  ypos 1265
+ }
+push $N908d5600
+ Dot {
+  name Dot36
+  xpos 1849
+  ypos 583
+ }
+set N9084f900 [stack 0]
+ Dot {
+  name Dot2
+  xpos 2059
+  ypos 583
+ }
+set N9084f200 [stack 0]
+ FilterErode {
+  channels alpha
+  size {{-parent.FilterErode8.size}}
+  name FilterErode1
+  xpos 2025
+  ypos 955
+ }
+ Blur {
+  channels alpha
+  size {{parent.Blur25.size}}
+  name Blur2
+  xpos 2025
+  ypos 1023
+ }
+ Dot {
+  name Dot8
+  xpos 2059
+  ypos 1335
+ }
+ Invert {
+  name Invert3
+  xpos 1925
+  ypos 1326
+ }
+push $N9084f900
+ FilterErode {
+  channels alpha
+  size {{parent.Edge_Erode}}
+  name FilterErode8
+  xpos 1815
+  ypos 954
+ }
+ Blur {
+  channels alpha
+  size {{parent.Edge_blur}}
+  name Blur25
+  xpos 1815
+  ypos 1024
+ }
+ Switch {
+  inputs 2
+  which {{parent.InvertAlpha}}
+  name Pull_inward2
+  xpos 1815
+  ypos 1332
+ }
+ Merge2 {
+  inputs 2
+  operation minus
+  name Multiply
+  label "\[value Achannels]"
+  xpos 1366
+  ypos 1326
+ }
+set N90826b00 [stack 0]
+ Dot {
+  name Dot6
+  xpos 1400
+  ypos 1617
+ }
+set N90826400 [stack 0]
+push $N90826400
+push $N9084f200
+ Dot {
+  name Dot4
+  xpos 2280
+  ypos 583
+ }
+ Grade {
+  inputs 1+1
+  multiply {4 0.8842215538 0.7226884365 1}
+  name Grade1
+  xpos 2246
+  ypos 1554
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy1
+  xpos 2246
+  ypos 1608
+ }
+ Dot {
+  name Dot3
+  xpos 2280
+  ypos 2092
+ }
+push $N90826b00
+push $N90875600
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy4_warpEdgeAlso
+  xpos 767
+  ypos 1326
+  disable {{parent.smearEdge}}
+ }
+ Premult {
+  name Premult2
+  xpos 767
+  ypos 1532
+ }
+set N9080c800 [stack 0]
+ Dot {
+  name Dot1
+  xpos 1146
+  ypos 1535
+ }
+ Input {
+  inputs 0
+  name InputMask
+  xpos 891
+  ypos 1790
+  number 1
+ }
+ Invert {
+  name Invert1
+  xpos 891
+  ypos 1833
+ }
+push $N90906400
+ Dot {
+  name Dot52
+  xpos 559
+  ypos 1649
+ }
+set N907eeb00 [stack 0]
+ Dot {
+  name Dot53
+  xpos 559
+  ypos 1751
+ }
+set N907ee400 [stack 0]
+push $N907ee400
+push $N9080c800
+push $N907eeb00
+ Merge2 {
+  inputs 2
+  name Merge10
+  label "\[value Achannels]"
+  xpos 767
+  ypos 1640
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy5_alphaToo
+  xpos 767
+  ypos 1748
+  disable {{parent.alphaToo}}
+ }
+ Keymix {
+  inputs 3
+  name Keymix2
+  xpos 767
+  ypos 1833
+ }
+ Dot {
+  name Dot7
+  xpos 801
+  ypos 2092
+ }
+ Switch {
+  inputs 3
+  which {{parent.Output}}
+  name Switch1
+  xpos 1112
+  ypos 2089
+ }
+ Output {
+  name Output1
+  label Output
+  xpos 1112
+  ypos 2149
+ }
+ Expression {
+  inputs 0
+  expr0 (x+0.5)/(width)
+  expr1 (y+0.5)/(height)
+  channel2 {rgba.red -rgba.green rgba.blue none}
+  expr2 0
+  channel3 {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+  expr3 1
+  name UV1
+  xpos 1531
+  ypos 781
+ }
+push $N908a1d00
+ Viewer {
+  inputs 2
+  frame_range 1001-1128
+  fps 25
+  colour_sample_bbox {0.9989583492 -0.5625 1 -0.5614583492}
+  input_process false
+  name Viewer1
+  xpos 1689
+  ypos 1209
+ }
+end_group
+PostageStamp {
+ inputs 0
+ name Stamp15
+ help "Stamps by Adrian Pueyo and Alexey Kuchinski.\nUpdated May 18 2021"
+ onCreate "if nuke.GUI:\n    try:\n        import stamps; stamps.wiredOnCreate()\n    except:\n        pass\n"
+ knobChanged "import stamps; stamps.wiredKnobChanged()"
+ autolabel "nuke.thisNode().knob(\"title\").value()"
+ tile_color 0x1000001
+ note_font "Bitstream Vera Sans Bold"
+ note_font_size 40
+ note_font_color 0xff0000ff
+ xpos 3998
+ ypos 518
+ hide_input true
+ addUserKnob {20 wired_tab l "Wired Stamp"}
+ addUserKnob {26 identifier -STARTLINE +HIDDEN T wired}
+ addUserKnob {3 lockCallbacks l "" +STARTLINE +HIDDEN}
+ addUserKnob {6 toReconnect -STARTLINE +HIDDEN}
+ addUserKnob {1 title l Title: t "Displayed name on the Node Graph for this Stamp and its Anchor.\nIMPORTANT: This is only for display purposes, and is different from the real/internal name of the Stamps."}
+ title precomp
+ addUserKnob {26 prev_title l "" +STARTLINE +HIDDEN T precomp}
+ addUserKnob {26 tags l Tags: t "Tags of this stamp's Anchor, for information purpose only.\nClick \"show anchor\" to change them." T <i>2D</i>}
+ addUserKnob {26 backdrops l Backdrops: t "Labels of backdrop nodes which contain this stamp's Anchor." T <i>precomp</i>}
+ addUserKnob {26 line1 l "" +STARTLINE}
+ addUserKnob {6 postageStamp_show l "postage stamp" t "Enable the postage stamp thumbnail in this node.\nYou're seeing this because the class of this node includes the postage_stamp knob." +STARTLINE}
+ postageStamp_show true
+ addUserKnob {26 anchor_label l Anchor: T " "}
+ addUserKnob {22 show_anchor l " show anchor " t "Show the properties panel for this Stamp's Anchor." -STARTLINE T stamps.wiredShowAnchor()}
+ addUserKnob {22 zoom_anchor l "zoom anchor" t "Navigate to this Stamp's Anchor on the Node Graph." -STARTLINE T stamps.wiredZoomAnchor()}
+ addUserKnob {26 stamps_label l Stamps: T " "}
+ addUserKnob {22 zoomNext l " zoom next " t "Navigate to this Stamp's next sibling on the Node Graph." -STARTLINE T stamps.wiredZoomNext()}
+ addUserKnob {22 selectSimilar l " select similar " t "Select all similar Stamps to this one on the Node Graph." -STARTLINE T stamps.wiredSelectSimilar()}
+ addUserKnob {26 space_1 l "" +STARTLINE T " "}
+ addUserKnob {26 reconnect_label l Reconnect: t "Reconnect by the stored Anchor name." T " "}
+ addUserKnob {22 reconnect_this l this t "Reconnect this Stamp to its Anchor, by its stored Anchor name." -STARTLINE T "n = nuke.thisNode()\ntry:\n    n.setInput(0,nuke.toNode(n.knob(\"anchor\").value()))\nexcept:\n    nuke.message(\"Unable to reconnect.\")\ntry:\n    import stamps\n    stamps.wiredGetStyle(n)\nexcept:\n    pass\n"}
+ addUserKnob {22 reconnect_similar l similar t "Reconnect this Stamp and similar ones to their Anchor, by their stored anchor name." -STARTLINE T stamps.wiredReconnectSimilar()}
+ addUserKnob {22 reconnect_all l all t "Reconnect all the Stamps to their Anchors, by their stored anchor names." -STARTLINE T stamps.wiredReconnectAll()}
+ addUserKnob {26 space_2 l "" +STARTLINE T " "}
+ addUserKnob {20 advanced_reconnection l "Advanced Reconnection" n 2}
+ addUserKnob {26 reconnect_by_title_label l "<font color=gold>By Title:" t "Reconnect by searching for a matching title." T " "}
+ addUserKnob {22 reconnect_by_title_this l this t "Look for an Anchor that shares this Stamp's title, and connect this Stamp to it.\nIMPORTANT: Use this carefully, and only when the normal reconnection doesn't work." -STARTLINE T stamps.wiredReconnectByTitle()}
+ addUserKnob {22 reconnect_by_title_similar l similar t "Look for an Anchor that shares this Stamp's title, and connect this Stamp and similar ones to it.\nIMPORTANT: Use this carefully, and only when the normal reconnection doesn't work." -STARTLINE T stamps.wiredReconnectByTitleSimilar()}
+ addUserKnob {22 reconnect_by_title_selected l selected t "For each Stamp selected, look for an Anchor that shares its title, and connect to it.\nIMPORTANT: Use this carefully, and only when the normal reconnection doesn't work." -STARTLINE T stamps.wiredReconnectByTitleSelected()}
+ addUserKnob {26 reconnect_by_selection_label l "<font color=orangered>By Selection:" t "Force reconnect to a selected Anchor." T " "}
+ addUserKnob {22 reconnect_by_selection_this l this t "Force reconnect this Stamp to a selected Anchor, whatever its name or title.\nIMPORTANT: Use this carefully, and only when the normal reconnection doesn't work." -STARTLINE T stamps.wiredReconnectBySelection()}
+ addUserKnob {22 reconnect_by_selection_similar l similar t "Force reconnect this Stamp and similar ones to a selected Anchor, whatever its name or title.\nIMPORTANT: Use this carefully, and only when the normal reconnection doesn't work." -STARTLINE T stamps.wiredReconnectBySelectionSimilar()}
+ addUserKnob {22 reconnect_by_selection_selected l selected t "Force reconnect all selected Stamps to an also selected Anchor, whatever its name or title.\nIMPORTANT: Use this carefully, and only when the normal reconnection doesn't work." -STARTLINE T stamps.wiredReconnectBySelectionSelected()}
+ addUserKnob {1 anchor l Anchor}
+ anchor Anchor_30cdcd2d8c8
+ addUserKnob {6 auto_reconnect_by_title l "<font color=#ED9977>&nbsp; auto-reconnect by title" t "When creating this stamp again (like on copy-paste), auto-reconnect it by title instead of doing it by the saved anchor's name, and auto-turn this off immediately.\nIMPORTANT: Should be off by default. Only use this for setting up templates." +STARTLINE}
+ addUserKnob {26 line2 l "" +STARTLINE}
+ addUserKnob {22 buttonHelp l Help -STARTLINE T stamps.showHelp()}
+ addUserKnob {26 version l " " t "Stamps by Adrian Pueyo and Alexey Kuchinski.\nUpdated May 18 2021." -STARTLINE T "<a href=\"http://www.nukepedia.com/gizmos/other/stamps\" style=\"color:#666;text-decoration: none;\"><span style=\"color:#666\"> <big>Stamps v1.1</big></b></a>"}
+}
+Dot {
+ name Dot2
+ xpos 4032
+ ypos 630
+}
+Group {
+ name NR_Stabilization_flw2
+ tile_color 0x513a00ff
+ label "\n\[value type_cp]"
+ note_font "Bitstream Vera Sans Bold"
+ note_font_color 0xffb800ff
+ xpos 3998
+ ypos 750
+ addUserKnob {20 user l "Position Correction"}
+ addUserKnob {26 node_title l "" t " " +STARTLINE T "<font size = 5>NR_Stabilization"}
+ addUserKnob {26 made_by l "" +STARTLINE T "<font color = '#eba834'><b>by Filipe Correia"}
+ addUserKnob {26 _1 l "" +STARTLINE}
+ addUserKnob {1 ReadNodeName l "Read Node"}
+ ReadNodeName PRECOMP
+ addUserKnob {22 generate_internal_cornerpins l "<font color = '#eba834'><b>Generate Internal CornerPins" t "Fetches metadata to get the x and y values for the cornerpin to generate the values per frame and populate the cp_stab.\n\nCan be done anywhere in the node graph if the PRECOMP read node exists. " T "import nuke\n\n\n\n\ndef extract_reposition_points_from_read_node(read_node):\n\n\n\n    reposition_points_dict_list = \[]\n\n\n\n\n    # Store the original frame range\n    original_first_frame = read_node\['first'].value()\n    original_last_frame = read_node\['last'].value()\n\n\n\n\n    for frame_number in range(int(read_node.firstFrame()), int(read_node.lastFrame()) + 1):\n        # Set the frame number of the Read node\n        read_node\['first'].setValue(frame_number)\n        read_node\['last'].setValue(frame_number)\n\n\n\n\n        metadata = extract_exr_metadata(read_node)\n\n\n\n\n        if metadata is not None:\n            reposition_points = \{\n                \"frame_number\": frame_number,\n                \"cpToTwoY\": metadata.get(\"exr/nuke/cpToTwoY\", None),\n                \"cpToOneY\": metadata.get(\"exr/nuke/cpToOneY\", None),\n                \"cpToOneX\": metadata.get(\"exr/nuke/cpToOneX\", None),\n                \"cpToFourY\": metadata.get(\"exr/nuke/cpToFourY\", None),\n                \"cpToFourX\": metadata.get(\"exr/nuke/cpToFourX\", None),\n                \"cpToThreeY\": metadata.get(\"exr/nuke/cpToThreeY\", None),\n                \"cpToThreeX\": metadata.get(\"exr/nuke/cpToThreeX\", None),\n                \"cpToTwoX\": metadata.get(\"exr/nuke/cpToTwoX\", None)\n            \}\n            reposition_points_dict_list.append(reposition_points)\n\n\n\n\n    # Restore the original frame range\n    read_node\['first'].setValue(original_first_frame)\n    read_node\['last'].setValue(original_last_frame)\n\n\n\n\n    return reposition_points_dict_list\n\n\n\n\n\ndef extract_exr_metadata(read_node):\n    try:\n        metadata_dict = read_node.metadata()\n        return metadata_dict\n    except Exception as e:\n        print(f\"Error extracting metadata: \{e\}\")\n        return None\n\n\n\n\ndef _generate_cornerpin_from_reposition_points(reposition_points_list):\n    reposition_node = nuke.toNode(\"cp_stab\")\n    reposition_node\['to1'].setAnimated()\n    reposition_node\['to2'].setAnimated()\n    reposition_node\['to3'].setAnimated()\n    reposition_node\['to4'].setAnimated()\n\n\n\n\n    for reposition_points in reposition_points_list:\n        if reposition_points\[\"cpToOneX\"] is None:\n            continue\n        frame_number = int(reposition_points\[\"frame_number\"])\n        cpToOneX_value = float(reposition_points\[\"cpToOneX\"])  \n        cpToOneY_value = float(reposition_points\[\"cpToOneY\"])  \n        cpToTwoX_value = float(reposition_points\[\"cpToTwoX\"])  \n        cpToTwoY_value = float(reposition_points\[\"cpToTwoY\"])  \n        cpToThreeX_value = float(reposition_points\[\"cpToThreeX\"])  \n        cpToThreeY_value = float(reposition_points\[\"cpToThreeY\"])  \n        cpToFourX_value = float(reposition_points\[\"cpToFourX\"])  \n        cpToFourY_value = float(reposition_points\[\"cpToFourY\"])  \n\n\n\n\n        reposition_node\['to1'].setValueAt(cpToOneX_value, frame_number, 0)\n        reposition_node\['to1'].setValueAt(cpToOneY_value, frame_number, 1)\n        reposition_node\['to2'].setValueAt(cpToTwoX_value, frame_number, 0)\n        reposition_node\['to2'].setValueAt(cpToTwoY_value, frame_number, 1)\n        reposition_node\['to3'].setValueAt(cpToThreeX_value, frame_number, 0)\n        reposition_node\['to3'].setValueAt(cpToThreeY_value, frame_number, 1)\n        reposition_node\['to4'].setValueAt(cpToFourX_value, frame_number, 0)\n        reposition_node\['to4'].setValueAt(cpToFourY_value, frame_number, 1)\n\n\n\n\n\ndef main():\n\n\n\n    this_group = nuke.thisNode()\n    read_node_name = this_group\[\"ReadNodeName\"].value()\n    \n    read_node = nuke.toNode(read_node_name)\n    if read_node.Class() == \"Read\":\n\n\n\n        # Get the repostion from top node metadata\n        reposition_points_list = extract_reposition_points_from_read_node(read_node)\n\n\n\n        # Generate CornerPin and Reformat nodes from the extracted reposition points\n        _generate_cornerpin_from_reposition_points(reposition_points_list)\n    else:\n        nuke.message(f\"\{read_node_name\} is has to be Read node\")\n\n\n\nmain()" +STARTLINE}
+ addUserKnob {22 generate_external_cornerpins l "<font color = '#eba834'><b>Generate External Cornerpins" t "Generates a cornerpin outside of the Gizmo" T "import nuke\n\n\n\ndef extract_reposition_points_from_read_node(read_node):\n\n\n\n    reposition_points_dict_list = \[]\n\n\n\n    # Store the original frame range\n    original_first_frame = read_node\['first'].value()\n    original_last_frame = read_node\['last'].value()\n\n\n\n    for frame_number in range(int(read_node.firstFrame()), int(read_node.lastFrame()) + 1):\n        # Set the frame number of the Read node\n        read_node\['first'].setValue(frame_number)\n        read_node\['last'].setValue(frame_number)\n\n\n\n        metadata = extract_exr_metadata(read_node)\n\n\n\n        if metadata is not None:\n            reposition_points = \{\n                \"frame_number\": frame_number,\n                \"cpToTwoY\": metadata.get(\"exr/nuke/cpToTwoY\", None),\n                \"cpToOneY\": metadata.get(\"exr/nuke/cpToOneY\", None),\n                \"cpToOneX\": metadata.get(\"exr/nuke/cpToOneX\", None),\n                \"cpToFourY\": metadata.get(\"exr/nuke/cpToFourY\", None),\n                \"cpToFourX\": metadata.get(\"exr/nuke/cpToFourX\", None),\n                \"cpToThreeY\": metadata.get(\"exr/nuke/cpToThreeY\", None),\n                \"cpToThreeX\": metadata.get(\"exr/nuke/cpToThreeX\", None),\n                \"cpToTwoX\": metadata.get(\"exr/nuke/cpToTwoX\", None)\n            \}\n            reposition_points_dict_list.append(reposition_points)\n\n\n\n    # Restore the original frame range\n    read_node\['first'].setValue(original_first_frame)\n    read_node\['last'].setValue(original_last_frame)\n\n\n\n    return reposition_points_dict_list\n\n\n\ndef extract_exr_metadata(read_node):\n    try:\n        metadata_dict = read_node.metadata()\n        return metadata_dict\n    except Exception as e:\n        print(f\"Error extracting metadata: \{e\}\")\n        return None\n\n\n\ndef _generate_cornerpin_from_reposition_points(reposition_points_list):\n    \n    this_group = nuke.thisNode()\n    xpos = this_group.xpos()\n    ypos = this_group.ypos()\n    this_group.end()\n\n\n    # Create a new CornerPin node at the root level outside of group\n    CornerPin_stabilize = nuke.nodes.CornerPin2D()\n    CornerPin_stabilize.setInput(0, None)\n    CornerPin_stabilize.setXYpos(xpos+100, ypos+100)\n    CornerPin_stabilize.setName('CornerPin_Stabilize')\n    \n    # Set default \"from\" resolution to 1024x1024\n    CornerPin_stabilize\['invert'].setValue(True)\n    CornerPin_stabilize\['from2'].setValue(\[1024, 0])\n    CornerPin_stabilize\['from3'].setValue(\[1024, 1024])\n    CornerPin_stabilize\['from4'].setValue(\[0, 1024])\n\n\n\n    # Set the \"to\" points to be animated\n    CornerPin_stabilize\['to1'].setAnimated()\n    CornerPin_stabilize\['to2'].setAnimated()\n    CornerPin_stabilize\['to3'].setAnimated()\n    CornerPin_stabilize\['to4'].setAnimated()\n\n\n\n    for reposition_points in reposition_points_list:\n        # skip sparse frames\n        if reposition_points\[\"cpToOneX\"] is None:\n            continue\n        frame_number = int(reposition_points\[\"frame_number\"])\n        CornerPin_stabilize\['to1'].setValueAt(float(reposition_points\[\"cpToOneX\"]), frame_number, 0)\n        CornerPin_stabilize\['to1'].setValueAt(float(reposition_points\[\"cpToOneY\"]), frame_number, 1)\n        CornerPin_stabilize\['to2'].setValueAt(float(reposition_points\[\"cpToTwoX\"]), frame_number, 0)\n        CornerPin_stabilize\['to2'].setValueAt(float(reposition_points\[\"cpToTwoY\"]), frame_number, 1)\n        CornerPin_stabilize\['to3'].setValueAt(float(reposition_points\[\"cpToThreeX\"]), frame_number, 0)\n        CornerPin_stabilize\['to3'].setValueAt(float(reposition_points\[\"cpToThreeY\"]), frame_number, 1)\n        CornerPin_stabilize\['to4'].setValueAt(float(reposition_points\[\"cpToFourX\"]), frame_number, 0)\n        CornerPin_stabilize\['to4'].setValueAt(float(reposition_points\[\"cpToFourY\"]), frame_number, 1)\n\n\n\n    # Create and configure the Reformat node\n    reformat_node = nuke.nodes.Reformat()\n    reformat_node.setInput(0, CornerPin_stabilize)\n    reformat_node.setName(\"Reformat_Stabilize\")\n    reformat_node\['format'].setValue(\"square_1K\")\n    reformat_node\['resize'].setValue(\"none\")\n    reformat_node\['center'].setValue(False)\n    reformat_node\['filter'].setValue(\"Lanczos6\")\n\n\n    # Duplicate the Cornerpin_stabilize\n    for node in nuke.allNodes(): node.setSelected(False)\n    reposition_copy = nuke.createNode(CornerPin_stabilize.Class(), CornerPin_stabilize.writeKnobs(nuke.WRITE_NON_DEFAULT_ONLY | nuke.TO_SCRIPT), inpanel=False)\n    reposition_copy.setName(\"CornerPin_Stabilize\")\n    reposition_copy.setInput(0,reformat_node)\n    reposition_copy\['invert'].setValue(False)\n    reposition_copy.setXYpos(CornerPin_stabilize.xpos(), CornerPin_stabilize.ypos() + 200)\n\n\n    # Create and configure the Reformat node\n    re_reformat_node = nuke.nodes.Reformat()\n    re_reformat_node.setInput(0, reposition_copy)\n    re_reformat_node.setName(\"Reformat_MatchMove\")\n    re_reformat_node\['resize'].setValue(\"none\")\n    re_reformat_node\['center'].setValue(False)\n    re_reformat_node\['filter'].setValue(\"Lanczos6\")\n\n\n\n\ndef main():\n\n\n    this_group = nuke.thisNode()\n    read_node_name = this_group\[\"ReadNodeName\"].value()\n    \n    read_node = nuke.toNode(read_node_name)\n    if read_node.Class() == \"Read\":\n\n\n        # Get the repostion from top node metadata\n        reposition_points_list = extract_reposition_points_from_read_node(read_node)\n\n\n        # Generate CornerPin and Reformat nodes from the extracted reposition points\n        _generate_cornerpin_from_reposition_points(reposition_points_list)\n    else:\n        nuke.message(f\"\{read_node_name\} is has to be Read node\")\n\n\nmain()" +STARTLINE}
+ addUserKnob {26 _2 l "" +STARTLINE}
+ addUserKnob {4 type_cp l "<font color = '#eba834'><b>Transformation" t "Default is Stabilized CornerPin to bring it to 1K resolution stabilized face. \nCopy the name node and after worked has been done paste it at the end and switch it to MatchMoved CornePin to bring it back to normal " M {"Stabilized CornerPin" "MatchMoved Cornerpin" "" ""}}
+ addUserKnob {26 text l "" +STARTLINE}
+ addUserKnob {20 stab_reformat l "Stabilized Reformat" n 1}
+ addUserKnob {41 format l "output format" T ref_1k.format}
+ addUserKnob {41 filter T Reformat1.filter}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {20 mm_reformat l "MatchMove Reformat" n 1}
+ mm_reformat 0
+ addUserKnob {41 format_1 l "output format" T ref_original.format}
+ addUserKnob {41 filter_1 l filter T ref_original.filter}
+ addUserKnob {20 endGroup_1 l endGroup n -1}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos -480
+  ypos -10
+ }
+ CornerPin2D {
+  to1 {{curve x1 1381.53 1379.14 1375.52 1373.93 1375.14 1370.75 1369.89 1368.48 1366.6 1366.24 1365.82 1364.5 1365.8 1368.66 1371.1 1374.5 1380.04 1386.62 1395.23 1401.12 1409.42 1417.15 1421.81 1426.05 1429.62 1431.87 1436.17 1442.84 1452.63 1464.08 1470.66 1479.92 1486.92 1495.53 1503.48 1509.9 1515.01 1518.1 1519.39 1516.09 1511.65 1502.19 1497.66 1493 1489.8 1487.77 1483.33} {curve x1 -2.96948 -3.14612 -4.09912 -5.33521 -0.351074 -6.85718 -10.0056 -11.8999 -11.3311 -10.4177 -9.49194 -10.1323 -8.66406 -7.79846 -7.59985 -9.04639 -11.7394 -15.4301 -19.8384 -21.0565 -10.2657 -15.3435 -22.3535 -24.6592 -24.8113 -24.9669 -26.2152 -27.9724 -34.214 -39.797 -44.8317 -47.9691 -50.0651 -52.9935 -54.1964 -52.6874 -51.613 -49.4209 -46.4868 -44.2402 -39.4496 -34.5571 -26.9524 -21.9976 -21.7437 -23.1088 -23.64}}
+  to2 {{curve x1 2740.6 2739.15 2736.44 2733.94 2726.29 2728.52 2729.08 2729.1 2728.14 2729.07 2729.55 2730.37 2731.95 2735.45 2738.91 2742.58 2748.93 2755.37 2762.72 2766.48 2759.29 2769.2 2780.75 2786.08 2790.04 2791.42 2795.97 2800.68 2810.59 2822.03 2830.54 2839.35 2847.43 2856.92 2864.04 2867.69 2869.95 2870.56 2869.63 2867.19 2861.75 2853.42 2846.35 2841.33 2839.45 2838.29 2834.56} {curve x1 -56.2001 -57.4519 -59.5071 -60.4778 -58.6294 -63.5867 -65.0365 -66.2134 -64.3615 -62.7087 -61.5187 -62.6819 -61.3518 -59.9824 -59.7914 -61.0186 -62.274 -63.4261 -63.3091 -65.207 -60.6439 -62.2419 -67.1685 -73.606 -80.031 -87.6113 -92.0891 -94.3889 -93.6002 -91.5245 -94.7214 -96.7213 -100.652 -102.483 -103.381 -102.739 -101.728 -98.9412 -95.4286 -93.2722 -90.226 -88.3126 -80.229 -72.4368 -65.8517 -60.5658 -59.6064}}
+  to3 {{curve x1 2793.83 2793.45 2791.85 2789.08 2784.57 2785.25 2784.11 2783.42 2781.17 2781.36 2781.58 2782.92 2784.64 2787.64 2791.1 2794.55 2799.47 2803.37 2806.2 2810.63 2809.66 2816.1 2825.57 2835.03 2845.26 2854.07 2861.84 2867.1 2869.97 2873.76 2880.43 2888.1 2898.01 2906.41 2913.22 2917.74 2920.07 2920.08 2918.57 2916.22 2912.53 2907.17 2899.63 2891.77 2883.56 2875.75 2870.53} {curve x1 1302.88 1302.55 1301.41 1299.54 1292.53 1294.18 1294.16 1294.41 1297.18 1300.12 1302.22 1303.19 1304.8 1306.81 1308.02 1307.06 1306.62 1305.33 1304.19 1300.16 1289.22 1289.8 1291.78 1286.43 1280.39 1271.94 1267.7 1263.45 1264.36 1266.42 1265.16 1262.71 1259.86 1258.91 1257.17 1255.04 1253.22 1253.53 1254.82 1257.83 1259.88 1262.92 1268.46 1275.89 1283.8 1289.96 1291.63}}
+  to4 {{curve x1 1434.76 1433.45 1430.93 1429.07 1433.41 1427.48 1424.92 1422.79 1419.63 1418.53 1417.84 1417.05 1418.48 1420.85 1423.29 1426.47 1430.57 1434.62 1438.7 1445.27 1459.8 1464.05 1466.62 1475 1484.84 1494.51 1502.05 1509.26 1512.01 1515.81 1520.55 1528.67 1537.51 1545.02 1552.67 1559.95 1565.12 1567.62 1568.33 1565.12 1562.42 1555.94 1550.94 1543.44 1533.91 1525.23 1519.29} {curve x1 1356.11 1356.86 1356.82 1354.68 1350.81 1350.91 1349.19 1348.72 1350.21 1352.41 1354.24 1355.74 1357.49 1358.99 1360.21 1359.03 1357.15 1353.32 1347.66 1344.31 1339.6 1336.7 1336.59 1335.38 1335.61 1334.59 1333.58 1329.86 1323.75 1318.15 1315.05 1311.46 1310.44 1308.4 1306.36 1305.1 1303.33 1303.05 1303.76 1306.86 1310.65 1316.67 1321.73 1326.33 1327.91 1327.41 1327.59}}
+  invert true
+  filter Lanczos6
+  from1 {0 0}
+  from2 {{ref_1k.format.w x1 1024 1024 x14 1024 x40 1024 x108 1024} 0}
+  from3 {{ref_1k.format.w x1 1024 1024 x14 1024 x40 1024 x108 1024} {ref_1k.format.h x1 1024 1024 x14 1024 x40 1024 x108 1024}}
+  from4 {0 {ref_1k.format.h x1 1024 1024 x14 1024 x40 1024 x108 1024}}
+  name cp_stab
+  xpos -480
+  ypos 567
+  disable {{type_cp x1 0}}
+ }
+ Reformat {
+  format {{{parent.ref_1k.format}}}
+  resize none
+  center false
+  filter Lanczos6
+  name Reformat1
+  xpos -480
+  ypos 661
+  disable {{type_cp}}
+ }
+ CornerPin2D {
+  to1 {{parent.cp_stab.to1} {parent.cp_stab.to1}}
+  to2 {{parent.cp_stab.to2} {parent.cp_stab.to2}}
+  to3 {{parent.cp_stab.to3} {parent.cp_stab.to3}}
+  to4 {{parent.cp_stab.to4} {parent.cp_stab.to4}}
+  invert false
+  filter Lanczos6
+  from1 {0 0}
+  from2 {{ref_1k.format.w} 0}
+  from3 {{ref_1k.format.w} {ref_1k.format.h}}
+  from4 {0 {ref_1k.format.h}}
+  name cp_mm
+  xpos -480
+  ypos 775
+  disable {{!type_cp}}
+ }
+ Reformat {
+  resize none
+  center false
+  filter Lanczos6
+  name ref_original
+  xpos -480
+  ypos 878
+  disable {{!type_cp}}
+ }
+ Output {
+  name Output1
+  xpos -480
+  ypos 1334
+ }
+ Reformat {
+  inputs 0
+  format "1024 1024 0 0 1024 1024 1 square_1K"
+  resize none
+  center false
+  filter Lanczos6
+  name ref_1k
+  xpos -920
+  ypos 584
+ }
+end_group
+Dot {
+ name Dot239
+ xpos 4032
+ ypos 922
+}
+set Nb079e400 [stack 0]
+Dot {
+ name Dot240
+ xpos 3152
+ ypos 922
+}
+add_layer {fotd_stmap fotd_stmap.red fotd_stmap.green fotd_stmap.blue fotd_stmap.alpha}
+Shuffle2 {
+ fromInput1 {{0} B}
+ in1 fotd_stmap
+ fromInput2 {{0} B}
+ mappings "4 fotd_stmap.red 0 0 rgba.red 0 0 fotd_stmap.green 0 1 rgba.green 0 1 fotd_stmap.blue 0 2 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3"
+ name Shuffle11
+ label "\[value in1]"
+ xpos 3118
+ ypos 1092
+}
+Dot {
+ name Dot241
+ xpos 3152
+ ypos 1382
+}
+set Nb079cf00 [stack 0]
+Dot {
+ name Dot242
+ xpos 3042
+ ypos 1382
+}
+EdgeDetectWrapper {
+ name EdgeDetect1
+ xpos 3008
+ ypos 1420
+}
+set Cb079c100 [stack 0]
+Clamp {
+ minimum 0.095
+ maximum {{minimum}}
+ MinClampTo_enable true
+ MaxClampTo_enable true
+ name Clamp1
+ xpos 3008
+ ypos 1468
+}
+set Cb077b900 [stack 0]
+Invert {
+ name Invert1
+ xpos 3008
+ ypos 1516
+}
+set Cb0779600 [stack 0]
+Dot {
+ name Dot243
+ xpos 3042
+ ypos 1598
+}
+push $Nb079cf00
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 rgba.alpha
+ name Copy29
+ xpos 3118
+ ypos 1588
+}
+set Cb0778800 [stack 0]
+Premult {
+ name Premult2
+ xpos 3118
+ ypos 1648
+}
+set Cb0778100 [stack 0]
+Dot {
+ name Dot244
+ xpos 3152
+ ypos 2330
+}
+PostageStamp {
+ inputs 0
+ name Stamp14
+ help "Stamps by Adrian Pueyo and Alexey Kuchinski.\nUpdated May 18 2021"
+ onCreate "if nuke.GUI:\n    try:\n        import stamps; stamps.wiredOnCreate()\n    except:\n        pass\n"
+ knobChanged "import stamps; stamps.wiredKnobChanged()"
+ autolabel "nuke.thisNode().knob(\"title\").value()"
+ tile_color 0x1000001
+ note_font "Bitstream Vera Sans Bold"
+ note_font_size 40
+ note_font_color 0xff0000ff
+ xpos 2788
+ ypos 518
+ hide_input true
+ addUserKnob {20 wired_tab l "Wired Stamp"}
+ addUserKnob {26 identifier -STARTLINE +HIDDEN T wired}
+ addUserKnob {3 lockCallbacks l "" +STARTLINE +HIDDEN}
+ addUserKnob {6 toReconnect -STARTLINE +HIDDEN}
+ addUserKnob {1 title l Title: t "Displayed name on the Node Graph for this Stamp and its Anchor.\nIMPORTANT: This is only for display purposes, and is different from the real/internal name of the Stamps."}
+ title denoise
+ addUserKnob {26 prev_title l "" +STARTLINE +HIDDEN T plate}
+ addUserKnob {26 tags l Tags: t "Tags of this stamp's Anchor, for information purpose only.\nClick \"show anchor\" to change them." T <i>2D</i>}
+ addUserKnob {26 backdrops l Backdrops: t "Labels of backdrop nodes which contain this stamp's Anchor." T <i>plate</i>}
+ addUserKnob {26 line1 l "" +STARTLINE}
+ addUserKnob {6 postageStamp_show l "postage stamp" t "Enable the postage stamp thumbnail in this node.\nYou're seeing this because the class of this node includes the postage_stamp knob." +STARTLINE}
+ postageStamp_show true
+ addUserKnob {26 anchor_label l Anchor: T " "}
+ addUserKnob {22 show_anchor l " show anchor " t "Show the properties panel for this Stamp's Anchor." -STARTLINE T stamps.wiredShowAnchor()}
+ addUserKnob {22 zoom_anchor l "zoom anchor" t "Navigate to this Stamp's Anchor on the Node Graph." -STARTLINE T stamps.wiredZoomAnchor()}
+ addUserKnob {26 stamps_label l Stamps: T " "}
+ addUserKnob {22 zoomNext l " zoom next " t "Navigate to this Stamp's next sibling on the Node Graph." -STARTLINE T stamps.wiredZoomNext()}
+ addUserKnob {22 selectSimilar l " select similar " t "Select all similar Stamps to this one on the Node Graph." -STARTLINE T stamps.wiredSelectSimilar()}
+ addUserKnob {26 space_1 l "" +STARTLINE T " "}
+ addUserKnob {26 reconnect_label l Reconnect: t "Reconnect by the stored Anchor name." T " "}
+ addUserKnob {22 reconnect_this l this t "Reconnect this Stamp to its Anchor, by its stored Anchor name." -STARTLINE T "n = nuke.thisNode()\ntry:\n    n.setInput(0,nuke.toNode(n.knob(\"anchor\").value()))\nexcept:\n    nuke.message(\"Unable to reconnect.\")\ntry:\n    import stamps\n    stamps.wiredGetStyle(n)\nexcept:\n    pass\n"}
+ addUserKnob {22 reconnect_similar l similar t "Reconnect this Stamp and similar ones to their Anchor, by their stored anchor name." -STARTLINE T stamps.wiredReconnectSimilar()}
+ addUserKnob {22 reconnect_all l all t "Reconnect all the Stamps to their Anchors, by their stored anchor names." -STARTLINE T stamps.wiredReconnectAll()}
+ addUserKnob {26 space_2 l "" +STARTLINE T " "}
+ addUserKnob {20 advanced_reconnection l "Advanced Reconnection" n 2}
+ addUserKnob {26 reconnect_by_title_label l "<font color=gold>By Title:" t "Reconnect by searching for a matching title." T " "}
+ addUserKnob {22 reconnect_by_title_this l this t "Look for an Anchor that shares this Stamp's title, and connect this Stamp to it.\nIMPORTANT: Use this carefully, and only when the normal reconnection doesn't work." -STARTLINE T stamps.wiredReconnectByTitle()}
+ addUserKnob {22 reconnect_by_title_similar l similar t "Look for an Anchor that shares this Stamp's title, and connect this Stamp and similar ones to it.\nIMPORTANT: Use this carefully, and only when the normal reconnection doesn't work." -STARTLINE T stamps.wiredReconnectByTitleSimilar()}
+ addUserKnob {22 reconnect_by_title_selected l selected t "For each Stamp selected, look for an Anchor that shares its title, and connect to it.\nIMPORTANT: Use this carefully, and only when the normal reconnection doesn't work." -STARTLINE T stamps.wiredReconnectByTitleSelected()}
+ addUserKnob {26 reconnect_by_selection_label l "<font color=orangered>By Selection:" t "Force reconnect to a selected Anchor." T " "}
+ addUserKnob {22 reconnect_by_selection_this l this t "Force reconnect this Stamp to a selected Anchor, whatever its name or title.\nIMPORTANT: Use this carefully, and only when the normal reconnection doesn't work." -STARTLINE T stamps.wiredReconnectBySelection()}
+ addUserKnob {22 reconnect_by_selection_similar l similar t "Force reconnect this Stamp and similar ones to a selected Anchor, whatever its name or title.\nIMPORTANT: Use this carefully, and only when the normal reconnection doesn't work." -STARTLINE T stamps.wiredReconnectBySelectionSimilar()}
+ addUserKnob {22 reconnect_by_selection_selected l selected t "Force reconnect all selected Stamps to an also selected Anchor, whatever its name or title.\nIMPORTANT: Use this carefully, and only when the normal reconnection doesn't work." -STARTLINE T stamps.wiredReconnectBySelectionSelected()}
+ addUserKnob {1 anchor l Anchor}
+ anchor Anchor_30cdcd2d8c9
+ addUserKnob {6 auto_reconnect_by_title l "<font color=#ED9977>&nbsp; auto-reconnect by title" t "When creating this stamp again (like on copy-paste), auto-reconnect it by title instead of doing it by the saved anchor's name, and auto-turn this off immediately.\nIMPORTANT: Should be off by default. Only use this for setting up templates." +STARTLINE}
+ addUserKnob {26 line2 l "" +STARTLINE}
+ addUserKnob {22 buttonHelp l Help -STARTLINE T stamps.showHelp()}
+ addUserKnob {26 version l " " t "Stamps by Adrian Pueyo and Alexey Kuchinski.\nUpdated May 18 2021." -STARTLINE T "<a href=\"http://www.nukepedia.com/gizmos/other/stamps\" style=\"color:#666;text-decoration: none;\"><span style=\"color:#666\"> <big>Stamps v1.1</big></b></a>"}
+}
+Dot {
+ name Dot245
+ xpos 2822
+ ypos 630
+}
+Group {
+ name NR_Stabilization_flw1
+ tile_color 0x513a00ff
+ label "\n\[value type_cp]"
+ note_font "Bitstream Vera Sans Bold"
+ note_font_color 0xffb800ff
+ xpos 2788
+ ypos 737
+ addUserKnob {20 user l "Position Correction"}
+ addUserKnob {26 node_title l "" t " " +STARTLINE T "<font size = 5>NR_Stabilization"}
+ addUserKnob {26 made_by l "" +STARTLINE T "<font color = '#eba834'><b>by Filipe Correia"}
+ addUserKnob {26 _1 l "" +STARTLINE}
+ addUserKnob {1 ReadNodeName l "Read Node"}
+ ReadNodeName PRECOMP
+ addUserKnob {22 generate_internal_cornerpins l "<font color = '#eba834'><b>Generate Internal CornerPins" t "Fetches metadata to get the x and y values for the cornerpin to generate the values per frame and populate the cp_stab.\n\nCan be done anywhere in the node graph if the PRECOMP read node exists. " T "import nuke\n\n\n\n\ndef extract_reposition_points_from_read_node(read_node):\n\n\n\n    reposition_points_dict_list = \[]\n\n\n\n\n    # Store the original frame range\n    original_first_frame = read_node\['first'].value()\n    original_last_frame = read_node\['last'].value()\n\n\n\n\n    for frame_number in range(int(read_node.firstFrame()), int(read_node.lastFrame()) + 1):\n        # Set the frame number of the Read node\n        read_node\['first'].setValue(frame_number)\n        read_node\['last'].setValue(frame_number)\n\n\n\n\n        metadata = extract_exr_metadata(read_node)\n\n\n\n\n        if metadata is not None:\n            reposition_points = \{\n                \"frame_number\": frame_number,\n                \"cpToTwoY\": metadata.get(\"exr/nuke/cpToTwoY\", None),\n                \"cpToOneY\": metadata.get(\"exr/nuke/cpToOneY\", None),\n                \"cpToOneX\": metadata.get(\"exr/nuke/cpToOneX\", None),\n                \"cpToFourY\": metadata.get(\"exr/nuke/cpToFourY\", None),\n                \"cpToFourX\": metadata.get(\"exr/nuke/cpToFourX\", None),\n                \"cpToThreeY\": metadata.get(\"exr/nuke/cpToThreeY\", None),\n                \"cpToThreeX\": metadata.get(\"exr/nuke/cpToThreeX\", None),\n                \"cpToTwoX\": metadata.get(\"exr/nuke/cpToTwoX\", None)\n            \}\n            reposition_points_dict_list.append(reposition_points)\n\n\n\n\n    # Restore the original frame range\n    read_node\['first'].setValue(original_first_frame)\n    read_node\['last'].setValue(original_last_frame)\n\n\n\n\n    return reposition_points_dict_list\n\n\n\n\n\ndef extract_exr_metadata(read_node):\n    try:\n        metadata_dict = read_node.metadata()\n        return metadata_dict\n    except Exception as e:\n        print(f\"Error extracting metadata: \{e\}\")\n        return None\n\n\n\n\ndef _generate_cornerpin_from_reposition_points(reposition_points_list):\n    reposition_node = nuke.toNode(\"cp_stab\")\n    reposition_node\['to1'].setAnimated()\n    reposition_node\['to2'].setAnimated()\n    reposition_node\['to3'].setAnimated()\n    reposition_node\['to4'].setAnimated()\n\n\n\n\n    for reposition_points in reposition_points_list:\n        if reposition_points\[\"cpToOneX\"] is None:\n            continue\n        frame_number = int(reposition_points\[\"frame_number\"])\n        cpToOneX_value = float(reposition_points\[\"cpToOneX\"])  \n        cpToOneY_value = float(reposition_points\[\"cpToOneY\"])  \n        cpToTwoX_value = float(reposition_points\[\"cpToTwoX\"])  \n        cpToTwoY_value = float(reposition_points\[\"cpToTwoY\"])  \n        cpToThreeX_value = float(reposition_points\[\"cpToThreeX\"])  \n        cpToThreeY_value = float(reposition_points\[\"cpToThreeY\"])  \n        cpToFourX_value = float(reposition_points\[\"cpToFourX\"])  \n        cpToFourY_value = float(reposition_points\[\"cpToFourY\"])  \n\n\n\n\n        reposition_node\['to1'].setValueAt(cpToOneX_value, frame_number, 0)\n        reposition_node\['to1'].setValueAt(cpToOneY_value, frame_number, 1)\n        reposition_node\['to2'].setValueAt(cpToTwoX_value, frame_number, 0)\n        reposition_node\['to2'].setValueAt(cpToTwoY_value, frame_number, 1)\n        reposition_node\['to3'].setValueAt(cpToThreeX_value, frame_number, 0)\n        reposition_node\['to3'].setValueAt(cpToThreeY_value, frame_number, 1)\n        reposition_node\['to4'].setValueAt(cpToFourX_value, frame_number, 0)\n        reposition_node\['to4'].setValueAt(cpToFourY_value, frame_number, 1)\n\n\n\n\n\ndef main():\n\n\n\n    this_group = nuke.thisNode()\n    read_node_name = this_group\[\"ReadNodeName\"].value()\n    \n    read_node = nuke.toNode(read_node_name)\n    if read_node.Class() == \"Read\":\n\n\n\n        # Get the repostion from top node metadata\n        reposition_points_list = extract_reposition_points_from_read_node(read_node)\n\n\n\n        # Generate CornerPin and Reformat nodes from the extracted reposition points\n        _generate_cornerpin_from_reposition_points(reposition_points_list)\n    else:\n        nuke.message(f\"\{read_node_name\} is has to be Read node\")\n\n\n\nmain()" +STARTLINE}
+ addUserKnob {22 generate_external_cornerpins l "<font color = '#eba834'><b>Generate External Cornerpins" t "Generates a cornerpin outside of the Gizmo" T "import nuke\n\n\n\ndef extract_reposition_points_from_read_node(read_node):\n\n\n\n    reposition_points_dict_list = \[]\n\n\n\n    # Store the original frame range\n    original_first_frame = read_node\['first'].value()\n    original_last_frame = read_node\['last'].value()\n\n\n\n    for frame_number in range(int(read_node.firstFrame()), int(read_node.lastFrame()) + 1):\n        # Set the frame number of the Read node\n        read_node\['first'].setValue(frame_number)\n        read_node\['last'].setValue(frame_number)\n\n\n\n        metadata = extract_exr_metadata(read_node)\n\n\n\n        if metadata is not None:\n            reposition_points = \{\n                \"frame_number\": frame_number,\n                \"cpToTwoY\": metadata.get(\"exr/nuke/cpToTwoY\", None),\n                \"cpToOneY\": metadata.get(\"exr/nuke/cpToOneY\", None),\n                \"cpToOneX\": metadata.get(\"exr/nuke/cpToOneX\", None),\n                \"cpToFourY\": metadata.get(\"exr/nuke/cpToFourY\", None),\n                \"cpToFourX\": metadata.get(\"exr/nuke/cpToFourX\", None),\n                \"cpToThreeY\": metadata.get(\"exr/nuke/cpToThreeY\", None),\n                \"cpToThreeX\": metadata.get(\"exr/nuke/cpToThreeX\", None),\n                \"cpToTwoX\": metadata.get(\"exr/nuke/cpToTwoX\", None)\n            \}\n            reposition_points_dict_list.append(reposition_points)\n\n\n\n    # Restore the original frame range\n    read_node\['first'].setValue(original_first_frame)\n    read_node\['last'].setValue(original_last_frame)\n\n\n\n    return reposition_points_dict_list\n\n\n\ndef extract_exr_metadata(read_node):\n    try:\n        metadata_dict = read_node.metadata()\n        return metadata_dict\n    except Exception as e:\n        print(f\"Error extracting metadata: \{e\}\")\n        return None\n\n\n\ndef _generate_cornerpin_from_reposition_points(reposition_points_list):\n    \n    this_group = nuke.thisNode()\n    xpos = this_group.xpos()\n    ypos = this_group.ypos()\n    this_group.end()\n\n\n    # Create a new CornerPin node at the root level outside of group\n    CornerPin_stabilize = nuke.nodes.CornerPin2D()\n    CornerPin_stabilize.setInput(0, None)\n    CornerPin_stabilize.setXYpos(xpos+100, ypos+100)\n    CornerPin_stabilize.setName('CornerPin_Stabilize')\n    \n    # Set default \"from\" resolution to 1024x1024\n    CornerPin_stabilize\['invert'].setValue(True)\n    CornerPin_stabilize\['from2'].setValue(\[1024, 0])\n    CornerPin_stabilize\['from3'].setValue(\[1024, 1024])\n    CornerPin_stabilize\['from4'].setValue(\[0, 1024])\n\n\n\n    # Set the \"to\" points to be animated\n    CornerPin_stabilize\['to1'].setAnimated()\n    CornerPin_stabilize\['to2'].setAnimated()\n    CornerPin_stabilize\['to3'].setAnimated()\n    CornerPin_stabilize\['to4'].setAnimated()\n\n\n\n    for reposition_points in reposition_points_list:\n        # skip sparse frames\n        if reposition_points\[\"cpToOneX\"] is None:\n            continue\n        frame_number = int(reposition_points\[\"frame_number\"])\n        CornerPin_stabilize\['to1'].setValueAt(float(reposition_points\[\"cpToOneX\"]), frame_number, 0)\n        CornerPin_stabilize\['to1'].setValueAt(float(reposition_points\[\"cpToOneY\"]), frame_number, 1)\n        CornerPin_stabilize\['to2'].setValueAt(float(reposition_points\[\"cpToTwoX\"]), frame_number, 0)\n        CornerPin_stabilize\['to2'].setValueAt(float(reposition_points\[\"cpToTwoY\"]), frame_number, 1)\n        CornerPin_stabilize\['to3'].setValueAt(float(reposition_points\[\"cpToThreeX\"]), frame_number, 0)\n        CornerPin_stabilize\['to3'].setValueAt(float(reposition_points\[\"cpToThreeY\"]), frame_number, 1)\n        CornerPin_stabilize\['to4'].setValueAt(float(reposition_points\[\"cpToFourX\"]), frame_number, 0)\n        CornerPin_stabilize\['to4'].setValueAt(float(reposition_points\[\"cpToFourY\"]), frame_number, 1)\n\n\n\n    # Create and configure the Reformat node\n    reformat_node = nuke.nodes.Reformat()\n    reformat_node.setInput(0, CornerPin_stabilize)\n    reformat_node.setName(\"Reformat_Stabilize\")\n    reformat_node\['format'].setValue(\"square_1K\")\n    reformat_node\['resize'].setValue(\"none\")\n    reformat_node\['center'].setValue(False)\n    reformat_node\['filter'].setValue(\"Lanczos6\")\n\n\n    # Duplicate the Cornerpin_stabilize\n    for node in nuke.allNodes(): node.setSelected(False)\n    reposition_copy = nuke.createNode(CornerPin_stabilize.Class(), CornerPin_stabilize.writeKnobs(nuke.WRITE_NON_DEFAULT_ONLY | nuke.TO_SCRIPT), inpanel=False)\n    reposition_copy.setName(\"CornerPin_Stabilize\")\n    reposition_copy.setInput(0,reformat_node)\n    reposition_copy\['invert'].setValue(False)\n    reposition_copy.setXYpos(CornerPin_stabilize.xpos(), CornerPin_stabilize.ypos() + 200)\n\n\n    # Create and configure the Reformat node\n    re_reformat_node = nuke.nodes.Reformat()\n    re_reformat_node.setInput(0, reposition_copy)\n    re_reformat_node.setName(\"Reformat_MatchMove\")\n    re_reformat_node\['resize'].setValue(\"none\")\n    re_reformat_node\['center'].setValue(False)\n    re_reformat_node\['filter'].setValue(\"Lanczos6\")\n\n\n\n\ndef main():\n\n\n    this_group = nuke.thisNode()\n    read_node_name = this_group\[\"ReadNodeName\"].value()\n    \n    read_node = nuke.toNode(read_node_name)\n    if read_node.Class() == \"Read\":\n\n\n        # Get the repostion from top node metadata\n        reposition_points_list = extract_reposition_points_from_read_node(read_node)\n\n\n        # Generate CornerPin and Reformat nodes from the extracted reposition points\n        _generate_cornerpin_from_reposition_points(reposition_points_list)\n    else:\n        nuke.message(f\"\{read_node_name\} is has to be Read node\")\n\n\nmain()" +STARTLINE}
+ addUserKnob {26 _2 l "" +STARTLINE}
+ addUserKnob {4 type_cp l "<font color = '#eba834'><b>Transformation" t "Default is Stabilized CornerPin to bring it to 1K resolution stabilized face. \nCopy the name node and after worked has been done paste it at the end and switch it to MatchMoved CornePin to bring it back to normal " M {"Stabilized CornerPin" "MatchMoved Cornerpin" "" ""}}
+ addUserKnob {26 text l "" +STARTLINE}
+ addUserKnob {20 stab_reformat l "Stabilized Reformat" n 1}
+ addUserKnob {41 format l "output format" T ref_1k.format}
+ addUserKnob {41 filter T Reformat1.filter}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {20 mm_reformat l "MatchMove Reformat" n 1}
+ mm_reformat 0
+ addUserKnob {41 format_1 l "output format" T ref_original.format}
+ addUserKnob {41 filter_1 l filter T ref_original.filter}
+ addUserKnob {20 endGroup_1 l endGroup n -1}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos -480
+  ypos -10
+ }
+ CornerPin2D {
+  to1 {{curve x1 1381.53 1379.14 1375.52 1373.93 1375.14 1370.75 1369.89 1368.48 1366.6 1366.24 1365.82 1364.5 1365.8 1368.66 1371.1 1374.5 1380.04 1386.62 1395.23 1401.12 1409.42 1417.15 1421.81 1426.05 1429.62 1431.87 1436.17 1442.84 1452.63 1464.08 1470.66 1479.92 1486.92 1495.53 1503.48 1509.9 1515.01 1518.1 1519.39 1516.09 1511.65 1502.19 1497.66 1493 1489.8 1487.77 1483.33} {curve x1 -2.96948 -3.14612 -4.09912 -5.33521 -0.351074 -6.85718 -10.0056 -11.8999 -11.3311 -10.4177 -9.49194 -10.1323 -8.66406 -7.79846 -7.59985 -9.04639 -11.7394 -15.4301 -19.8384 -21.0565 -10.2657 -15.3435 -22.3535 -24.6592 -24.8113 -24.9669 -26.2152 -27.9724 -34.214 -39.797 -44.8317 -47.9691 -50.0651 -52.9935 -54.1964 -52.6874 -51.613 -49.4209 -46.4868 -44.2402 -39.4496 -34.5571 -26.9524 -21.9976 -21.7437 -23.1088 -23.64}}
+  to2 {{curve x1 2740.6 2739.15 2736.44 2733.94 2726.29 2728.52 2729.08 2729.1 2728.14 2729.07 2729.55 2730.37 2731.95 2735.45 2738.91 2742.58 2748.93 2755.37 2762.72 2766.48 2759.29 2769.2 2780.75 2786.08 2790.04 2791.42 2795.97 2800.68 2810.59 2822.03 2830.54 2839.35 2847.43 2856.92 2864.04 2867.69 2869.95 2870.56 2869.63 2867.19 2861.75 2853.42 2846.35 2841.33 2839.45 2838.29 2834.56} {curve x1 -56.2001 -57.4519 -59.5071 -60.4778 -58.6294 -63.5867 -65.0365 -66.2134 -64.3615 -62.7087 -61.5187 -62.6819 -61.3518 -59.9824 -59.7914 -61.0186 -62.274 -63.4261 -63.3091 -65.207 -60.6439 -62.2419 -67.1685 -73.606 -80.031 -87.6113 -92.0891 -94.3889 -93.6002 -91.5245 -94.7214 -96.7213 -100.652 -102.483 -103.381 -102.739 -101.728 -98.9412 -95.4286 -93.2722 -90.226 -88.3126 -80.229 -72.4368 -65.8517 -60.5658 -59.6064}}
+  to3 {{curve x1 2793.83 2793.45 2791.85 2789.08 2784.57 2785.25 2784.11 2783.42 2781.17 2781.36 2781.58 2782.92 2784.64 2787.64 2791.1 2794.55 2799.47 2803.37 2806.2 2810.63 2809.66 2816.1 2825.57 2835.03 2845.26 2854.07 2861.84 2867.1 2869.97 2873.76 2880.43 2888.1 2898.01 2906.41 2913.22 2917.74 2920.07 2920.08 2918.57 2916.22 2912.53 2907.17 2899.63 2891.77 2883.56 2875.75 2870.53} {curve x1 1302.88 1302.55 1301.41 1299.54 1292.53 1294.18 1294.16 1294.41 1297.18 1300.12 1302.22 1303.19 1304.8 1306.81 1308.02 1307.06 1306.62 1305.33 1304.19 1300.16 1289.22 1289.8 1291.78 1286.43 1280.39 1271.94 1267.7 1263.45 1264.36 1266.42 1265.16 1262.71 1259.86 1258.91 1257.17 1255.04 1253.22 1253.53 1254.82 1257.83 1259.88 1262.92 1268.46 1275.89 1283.8 1289.96 1291.63}}
+  to4 {{curve x1 1434.76 1433.45 1430.93 1429.07 1433.41 1427.48 1424.92 1422.79 1419.63 1418.53 1417.84 1417.05 1418.48 1420.85 1423.29 1426.47 1430.57 1434.62 1438.7 1445.27 1459.8 1464.05 1466.62 1475 1484.84 1494.51 1502.05 1509.26 1512.01 1515.81 1520.55 1528.67 1537.51 1545.02 1552.67 1559.95 1565.12 1567.62 1568.33 1565.12 1562.42 1555.94 1550.94 1543.44 1533.91 1525.23 1519.29} {curve x1 1356.11 1356.86 1356.82 1354.68 1350.81 1350.91 1349.19 1348.72 1350.21 1352.41 1354.24 1355.74 1357.49 1358.99 1360.21 1359.03 1357.15 1353.32 1347.66 1344.31 1339.6 1336.7 1336.59 1335.38 1335.61 1334.59 1333.58 1329.86 1323.75 1318.15 1315.05 1311.46 1310.44 1308.4 1306.36 1305.1 1303.33 1303.05 1303.76 1306.86 1310.65 1316.67 1321.73 1326.33 1327.91 1327.41 1327.59}}
+  invert true
+  filter Lanczos6
+  from1 {0 0}
+  from2 {{ref_1k.format.w x1 1024 1024 x14 1024 x40 1024 x108 1024} 0}
+  from3 {{ref_1k.format.w x1 1024 1024 x14 1024 x40 1024 x108 1024} {ref_1k.format.h x1 1024 1024 x14 1024 x40 1024 x108 1024}}
+  from4 {0 {ref_1k.format.h x1 1024 1024 x14 1024 x40 1024 x108 1024}}
+  name cp_stab
+  xpos -480
+  ypos 567
+  disable {{type_cp x1 0}}
+ }
+ Reformat {
+  format {{{parent.ref_1k.format}}}
+  resize none
+  center false
+  filter Lanczos6
+  name Reformat1
+  xpos -480
+  ypos 661
+  disable {{type_cp}}
+ }
+ CornerPin2D {
+  to1 {{parent.cp_stab.to1} {parent.cp_stab.to1}}
+  to2 {{parent.cp_stab.to2} {parent.cp_stab.to2}}
+  to3 {{parent.cp_stab.to3} {parent.cp_stab.to3}}
+  to4 {{parent.cp_stab.to4} {parent.cp_stab.to4}}
+  invert false
+  filter Lanczos6
+  from1 {0 0}
+  from2 {{ref_1k.format.w} 0}
+  from3 {{ref_1k.format.w} {ref_1k.format.h}}
+  from4 {0 {ref_1k.format.h}}
+  name cp_mm
+  xpos -480
+  ypos 775
+  disable {{!type_cp}}
+ }
+ Reformat {
+  resize none
+  center false
+  filter Lanczos6
+  name ref_original
+  xpos -480
+  ypos 878
+  disable {{!type_cp}}
+ }
+ Output {
+  name Output1
+  xpos -480
+  ypos 1334
+ }
+ Reformat {
+  inputs 0
+  format "1024 1024 0 0 1024 1024 1 square_1K"
+  resize none
+  center false
+  filter Lanczos6
+  name ref_1k
+  xpos -920
+  ypos 584
+ }
+end_group
+Dot {
+ name Dot246
+ xpos 2822
+ ypos 930
+}
+Rectangle {
+ area {0 0 1 1}
+ color 0
+ name RemovePixel1
+ label "x = 0 || y = 0"
+ xpos 2788
+ ypos 1667
+}
+set Cb0731600 [stack 0]
+C_STMap2_1 {
+ inputs 2
+ uv rgb
+ mode "warped src (inverse)"
+ splatting 6
+ name C_STMap1
+ xpos 2788
+ ypos 2320
+}
+EdgeExtend {
+ sourceIsPremultiplied true
+ premultiply false
+ name EdgeExtend1
+ xpos 2788
+ ypos 2566
+}
+set Nb06ff900 [stack 0]
+Dot {
+ name Dot247
+ label "Source is Premultiplied ->Check\nPremultiply -> Uncheck"
+ xpos 2959
+ ypos 2570
+}
+push $Nb079e400
+add_layer {stmap stmap.red stmap.green stmap.blue stmap.u stmap.v stmap.mask stmap.alpha stmap.u}
+Shuffle2 {
+ fromInput1 {{0} B}
+ in1 {stmap.red stmap.green stmap.blue -stmap.u -stmap.v -stmap.mask -stmap.alpha -stmap.u}
+ fromInput2 {{0} B}
+ mappings "4 stmap.red 0 0 rgba.red 0 0 stmap.green 0 1 rgba.green 0 1 stmap.blue 0 2 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3"
+ name Shuffle10
+ label "\[value in1]"
+ xpos 3998
+ ypos 1096
+}
+Dot {
+ name Dot248
+ xpos 4032
+ ypos 1384
+}
+set Nb06fe400 [stack 0]
+Dot {
+ name Dot249
+ xpos 3922
+ ypos 1384
+}
+clone $Cb079c100 {
+ xpos 3888
+ ypos 1422
+ selected false
+}
+clone $Cb077b900 {
+ xpos 3888
+ ypos 1470
+ selected false
+}
+clone $Cb0779600 {
+ xpos 3888
+ ypos 1518
+ selected false
+}
+Dot {
+ name Dot250
+ xpos 3922
+ ypos 1600
+}
+push $Nb06fe400
+clone $Cb0778800 {
+ inputs 2
+ xpos 3998
+ ypos 1590
+ selected false
+}
+clone $Cb0778100 {
+ xpos 3998
+ ypos 1650
+ selected false
+}
+EdgeBlur {
+ channels rgba
+ size 4.1
+ edge_mult 4
+ name EdgeBlur1
+ xpos 3998
+ ypos 2166
+}
+Unpremult {
+ name Unpremult2
+ xpos 3998
+ ypos 2277
+}
+set Nb06e8100 [stack 0]
+Expression {
+ expr3 "max(r,g,b) * 4"
+ name Alpha_Max
+ xpos 4174
+ ypos 2396
+}
+push $Nb06e8100
+Expression {
+ expr3 r||g||b
+ name Alpha
+ xpos 3835
+ ypos 2396
+}
+Group {
+ inputs 2
+ name fc_QuickSwitcher
+ tile_color 0x215e1300
+ label "\[if \{\[value this.which] == 0 || \[value this.disable] == \"true\"\} \{\n    return \"\[knob this.tile_color 0x9c0000ff]\"\n\} else \{\n    return \"\[knob this.tile_color 0x215e1300]\"\n\}]"
+ note_font "Bitstream Vera Sans Bold"
+ note_font_color 0xffb800ff
+ xpos 3998
+ ypos 2396
+ addUserKnob {20 User}
+ addUserKnob {26 node_title l "" +STARTLINE T "<font size = 5>QuickSwitcher"}
+ addUserKnob {26 made_by l "" +STARTLINE T "<font color = '#eba834'><b>by Filipe Correia"}
+ addUserKnob {26 text l "" +STARTLINE}
+ addUserKnob {22 on_off l "<p style='color:#07911a'>ON</p>" T "thisKnob = nuke.thisKnob()  # Reference to the current knob being interacted with\nswitch = nuke.toNode('UsePrecomp')  # Reference to a specific node by name\n\n# Define the toggle states with corresponding labels and values\nstates = \{\n    \"ON\": (\"<p style='color:#e31414'>OFF</p>\", 0),  # \"ON\" becomes \"OFF\" with red color\n    \"OFF\": (\"<p style='color:#07911a'>ON</p>\", 1),  # \"OFF\" becomes \"ON\" with green color\n\}\n\n# Iterate through states to toggle the label and value\nfor state, (label, value) in states.items():\n    if state in thisKnob.label():  # Check if the current state matches the knob's label\n        thisKnob.setLabel(label)  # Update the label dynamically\n        switch.knob('which').setValue(value)  # Update the value of the target node\n        break  # Exit the loop once the match is found" +STARTLINE}
+ addUserKnob {41 which l "" -STARTLINE T UsePrecomp.which}
+}
+ Input {
+  inputs 0
+  name Input1
+  tile_color 0x215e13ff
+  label "(input \[value number])"
+  xpos 365
+  ypos -183
+  number 1
+ }
+ Input {
+  inputs 0
+  name Input0
+  tile_color 0x9c0000ff
+  label "(input \[value number])"
+  selected true
+  xpos 175
+  ypos -295
+ }
+ Switch {
+  inputs 2
+  which 1
+  name UsePrecomp
+  tile_color 0x215e1300
+  label "\[if \{\[value this.which] == 0 || \[value this.disable] == \"true\"\} \{\n    return \"\[knob this.tile_color 0x9c0000ff]\"\n\} else \{\n    return \"\[knob this.tile_color 0x215e1300]\"\n\}]"
+  xpos 175
+  ypos -177
+ }
+ Output {
+  name Output1
+  xpos 175
+  ypos -32
+ }
+end_group
+Crop {
+ box {0 0 {width} {height}}
+ crop false
+ name Crop9
+ xpos 3998
+ ypos 2736
+}
+Dot {
+ name Dot251
+ xpos 4032
+ ypos 2884
+}
+set Nb06c0100 [stack 0]
+Dot {
+ name Dot252
+ xpos 4032
+ ypos 3043
+}
+push $Nb06c0100
+push $Nb06ff900
+clone $Cb0731600 {
+ xpos 2788
+ ypos 2720
+ selected false
+}
+C_STMap2_1 {
+ inputs 2
+ uv rgb
+ name C_STMap10
+ xpos 2788
+ ypos 2874
+}
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 rgba.alpha
+ name Copy30
+ xpos 2788
+ ypos 3033
+}
+Group {
+ name NR_Stabilization_flw19
+ tile_color 0x513a00ff
+ label "\n\[value type_cp]"
+ note_font "Bitstream Vera Sans Bold"
+ note_font_color 0xffb800ff
+ xpos 2788
+ ypos 3134
+ addUserKnob {20 user l "Position Correction"}
+ addUserKnob {26 node_title l "" t " " +STARTLINE T "<font size = 5>NR_Stabilization"}
+ addUserKnob {26 made_by l "" +STARTLINE T "<font color = '#eba834'><b>by Filipe Correia"}
+ addUserKnob {26 _1 l "" +STARTLINE}
+ addUserKnob {1 ReadNodeName l "Read Node"}
+ ReadNodeName PRECOMP
+ addUserKnob {22 generate_internal_cornerpins l "<font color = '#eba834'><b>Generate Internal CornerPins" t "Fetches metadata to get the x and y values for the cornerpin to generate the values per frame and populate the cp_stab.\n\nCan be done anywhere in the node graph if the PRECOMP read node exists. " T "import nuke\n\n\n\n\ndef extract_reposition_points_from_read_node(read_node):\n\n\n\n    reposition_points_dict_list = \[]\n\n\n\n\n    # Store the original frame range\n    original_first_frame = read_node\['first'].value()\n    original_last_frame = read_node\['last'].value()\n\n\n\n\n    for frame_number in range(int(read_node.firstFrame()), int(read_node.lastFrame()) + 1):\n        # Set the frame number of the Read node\n        read_node\['first'].setValue(frame_number)\n        read_node\['last'].setValue(frame_number)\n\n\n\n\n        metadata = extract_exr_metadata(read_node)\n\n\n\n\n        if metadata is not None:\n            reposition_points = \{\n                \"frame_number\": frame_number,\n                \"cpToTwoY\": metadata.get(\"exr/nuke/cpToTwoY\", None),\n                \"cpToOneY\": metadata.get(\"exr/nuke/cpToOneY\", None),\n                \"cpToOneX\": metadata.get(\"exr/nuke/cpToOneX\", None),\n                \"cpToFourY\": metadata.get(\"exr/nuke/cpToFourY\", None),\n                \"cpToFourX\": metadata.get(\"exr/nuke/cpToFourX\", None),\n                \"cpToThreeY\": metadata.get(\"exr/nuke/cpToThreeY\", None),\n                \"cpToThreeX\": metadata.get(\"exr/nuke/cpToThreeX\", None),\n                \"cpToTwoX\": metadata.get(\"exr/nuke/cpToTwoX\", None)\n            \}\n            reposition_points_dict_list.append(reposition_points)\n\n\n\n\n    # Restore the original frame range\n    read_node\['first'].setValue(original_first_frame)\n    read_node\['last'].setValue(original_last_frame)\n\n\n\n\n    return reposition_points_dict_list\n\n\n\n\n\ndef extract_exr_metadata(read_node):\n    try:\n        metadata_dict = read_node.metadata()\n        return metadata_dict\n    except Exception as e:\n        print(f\"Error extracting metadata: \{e\}\")\n        return None\n\n\n\n\ndef _generate_cornerpin_from_reposition_points(reposition_points_list):\n    reposition_node = nuke.toNode(\"cp_stab\")\n    reposition_node\['to1'].setAnimated()\n    reposition_node\['to2'].setAnimated()\n    reposition_node\['to3'].setAnimated()\n    reposition_node\['to4'].setAnimated()\n\n\n\n\n    for reposition_points in reposition_points_list:\n        if reposition_points\[\"cpToOneX\"] is None:\n            continue\n        frame_number = int(reposition_points\[\"frame_number\"])\n        cpToOneX_value = float(reposition_points\[\"cpToOneX\"])  \n        cpToOneY_value = float(reposition_points\[\"cpToOneY\"])  \n        cpToTwoX_value = float(reposition_points\[\"cpToTwoX\"])  \n        cpToTwoY_value = float(reposition_points\[\"cpToTwoY\"])  \n        cpToThreeX_value = float(reposition_points\[\"cpToThreeX\"])  \n        cpToThreeY_value = float(reposition_points\[\"cpToThreeY\"])  \n        cpToFourX_value = float(reposition_points\[\"cpToFourX\"])  \n        cpToFourY_value = float(reposition_points\[\"cpToFourY\"])  \n\n\n\n\n        reposition_node\['to1'].setValueAt(cpToOneX_value, frame_number, 0)\n        reposition_node\['to1'].setValueAt(cpToOneY_value, frame_number, 1)\n        reposition_node\['to2'].setValueAt(cpToTwoX_value, frame_number, 0)\n        reposition_node\['to2'].setValueAt(cpToTwoY_value, frame_number, 1)\n        reposition_node\['to3'].setValueAt(cpToThreeX_value, frame_number, 0)\n        reposition_node\['to3'].setValueAt(cpToThreeY_value, frame_number, 1)\n        reposition_node\['to4'].setValueAt(cpToFourX_value, frame_number, 0)\n        reposition_node\['to4'].setValueAt(cpToFourY_value, frame_number, 1)\n\n\n\n\n\ndef main():\n\n\n\n    this_group = nuke.thisNode()\n    read_node_name = this_group\[\"ReadNodeName\"].value()\n    \n    read_node = nuke.toNode(read_node_name)\n    if read_node.Class() == \"Read\":\n\n\n\n        # Get the repostion from top node metadata\n        reposition_points_list = extract_reposition_points_from_read_node(read_node)\n\n\n\n        # Generate CornerPin and Reformat nodes from the extracted reposition points\n        _generate_cornerpin_from_reposition_points(reposition_points_list)\n    else:\n        nuke.message(f\"\{read_node_name\} is has to be Read node\")\n\n\n\nmain()" +STARTLINE}
+ addUserKnob {22 generate_external_cornerpins l "<font color = '#eba834'><b>Generate External Cornerpins" t "Generates a cornerpin outside of the Gizmo" T "import nuke\n\n\n\ndef extract_reposition_points_from_read_node(read_node):\n\n\n\n    reposition_points_dict_list = \[]\n\n\n\n    # Store the original frame range\n    original_first_frame = read_node\['first'].value()\n    original_last_frame = read_node\['last'].value()\n\n\n\n    for frame_number in range(int(read_node.firstFrame()), int(read_node.lastFrame()) + 1):\n        # Set the frame number of the Read node\n        read_node\['first'].setValue(frame_number)\n        read_node\['last'].setValue(frame_number)\n\n\n\n        metadata = extract_exr_metadata(read_node)\n\n\n\n        if metadata is not None:\n            reposition_points = \{\n                \"frame_number\": frame_number,\n                \"cpToTwoY\": metadata.get(\"exr/nuke/cpToTwoY\", None),\n                \"cpToOneY\": metadata.get(\"exr/nuke/cpToOneY\", None),\n                \"cpToOneX\": metadata.get(\"exr/nuke/cpToOneX\", None),\n                \"cpToFourY\": metadata.get(\"exr/nuke/cpToFourY\", None),\n                \"cpToFourX\": metadata.get(\"exr/nuke/cpToFourX\", None),\n                \"cpToThreeY\": metadata.get(\"exr/nuke/cpToThreeY\", None),\n                \"cpToThreeX\": metadata.get(\"exr/nuke/cpToThreeX\", None),\n                \"cpToTwoX\": metadata.get(\"exr/nuke/cpToTwoX\", None)\n            \}\n            reposition_points_dict_list.append(reposition_points)\n\n\n\n    # Restore the original frame range\n    read_node\['first'].setValue(original_first_frame)\n    read_node\['last'].setValue(original_last_frame)\n\n\n\n    return reposition_points_dict_list\n\n\n\ndef extract_exr_metadata(read_node):\n    try:\n        metadata_dict = read_node.metadata()\n        return metadata_dict\n    except Exception as e:\n        print(f\"Error extracting metadata: \{e\}\")\n        return None\n\n\n\ndef _generate_cornerpin_from_reposition_points(reposition_points_list):\n    \n    this_group = nuke.thisNode()\n    xpos = this_group.xpos()\n    ypos = this_group.ypos()\n    this_group.end()\n\n\n    # Create a new CornerPin node at the root level outside of group\n    CornerPin_stabilize = nuke.nodes.CornerPin2D()\n    CornerPin_stabilize.setInput(0, None)\n    CornerPin_stabilize.setXYpos(xpos+100, ypos+100)\n    CornerPin_stabilize.setName('CornerPin_Stabilize')\n    \n    # Set default \"from\" resolution to 1024x1024\n    CornerPin_stabilize\['invert'].setValue(True)\n    CornerPin_stabilize\['from2'].setValue(\[1024, 0])\n    CornerPin_stabilize\['from3'].setValue(\[1024, 1024])\n    CornerPin_stabilize\['from4'].setValue(\[0, 1024])\n\n\n\n    # Set the \"to\" points to be animated\n    CornerPin_stabilize\['to1'].setAnimated()\n    CornerPin_stabilize\['to2'].setAnimated()\n    CornerPin_stabilize\['to3'].setAnimated()\n    CornerPin_stabilize\['to4'].setAnimated()\n\n\n\n    for reposition_points in reposition_points_list:\n        # skip sparse frames\n        if reposition_points\[\"cpToOneX\"] is None:\n            continue\n        frame_number = int(reposition_points\[\"frame_number\"])\n        CornerPin_stabilize\['to1'].setValueAt(float(reposition_points\[\"cpToOneX\"]), frame_number, 0)\n        CornerPin_stabilize\['to1'].setValueAt(float(reposition_points\[\"cpToOneY\"]), frame_number, 1)\n        CornerPin_stabilize\['to2'].setValueAt(float(reposition_points\[\"cpToTwoX\"]), frame_number, 0)\n        CornerPin_stabilize\['to2'].setValueAt(float(reposition_points\[\"cpToTwoY\"]), frame_number, 1)\n        CornerPin_stabilize\['to3'].setValueAt(float(reposition_points\[\"cpToThreeX\"]), frame_number, 0)\n        CornerPin_stabilize\['to3'].setValueAt(float(reposition_points\[\"cpToThreeY\"]), frame_number, 1)\n        CornerPin_stabilize\['to4'].setValueAt(float(reposition_points\[\"cpToFourX\"]), frame_number, 0)\n        CornerPin_stabilize\['to4'].setValueAt(float(reposition_points\[\"cpToFourY\"]), frame_number, 1)\n\n\n\n    # Create and configure the Reformat node\n    reformat_node = nuke.nodes.Reformat()\n    reformat_node.setInput(0, CornerPin_stabilize)\n    reformat_node.setName(\"Reformat_Stabilize\")\n    reformat_node\['format'].setValue(\"square_1K\")\n    reformat_node\['resize'].setValue(\"none\")\n    reformat_node\['center'].setValue(False)\n    reformat_node\['filter'].setValue(\"Lanczos6\")\n\n\n    # Duplicate the Cornerpin_stabilize\n    for node in nuke.allNodes(): node.setSelected(False)\n    reposition_copy = nuke.createNode(CornerPin_stabilize.Class(), CornerPin_stabilize.writeKnobs(nuke.WRITE_NON_DEFAULT_ONLY | nuke.TO_SCRIPT), inpanel=False)\n    reposition_copy.setName(\"CornerPin_Stabilize\")\n    reposition_copy.setInput(0,reformat_node)\n    reposition_copy\['invert'].setValue(False)\n    reposition_copy.setXYpos(CornerPin_stabilize.xpos(), CornerPin_stabilize.ypos() + 200)\n\n\n    # Create and configure the Reformat node\n    re_reformat_node = nuke.nodes.Reformat()\n    re_reformat_node.setInput(0, reposition_copy)\n    re_reformat_node.setName(\"Reformat_MatchMove\")\n    re_reformat_node\['resize'].setValue(\"none\")\n    re_reformat_node\['center'].setValue(False)\n    re_reformat_node\['filter'].setValue(\"Lanczos6\")\n\n\n\n\ndef main():\n\n\n    this_group = nuke.thisNode()\n    read_node_name = this_group\[\"ReadNodeName\"].value()\n    \n    read_node = nuke.toNode(read_node_name)\n    if read_node.Class() == \"Read\":\n\n\n        # Get the repostion from top node metadata\n        reposition_points_list = extract_reposition_points_from_read_node(read_node)\n\n\n        # Generate CornerPin and Reformat nodes from the extracted reposition points\n        _generate_cornerpin_from_reposition_points(reposition_points_list)\n    else:\n        nuke.message(f\"\{read_node_name\} is has to be Read node\")\n\n\nmain()" +STARTLINE}
+ addUserKnob {26 _2 l "" +STARTLINE}
+ addUserKnob {4 type_cp l "<font color = '#eba834'><b>Transformation" t "Default is Stabilized CornerPin to bring it to 1K resolution stabilized face. \nCopy the name node and after worked has been done paste it at the end and switch it to MatchMoved CornePin to bring it back to normal " M {"Stabilized CornerPin" "MatchMoved Cornerpin" "" ""}}
+ type_cp "MatchMoved Cornerpin"
+ addUserKnob {26 text l "" +STARTLINE}
+ addUserKnob {20 stab_reformat l "Stabilized Reformat" n 1}
+ addUserKnob {41 format l "output format" T ref_1k.format}
+ addUserKnob {41 filter T Reformat1.filter}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {20 mm_reformat l "MatchMove Reformat" n 1}
+ addUserKnob {41 format_1 l "output format" T ref_original.format}
+ addUserKnob {41 filter_1 l filter T ref_original.filter}
+ addUserKnob {20 endGroup_1 l endGroup n -1}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos -480
+  ypos -10
+ }
+ CornerPin2D {
+  to1 {{curve x1 1381.53 1379.14 1375.52 1373.93 1375.14 1370.75 1369.89 1368.48 1366.6 1366.24 1365.82 1364.5 1365.8 1368.66 1371.1 1374.5 1380.04 1386.62 1395.23 1401.12 1409.42 1417.15 1421.81 1426.05 1429.62 1431.87 1436.17 1442.84 1452.63 1464.08 1470.66 1479.92 1486.92 1495.53 1503.48 1509.9 1515.01 1518.1 1519.39 1516.09 1511.65 1502.19 1497.66 1493 1489.8 1487.77 1483.33} {curve x1 -2.96948 -3.14612 -4.09912 -5.33521 -0.351074 -6.85718 -10.0056 -11.8999 -11.3311 -10.4177 -9.49194 -10.1323 -8.66406 -7.79846 -7.59985 -9.04639 -11.7394 -15.4301 -19.8384 -21.0565 -10.2657 -15.3435 -22.3535 -24.6592 -24.8113 -24.9669 -26.2152 -27.9724 -34.214 -39.797 -44.8317 -47.9691 -50.0651 -52.9935 -54.1964 -52.6874 -51.613 -49.4209 -46.4868 -44.2402 -39.4496 -34.5571 -26.9524 -21.9976 -21.7437 -23.1088 -23.64}}
+  to2 {{curve x1 2740.6 2739.15 2736.44 2733.94 2726.29 2728.52 2729.08 2729.1 2728.14 2729.07 2729.55 2730.37 2731.95 2735.45 2738.91 2742.58 2748.93 2755.37 2762.72 2766.48 2759.29 2769.2 2780.75 2786.08 2790.04 2791.42 2795.97 2800.68 2810.59 2822.03 2830.54 2839.35 2847.43 2856.92 2864.04 2867.69 2869.95 2870.56 2869.63 2867.19 2861.75 2853.42 2846.35 2841.33 2839.45 2838.29 2834.56} {curve x1 -56.2001 -57.4519 -59.5071 -60.4778 -58.6294 -63.5867 -65.0365 -66.2134 -64.3615 -62.7087 -61.5187 -62.6819 -61.3518 -59.9824 -59.7914 -61.0186 -62.274 -63.4261 -63.3091 -65.207 -60.6439 -62.2419 -67.1685 -73.606 -80.031 -87.6113 -92.0891 -94.3889 -93.6002 -91.5245 -94.7214 -96.7213 -100.652 -102.483 -103.381 -102.739 -101.728 -98.9412 -95.4286 -93.2722 -90.226 -88.3126 -80.229 -72.4368 -65.8517 -60.5658 -59.6064}}
+  to3 {{curve x1 2793.83 2793.45 2791.85 2789.08 2784.57 2785.25 2784.11 2783.42 2781.17 2781.36 2781.58 2782.92 2784.64 2787.64 2791.1 2794.55 2799.47 2803.37 2806.2 2810.63 2809.66 2816.1 2825.57 2835.03 2845.26 2854.07 2861.84 2867.1 2869.97 2873.76 2880.43 2888.1 2898.01 2906.41 2913.22 2917.74 2920.07 2920.08 2918.57 2916.22 2912.53 2907.17 2899.63 2891.77 2883.56 2875.75 2870.53} {curve x1 1302.88 1302.55 1301.41 1299.54 1292.53 1294.18 1294.16 1294.41 1297.18 1300.12 1302.22 1303.19 1304.8 1306.81 1308.02 1307.06 1306.62 1305.33 1304.19 1300.16 1289.22 1289.8 1291.78 1286.43 1280.39 1271.94 1267.7 1263.45 1264.36 1266.42 1265.16 1262.71 1259.86 1258.91 1257.17 1255.04 1253.22 1253.53 1254.82 1257.83 1259.88 1262.92 1268.46 1275.89 1283.8 1289.96 1291.63}}
+  to4 {{curve x1 1434.76 1433.45 1430.93 1429.07 1433.41 1427.48 1424.92 1422.79 1419.63 1418.53 1417.84 1417.05 1418.48 1420.85 1423.29 1426.47 1430.57 1434.62 1438.7 1445.27 1459.8 1464.05 1466.62 1475 1484.84 1494.51 1502.05 1509.26 1512.01 1515.81 1520.55 1528.67 1537.51 1545.02 1552.67 1559.95 1565.12 1567.62 1568.33 1565.12 1562.42 1555.94 1550.94 1543.44 1533.91 1525.23 1519.29} {curve x1 1356.11 1356.86 1356.82 1354.68 1350.81 1350.91 1349.19 1348.72 1350.21 1352.41 1354.24 1355.74 1357.49 1358.99 1360.21 1359.03 1357.15 1353.32 1347.66 1344.31 1339.6 1336.7 1336.59 1335.38 1335.61 1334.59 1333.58 1329.86 1323.75 1318.15 1315.05 1311.46 1310.44 1308.4 1306.36 1305.1 1303.33 1303.05 1303.76 1306.86 1310.65 1316.67 1321.73 1326.33 1327.91 1327.41 1327.59}}
+  invert true
+  filter Lanczos6
+  from1 {0 0}
+  from2 {{ref_1k.format.w x1 1024 1024 x14 1024 x40 1024 x108 1024} 0}
+  from3 {{ref_1k.format.w x1 1024 1024 x14 1024 x40 1024 x108 1024} {ref_1k.format.h x1 1024 1024 x14 1024 x40 1024 x108 1024}}
+  from4 {0 {ref_1k.format.h x1 1024 1024 x14 1024 x40 1024 x108 1024}}
+  name cp_stab
+  xpos -480
+  ypos 567
+  disable {{type_cp x1 0}}
+ }
+ Reformat {
+  format {{{parent.ref_1k.format}}}
+  resize none
+  center false
+  filter Lanczos6
+  name Reformat1
+  xpos -480
+  ypos 661
+  disable {{type_cp}}
+ }
+ CornerPin2D {
+  to1 {{parent.cp_stab.to1} {parent.cp_stab.to1}}
+  to2 {{parent.cp_stab.to2} {parent.cp_stab.to2}}
+  to3 {{parent.cp_stab.to3} {parent.cp_stab.to3}}
+  to4 {{parent.cp_stab.to4} {parent.cp_stab.to4}}
+  invert false
+  filter Lanczos6
+  from1 {0 0}
+  from2 {{ref_1k.format.w} 0}
+  from3 {{ref_1k.format.w} {ref_1k.format.h}}
+  from4 {0 {ref_1k.format.h}}
+  name cp_mm
+  xpos -480
+  ypos 775
+  disable {{!type_cp}}
+ }
+ Reformat {
+  format "4096 1716 0 0 4096 1716 1 precomp_format"
+  resize none
+  center false
+  filter Lanczos6
+  name ref_original
+  xpos -480
+  ypos 878
+  disable {{!type_cp}}
+ }
+ Output {
+  name Output1
+  xpos -480
+  ypos 1334
+ }
+ Reformat {
+  inputs 0
+  format "1024 1024 0 0 1024 1024 1 square_1K"
+  resize none
+  center false
+  filter Lanczos6
+  name ref_1k
+  xpos -920
+  ypos 584
+ }
+end_group
+Dot {
+ name Dot253
+ xpos 2822
+ ypos 3426
+}
+PostageStamp {
+ inputs 0
+ name Stamp1
+ help "Stamps by Adrian Pueyo and Alexey Kuchinski.\nUpdated May 18 2021"
+ onCreate "if nuke.GUI:\n    try:\n        import stamps; stamps.wiredOnCreate()\n    except:\n        pass\n"
+ knobChanged "import stamps; stamps.wiredKnobChanged()"
+ autolabel "nuke.thisNode().knob(\"title\").value()"
+ tile_color 0x1000001
+ note_font "Bitstream Vera Sans Bold"
+ note_font_size 40
+ note_font_color 0xff0000ff
+ xpos 4819
+ ypos 3160
+ hide_input true
+ addUserKnob {20 wired_tab l "Wired Stamp"}
+ addUserKnob {26 identifier -STARTLINE +HIDDEN T wired}
+ addUserKnob {3 lockCallbacks l "" +STARTLINE +HIDDEN}
+ addUserKnob {6 toReconnect -STARTLINE +HIDDEN}
+ addUserKnob {1 title l Title: t "Displayed name on the Node Graph for this Stamp and its Anchor.\nIMPORTANT: This is only for display purposes, and is different from the real/internal name of the Stamps."}
+ title denoise
+ addUserKnob {26 prev_title l "" +STARTLINE +HIDDEN T plate}
+ addUserKnob {26 tags l Tags: t "Tags of this stamp's Anchor, for information purpose only.\nClick \"show anchor\" to change them." T <i>2D</i>}
+ addUserKnob {26 backdrops l Backdrops: t "Labels of backdrop nodes which contain this stamp's Anchor." T <i>plate</i>}
+ addUserKnob {26 line1 l "" +STARTLINE}
+ addUserKnob {6 postageStamp_show l "postage stamp" t "Enable the postage stamp thumbnail in this node.\nYou're seeing this because the class of this node includes the postage_stamp knob." +STARTLINE}
+ postageStamp_show true
+ addUserKnob {26 anchor_label l Anchor: T " "}
+ addUserKnob {22 show_anchor l " show anchor " t "Show the properties panel for this Stamp's Anchor." -STARTLINE T stamps.wiredShowAnchor()}
+ addUserKnob {22 zoom_anchor l "zoom anchor" t "Navigate to this Stamp's Anchor on the Node Graph." -STARTLINE T stamps.wiredZoomAnchor()}
+ addUserKnob {26 stamps_label l Stamps: T " "}
+ addUserKnob {22 zoomNext l " zoom next " t "Navigate to this Stamp's next sibling on the Node Graph." -STARTLINE T stamps.wiredZoomNext()}
+ addUserKnob {22 selectSimilar l " select similar " t "Select all similar Stamps to this one on the Node Graph." -STARTLINE T stamps.wiredSelectSimilar()}
+ addUserKnob {26 space_1 l "" +STARTLINE T " "}
+ addUserKnob {26 reconnect_label l Reconnect: t "Reconnect by the stored Anchor name." T " "}
+ addUserKnob {22 reconnect_this l this t "Reconnect this Stamp to its Anchor, by its stored Anchor name." -STARTLINE T "n = nuke.thisNode()\ntry:\n    n.setInput(0,nuke.toNode(n.knob(\"anchor\").value()))\nexcept:\n    nuke.message(\"Unable to reconnect.\")\ntry:\n    import stamps\n    stamps.wiredGetStyle(n)\nexcept:\n    pass\n"}
+ addUserKnob {22 reconnect_similar l similar t "Reconnect this Stamp and similar ones to their Anchor, by their stored anchor name." -STARTLINE T stamps.wiredReconnectSimilar()}
+ addUserKnob {22 reconnect_all l all t "Reconnect all the Stamps to their Anchors, by their stored anchor names." -STARTLINE T stamps.wiredReconnectAll()}
+ addUserKnob {26 space_2 l "" +STARTLINE T " "}
+ addUserKnob {20 advanced_reconnection l "Advanced Reconnection" n 2}
+ addUserKnob {26 reconnect_by_title_label l "<font color=gold>By Title:" t "Reconnect by searching for a matching title." T " "}
+ addUserKnob {22 reconnect_by_title_this l this t "Look for an Anchor that shares this Stamp's title, and connect this Stamp to it.\nIMPORTANT: Use this carefully, and only when the normal reconnection doesn't work." -STARTLINE T stamps.wiredReconnectByTitle()}
+ addUserKnob {22 reconnect_by_title_similar l similar t "Look for an Anchor that shares this Stamp's title, and connect this Stamp and similar ones to it.\nIMPORTANT: Use this carefully, and only when the normal reconnection doesn't work." -STARTLINE T stamps.wiredReconnectByTitleSimilar()}
+ addUserKnob {22 reconnect_by_title_selected l selected t "For each Stamp selected, look for an Anchor that shares its title, and connect to it.\nIMPORTANT: Use this carefully, and only when the normal reconnection doesn't work." -STARTLINE T stamps.wiredReconnectByTitleSelected()}
+ addUserKnob {26 reconnect_by_selection_label l "<font color=orangered>By Selection:" t "Force reconnect to a selected Anchor." T " "}
+ addUserKnob {22 reconnect_by_selection_this l this t "Force reconnect this Stamp to a selected Anchor, whatever its name or title.\nIMPORTANT: Use this carefully, and only when the normal reconnection doesn't work." -STARTLINE T stamps.wiredReconnectBySelection()}
+ addUserKnob {22 reconnect_by_selection_similar l similar t "Force reconnect this Stamp and similar ones to a selected Anchor, whatever its name or title.\nIMPORTANT: Use this carefully, and only when the normal reconnection doesn't work." -STARTLINE T stamps.wiredReconnectBySelectionSimilar()}
+ addUserKnob {22 reconnect_by_selection_selected l selected t "Force reconnect all selected Stamps to an also selected Anchor, whatever its name or title.\nIMPORTANT: Use this carefully, and only when the normal reconnection doesn't work." -STARTLINE T stamps.wiredReconnectBySelectionSelected()}
+ addUserKnob {1 anchor l Anchor}
+ anchor Anchor_30cdcd2d8c9
+ addUserKnob {6 auto_reconnect_by_title l "<font color=#ED9977>&nbsp; auto-reconnect by title" t "When creating this stamp again (like on copy-paste), auto-reconnect it by title instead of doing it by the saved anchor's name, and auto-turn this off immediately.\nIMPORTANT: Should be off by default. Only use this for setting up templates." +STARTLINE}
+ addUserKnob {26 line2 l "" +STARTLINE}
+ addUserKnob {22 buttonHelp l Help -STARTLINE T stamps.showHelp()}
+ addUserKnob {26 version l " " t "Stamps by Adrian Pueyo and Alexey Kuchinski.\nUpdated May 18 2021." -STARTLINE T "<a href=\"http://www.nukepedia.com/gizmos/other/stamps\" style=\"color:#666;text-decoration: none;\"><span style=\"color:#666\"> <big>Stamps v1.1</big></b></a>"}
+}
+Merge2 {
+ inputs 2
+ name Merge29
+ xpos 4819
+ ypos 3422
+}
+Dot {
+ inputs 0
+ name Dot254
+ label C_STMAP_NR_TEMPLATE_V001
+ note_font "Bitstream Vera Sans Bold"
+ note_font_size 50
+ note_font_color 0xffffffff
+ xpos 3106
+ ypos 537
+}

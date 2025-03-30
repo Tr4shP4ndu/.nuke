@@ -1,0 +1,65 @@
+set cut_paste_input [stack 0]
+version 11.2 v3
+push $cut_paste_input
+Gizmo {
+ name Image2Paint
+ selected true
+ xpos 11
+ ypos 78
+ addUserKnob {20 Image2Paint}
+ addUserKnob {22 Image2Paint_1 l Image2Paint T "import nuke.rotopaint
+
+image = nuke.thisNode()
+imageWidth = image.width()
+imageHeight = image.height()
+
+with nuke.root():
+    reformatNode = nuke.nodes.Reformat()
+    reformatNode['type'].setValue('to box')
+    reformatNode['box_fixed'].setValue(True)
+    reformatNode['box_width'].setValue(imageWidth)
+    reformatNode['box_height'].setValue(imageHeight)
+    rotoNode = nuke.nodes.RotoPaint()
+    rotoNode.setInput(0, reformatNode)
+curvesKnob = rotoNode['curves']
+task = nuke.ProgressTask( 'ImageToRotoPaint' )
+task.setMessage( 'Generating Rotopaint' )
+
+for wpixels in range(imageWidth):
+    for hpixels in range(imageHeight):
+        red = image.sample('red', wpixels,hpixels)
+        green = image.sample('green', wpixels,hpixels)
+        blue = image.sample('blue', wpixels,hpixels)
+        if red or green or blue:
+            if task.isCancelled(): 
+                break
+
+            task.setProgress( int( float(wpixels + 1)/imageWidth * 100 ) )
+            stroke = nuke.rotopaint.Stroke( curvesKnob )
+            attr = stroke.getAttributes()
+            attr.set(attr.kBrushSizeAttribute, 1)
+            attr.set(attr.kRedAttribute, red)
+            attr.set(attr.kGreenAttribute, green)
+            attr.set(attr.kBlueAttribute, blue)
+            attr.set(attr.kAlphaAttribute, 1)
+            ctrlPoint = nuke.rotopaint.AnimControlPoint( (wpixels + 0.5,hpixels + 0.5) )
+            stroke.append( ctrlPoint )
+            curvesKnob.rootLayer.append( stroke )
+        if task.isCancelled(): 
+            break
+del task" +STARTLINE}
+ addUserKnob {26 divider l "" +STARTLINE}
+ addUserKnob {26 info l "" +STARTLINE T "Author: Michael De Caria
+Website: michaeldecaria.com"}
+}
+ Input {
+  inputs 0
+  name Input
+  xpos 0
+ }
+ Output {
+  name Output1
+  xpos 0
+  ypos 300
+ }
+end_group

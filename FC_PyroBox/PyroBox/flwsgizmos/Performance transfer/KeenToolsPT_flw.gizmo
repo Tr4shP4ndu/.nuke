@@ -1,0 +1,640 @@
+Group {
+ name KeenToolsPT_flw1
+ tile_color 0xff5555ff
+ label "\[value ptStyle]"
+ selected true
+ addUserKnob {20 PerformanceTransfer}
+ addUserKnob {4 ptStyle l style M {"mean and standard deviation" minmax add subtract mix nearest append "" "" ""}}
+ addUserKnob {3 window_size l "temporal window" t "if 0, no temporal window \nelse, a temportal window of 3 looks one frame ahead and one frame back\n"}
+ addUserKnob {4 window_weight l weight -STARTLINE +INVISIBLE M {uniform triangle gaussian "" "" "" ""}}
+ addUserKnob {4 window_extend l extend -STARTLINE +INVISIBLE M {repeat mirror wrap "" ""}}
+ addUserKnob {22 setup t "Execute mean calculations\n\nTodo: \nclear gizmo before export\ngaussian window in numpy\nallow dots (use python nuke.dependent until no AttributeError)\n- option to ask for ask for frange: add s f knobs\n                weights= \[g\[f'interpolation_weight_\{i\}'].valueAt(frame)*weights= \[g\[f'dd_stdev_\{i\}'].valueAt(frame) for i in range (1, 51 + 1)]\n" T "#sean 2nd sep 2022\n\n\nimport time\n\n\n\nprint (\"put any code here\")\n\n\n\n\n\n\nimport time\n\n\n\nprint (\"put any code here\")\n\n\n\n\n\n#!/usr/bin/env python3\n# PerformanceTransfer Node Setup Knob code\n# Sean Danischevsky 2022\n# to edit, copy to Nuke's Script Editor and add \n# myScript= \" \" \" \n# (but without spaces between quotes) \n# to top of script\n# and see bottom of script.\n\n\n\n\nfrom configparser import Interpolation\nimport statistics\nimport threading\n\n\n\n\n\n\ndef get_first_last(node):\n\n\n\n\n    curves= list(filter(None, \[node.knob(\"blendshape_value_%d\" % i).animation(0) for i in range(1, 52)] ))\n    try:\n        first_frame= int(min(\[key.x for i in curves for key in i.keys()]))\n        last_frame= int(max(\[key.x for i in curves for key in i.keys()]))\n    except ValueError:\n        first_frame= int(nuke.root()\[\"first_frame\"].value())\n        last_frame= int(nuke.root()\[\"last_frame\"].value())\n\n\n\n\n    return first_frame, last_frame\n\n\n\n\n\n\n\n\n\ndef rolling_mean_std(data, window_size):\n    #returns list of tuples (mean, std) for each item\n    #using a uniform window\n    #import statistics\n    #print (data,window_size)\n    half_win= int(window_size// 2)\n    # pad window\n    data= (data\[:1]* half_win)+ data+ data\[-1:]* half_win\n    ret= \[]\n    for i in range(half_win, len(data)- half_win):\n        win= (data\[i- half_win: i+ half_win+ 1])\n        ret.append((statistics.mean(win), statistics.stdev(win)))\n    return ret\n\n\n\n\n\n\n\n\ndef rolling_minmax(data, window_size):\n    #returns list of tuples (min, max) for each item\n    #using a uniform window\n    #print (data, window_size)\n    half_win= int(window_size// 2)\n    # pad window\n    data= (data\[:1]* half_win)+ data+ data\[-1:]* half_win\n    ret= \[]\n    for i in range(half_win, len(data)- half_win):\n        #print (i)\n        win= (data\[i- half_win: i+ half_win+ 1])\n        #print (win, 'min', min(win), 'max', max(win))\n        ret.append((min(win), max(win)))\n    return ret\n\n\n\n\n\n\n\ndef BlendMeanAndSD(g, sd, dd):\n    # create a blend between sd and dd\n    with g:\n        #alpha= nuke.toNode('alpha')\n        blended= nuke.toNode('blended')\n        for i in range(1, 52):\n            #setup references to knobs, to use in expressions\n            sd_value = f'input1.blendshape_value_\{i\}'\n            sd_mean = f'sd_mean_\{i\}'\n            sd_stdev = f'sd_stdev_\{i\}'\n            #sd_mean = f'sd_mean_mean'\n            #sd_stdev = f'sd_stdev_mean'\n\n\n\n\n\n\n            dd_value= f'input2.blendshape_value_\{i\}'\n            dd_mean= f'dd_mean_\{i\}'\n            dd_stdev = f'dd_stdev_\{i\}'\n            #dd_mean= f'dd_mean_mean'\n            #dd_stdev = f'dd_stdev_mean'\n\n\n\n\n\n\n            offset = 'offset'\n            scale = 'scale'\n            interpolation = 'interpolation'\n\n\n\n\n\n\n\n            #setup the expression\n            expression = f\"(\{dd_value\} - \{dd_mean\}) * clamp(\{sd_stdev\}/ (\{dd_stdev\}), -3, 3) * \{scale\} +\{sd_mean\} + \{offset\}\"\n            #expression = f\"(1 - \{interpolation\}) * \{sd_value\} + \{interpolation\} * (\{expression\})\"\n\n\n\n\n\n\n\n            #set the blendshape\n            blendshape_knob_name = \"blendshape_value_%d\" % i\n            blended.knob(blendshape_knob_name).setExpression(expression)\n\n\n\n\n\n\ndef BlendMinMax(g, sd, dd):\n    # create a blend between sd and dd\n    with g:\n        #alpha= nuke.toNode('alpha')\n        blended= nuke.toNode('blended')\n        for i in range(1, 52):\n            #setup references to knobs, to use in expressions\n            sd_value = f'input1.blendshape_value_\{i\}'\n            sd_min = f'sd_min_\{i\}'\n            sd_max = f'sd_max_\{i\}'\n\n\n\n\n\n\n\n            dd_value= f'input2.blendshape_value_\{i\}'\n            dd_min= f'dd_min_\{i\}'\n            dd_max = f'dd_max_\{i\}'\n\n\n\n\n\n\n\n            offset = 'offset'\n            scale = 'scale'\n            interpolation = 'interpolation'\n\n\n\n\n\n\n\n            #setup the expression on alpha\n            expression = f\"(\{dd_value\} - \{dd_min\}) * clamp(\{sd_max\}/ (\{dd_max\}), -3, 3) * \{scale\} +\{sd_min\} + \{offset\}\"\n\n\n\n            #set the blendshape on alpha\n            #blendshape_knob_name = \"blendshape_value_%d\" % i\n            #alpha.knob(blendshape_knob_name).setExpression(expression)\n\n\n\n\n            #reference alpha in main blendshape\n            #expression = f\"alpha.\{blendshape_knob_name\}\"\n            #temporal smoothing\n            #expression = f\"\{expression\}.integrate((frame- fabs(window_size)/ 2.0), (frame+ fabs(window_size)/ 2.0))/ (fabs(window_size))\"\n\n\n\n\n            #set the blendshape\n            blendshape_knob_name = \"blendshape_value_%d\" % i\n            blended.knob(blendshape_knob_name).setExpression(expression)\n\n\n\n\n\n\n\n\n\n\ndef BlendMeanAndSDLocal(g, sd, dd):\n    # create a blend between sd and dd\n    with g:\n        #alpha= nuke.toNode('alpha')\n        blended= nuke.toNode('blended')\n        for i in range(1, 52):\n            #setup references to knobs, to use in expressions\n            sd_value = f'input1.blendshape_value_\{i\}'\n            sd_mean = f'sd_mean_\{i\}'\n            sd_stdev = f'sd_stdev_\{i\}'\n\n\n\n\n\n\n\n            dd_value= f'input2.blendshape_value_\{i\}'\n            dd_mean= f'dd_mean_\{i\}'\n            dd_stdev = f'dd_stdev_\{i\}'\n\n\n\n\n\n\n\n            offset = 'offset'\n            scale = 'scale'\n            interpolation = 'interpolation'\n\n\n\n\n\n\n            interpolation_weight = f'interpolation_weight_\{i\}'\n\n\n\n\n\n\n            #setup the expression\n            expression = f\"(\{dd_value\} - \{dd_mean\}) * clamp(\{sd_stdev\}/ (\{dd_stdev\}), -3, 3) * \{scale\} +\{sd_mean\} + \{offset\}\"\n            expression = f\"(1 - \{interpolation_weight\}) * \{sd_value\} + \{interpolation_weight\} * (\{expression\})\"\n            expression = f\"(1 - \{interpolation\}) * \{sd_value\} + \{interpolation\} * (\{expression\})\"\n\n\n\n\n\n\n\n            #set the blendshape\n            blendshape_knob_name = \"blendshape_value_%d\" % i\n            blended.knob(blendshape_knob_name).setExpression(expression)\n\n\n\n\n\n\n\n\n\n\ndef analysePerformanceData():\n    if window_size < 1:\n        #set up statistics knobs, constant:\n        for node, knob_label in \[\[sd, 'sd'], \[dd, 'dd']]:\n            for i in range(1, 52):\n                blendshape_knob = node.knob(f'blendshape_value_\{i\}')\n            \n                try:\n                    blendshape_values = \[blendshape_knob.animation(0).evaluate(frame) for frame in range(first_frame, last_frame+ 1)]\n                except AttributeError:\n                    blendshape_values = \[blendshape_knob.getValue(frame) for frame in range(first_frame, last_frame+ 1)]\n\n\n\n\n\n\n\n                #Mean\n                mean = statistics.mean(blendshape_values)\n                mean_knob_name = f'\{knob_label\}_mean_\{i\}'\n                g\[mean_knob_name].clearAnimated()\n                g\[mean_knob_name].setValue(mean)\n\n\n\n\n\n\n\n                #Standard Deviation\n                stdev = statistics.stdev(blendshape_values)\n                stdev_knob_name = f'\{knob_label\}_stdev_\{i\}'\n                g\[stdev_knob_name].clearAnimated()\n                g\[stdev_knob_name].setValue(stdev)\n\n\n\n\n\n\n\n                #Minimum Value    \n                minValue= min(blendshape_values)\n                min_knob_name = f'\{knob_label\}_min_\{i\}'\n                g\[min_knob_name].clearAnimated()\n                g\[min_knob_name].setValue(minValue)\n\n\n\n\n\n\n\n\n\n                #Maximum Value\n                maxValue= max(blendshape_values)\n                max_knob_name = f'\{knob_label\}_max_\{i\}'\n                g\[max_knob_name].clearAnimated()\n                g\[max_knob_name].setValue(maxValue)\n\n\n\n\n\n\n\n    else:\n        #set up statistics knobs, varying:\n        for node, knob_label in \[\[sd, 'sd'], \[dd, 'dd']]:\n            task = nuke.ProgressTask(f'frames \{first_frame\}- \{last_frame\}')\n            task.setMessage(f\"Analysing \{node.name()\} performance data\")           \n            for i in range(1, 52):\n                #threading.Thread( None, analysePerformanceData ).start()\n\n\n\n\n\n\n\n                blendshape_knob = node.knob(f'blendshape_value_\{i\}')\n            \n                try:\n                    blendshape_values = \[blendshape_knob.animation(0).evaluate(frame) for frame in range(first_frame, last_frame+ 1)]\n                except AttributeError:\n                    blendshape_values = \[blendshape_knob.getValue(frame) for frame in range(first_frame, last_frame+ 1)]\n\n\n\n\n\n\n\n                #Rolling Mean and Standard Deviation\n                #Mean\n                means, stdevs= zip(*rolling_mean_std(blendshape_values, window_size))\n                mean_knob_name = f'\{knob_label\}_mean_\{i\}'\n                g\[mean_knob_name].clearAnimated()\n                g\[mean_knob_name].setAnimated()\n                \[g\[mean_knob_name].animations(0)\[0].setKey(k, v) for k, v in enumerate(means, first_frame)]\n\n\n\n                #Standard Deviation\n                stdev_knob_name = f'\{knob_label\}_stdev_\{i\}'\n                g\[stdev_knob_name].clearAnimated()\n                g\[stdev_knob_name].setAnimated()\n                \[g\[stdev_knob_name].animations(0)\[0].setKey(k, v) for k, v in enumerate(stdevs, first_frame)]\n\n\n\n\n\n                \n                #Rolling Min and Max\n                #Minimum Value   \n                mins, maxes= zip(*rolling_minmax(blendshape_values, window_size)) \n                min_knob_name= f'\{knob_label\}_min_\{i\}'\n                g\[min_knob_name].clearAnimated()\n                g\[min_knob_name].setAnimated()\n                \[g\[min_knob_name].animations(0)\[0].setKey(k, v) for k, v in enumerate(mins, first_frame)]\n                #temporal smoothing - THIS DOESN't WORK, NEED TO SE ON ALPHA THEN thatcurve.integgrate(...)\n                #expression = \"integrate((frame- fabs(window_size)/ 2.0), (frame+ fabs(window_size)/ 2.0))/ (fabs(window_size))\"\n                #g\[min_knob_name].setExpression(expression)\n\n\n\n                #Maximum Value\n                maxValue= max(blendshape_values)\n                max_knob_name= f'\{knob_label\}_max_\{i\}'\n                g\[max_knob_name].clearAnimated()\n                g\[max_knob_name].setAnimated()\n                \[g\[max_knob_name].animations(0)\[0].setKey(k, v) for k, v in enumerate(maxes, first_frame)]\n                #temporal smoothing\n                #expression = \"integrate((frame- fabs(window_size)/ 2.0), (frame+ fabs(window_size)/ 2.0))/ (fabs(window_size))\"\n                #g\[max_knob_name].setExpression(expression)\n\n\n\n\n                if task.isCancelled():\n                    nuke.executeInMainThread( nuke.message, args=( \"Cancelled.\" ) )\n                    break;\n                task.setProgress(int((i/52)*100))\n\n\n\n\n\n\n\ndef set_interpolation_weights(g, sd, dd):\n    #set interpolation_weights\n    #experiment to interpolate more towards the driving data if the driving data is very different to the source\n    expressionList= \[]\n    k= 'interpolation_weight'\n    for i in range (1, 52):\n        knob_name = f'\{k\}_\{i\}'\n        #weight_value = f'clamp(max(input2.blendshape_value_\{i\}, input1.blendshape_value_\{i\})/ fabs(input2.blendshape_value_\{i\}-input1.blendshape_value_\{i\}),0, 1)'\n        #weight_value = f'clamp(max(sd_mean_\{i\}, dd_mean_\{i\})/ fabs(input2.blendshape_value_\{i\}- input1.blendshape_value_\{i\}),0, 1)'\n        #weight_value = f'clamp(max(sd_mean_\{i\}, dd_mean_\{i\})/ fabs(sd_mean_\{i\}- dd_mean_\{i\}),0, 3)'  \n        #weight_value = f'fabs(sd_mean_\{i\}- dd_mean_\{i\})'  #L1\n        weight_value = f'(sd_mean_\{i\}- dd_mean_\{i\})**2'\n\n\n\n        g\[knob_name].setExpression(f'\{weight_value\}')\n        expressionList.append(knob_name)\n    g\['interpolation'].clearAnimated()\n    g\['interpolation'].setExpression(f\"(((\{'+'.join(\[expression for expression in expressionList])\})/ \{len(expressionList)\})+ interpoff)* interp\")\n\n\n\n\n\n\ndef add(g, sd, dd):\n    # create a blend between sd and dd\n    with g:\n        alpha= nuke.toNode('alpha')\n        blended= nuke.toNode('blended')\n        for i in range(1, 52):\n            #setup references to knobs, to use in expressions\n            sd_value = f'input1.blendshape_value_\{i\}'\n            #sd_mean = f'sd_mean_\{i\}'\n            #sd_stdev = f'sd_stdev_\{i\}'\n\n\n\n\n\n\n\n            dd_value= f'input2.blendshape_value_\{i\}'\n            #dd_mean= f'dd_mean_\{i\}'\n            #dd_stdev = f'dd_stdev_\{i\}'\n\n\n\n\n\n\n\n            offset = 'offset'\n            scale = 'scale'\n            interpolation = 'interpolation'\n\n\n\n\n\n\n\n            #setup the expression on alpha\n            expression = f\"\{sd_value\}+ \{dd_value\}\"\n            #expression = f\"\{sd_value\}* \{dd_value\}\"\n            #0.18744093\n            #set the blendshape on alpha\n            blendshape_knob_name = \"blendshape_value_%d\" % i\n            alpha.knob(blendshape_knob_name).setExpression(expression)\n\n\n\n\n            #reference alpha in main blendshape\n            expression = f\"alpha.\{blendshape_knob_name\}\"\n            #temporal smoothing\n            #expression = f\"\{expression\}.integrate((frame- fabs(window_size)/ 2.0), (frame+ fabs(window_size)/ 2.0))/ (fabs(window_size))\"\n            #interpolation\n            #expression = f\"(1 - \{interpolation\}) * \{sd_value\} + \{interpolation\} * (\{expression\})\"\n\n\n\n            #set the blendshape\n            blendshape_knob_name = \"blendshape_value_%d\" % i\n            blended.knob(blendshape_knob_name).setExpression(expression)\n\n\n\n\n\n\n\ndef subtract(g, sd, dd):\n    # create a blend between sd and dd\n    with g:\n        alpha= nuke.toNode('alpha')\n        blended= nuke.toNode('blended')\n        for i in range(1, 52):\n            #setup references to knobs, to use in expressions\n            sd_value = f'input1.blendshape_value_\{i\}'\n            #sd_mean = f'sd_mean_\{i\}'\n            #sd_stdev = f'sd_stdev_\{i\}'\n\n\n\n\n\n\n\n            dd_value= f'input2.blendshape_value_\{i\}'\n            #dd_mean= f'dd_mean_\{i\}'\n            #dd_stdev = f'dd_stdev_\{i\}'\n\n\n\n\n\n\n\n            offset = 'offset'\n            scale = 'scale'\n            interpolation = 'interpolation'\n\n\n\n\n\n\n\n            #setup the expression on alpha\n            expression = f\"\{sd_value\}- \{dd_value\}\"\n            #expression = f\"\{sd_mean\}- \{dd_mean\}\"\n\n\n\n            #set the blendshape on alpha\n            blendshape_knob_name = \"blendshape_value_%d\" % i\n            alpha.knob(blendshape_knob_name).setExpression(expression)\n\n\n\n\n            #reference alpha in main blendshape\n            expression = f\"alpha.\{blendshape_knob_name\}\"\n            #temporal smoothing\n            expression = f\"\{expression\}.integrate((frame- fabs(window_size)/ 2.0), (frame+ fabs(window_size)/ 2.0))/ (fabs(window_size))\"\n            #interpolation\n            #expression = f\"(1 - \{interpolation\}) * \{sd_value\} + \{interpolation\} * (\{expression\})\"\n\n\n\n\n\n\n\n            #set the blendshape\n            blendshape_knob_name = \"blendshape_value_%d\" % i\n            blended.knob(blendshape_knob_name).setExpression(expression)\n\n\n\n\n\n\n\ndef mix(g, sd, dd):\n    # create a blend between sd and dd\n    with g:\n        alpha= nuke.toNode('alpha')\n        blended= nuke.toNode('blended')\n        for i in range(1, 52):\n            #setup references to knobs, to use in expressions\n            sd_value = f'input1.blendshape_value_\{i\}'\n            #sd_mean = f'sd_mean_\{i\}'\n            #sd_stdev = f'sd_stdev_\{i\}'\n\n\n\n\n\n\n\n            dd_value= f'input2.blendshape_value_\{i\}'\n            #dd_mean= f'dd_mean_\{i\}'\n            #dd_stdev = f'dd_stdev_\{i\}'\n\n\n\n\n\n\n\n            #offset = 'offset'\n            #scale = 'scale'\n            interpolation = 'interpolation'\n\n\n\n\n\n\n\n            #setup the expression on alpha\n            #expression = f\"\{sd_value\}+ \{dd_value\}\"\n            #expression = f\"\{sd_mean\}- \{dd_mean\}\"\n\n\n\n            #set the blendshape on alpha\n            #blendshape_knob_name = \"blendshape_value_%d\" % i\n            #alpha.knob(blendshape_knob_name).setExpression(expression)\n\n\n\n\n            #reference alpha in main blendshape\n            #expression = f\"alpha.\{blendshape_knob_name\}\"\n            #temporal smoothing\n            #expression = f\"\{expression\}.integrate((frame- fabs(window_size)/ 2.0), (frame+ fabs(window_size)/ 2.0))/ (fabs(window_size))\"\n            #interpolation\n            expression = f\"(1 - \{interpolation\}) * \{sd_value\} + \{interpolation\} * (\{dd_value\})\"\n\n\n\n            #set the blendshape\n            blendshape_knob_name = \"blendshape_value_%d\" % i\n            blended.knob(blendshape_knob_name).setExpression(expression)\n\n\n\n\n\ndef nearest(g, sd, dd):\n    # searches dd for a nearest match to blendshapes to sd\n    # sets filtered blendshape values \n\n\n    with g:\n        alpha= nuke.toNode('alpha')\n        blended= nuke.toNode('blended')\n\n        def blendshapes(node, frame): \n            #returns list of values for all blendshapes per frame\n            returnblendshapes = \[]\n            for blendshapenumber in range (1, 51 + 1):\n                blendshapename = \"blendshape_value_%d\"%(blendshapenumber)\n                returnblendshapes.append(node\[blendshapename].valueAt(frame))\n            return returnblendshapes\n    \n    \n        def n_distance_squared(i, j):\n            # by Sean Danischevsky 2022\n            # return squared distance in n dimensional space from point i to j\n            # where i and j are integers or iterables e.g. (5, 6, -.2)\n            # if you want the real distance, ask for the square root, e.g.\n            # print (sqrt(distance(\[0,0,0,0],\[1,1,1,1])))\n            try:\n                return sum(\[abs(point_a - point_b) for point_a, point_b in zip(i, j)])\n            except TypeError:\n                # i and j are 1 dimensional integers or floats\n                return abs(i - j)\n\n    \n        #clear and set up destination blendshape values\n        for blendshapenumber in range (1, 51 + 1):\n            blendshapeknob = blended\[\"blendshape_value_%d\"%(blendshapenumber)]\n            blendshapeknob.clearAnimated()\n            blendshapeknob.setAnimated()\n    \n        # find closest frame (in 51 dimensional blendshape space) in driving data for each source data keyframe\n        # weights come from interpolation_weight knobs (user epecified but setup by 'setup weights',\n        # divided by the standard deviation (to normalize, setup with 'setup')\n        for frame in range(sd_first_frame, sd_last_frame + 1):\n            distances = \{\}\n            for dd_frame in range(dd_first_frame, dd_last_frame + 1):\n                weights= \[g\[f'interpolation_weight_\{i\}'].valueAt(frame)/ g\[f'dd_stdev_\{i\}'].valueAt(frame) for i in range (1, 51 + 1)]\n                #print (weights)\n                #print(blendshapes(sd, frame))\n                weighted_sd= \[blendshape* weight for blendshape, weight in zip(blendshapes(sd, frame), weights)]\n                weighted_dd= \[blendshape* weight for blendshape, weight in zip(blendshapes(dd, dd_frame), weights)]\n                #print ('lens', len(weighted_sd))\n                distance = n_distance_squared(weighted_sd, weighted_dd)\n                distances\[dd_frame] = distance \n            mindistance_frame = min(distances, key = lambda distance: distances\[distance])\n            \n            for blendshapenumber in range (1, 51 + 1):\n                dd_blendshapeknob = dd\[\"blendshape_value_%d\"%(blendshapenumber)]\n                blendshapeknob = blended\[\"blendshape_value_%d\"%(blendshapenumber)]\n                nearestvalue = dd_blendshapeknob.valueAt(mindistance_frame)\n                blendshapeknob =  blended\[\"blendshape_value_%d\"%(blendshapenumber)]\n                blendshapeknob.animations(0)\[0].setKey(frame, nearestvalue)\n        \n\n            \ndef append_blendshapes(g, sd, dd):\n    # appends values from sd and dd into one list of blendshapes \n\n\n    with g:\n        alpha= nuke.toNode('alpha')\n        blended= nuke.toNode('blended')\n        sd_last_frame - sd_first_frame \n    \n        #clear and set up destination blendshape values\n        for blendshapenumber in range (1, 51 + 1):\n            sd_blendshapeknob = sd\[\"blendshape_value_%d\"%(blendshapenumber)]\n            dd_blendshapeknob = dd\[\"blendshape_value_%d\"%(blendshapenumber)]\n            blended_blendshapeknob = blended\[\"blendshape_value_%d\"%(blendshapenumber)]\n            blended_blendshapeknob.clearAnimated()\n            blended_blendshapeknob.setAnimated()\n            blended_blendshapeknob.copyAnimations(sd_blendshapeknob.animations())\n\n\n\n            for frame in range(dd_first_frame, dd_last_frame + 1):\n                outvalue = dd_blendshapeknob.valueAt(frame)\n                blended_blendshapeknob.animations(0)\[0].setKey(sd_last_frame- sd_first_frame+ 1+ frame, outvalue)\n        \n\n\n\n\n\n            \n\n\n\n\n\n\n\n\n\n\n#########\n#main\ng= nuke.thisNode()\nsd= g.input(1)\ndd= g.input(2)\n\n\n\nprint (00000)\nsd_first_frame, sd_last_frame= get_first_last(sd)\ndd_first_frame, dd_last_frame= get_first_last(dd)\n\n\n\nfirst_frame= min(sd_first_frame, dd_first_frame)\nlast_frame= max(sd_last_frame, dd_last_frame)\n\n\n\nwindow_size= int(g\['window_size'].value() )\n\n\n\n\n#create expressions to link sd and dd:\nif g\['ptStyle'].value() == 'mean and standard deviation':\n    analysePerformanceData()\n    BlendMeanAndSD(g, sd, dd) #assumes 1 in local weights\n    #BlendMeanAndSDLocal(g, sd, dd)\n\n\n\nelif g\['ptStyle'].value() == 'minmax':\n    analysePerformanceData()\n    BlendMinMax(g, sd, dd) #assumes 1 in local weights\n    #BlendMeanAndSDLocal(g, sd, dd)\n\n\n\n\n\nelif g\['ptStyle'].value() == 'add':  \n    #subtract original language ('driving data') from source data    \n    add(g, sd, dd)\n\n\n\nelif g\['ptStyle'].value() == 'subtract':  \n    #subtract original language ('driving data') from source data    \n    subtract(g, sd, dd)\n\n\n\n\nelif g\['ptStyle'].value() == 'mix':  \n    #subtract original language ('driving data') from source data    \n    mix(g, sd, dd)\n\n\n\nelif g\['ptStyle'].value() == 'nearest':  \n    #subtract original language ('driving data') from source data    \n    analysePerformanceData()\n    nearest(g, sd, dd)\n\n\n\nelif g\['ptStyle'].value() == 'append':  \n    #subtract original language ('driving data') from source data    \n    append_blendshapes(g, sd, dd)\n\n\n\nelse:\n    nuke.alert(\"Sorry, that Performance Transfer style is not available! Ask Sean.\")\n    #BlendMeanScaling(g, sd, dd)\n    #print ('meanScaling')\n    #set_interpolation_weights(g, sd, dd)\n    #BlendMeanAndSD(g, sd, dd)\n\n\n\n#To change this script, copy all to script editor copy and unhash the below lines:\n#knobToSet= nuke.toNode('KeenToolsPT_flw1')\['setup']\n#knobToSet.setValue(myScript)\n#knobToSet.execute()\n#then add \" \" \" (without spaces) on top and next line\npass\n\n\n\n\n\n\n\n\n" +STARTLINE}
+ addUserKnob {22 setupinterpolation l "setup interpolation" -STARTLINE T "#main\ng= nuke.thisNode()\n#sd= g.input(1)\n#dd= g.input(2)\n\n#sd_first_frame, sd_last_frame= get_first_last(sd)\n#dd_first_frame, dd_last_frame= get_first_last(dd)\n\n#first_frame= min(sd_first_frame, dd_first_frame)\n#last_frame= max(sd_last_frame, dd_last_frame)\n\n\n\n#window_size= int(g\['window_size'].value() )\n\n\n\n\n#create expressions to link sd and dd:\nif g\['ptStyle'].value() == 'mean and standard deviation':\n    interpolation_weights= \[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]\n\nelif g\['ptStyle'].value() == 'minmax':\n    interpolation_weights= \[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]\n\nelif g\['ptStyle'].value() == 'add':  \n    interpolation_weights= \[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]\n\nelif g\['ptStyle'].value() == 'subtract':  \n    interpolation_weights= \[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]\n\nelif g\['ptStyle'].value() == 'mix':  \n    interpolation_weights= \[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]\n\nelif g\['ptStyle'].value() == 'nearest':  \n    #weight mouth more\n    interpolation_weights= \[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]\n\nelif g\['ptStyle'].value() == 'append':  \n    interpolation_weights= \[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]\n\nelse:\n    nuke.alert(\"Sorry, that Performance Transfer style is not available! Ask Sean.\")\n    #BlendMeanScaling(g, sd, dd)\n    #print ('meanScaling')\n    #set_interpolation_weights(g, sd, dd)\n    #BlendMeanAndSD(g, sd, dd)\n\n\n\n#To change this script, copy all to script editor copy and unhash the below lines:\n#knobToSet= nuke.toNode('KeenToolsPT_flw1')\['setup']\n#knobToSet.setValue(myScript)\n#knobToSet.execute()\n#then add \" \" \" (without spaces) on top and next line\n\n\n\nk= 'interpolation_weight'\nfor i, interpolation_weight in enumerate(interpolation_weights, 1):\n   #print (i, interpolation_weight)\n   knob_name = f'\{k\}_\{i\}'\n   g\[knob_name].setValue(interpolation_weight) \n\ndef set_interpolation_weights(g, sd, dd):\n    #set interpolation_weights\n    #experiment to interpolate more towards the driving data if the driving data is very different to the source\n    expressionList= \[]\n    k= 'interpolation_weight'\n    for i in range (1, 52):\n        knob_name = f'\{k\}_\{i\}'\n        #weight_value = f'clamp(max(input2.blendshape_value_\{i\}, input1.blendshape_value_\{i\})/ fabs(input2.blendshape_value_\{i\}-input1.blendshape_value_\{i\}),0, 1)'\n        #weight_value = f'clamp(max(sd_mean_\{i\}, dd_mean_\{i\})/ fabs(input2.blendshape_value_\{i\}- input1.blendshape_value_\{i\}),0, 1)'\n        #weight_value = f'clamp(max(sd_mean_\{i\}, dd_mean_\{i\})/ fabs(sd_mean_\{i\}- dd_mean_\{i\}),0, 3)'  \n        #weight_value = f'fabs(sd_mean_\{i\}- dd_mean_\{i\})'  #L1\n        weight_value = f'(sd_mean_\{i\}- dd_mean_\{i\})**2'\n\n\n\n        g\[knob_name].setExpression(f'\{weight_value\}')\n        expressionList.append(knob_name)\n    g\['interpolation'].clearAnimated()\n    g\['interpolation'].setExpression(f\"(((\{'+'.join(\[expression for expression in expressionList])\})/ \{len(expressionList)\})+ interpoff)* interp\")\n\npass\n\n"}
+ addUserKnob {22 reset -STARTLINE +INVISIBLE T "\n\n#main\ng= nuke.thisNode()\nsd= g.input(1)\ndd= g.input(2)\nfor k in g.knobs():\n    print (k)\n"}
+ addUserKnob {26 ""}
+ addUserKnob {7 offset t "global offset"}
+ addUserKnob {7 scale t "global scale"}
+ addUserKnob {7 interpolation t "global interpolation (0=only source data, 1= full driving data)"}
+ addUserKnob {20 Results}
+ addUserKnob {41 blendshape_value_1 l eyeBlinkLeft T blended.blendshape_value_1}
+ addUserKnob {41 blendshape_value_2 l eyeBlinkRight T blended.blendshape_value_2}
+ addUserKnob {41 blendshape_value_3 l eyeSquintLeft T blended.blendshape_value_3}
+ addUserKnob {41 blendshape_value_4 l eyeSquintRight T blended.blendshape_value_4}
+ addUserKnob {41 blendshape_value_5 l eyeLookDownLeft T blended.blendshape_value_5}
+ addUserKnob {41 blendshape_value_6 l eyeLookDownRight T blended.blendshape_value_6}
+ addUserKnob {41 blendshape_value_7 l eyeLookInLeft T blended.blendshape_value_7}
+ addUserKnob {41 blendshape_value_8 l eyeLookInRight T blended.blendshape_value_8}
+ addUserKnob {41 blendshape_value_9 l eyeWideLeft T blended.blendshape_value_9}
+ addUserKnob {41 blendshape_value_10 l eyeWideRight T blended.blendshape_value_10}
+ addUserKnob {41 blendshape_value_11 l eyeLookOutLeft T blended.blendshape_value_11}
+ addUserKnob {41 blendshape_value_12 l eyeLookOutRight T blended.blendshape_value_12}
+ addUserKnob {41 blendshape_value_13 l eyeLookUpLeft T blended.blendshape_value_13}
+ addUserKnob {41 blendshape_value_14 l eyeLookUpRight T blended.blendshape_value_14}
+ addUserKnob {41 blendshape_value_15 l browDownLeft T blended.blendshape_value_15}
+ addUserKnob {41 blendshape_value_16 l browDownRight T blended.blendshape_value_16}
+ addUserKnob {41 blendshape_value_17 l browInnerUp T blended.blendshape_value_17}
+ addUserKnob {41 blendshape_value_18 l browOuterUpLeft T blended.blendshape_value_18}
+ addUserKnob {41 blendshape_value_19 l browOuterUpRight T blended.blendshape_value_19}
+ addUserKnob {41 blendshape_value_20 l jawOpen T blended.blendshape_value_20}
+ addUserKnob {41 blendshape_value_21 l mouthClose T blended.blendshape_value_21}
+ addUserKnob {41 blendshape_value_22 l jawLeft T blended.blendshape_value_22}
+ addUserKnob {41 blendshape_value_23 l jawRight T blended.blendshape_value_23}
+ addUserKnob {41 blendshape_value_24 l jawForward T blended.blendshape_value_24}
+ addUserKnob {41 blendshape_value_25 l mouthUpperUpLeft T blended.blendshape_value_25}
+ addUserKnob {41 blendshape_value_26 l mouthUpperUpRight T blended.blendshape_value_26}
+ addUserKnob {41 blendshape_value_27 l mouthLowerDownLeft T blended.blendshape_value_27}
+ addUserKnob {41 blendshape_value_28 l mouthLowerDownRight T blended.blendshape_value_28}
+ addUserKnob {41 blendshape_value_29 l mouthRollUpper T blended.blendshape_value_29}
+ addUserKnob {41 blendshape_value_30 l mouthRollLower T blended.blendshape_value_30}
+ addUserKnob {41 blendshape_value_31 l mouthSmileLeft T blended.blendshape_value_31}
+ addUserKnob {41 blendshape_value_32 l mouthSmileRight T blended.blendshape_value_32}
+ addUserKnob {41 blendshape_value_33 l mouthDimpleLeft T blended.blendshape_value_33}
+ addUserKnob {41 blendshape_value_34 l mouthDimpleRight T blended.blendshape_value_34}
+ addUserKnob {41 blendshape_value_35 l mouthStretchLeft T blended.blendshape_value_35}
+ addUserKnob {41 blendshape_value_36 l mouthStretchRight T blended.blendshape_value_36}
+ addUserKnob {41 blendshape_value_37 l mouthFrownLeft T blended.blendshape_value_37}
+ addUserKnob {41 blendshape_value_38 l mouthFrownRight T blended.blendshape_value_38}
+ addUserKnob {41 blendshape_value_39 l mouthPressLeft T blended.blendshape_value_39}
+ addUserKnob {41 blendshape_value_40 l mouthPressRight T blended.blendshape_value_40}
+ addUserKnob {41 blendshape_value_41 l mouthPucker T blended.blendshape_value_41}
+ addUserKnob {41 blendshape_value_42 l mouthFunnel T blended.blendshape_value_42}
+ addUserKnob {41 blendshape_value_43 l mouthLeft T blended.blendshape_value_43}
+ addUserKnob {41 blendshape_value_44 l mouthRight T blended.blendshape_value_44}
+ addUserKnob {41 blendshape_value_45 l mouthShrugLower T blended.blendshape_value_45}
+ addUserKnob {41 blendshape_value_46 l mouthShrugUpper T blended.blendshape_value_46}
+ addUserKnob {41 blendshape_value_47 l noseSneerLeft T blended.blendshape_value_47}
+ addUserKnob {41 blendshape_value_48 l noseSneerRight T blended.blendshape_value_48}
+ addUserKnob {41 blendshape_value_49 l cheekPuff T blended.blendshape_value_49}
+ addUserKnob {41 blendshape_value_50 l cheekSquintLeft T blended.blendshape_value_50}
+ addUserKnob {41 blendshape_value_51 l cheekSquintRight T blended.blendshape_value_51}
+ addUserKnob {20 override l Override}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {26 "" l " "}
+ addUserKnob {20 InterpolationTab l Interpolation}
+ addUserKnob {7 interpolation_weight_1 l eyeBlinkLeft_weight}
+ addUserKnob {7 interpolation_weight_2 l eyeBlinkRight_weight}
+ addUserKnob {7 interpolation_weight_3 l eyeSquintLeft_weight}
+ addUserKnob {7 interpolation_weight_4 l eyeSquintRight_weight}
+ addUserKnob {7 interpolation_weight_5 l eyeLookDownLeft_weight}
+ addUserKnob {7 interpolation_weight_6 l eyeLookDownRight_weight}
+ addUserKnob {7 interpolation_weight_7 l eyeLookInLeft_weight}
+ addUserKnob {7 interpolation_weight_8 l eyeLookInRight_weight}
+ addUserKnob {7 interpolation_weight_9 l eyeWideLeft_weight}
+ addUserKnob {7 interpolation_weight_10 l eyeWideRight_weight}
+ addUserKnob {7 interpolation_weight_11 l eyeLookOutLeft_weight}
+ addUserKnob {7 interpolation_weight_12 l eyeLookOutRight_weight}
+ addUserKnob {7 interpolation_weight_13 l eyeLookUpLeft_weight}
+ addUserKnob {7 interpolation_weight_14 l eyeLookUpRight_weight}
+ addUserKnob {7 interpolation_weight_15 l browDownLeft_weight}
+ addUserKnob {7 interpolation_weight_16 l browDownRight_weight}
+ addUserKnob {7 interpolation_weight_17 l browInnerUp_weight}
+ addUserKnob {7 interpolation_weight_18 l browOuterUpLeft_weight}
+ addUserKnob {7 interpolation_weight_19 l browOuterUpRight_weight}
+ addUserKnob {7 interpolation_weight_20 l jawOpen_weight}
+ addUserKnob {7 interpolation_weight_21 l mouthClose_weight}
+ addUserKnob {7 interpolation_weight_22 l jawLeft_weight}
+ addUserKnob {7 interpolation_weight_23 l jawRight_weight}
+ addUserKnob {7 interpolation_weight_24 l jawForward_weight}
+ addUserKnob {7 interpolation_weight_25 l mouthUpperUpLeft_weight}
+ addUserKnob {7 interpolation_weight_26 l mouthUpperUpRight_weight}
+ addUserKnob {7 interpolation_weight_27 l mouthLowerDownLeft_weight}
+ addUserKnob {7 interpolation_weight_28 l mouthLowerDownRight_weight}
+ addUserKnob {7 interpolation_weight_29 l mouthRollUpper_weight}
+ addUserKnob {7 interpolation_weight_30 l mouthRollLower_weight}
+ addUserKnob {7 interpolation_weight_31 l mouthSmileLeft_weight}
+ addUserKnob {7 interpolation_weight_32 l mouthSmileRight_weight}
+ addUserKnob {7 interpolation_weight_33 l mouthDimpleLeft_weight}
+ addUserKnob {7 interpolation_weight_34 l mouthDimpleRight_weight}
+ addUserKnob {7 interpolation_weight_35 l mouthStretchLeft_weight}
+ addUserKnob {7 interpolation_weight_36 l mouthStretchRight_weight}
+ addUserKnob {7 interpolation_weight_37 l mouthFrownLeft_weight}
+ addUserKnob {7 interpolation_weight_38 l mouthFrownRight_weight}
+ addUserKnob {7 interpolation_weight_39 l mouthPressLeft_weight}
+ addUserKnob {7 interpolation_weight_40 l mouthPressRight_weight}
+ addUserKnob {7 interpolation_weight_41 l mouthPucker_weight}
+ addUserKnob {7 interpolation_weight_42 l mouthFunnel_weight}
+ addUserKnob {7 interpolation_weight_43 l mouthLeft_weight}
+ addUserKnob {7 interpolation_weight_44 l mouthRight_weight}
+ addUserKnob {7 interpolation_weight_45 l mouthShrugLower_weight}
+ addUserKnob {7 interpolation_weight_46 l mouthShrugUpper_weight}
+ addUserKnob {7 interpolation_weight_47 l noseSneerLeft_weight}
+ addUserKnob {7 interpolation_weight_48 l noseSneerRight_weight}
+ addUserKnob {7 interpolation_weight_49 l cheekPuff_weight}
+ addUserKnob {7 interpolation_weight_50 l cheekSquintLeft_weight}
+ addUserKnob {7 interpolation_weight_51 l cheekSquintRight_weight}
+ addUserKnob {20 SourceData}
+ addUserKnob {7 sd_mean_1 l eyeBlinkLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_1 l eyeBlinkLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_1 l eyeBlinkLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_1 l eyeBlinkLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_2 l eyeBlinkRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_2 l eyeBlinkRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_2 l eyeBlinkRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_2 l eyeBlinkRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_3 l eyeSquintLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_3 l eyeSquintLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_3 l eyeSquintLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_3 l eyeSquintLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_4 l eyeSquintRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_4 l eyeSquintRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_4 l eyeSquintRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_4 l eyeSquintRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_5 l eyeLookDownLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_5 l eyeLookDownLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_5 l eyeLookDownLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_5 l eyeLookDownLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_6 l eyeLookDownRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_6 l eyeLookDownRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_6 l eyeLookDownRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_6 l eyeLookDownRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_7 l eyeLookInLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_7 l eyeLookInLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_7 l eyeLookInLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_7 l eyeLookInLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_8 l eyeLookInRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_8 l eyeLookInRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_8 l eyeLookInRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_8 l eyeLookInRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_9 l eyeWideLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_9 l eyeWideLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_9 l eyeWideLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_9 l eyeWideLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_10 l eyeWideRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_10 l eyeWideRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_10 l eyeWideRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_10 l eyeWideRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_11 l eyeLookOutLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_11 l eyeLookOutLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_11 l eyeLookOutLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_11 l eyeLookOutLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_12 l eyeLookOutRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_12 l eyeLookOutRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_12 l eyeLookOutRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_12 l eyeLookOutRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_13 l eyeLookUpLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_13 l eyeLookUpLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_13 l eyeLookUpLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_13 l eyeLookUpLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_14 l eyeLookUpRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_14 l eyeLookUpRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_14 l eyeLookUpRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_14 l eyeLookUpRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_15 l browDownLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_15 l browDownLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_15 l browDownLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_15 l browDownLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_16 l browDownRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_16 l browDownRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_16 l browDownRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_16 l browDownRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_17 l browInnerUp_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_17 l browInnerUp_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_17 l browInnerUp_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_17 l browInnerUp_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_18 l browOuterUpLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_18 l browOuterUpLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_18 l browOuterUpLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_18 l browOuterUpLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_19 l browOuterUpRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_19 l browOuterUpRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_19 l browOuterUpRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_19 l browOuterUpRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_20 l jawOpen_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_20 l jawOpen_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_20 l jawOpen_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_20 l jawOpen_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_21 l mouthClose_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_21 l mouthClose_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_21 l mouthClose_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_21 l mouthClose_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_22 l jawLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_22 l jawLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_22 l jawLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_22 l jawLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_23 l jawRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_23 l jawRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_23 l jawRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_23 l jawRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_24 l jawForward_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_24 l jawForward_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_24 l jawForward_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_24 l jawForward_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_25 l mouthUpperUpLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_25 l mouthUpperUpLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_25 l mouthUpperUpLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_25 l mouthUpperUpLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_26 l mouthUpperUpRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_26 l mouthUpperUpRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_26 l mouthUpperUpRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_26 l mouthUpperUpRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_27 l mouthLowerDownLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_27 l mouthLowerDownLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_27 l mouthLowerDownLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_27 l mouthLowerDownLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_28 l mouthLowerDownRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_28 l mouthLowerDownRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_28 l mouthLowerDownRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_28 l mouthLowerDownRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_29 l mouthRollUpper_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_29 l mouthRollUpper_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_29 l mouthRollUpper_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_29 l mouthRollUpper_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_30 l mouthRollLower_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_30 l mouthRollLower_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_30 l mouthRollLower_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_30 l mouthRollLower_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_31 l mouthSmileLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_31 l mouthSmileLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_31 l mouthSmileLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_31 l mouthSmileLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_32 l mouthSmileRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_32 l mouthSmileRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_32 l mouthSmileRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_32 l mouthSmileRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_33 l mouthDimpleLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_33 l mouthDimpleLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_33 l mouthDimpleLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_33 l mouthDimpleLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_34 l mouthDimpleRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_34 l mouthDimpleRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_34 l mouthDimpleRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_34 l mouthDimpleRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_35 l mouthStretchLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_35 l mouthStretchLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_35 l mouthStretchLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_35 l mouthStretchLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_36 l mouthStretchRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_36 l mouthStretchRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_36 l mouthStretchRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_36 l mouthStretchRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_37 l mouthFrownLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_37 l mouthFrownLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_37 l mouthFrownLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_37 l mouthFrownLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_38 l mouthFrownRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_38 l mouthFrownRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_38 l mouthFrownRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_38 l mouthFrownRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_39 l mouthPressLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_39 l mouthPressLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_39 l mouthPressLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_39 l mouthPressLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_40 l mouthPressRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_40 l mouthPressRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_40 l mouthPressRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_40 l mouthPressRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_41 l mouthPucker_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_41 l mouthPucker_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_41 l mouthPucker_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_41 l mouthPucker_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_42 l mouthFunnel_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_42 l mouthFunnel_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_42 l mouthFunnel_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_42 l mouthFunnel_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_43 l mouthLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_43 l mouthLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_43 l mouthLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_43 l mouthLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_44 l mouthRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_44 l mouthRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_44 l mouthRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_44 l mouthRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_45 l mouthShrugLower_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_45 l mouthShrugLower_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_45 l mouthShrugLower_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_45 l mouthShrugLower_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_46 l mouthShrugUpper_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_46 l mouthShrugUpper_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_46 l mouthShrugUpper_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_46 l mouthShrugUpper_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_47 l noseSneerLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_47 l noseSneerLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_47 l noseSneerLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_47 l noseSneerLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_48 l noseSneerRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_48 l noseSneerRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_48 l noseSneerRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_48 l noseSneerRight_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_49 l cheekPuff_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_49 l cheekPuff_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_49 l cheekPuff_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_49 l cheekPuff_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_50 l cheekSquintLeft_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_50 l cheekSquintLeft_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_50 l cheekSquintLeft_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_50 l cheekSquintLeft_sd_max +HIDDEN}
+ addUserKnob {7 sd_mean_51 l cheekSquintRight_sd_mean +HIDDEN}
+ addUserKnob {7 sd_stdev_51 l cheekSquintRight_sd_stdev +HIDDEN}
+ addUserKnob {7 sd_min_51 l cheekSquintRight_sd_min +HIDDEN}
+ addUserKnob {7 sd_max_51 l cheekSquintRight_sd_max +HIDDEN}
+ addUserKnob {20 DrivingData}
+ addUserKnob {7 dd_mean_1 l eyeBlinkLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_1 l eyeBlinkLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_1 l eyeBlinkLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_1 l eyeBlinkLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_2 l eyeBlinkRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_2 l eyeBlinkRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_2 l eyeBlinkRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_2 l eyeBlinkRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_3 l eyeSquintLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_3 l eyeSquintLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_3 l eyeSquintLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_3 l eyeSquintLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_4 l eyeSquintRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_4 l eyeSquintRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_4 l eyeSquintRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_4 l eyeSquintRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_5 l eyeLookDownLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_5 l eyeLookDownLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_5 l eyeLookDownLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_5 l eyeLookDownLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_6 l eyeLookDownRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_6 l eyeLookDownRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_6 l eyeLookDownRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_6 l eyeLookDownRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_7 l eyeLookInLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_7 l eyeLookInLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_7 l eyeLookInLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_7 l eyeLookInLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_8 l eyeLookInRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_8 l eyeLookInRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_8 l eyeLookInRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_8 l eyeLookInRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_9 l eyeWideLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_9 l eyeWideLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_9 l eyeWideLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_9 l eyeWideLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_10 l eyeWideRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_10 l eyeWideRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_10 l eyeWideRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_10 l eyeWideRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_11 l eyeLookOutLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_11 l eyeLookOutLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_11 l eyeLookOutLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_11 l eyeLookOutLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_12 l eyeLookOutRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_12 l eyeLookOutRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_12 l eyeLookOutRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_12 l eyeLookOutRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_13 l eyeLookUpLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_13 l eyeLookUpLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_13 l eyeLookUpLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_13 l eyeLookUpLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_14 l eyeLookUpRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_14 l eyeLookUpRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_14 l eyeLookUpRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_14 l eyeLookUpRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_15 l browDownLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_15 l browDownLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_15 l browDownLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_15 l browDownLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_16 l browDownRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_16 l browDownRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_16 l browDownRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_16 l browDownRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_17 l browInnerUp_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_17 l browInnerUp_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_17 l browInnerUp_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_17 l browInnerUp_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_18 l browOuterUpLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_18 l browOuterUpLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_18 l browOuterUpLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_18 l browOuterUpLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_19 l browOuterUpRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_19 l browOuterUpRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_19 l browOuterUpRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_19 l browOuterUpRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_20 l jawOpen_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_20 l jawOpen_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_20 l jawOpen_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_20 l jawOpen_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_21 l mouthClose_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_21 l mouthClose_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_21 l mouthClose_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_21 l mouthClose_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_22 l jawLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_22 l jawLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_22 l jawLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_22 l jawLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_23 l jawRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_23 l jawRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_23 l jawRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_23 l jawRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_24 l jawForward_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_24 l jawForward_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_24 l jawForward_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_24 l jawForward_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_25 l mouthUpperUpLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_25 l mouthUpperUpLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_25 l mouthUpperUpLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_25 l mouthUpperUpLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_26 l mouthUpperUpRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_26 l mouthUpperUpRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_26 l mouthUpperUpRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_26 l mouthUpperUpRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_27 l mouthLowerDownLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_27 l mouthLowerDownLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_27 l mouthLowerDownLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_27 l mouthLowerDownLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_28 l mouthLowerDownRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_28 l mouthLowerDownRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_28 l mouthLowerDownRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_28 l mouthLowerDownRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_29 l mouthRollUpper_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_29 l mouthRollUpper_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_29 l mouthRollUpper_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_29 l mouthRollUpper_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_30 l mouthRollLower_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_30 l mouthRollLower_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_30 l mouthRollLower_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_30 l mouthRollLower_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_31 l mouthSmileLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_31 l mouthSmileLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_31 l mouthSmileLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_31 l mouthSmileLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_32 l mouthSmileRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_32 l mouthSmileRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_32 l mouthSmileRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_32 l mouthSmileRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_33 l mouthDimpleLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_33 l mouthDimpleLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_33 l mouthDimpleLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_33 l mouthDimpleLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_34 l mouthDimpleRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_34 l mouthDimpleRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_34 l mouthDimpleRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_34 l mouthDimpleRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_35 l mouthStretchLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_35 l mouthStretchLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_35 l mouthStretchLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_35 l mouthStretchLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_36 l mouthStretchRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_36 l mouthStretchRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_36 l mouthStretchRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_36 l mouthStretchRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_37 l mouthFrownLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_37 l mouthFrownLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_37 l mouthFrownLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_37 l mouthFrownLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_38 l mouthFrownRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_38 l mouthFrownRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_38 l mouthFrownRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_38 l mouthFrownRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_39 l mouthPressLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_39 l mouthPressLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_39 l mouthPressLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_39 l mouthPressLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_40 l mouthPressRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_40 l mouthPressRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_40 l mouthPressRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_40 l mouthPressRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_41 l mouthPucker_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_41 l mouthPucker_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_41 l mouthPucker_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_41 l mouthPucker_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_42 l mouthFunnel_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_42 l mouthFunnel_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_42 l mouthFunnel_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_42 l mouthFunnel_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_43 l mouthLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_43 l mouthLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_43 l mouthLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_43 l mouthLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_44 l mouthRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_44 l mouthRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_44 l mouthRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_44 l mouthRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_45 l mouthShrugLower_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_45 l mouthShrugLower_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_45 l mouthShrugLower_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_45 l mouthShrugLower_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_46 l mouthShrugUpper_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_46 l mouthShrugUpper_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_46 l mouthShrugUpper_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_46 l mouthShrugUpper_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_47 l noseSneerLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_47 l noseSneerLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_47 l noseSneerLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_47 l noseSneerLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_48 l noseSneerRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_48 l noseSneerRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_48 l noseSneerRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_48 l noseSneerRight_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_49 l cheekPuff_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_49 l cheekPuff_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_49 l cheekPuff_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_49 l cheekPuff_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_50 l cheekSquintLeft_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_50 l cheekSquintLeft_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_50 l cheekSquintLeft_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_50 l cheekSquintLeft_dd_max +HIDDEN}
+ addUserKnob {7 dd_mean_51 l cheekSquintRight_dd_mean +HIDDEN}
+ addUserKnob {7 dd_stdev_51 l cheekSquintRight_dd_stdev +HIDDEN}
+ addUserKnob {7 dd_min_51 l cheekSquintRight_dd_min +HIDDEN}
+ addUserKnob {7 dd_max_51 l cheekSquintRight_dd_max +HIDDEN +INVISIBLE}
+ addUserKnob {26 ""}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode1
+  tile_color 0x47312600
+  label "group me"
+  note_font_size 42
+  xpos -660
+  ypos -144
+  bdwidth 878
+  bdheight 789
+ }
+ Input {
+  inputs 0
+  name SD_MBS
+  label "Source Data \nMixBlendShapes"
+  xpos -590
+  ypos 61
+  number 1
+ }
+ Input {
+  inputs 0
+  name FACS
+  xpos -370
+  ypos 59
+ }
+set Ncc095d00 [stack 0]
+ MixBlendshapes {
+  name alpha
+  tile_color 0x19b21901
+  label "for storing temporary values"
+  xpos -590
+  ypos 192
+ }
+ Input {
+  inputs 0
+  name DD_MBS
+  label "Driving Data \nMixBlendShapes"
+  xpos -40
+  ypos 61
+  number 2
+ }
+push $Ncc095d00
+ MixBlendshapes {
+  name blended
+  tile_color 0x19b21901
+  xpos -370
+  ypos 301
+ }
+ Output {
+  name Output1
+  xpos -370
+  ypos 515
+ }
+end_group
+

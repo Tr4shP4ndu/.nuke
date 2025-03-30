@@ -1,0 +1,70 @@
+Group {
+ name OflowVisualise_flw1
+ help "Copyright 2022 Flawless"
+ tile_color 0xff5555ff
+ selected true
+}
+ Input {
+  inputs 0
+  name mask
+  label "input \[value number]"
+  xpos -590
+  ypos 48
+  number 1
+ }
+ Input {
+  inputs 0
+  name Input
+  label "input \[value number]"
+  xpos 70
+  ypos 8
+ }
+ VectorGenerator {
+  inputs 2
+  motionEstimation Regularized
+  vectorDetailReg 1
+  name VectorGenerator208
+  xpos -384
+  ypos 115
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 motion
+  fromInput2 {{0} B}
+  mappings "4 forward.u 0 0 rgba.red 0 0 forward.v 0 1 rgba.green 0 1 backward.u 0 2 rgba.blue 0 2 backward.v 0 3 rgba.alpha 0 3"
+  name Shuffle2
+  xpos -384
+  ypos 223
+ }
+ Grade {
+  white 0.025
+  black_clamp false
+  name Grade3
+  xpos -384
+  ypos 255
+ }
+ Expression {
+  temp_name0 scale
+  temp_expr0 sqrt(r**2+g**2)
+  temp_name1 direction
+  temp_expr1 atan2(g,r)/pi()
+  expr0 direction
+  expr1 1
+  expr2 scale
+  channel3 alpha
+  name Expression3
+  xpos -384
+  ypos 287
+ }
+ Colorspace {
+  colorspace_in HSV
+  name Colorspace5
+  xpos -384
+  ypos 319
+ }
+ Output {
+  name Output1
+  xpos -384
+  ypos 395
+ }
+end_group

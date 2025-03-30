@@ -1,0 +1,245 @@
+Group {
+inputs 0
+name Write_Flwls
+onCreate "exec(\"\"\"from contextlib import suppress;\nwith suppress(Exception):\n\tfrom python_scripts.write_flwls.callback_handler import *; callback_handler({'node' : nuke.thisNode(), 'knob' : nuke.thisNode().knobs()['datatype_flwls'],})\"\"\")"
+knobChanged "exec(\"\"\"from contextlib import suppress;\nwith suppress(Exception):\n\tfrom python_scripts.write_flwls.callback_handler import *; callback_handler({'node' : nuke.thisNode(), 'knob' : nuke.thisKnob(),})\"\"\")"
+tile_color 0x513a00ff
+label "Datatype: \[value datatype_flwls]\nFiletype: \[value filetype_flwls]"
+note_font "Verdana Bold"
+note_font_color 0xffb800ff
+selected true
+addUserKnob {20 Write_Flwls l "Write Flwls"}
+addUserKnob {26 node_title l "" +STARTLINE T "<font size = 5>Write Flwls"}
+addUserKnob {26 made_by l "" +STARTLINE T "<font color = '#eba834'><b>by Filipe Correia                           \n          "}
+addUserKnob {26 sep_1 l "" +STARTLINE}
+addUserKnob {4 datatype_flwls l "<font color = '#eba834'><b>Datatype" M {PREPCOMP PREPGEO COPYCAT SMARTVECTOR FLOATING_FACE REVIEW_EXR REVIEW_MOV "" "" "" "" "" "" "" "" "" ""}}
+addUserKnob {4 filetype_flwls +INVISIBLE l "<font color = '#eba834'><b>File type" -STARTLINE M {" "}}
+addUserKnob {26 sep_2 l "" +STARTLINE}
+addUserKnob {1 filename_flwls +INVISIBLE l "<font color = '#eba834'><b>Custom Name"}
+addUserKnob {1 filename_flwls_hidden +INVISIBLE}
+filename_flwls ""
+addUserKnob {1 disable_execution +INVISIBLE}
+addUserKnob {26 sep_4 l "" +STARTLINE}
+addUserKnob {26 info_printout l "" +STARTLINE T ""}
+addUserKnob {22 folderPath +INVISIBLE}
+addUserKnob {22 filePath +INVISIBLE}
+addUserKnob {22 renderHistory +INVISIBLE}
+addUserKnob {26 sep_3 l "" +STARTLINE}
+addUserKnob {22 execute_write_flwls l "Render" +INVISIBLE +STARTLINE}
+addUserKnob {26 sep_6 l "" +STARTLINE}
+addUserKnob {22 refresh l "Refresh View"}
+addUserKnob {22 readfromwrite_flwls l "Make Read" +INVISIBLE + DISABLED}
+addUserKnob {26 sep_5 l "" +STARTLINE}
+addUserKnob {22 openFolder l "Go to Internal Renders Folder" +INVISIBLE}
+addUserKnob {20 WriteGroupBegin l "" +STARTLINE n -2}
+addUserKnob {20 write_tab l Write +INVISIBLE}
+addUserKnob {41 channels T Write.channels}
+addUserKnob {41 proxy T Write.proxy}
+addUserKnob {41 frame_mode l frame T Write.frame_mode}
+addUserKnob {41 frame l "" -STARTLINE T Write.frame}
+addUserKnob {41 colorspace l "output transform" T Write.colorspace}
+addUserKnob {41 premultiplied -STARTLINE T Write.premultiplied}
+addUserKnob {41 raw l "raw data" -STARTLINE T Write.raw}
+addUserKnob {41 views T Write.views}
+addUserKnob {26 cin_options l "<b>CIN Options</b>" +INVISIBLE}
+addUserKnob {41 edge_code l "edge code" +INVISIBLE T Write.edge_code}
+addUserKnob {26 dpx_options l "<b>DPX Options</b>" +INVISIBLE}
+addUserKnob {41 datatype +INVISIBLE T Write.datatype}
+addUserKnob {41 fill -STARTLINE +INVISIBLE T Write.fill}
+addUserKnob {41 bigEndian l "big endian" -STARTLINE +INVISIBLE T Write.bigEndian}
+addUserKnob {41 transfer +INVISIBLE T Write.transfer}
+addUserKnob {26 exr_options l "<b>EXR Options</b>" +INVISIBLE}
+addUserKnob {41 write_ACES_compliant_EXR l "write ACES compliant EXR" +INVISIBLE T Write.write_ACES_compliant_EXR}
+addUserKnob {41 autocrop -STARTLINE +INVISIBLE T Write.autocrop}
+addUserKnob {41 datatype_1 l datatype +INVISIBLE T Write.datatype}
+addUserKnob {41 compression +INVISIBLE T Write.compression}
+addUserKnob {41 heroview +INVISIBLE T Write.heroview}
+addUserKnob {41 metadata +INVISIBLE T Write.metadata}
+addUserKnob {41 noprefix l "do not attach prefix" -STARTLINE +INVISIBLE T Write.noprefix}
+addUserKnob {41 interleave +INVISIBLE T Write.interleave}
+addUserKnob {41 first_part l "first part" +INVISIBLE T Write.first_part}
+addUserKnob {41 "standard layer name format" +INVISIBLE T "Write.standard layer name format"}
+addUserKnob {41 write_full_layer_names l "write full layer names" +INVISIBLE T Write.write_full_layer_names}
+addUserKnob {41 truncateChannelNames l "truncate channel names" +INVISIBLE T Write.truncateChannelNames}
+addUserKnob {26 jpeg_options l "<b>JPEG Options</b>" +INVISIBLE}
+addUserKnob {41 _jpeg_quality l quality +INVISIBLE T Write._jpeg_quality}
+addUserKnob {41 _jpeg_sub_sampling l sub-sampling +INVISIBLE T Write._jpeg_sub_sampling}
+addUserKnob {26 mov_options l "<b>MOV Options</b>" +INVISIBLE}
+addUserKnob {41 mov64_codec l Codec +INVISIBLE T Write.mov64_codec}
+addUserKnob {41 mov64_fps l FPS +INVISIBLE T Write.mov64_fps}
+addUserKnob {41 mov_prores_codec_profile l "Codec Profile" +INVISIBLE T Write.mov_prores_codec_profile}
+addUserKnob {41 mov64_ycbcr_matrix_type l "YCbCr Matrix" +INVISIBLE T Write.mov64_ycbcr_matrix_type}
+addUserKnob {41 mov64_audiofile l "Audio File" +INVISIBLE T Write.mov64_audiofile}
+addUserKnob {41 mov64_audio_offset l "Audio Offset" +INVISIBLE T Write.mov64_audio_offset}
+addUserKnob {20 mov64_advanced l Advanced +INVISIBLE n 1}
+mov64_advanced 0
+addUserKnob {41 dnxhd_encode_video_range +INVISIBLE T Write.dnxhd_encode_video_range}
+addUserKnob {41 mov64_dnxhd_encode_video_range +INVISIBLE T Write.mov64_dnxhd_encode_video_range}
+addUserKnob {41 dataRange l "Data Range" +INVISIBLE T Write.dataRange}
+addUserKnob {41 mov64_fast_start l "Fast Start" +INVISIBLE T Write.mov64_fast_start}
+addUserKnob {41 writeTimeCode +INVISIBLE T Write.writeTimeCode}
+addUserKnob {41 mov64_write_timecode l "Write Timecode" -STARTLINE +INVISIBLE T Write.mov64_write_timecode}
+addUserKnob {41 gop_size +INVISIBLE T Write.gop_size}
+addUserKnob {41 mov64_gop_size l "GOP Size" +HIDDEN +INVISIBLE T Write.mov64_gop_size}
+addUserKnob {41 b_frames +INVISIBLE T Write.b_frames}
+addUserKnob {41 mov64_b_frames l "B Frames" +HIDDEN +INVISIBLE T Write.mov64_b_frames}
+addUserKnob {26 mov64_bitrate_divider l "" +STARTLINE +HIDDEN +INVISIBLE}
+addUserKnob {41 mov64_limit_bitrate l "Limit Bitrate" +HIDDEN +INVISIBLE T Write.mov64_limit_bitrate}
+addUserKnob {41 bitrate +INVISIBLE T Write.bitrate}
+addUserKnob {41 mov64_bitrate l Bitrate +HIDDEN +INVISIBLE T Write.mov64_bitrate}
+addUserKnob {41 bitrate_tolerance +INVISIBLE T Write.bitrate_tolerance}
+addUserKnob {41 mov64_bitrate_tolerance l "Bitrate Tolerance" +HIDDEN +INVISIBLE T Write.mov64_bitrate_tolerance}
+addUserKnob {41 quality_min +INVISIBLE T Write.quality_min}
+addUserKnob {41 mov64_quality_min l "Quantizer Min" +HIDDEN +INVISIBLE T Write.mov64_quality_min}
+addUserKnob {41 quality_max +INVISIBLE T Write.quality_max}
+addUserKnob {41 mov64_quality_max l "Quantizer Max" -STARTLINE +HIDDEN +INVISIBLE T Write.mov64_quality_max}
+addUserKnob {41 mov64_write_nclc +INVISIBLE T Write.mov64_write_nclc}
+addUserKnob {41 bitrateTol +INVISIBLE T Write.bitrateTol}
+addUserKnob {41 gopSize +INVISIBLE T Write.gopSize}
+addUserKnob {41 bFrames +INVISIBLE T Write.bFrames}
+addUserKnob {41 mbDecision +INVISIBLE T Write.mbDecision}
+addUserKnob {41 mov64_mbDecision l "macro block decision mode" +INVISIBLE T Write.mov64_mbDecision}
+addUserKnob {20 _1 l "" +STARTLINE +INVISIBLE n -1}
+addUserKnob {26 _4 l "" +STARTLINE +INVISIBLE}
+addUserKnob {26 mxf_options l "<b>MXF Options</b>" +INVISIBLE}
+addUserKnob {41 mxf_video_codec_knob l Codec +INVISIBLE T Write.mxf_video_codec_knob}
+addUserKnob {41 mxf_op_pattern_knob l Pattern -STARTLINE +INVISIBLE T Write.mxf_op_pattern_knob}
+addUserKnob {41 mxf_edit_rate_knob l FPS +INVISIBLE T Write.mxf_edit_rate_knob}
+addUserKnob {41 mxf_codec_profile_knob l "Codec Profile" +INVISIBLE T Write.mxf_codec_profile_knob}
+addUserKnob {20 mxf_advanced l Advanced +INVISIBLE n 1}
+mxf_advanced 0
+addUserKnob {41 dataRange_1 l "Data Range" +INVISIBLE T Write.dataRange}
+addUserKnob {20 _2 l "" +STARTLINE +INVISIBLE n -1}
+addUserKnob {26 _3 l "" +STARTLINE +INVISIBLE}
+addUserKnob {26 DNxHR_SDK_Version l "SDK Build:" +INVISIBLE T "Avid DNxCodec 2.6.2"}
+addUserKnob {26 png_options l "<b>PNG Options</b>" +INVISIBLE}
+addUserKnob {41 datatype_2 l "data type" +INVISIBLE T Write.datatype}
+addUserKnob {26 sgi_options l "<b>SGI Options</b>" +INVISIBLE}
+addUserKnob {41 datatype_3 l "data type" +INVISIBLE T Write.datatype}
+addUserKnob {41 bigEndian_1 l "big endian" -STARTLINE +INVISIBLE T Write.bigEndian}
+addUserKnob {41 compression_1 l compression +INVISIBLE T Write.compression}
+addUserKnob {26 targa_options l "<b>TARGA Options</b>" +INVISIBLE}
+addUserKnob {41 compression_2 l compression +INVISIBLE T Write.compression}
+addUserKnob {26 tiff_options l "<b>TIFF Options</b>" +INVISIBLE}
+addUserKnob {41 datatype_4 l "data type" +INVISIBLE T Write.datatype}
+addUserKnob {41 compression_3 l compression +INVISIBLE T Write.compression}
+addUserKnob {26 yuv_options l "<b>YUV Options</b>" +INVISIBLE}
+addUserKnob {41 interlaced +INVISIBLE T Write.interlaced}
+addUserKnob {26 create_directories_separator l "" +STARTLINE}
+addUserKnob {41 create_directories l "create directories" T Write.create_directories}
+addUserKnob {41 render_order l "render order" T Write.render_order}
+addUserKnob {41 Render -STARTLINE T Write.Render}
+addUserKnob {41 first l "frame range" T Write.first}
+addUserKnob {41 last l "" -STARTLINE T Write.last}
+addUserKnob {41 use_limit l "limit to range" -STARTLINE T Write.use_limit}
+addUserKnob {41 reading l "read file" T Write.reading}
+addUserKnob {41 on_error l "missing frames" T Write.on_error}
+addUserKnob {41 reload l Reload -STARTLINE T Write.reload}
+addUserKnob {41 read_all_lines l "read all lines" -STARTLINE T Write.read_all_lines}
+addUserKnob {20 write_geo_tab l Geo +INVISIBLE}
+addUserKnob {41 first_1 l "frame range" T geo.first}
+addUserKnob {41 last_1 l "" -STARTLINE T geo.last}
+addUserKnob {41 use_limit_1 l "limit to range" -STARTLINE T geo.use_limit}
+addUserKnob {41 views_1 l views T geo.views}
+addUserKnob {41 Execute T geo.Execute}
+addUserKnob {26 abc_options l "<b>ABC Options</b>"}
+addUserKnob {41 writeGeometries_1 l geometries T geo.writeGeometries}
+addUserKnob {41 writePointClouds_1 l pointClouds T geo.writePointClouds}
+addUserKnob {41 writeCameras_1 l cameras T geo.writeCameras}
+addUserKnob {41 writeAxes_1 l axes T geo.writeAxes}
+addUserKnob {41 storageFormat l "storage format" T geo.storageFormat}
+addUserKnob {26 fbx_options l "<b>FBX Options</b>"}
+addUserKnob {41 compatibility_version l compatibility T geo.compatibility_version}
+addUserKnob {41 writeGeometries_2 l geometries T geo.writeGeometries}
+addUserKnob {41 writeCameras_2 l cameras T geo.writeCameras}
+addUserKnob {41 writeLights_1 l lights T geo.writeLights}
+addUserKnob {41 writeAxes_2 l axes T geo.writeAxes}
+addUserKnob {41 writePointClouds_2 l "point clouds" T geo.writePointClouds}
+addUserKnob {26 sep_4 l "" +STARTLINE}
+addUserKnob {41 asciiFileFormat l "ascii file format" T geo.asciiFileFormat}
+addUserKnob {41 animateMeshVertices l "animate mesh vertices" -STARTLINE T geo.animateMeshVertices}
+addUserKnob {26 ""}
+addUserKnob {20 copycat_tab l Copycat +INVISIBLE}
+addUserKnob {26 "" l "Local GPU:" T ""}
+addUserKnob {26 gpuName l "" -STARTLINE T "NVIDIA GeForce RTX 3090"}
+addUserKnob {41 useGPUIfAvailable l "Use GPU if available" T copycat.useGPUIfAvailable}
+addUserKnob {41 epochs l Epochs T copycat.epochs}
+addUserKnob {26 trainingInfo l "" -STARTLINE T "Channels: none -> none\nBatch Size: 1 (Auto)\nTotal Steps: 1000000"}
+addUserKnob {41 startTraining l "Start Training" T copycat.startTraining}
+addUserKnob {41 resumeTraining l "Resume Training" -STARTLINE T copycat.resumeTraining}
+addUserKnob {41 createInference l "Create Inference" -STARTLINE T copycat.createInference}
+addUserKnob {20 Advanced n 1}
+Advanced 0
+addUserKnob {41 runName +HIDDEN +INVISIBLE T copycat.runName}
+addUserKnob {41 initialWeights l "Initial Weights" T copycat.initialWeights}
+addUserKnob {41 checkpointFile l "Checkpoint File" -STARTLINE +HIDDEN T copycat.checkpointFile}
+addUserKnob {41 modelSize l "Model Size" T copycat.modelSize}
+addUserKnob {41 previousModelSize +INVISIBLE T copycat.previousModelSize}
+addUserKnob {41 learningRate l "Learning Rate" +HIDDEN T copycat.learningRate}
+addUserKnob {41 seed l Seed +HIDDEN T copycat.seed}
+addUserKnob {41 batchSizeType l "Batch Size" T copycat.batchSizeType}
+addUserKnob {41 autoBatchSize l "" -STARTLINE +HIDDEN T copycat.autoBatchSize}
+addUserKnob {41 batchSize l "" -STARTLINE +HIDDEN T copycat.batchSize}
+addUserKnob {41 cropSize l "Crop Size" T copycat.cropSize}
+addUserKnob {41 checkpointInterval l "Checkpoint Interval" T copycat.checkpointInterval}
+addUserKnob {41 imageInterval l "Contact Sheet Interval" T copycat.imageInterval}
+addUserKnob {41 useMultiResolution l "Use Multi-Resolution Training" -STARTLINE T copycat.useMultiResolution}
+addUserKnob {41 maxCheckpoints l "Max Checkpoints" +HIDDEN T copycat.maxCheckpoints}
+addUserKnob {41 isResumingTraining l "Model is resuming training" -STARTLINE +INVISIBLE T copycat.isResumingTraining}
+addUserKnob {41 isCachingEnabled l "Is caching enabled" -STARTLINE +HIDDEN T copycat.isCachingEnabled}
+addUserKnob {20 "" n -1}
+addUserKnob {20 progress_tab l Progress +INVISIBLE}
+addUserKnob {20 Runs n 1}
+Runs 0
+addUserKnob {41 runTable l "" -STARTLINE T copycat.runTable}
+addUserKnob {41 liveUpdates l "Live Updates" T copycat.liveUpdates}
+addUserKnob {20 "" n -1}
+addUserKnob {20 Graph n 1}
+Graph 0
+addUserKnob {41 logScale l "Log Scale" -STARTLINE T copycat.logScale}
+addUserKnob {41 smoothness l Smoothness T copycat.smoothness}
+addUserKnob {41 showOriginal l "Show Original Curve" -STARTLINE T copycat.showOriginal}
+addUserKnob {41 chart l "" +STARTLINE T copycat.chart}
+addUserKnob {20 "" n -1}
+addUserKnob {20 contact_group l "Contact Sheet" n 1}
+contact_group 0
+addUserKnob {41 overlay l "" +STARTLINE T copycat.overlay}
+addUserKnob {20 "" n -1}
+addUserKnob {20 preview_group l Preview n 1}
+preview_group 0
+addUserKnob {41 preview l "" +STARTLINE T copycat.preview}
+addUserKnob {20 "" n -1}
+addUserKnob {20 smartvector_tab l SmartVector +INVISIBLE}
+addUserKnob {26 "" l "Local GPU:" T ""}
+addUserKnob {26 gpuName_2 l "" -STARTLINE T "NVIDIA GeForce RTX 3090"}
+addUserKnob {41 useGPUIfAvailable_2 l "Use GPU if available" T smartvector.useGPUIfAvailable}
+addUserKnob {41 vectorDetailReg_1 l "Vector Detail" T smartvector.vectorDetailReg}
+addUserKnob {41 strengthReg_1 l Strength T smartvector.strengthReg}
+addUserKnob {41 matteChannel_1 l Matte T smartvector.matteChannel}
+addUserKnob {41 output_1 l Output T smartvector.output}
+addUserKnob {41 inpainting_1 l "Inpaint Matte Region" -STARTLINE T smartvector.inpainting}
+addUserKnob {41 matteDilation_1 l "Matte Dilation" T smartvector.matteDilation}
+addUserKnob {26 "" l Export}
+addUserKnob {41 exportWrite l "Export Write" T smartvector.exportWrite}
+addUserKnob {20 Advanced_1 l Advanced n 1}
+Advanced_1 0
+addUserKnob {41 flickerCompensation_1 l "Flicker Compensation" -STARTLINE T smartvector.flickerCompensation}
+addUserKnob {20 Tolerances n 1}
+Tolerances 0
+addUserKnob {41 weightRed_1 l "Weight Red" T smartvector.weightRed}
+addUserKnob {41 weightGreen_1 l "Weight Green" T smartvector.weightGreen}
+addUserKnob {41 weightBlue_1 l "Weight Blue" T smartvector.weightBlue}
+addUserKnob {20 "" n -1}
+addUserKnob {20 endGroup n -1}
+addUserKnob {20 tolerances l Tolerances n 1}
+tolerances 0
+addUserKnob {7 weightRed l "Weight Red" t "For efficiency, much of the motion estimation is done on luminance only - that is, using monochrome images. The tolerances allow you to tune the weight of each color channel when calculating the image luminance. These parameters rarely need tuning. However, you may, for example, wish to increase the Weight Red to allow the algorithm to concentrate on getting the motion of a primarily red object correct, at the cost of the rest of the items in a shot."}
+weightRed 0.3
+addUserKnob {7 weightGreen l "Weight Green" t "For efficiency, much of the motion estimation is done on luminance only - that is, using monochrome images. The tolerances allow you to tune the weight of each color channel when calculating the image luminance. These parameters rarely need tuning. However, you may, for example, wish to increase the Weight Red to allow the algorithm to concentrate on getting the motion of a primarily red object correct, at the cost of the rest of the items in a shot."}
+weightGreen 0.6
+addUserKnob {7 weightBlue l "Weight Blue" t "For efficiency, much of the motion estimation is done on luminance only - that is, using monochrome images. The tolerances allow you to tune the weight of each color channel when calculating the image luminance. These parameters rarely need tuning. However, you may, for example, wish to increase the Weight Red to allow the algorithm to concentrate on getting the motion of a primarily red object correct, at the cost of the rest of the items in a shot."}
+weightBlue 0.1
+addUserKnob {20 endGroup_2 l endGroup n -1}
+addUserKnob {20 WriteGroupEnd l "" +STARTLINE n -3}
+}
+end_group

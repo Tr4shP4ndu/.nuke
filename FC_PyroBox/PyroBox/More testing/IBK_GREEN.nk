@@ -1,0 +1,102 @@
+set cut_paste_input [stack 0]
+version 12.2 v5
+push $cut_paste_input
+IBKColourV3 {
+ name IBKColourV3_1
+ label "Main\nGreen"
+ selected true
+ xpos -3273
+ ypos 106
+ screen_type green
+ Size 0.5
+ erode 1
+}
+IBKColourV3 {
+ name IBKColourV3_2
+ label "Patch Main"
+ selected true
+ xpos -3273
+ ypos 154
+ screen_type green
+ Size {{parent.IBKColourV3_1.Size}}
+ off {{parent.IBKColourV3_1.off} {parent.IBKColourV3_1.off} {parent.IBKColourV3_1.off}}
+ mult {{parent.IBKColourV3_1.mult} {parent.IBKColourV3_1.mult} {parent.IBKColourV3_1.mult}}
+ multi 2
+}
+IBKColourV3 {
+ name IBKColourV3_3
+ selected true
+ xpos -3273
+ ypos 192
+ screen_type green
+ Size {{parent.IBKColourV3_1.Size}}
+ off {{parent.IBKColourV3_1.off} {parent.IBKColourV3_1.off} {parent.IBKColourV3_1.off}}
+ mult {{parent.IBKColourV3_1.mult} {parent.IBKColourV3_1.mult} {parent.IBKColourV3_1.mult}}
+ multi {{parent.IBKColourV3_2.multi*2}}
+}
+IBKColourV3 {
+ name IBKColourV3_4
+ selected true
+ xpos -3273
+ ypos 218
+ screen_type green
+ Size {{parent.IBKColourV3_1.Size}}
+ off {{parent.IBKColourV3_1.off} {parent.IBKColourV3_1.off} {parent.IBKColourV3_1.off}}
+ mult {{parent.IBKColourV3_1.mult} {parent.IBKColourV3_1.mult} {parent.IBKColourV3_1.mult}}
+ multi {{parent.IBKColourV3_3.multi*2}}
+}
+IBKColourV3 {
+ name IBKColourV3_5
+ selected true
+ xpos -3273
+ ypos 244
+ screen_type green
+ Size {{parent.IBKColourV3_1.Size}}
+ off {{parent.IBKColourV3_1.off} {parent.IBKColourV3_1.off} {parent.IBKColourV3_1.off}}
+ mult {{parent.IBKColourV3_1.mult} {parent.IBKColourV3_1.mult} {parent.IBKColourV3_1.mult}}
+ multi {{parent.IBKColourV3_4.multi*2}}
+}
+IBKColourV3 {
+ name IBKColourV3_6
+ selected true
+ xpos -3273
+ ypos 270
+ screen_type green
+ Size {{parent.IBKColourV3_1.Size}}
+ off {{parent.IBKColourV3_1.off} {parent.IBKColourV3_1.off} {parent.IBKColourV3_1.off}}
+ mult {{parent.IBKColourV3_1.mult} {parent.IBKColourV3_1.mult} {parent.IBKColourV3_1.mult}}
+ multi {{parent.IBKColourV3_5.multi*2}}
+}
+IBKColourV3 {
+ name IBKColourV3_7
+ selected true
+ xpos -3273
+ ypos 296
+ screen_type green
+ Size {{parent.IBKColourV3_1.Size}}
+ off {{parent.IBKColourV3_1.off} {parent.IBKColourV3_1.off} {parent.IBKColourV3_1.off}}
+ mult {{parent.IBKColourV3_1.mult} {parent.IBKColourV3_1.mult} {parent.IBKColourV3_1.mult}}
+ multi {{parent.IBKColourV3_6.multi*2}}
+}
+IBKColourV3 {
+ name IBKColourV3_8
+ selected true
+ xpos -3273
+ ypos 322
+ screen_type green
+ Size {{parent.IBKColourV3_1.Size}}
+ off {{parent.IBKColourV3_1.off} {parent.IBKColourV3_1.off} {parent.IBKColourV3_1.off}}
+ mult {{parent.IBKColourV3_1.mult} {parent.IBKColourV3_1.mult} {parent.IBKColourV3_1.mult}}
+ multi {{parent.IBKColourV3_7.multi*2}}
+}
+IBKColourV3 {
+ name IBKColourV3_9
+ selected true
+ xpos -3273
+ ypos 348
+ screen_type green
+ Size {{parent.IBKColourV3_1.Size}}
+ off {{parent.IBKColourV3_1.off} {parent.IBKColourV3_1.off} {parent.IBKColourV3_1.off}}
+ mult {{parent.IBKColourV3_1.mult} {parent.IBKColourV3_1.mult} {parent.IBKColourV3_1.mult}}
+ multi 128
+}

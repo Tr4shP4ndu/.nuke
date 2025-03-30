@@ -1,0 +1,105 @@
+set cut_paste_input [stack 0]
+version 13.1 v2
+BackdropNode {
+ inputs 0
+ name BackdropNode2
+ tile_color 0x6e7b7400
+ label "Despeckle      "
+ note_font_size 42
+ selected true
+ xpos -3658
+ ypos -1661
+ bdwidth 660
+ bdheight 698
+}
+push $cut_paste_input
+Dot {
+ name Dot14
+ label NR
+ note_font "Bitstream Vera Sans Bold"
+ note_font_size 30
+ selected true
+ xpos -2782
+ ypos -1738
+}
+Dot {
+ name Dot15
+ selected true
+ xpos -2782
+ ypos -1720
+}
+Dot {
+ name Dot6
+ selected true
+ xpos -2782
+ ypos -1537
+}
+set Nfc414100 [stack 0]
+Dot {
+ name Dot7
+ selected true
+ xpos -3159
+ ypos -1537
+}
+set Nfc34f900 [stack 0]
+Laplacian {
+ size 1
+ name Laplacian1
+ selected true
+ xpos -3193
+ ypos -1424
+}
+Laplacian {
+ size 1
+ name Laplacian2
+ selected true
+ xpos -3193
+ ypos -1356
+}
+Keyer {
+ operation "luminance key"
+ range {0.0006312971895 0.0006312971895 1 1}
+ name Keyer1
+ selected true
+ xpos -3193
+ ypos -1291
+}
+Dot {
+ name Dot10
+ selected true
+ xpos -3159
+ ypos -1054
+}
+push $Nfc34f900
+Dot {
+ name Dot8
+ selected true
+ xpos -3464
+ ypos -1537
+}
+TemporalMedian {
+ inputs 1+1
+ core 1
+ name TemporalMedian1
+ selected true
+ xpos -3498
+ ypos -1064
+}
+Dot {
+ name Dot11
+ selected true
+ xpos -3464
+ ypos -832
+}
+push $Nfc414100
+Copy {
+ inputs 2
+ from0 -rgba.alpha
+ to0 -rgba.alpha
+ channels rgb
+ bbox B
+ name Copy1
+ selected true
+ xpos -2816
+ ypos -848
+}

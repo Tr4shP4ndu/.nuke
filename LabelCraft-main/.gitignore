@@ -1,0 +1,10 @@
+# Specify filepatterns you want git to ignore.
+*.pyc
+/backup
+/backupSmartLabel
+/refs
+/tests
+/old
+/test_stacked
+.idea
+UI_test.py

@@ -1,0 +1,268 @@
+#! /opt/Nuke13.1v2/libnuke-13.1.2.so -nx
+version 13.1 v2
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="0" y="28" w="2560" h="1241" maximized="1" screen="0">
+        <splitter orientation="1">
+            <split size="40"/>
+            <dock id="" hideTitles="1" activePageId="Toolbar.1">
+                <page id="Toolbar.1"/>
+            </dock>
+            <split size="1897" stretch="1"/>
+            <splitter orientation="2">
+                <split size="703"/>
+                <dock id="" activePageId="Viewer.1">
+                    <page id="Viewer.1"/>
+                </dock>
+                <split size="495"/>
+                <dock id="" activePageId="DAG.1" focus="true">
+                    <page id="DAG.1"/>
+                    <page id="Curve Editor.1"/>
+                    <page id="DopeSheet.1"/>
+                </dock>
+            </splitter>
+            <split size="615"/>
+            <dock id="" activePageId="Properties.1">
+                <page id="Properties.1"/>
+                <page id="uk.co.thefoundry.backgroundrenderview.1"/>
+            </dock>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name /Volumes/shared/vfx/filipe.correia/repos/flwls_pp_scripts/nuke/flwls_vfx_pipeline/templates/vfx_inpaint_v006.nk
+ colorManagement OCIO
+ defaultViewerLUT "OCIO LUTs"
+ workingSpaceLUT default
+ monitorLut ACES/sRGB
+ monitorOutLUT "sRGB (ACES)"
+ int8Lut matte_paint
+ int16Lut texture_paint
+ logLut compositing_log
+ floatLut default
+ onScriptLoad "exec(\"\"\"\\n'''\\nThis module contains Python scripts for to be used in callbacks in nuke root\\nWhen copying these into the callbacks convert them to oneliners\\n'''\\n\\n\\n'''\\nonScriptLoad\\nFills task input Read nodes\\n'''\\n\\nfrom pathlib import Path\\nimport re\\nimport nuke\\n\\ndenoise_plate = nuke.toNode('DNS_PLATE')\\n\\ndef _get_context_from_script_name(script_name: str):\\n    try:\\n        script_name_parts = script_name.split('_')\\n        context_dict = \{\}\\n        context_dict\['workspace_root'] = Path('/Volumes/workspace')\\n        if \"nr\" in script_name_parts:\\n            if \"cleanup\" in script_name_parts:\\n                context_dict\['task'] = \"vfx_nr_cleanup\"\\n        elif \"inpaint\" in script_name_parts:\\n            context_dict\['task'] = \"vfx_inpaint\"\\n        elif \"occlusion\" in script_name_parts:\\n            context_dict\['task'] = \"vfx_occlusion\"\\n        if context_dict\['task'] in ('vfx_occlusion', 'vfx_inpaint'):\\n            context_dict\['level'] = 'Shot'\\n        elif context_dict\['task'] == 'vfx_nr_cleanup':\\n            context_dict\['level'] = 'ShotLanguageVariant'\\n        context_dict\['show'] = script_name_parts\[0]\\n        context_dict\['episode'] = int(script_name_parts\[1]\[2:4])\\n        context_dict\['part'] = int(script_name_parts\[2]\[2:4])\\n        context_dict\['shot'] = int(script_name_parts\[3])\\n        if context_dict\['level'] == 'ShotLanguageVariant':\\n            context_dict\['language'] = script_name_parts\[4]\\n            context_dict\['variant'] = f\"\{script_name_parts\[5]\}_\{script_name_parts\[6]\}\"\\n        return context_dict\\n    except TypeError as e:\\n        raise TypeError(f'\{e\}\\\\nError when extracting context from script name. Does the script name contain all the context')\\n\\ndef _get_task_path(context: dict) -> Path:\\n    cntx = context\\n    shot_path = cntx\['workspace_root'] / 'shows' / cntx\['show'] / 'episodes' / f\"ep\{cntx\['episode']:02d\}\" / 'parts' / f\"pt\{cntx\['part']:02d\}\" / 'shots' / f\"\{cntx\['shot']:04d\}\"\\n    task_path = None\\n    if cntx\['level'] == 'Shot':\\n        task = None\\n        if cntx\['task'] == 'vfx_inpaint':\\n            task = 'vfx_inpainting'\\n        elif cntx\['task'] == 'vfx_occlusion':\\n            task = 'vfx_occlusions'\\n        if task:\\n            task_path = shot_path / 'tasks' / task\\n    elif cntx\['level'] == 'ShotLanguageVariant':\\n        task_path = shot_path / 'languages' / cntx\['language'] / 'variants' / cntx\['variant'] / 'tasks' / cntx\['task']\\n\\n    if not task_path:\\n        raise ValueError(\"task_path must not be None\")\\n    return task_path\\n\\ndef _latest_in_version(task_path: Path):\\n    in_path = task_path / 'in'\\n    folders = \[f for f in in_path.glob('v\[0-9]\[0-9]\[0-9]') if f.is_dir()]\\n    folders.sort(reverse=True)\\n    return folders\[0]\\n\\ndef _get_sequence_path_in_fromUserText_format(sequence_folder: Path, extension: str):\\n    filepaths = list(sequence_folder.glob(f'*\{extension\}'))\\n    filepaths.sort()\\n    start_frame_path = filepaths\[0]\\n    first_frame_number = int(re.search(r'\\\\.(\[0-9]\{6\})', start_frame_path.stem).group(1))\\n    start_frame_name = re.sub(r'\\\\.(\[0-9]\{6\})', '.######', start_frame_path.name)\\n    return f'\{start_frame_path.parent / start_frame_name\} \{first_frame_number\}-\{first_frame_number + len(filepaths) - 1\}'\\n\\ndef _get_variant_from_scriptname():\\n    return \"_\".join(Path(nuke.scriptName()).stem.split('_')\[5:7])\\n\\nif denoise_plate:\\n    if denoise_plate.knob('file').value() == \"\":\\n        script_name = Path(nuke.root().name()).stem\\n        context = _get_context_from_script_name(script_name)\\n        task_path = _get_task_path(context)\\n        denoise_plate_folder = _latest_in_version(task_path) / 'DENOISED' / 'plate'\\n        denoise_plate_seq = _get_sequence_path_in_fromUserText_format(sequence_folder=denoise_plate_folder, extension='exr')\\n        denoise_plate.knob('file').fromUserText(denoise_plate_seq)\\n        denoise_plate\['frame'].setValue('1')\\n        denoise_plate\['frame_mode'].setValue('start_at')\\n        nuke.root().knob('first_frame').setValue(denoise_plate.firstFrame())\\n        nuke.root().knob('last_frame').setValue(denoise_plate.lastFrame())\\n        nuke.root().knob('lock_range').setValue(True)\\n        nuke.root().knob('fps').setValue(denoise_plate.metadata(\"input/frame_rate\"))\\n        nuke.root().knob('format').setValue(denoise_plate.knob('format').value())\\n\\nprecompNodeName = 'PRECOMP'\\nprecompExists = bool(\[n for n in nuke.allNodes() if n.name() == precompNodeName])\\nif not precompExists:\\n    pass\\nelse:\\n    precomp_plate = nuke.toNode('PRECOMP')\\n    if precomp_plate.knob('file').value() == \"\":\\n        script_name = Path(nuke.root().name()).stem\\n        context = _get_context_from_script_name(script_name)\\n        task_path = _get_task_path(context)\\n        precomp_plate_folder = _latest_in_version(task_path) / 'PRECOMP' / _get_variant_from_scriptname() / 'PRECOMP' / 'precomp'\\n        precomp_plate_seq = _get_sequence_path_in_fromUserText_format(sequence_folder=precomp_plate_folder, extension='exr')\\n        precomp_plate.knob('file').fromUserText(precomp_plate_seq)\\n        precomp_plate\['frame'].setValue('1')\\n        precomp_plate\['frame_mode'].setValue('start_at')\\n\\n\\n\\n\\n\\n'''\\nonScriptLoad\\nFills task input Read nodes\\nONELINER\\n'''\\n\"\"\")"
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode1
+ tile_color 0x7f7f7fff
+ gl_color 0xffaae9ff
+ label Inpainting
+ note_font_size 42
+ xpos -1720
+ ypos -44
+ bdwidth 1065
+ bdheight 1308
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode2
+ tile_color 0x7f7f7fff
+ gl_color 0xaabfffff
+ label "dns plate"
+ note_font_size 42
+ xpos -1544
+ ypos -640
+ border_width 10
+ bdwidth 232
+ bdheight 237
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode4
+ tile_color 0x7f7f7fff
+ gl_color 0x999999ff
+ label "inpaint guide"
+ note_font_size 42
+ xpos -2521
+ ypos -636
+ border_width 10
+ bdwidth 349
+ bdheight 241
+}
+BackdropNode {
+ inputs 0
+ name exr
+ tile_color 0x7f7f7fff
+ label "vfx_inpaint element\nexr"
+ note_font_size 42
+ xpos -1730
+ ypos 2024
+ border_width 10
+ bdwidth 602
+ bdheight 242
+}
+BackdropNode {
+ inputs 0
+ name exr1
+ tile_color 0x7f7f7fff
+ gl_color 0x6a55ffff
+ label "review (over BG)"
+ note_font_size 42
+ xpos -370
+ ypos 2019
+ border_width 10
+ bdwidth 438
+ bdheight 229
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode3
+ tile_color 0x7f7f7fff
+ label "preview merge"
+ note_font_size 42
+ xpos -345
+ ypos 1389
+ bdwidth 335
+ bdheight 251
+ z_order 1
+}
+Read {
+ inputs 0
+ file_type exr
+ format "3840 2160 0 0 3840 2160 1 UHD_4K"
+ proxy_format "3840 2160 0 0 3840 2160 1 UHD_4K"
+ first 1001
+ before black
+ last 1181
+ after black
+ frame_mode "start at"
+ frame 1001
+ origfirst 1001
+ origlast 1181
+ origset true
+ colorspace "ACES - ACES2065-1"
+ auto_alpha true
+ name INPAINT_GUIDE
+ tile_color 0x8498a0ff
+ xpos -2438
+ ypos -551
+}
+Dot {
+ name Dot10
+ xpos -2404
+ ypos -421
+}
+Read {
+ inputs 0
+ file_type exr
+ format "3840 2160 0 0 3840 2160 1 UHD_4K"
+ proxy_format "3840 2160 0 0 3840 2160 1 UHD_4K"
+ first 1001
+ before black
+ last 1181
+ after black
+ origfirst 1001
+ origlast 1181
+ origset true
+ colorspace "ACES - ACES2065-1"
+ auto_alpha true
+ name DNS_PLATE
+ tile_color 0x8498a0ff
+ xpos -1462
+ ypos -561
+}
+Dot {
+ name Dot2
+ xpos -1428
+ ypos -259
+}
+set N7ea46b00 [stack 0]
+Premult {
+ name Premult1
+ xpos -1462
+ ypos 1416
+}
+Dot {
+ name Dot5
+ xpos -1428
+ ypos 1486
+}
+set N7ea47900 [stack 0]
+Crop {
+ box {0 0 {root.width} {root.height}}
+ name Crop1
+ label "SAFETY CROP\nCAN BE REMOVED"
+ xpos -1462
+ ypos 1894
+}
+Write {
+ channels rgba
+ file "\[value script_directory]/\[value scriptname]_renders/\[value scriptversion]/exr/\[value scriptname_with_version].%06d.exr"
+ colorspace "ACES - ACES2065-1"
+ file_type exr
+ metadata "all metadata"
+ interleave "channels and layers"
+ first_part rgba
+ version 4
+ in_colorspace scene_linear
+ out_colorspace scene_linear
+ beforeRender "exec(\"\"\"\\nfrom datetime import datetime\\nfrom pathlib import Path\\nimport re\\nimport nuke\\nimport nukescripts\\n\\nscript_path = Path(nuke.scriptName())\\nscript_dir = script_path.parent\\nscript_name = script_path.stem\\nscript_name_without_version = re.sub(f'_v\\\\d+', '', script_name)\\nversion = nukescripts.version_get(script_path.as_posix(),'v')\\n\\nrender_dir = script_dir / f\"\{script_name_without_version\}_renders\" / f\"\{''.join(version)\}\"\\n\\n\\nrender_dir.mkdir(parents=True, exist_ok=True)\\n\\n\\n\\nscript_snapshot_path = render_dir / 'script'\\nscript_snapshot_path.mkdir(exist_ok=True)\\ncurrent_time = datetime.utcnow().strftime(\"%Y-%m-%d__%H-%M-%S\") + \"UTC\"\\nscript_snapshot_path = script_snapshot_path / f\"\{script_name\}_snapshot_\{current_time\}.nk\"\\nnuke.scriptSaveToTemp(script_snapshot_path.as_posix())\\n\"\"\")"
+ name Write3
+ label "\[value file]"
+ xpos -1462
+ ypos 2175
+ addUserKnob {20 FlwlsPipeline}
+ addUserKnob {1 script_directory}
+ script_directory "\[python nuke.script_directory()]"
+ addUserKnob {1 scriptname_with_version}
+ scriptname_with_version "\[basename \[file rootname \[value root.name]]]"
+ addUserKnob {1 scriptname}
+ scriptname "\[regsub -all \{_v\\d+\} \[value scriptname_with_version] \"\"]"
+ addUserKnob {1 scriptversion}
+ scriptversion "\[regexp -inline \{v\\d+\} \[value root.name]]"
+ addUserKnob {1 render_typ l render_type}
+ render_typ task_exr
+}
+push $N7ea47900
+push $N7ea46b00
+Dot {
+ name Dot6
+ xpos -149
+ ypos -259
+}
+Merge2 {
+ inputs 2
+ name Merge1
+ xpos -183
+ ypos 1482
+}
+Write {
+ channels {rgba.red rgba.green rgba.blue -rgba.alpha}
+ file "\[value script_directory]/\[value scriptname]_renders/\[value scriptversion]/review_mov/\[value scriptname_with_version].mov"
+ colorspace color_picking
+ file_type mov
+ mov64_format "mov (QuickTime / MOV)"
+ mov64_codec h264
+ mov64_fps {{root.fps}}
+ mov_h264_codec_profile "High 4:2:0 8-bit"
+ mov64_pixel_format {{0}}
+ mov64_quality Best
+ mov64_fast_start true
+ mov64_write_timecode true
+ mov64_gop_size 12
+ mov64_b_frames 0
+ mov64_bitrate 50000
+ mov64_bitrate_tolerance 0
+ mov64_quality_min 1
+ mov64_quality_max 1
+ create_directories true
+ checkHashOnRead false
+ version 4
+ name Write1
+ xpos -183
+ ypos 2146
+ addUserKnob {20 FlwlsPipeline}
+ addUserKnob {1 script_directory}
+ script_directory "\[python nuke.script_directory()]"
+ addUserKnob {1 scriptname_with_version}
+ scriptname_with_version "\[basename \[file rootname \[value root.name]]]"
+ addUserKnob {1 scriptname}
+ scriptname "\[regsub -all \{_v\\d+\} \[value scriptname_with_version] \"\"]"
+ addUserKnob {1 scriptversion}
+ scriptversion "\[regexp -inline \{v\\d+\} \[value root.name]]"
+ addUserKnob {1 render_type}
+ render_type review_mov
+}

@@ -1,0 +1,168 @@
+Group {
+ name Unwrap_flw1
+ help "Copyright 2022 Flawless"
+ tile_color 0xff5555ff
+ label "\[? \[value rewrap] rewrap \"\"]"
+ note_font_size 12
+ selected true
+ addUserKnob {20 User}
+ addUserKnob {4 pulldownresolution l size M {512 1024 2048}}
+ pulldownresolution 1024
+ addUserKnob {6 rewrap +STARTLINE}
+}
+ Input {
+  inputs 0
+  name target_stmap
+  label "(input \[value number])"
+  xpos 197
+  ypos -1398
+  number 3
+ }
+ Dot {
+  name Dot2
+  xpos 231
+  ypos 287
+ }
+ Input {
+  inputs 0
+  name cam
+  label "input \[value number]"
+  xpos -120
+  ypos -1357
+  number 2
+ }
+ Dot {
+  name Dot36
+  xpos -86
+  ypos -321
+ }
+set Ne40c8100 [stack 0]
+ Dot {
+  name Dot37
+  xpos -86
+  ypos 79
+ }
+push $Ne40c8100
+ Input {
+  inputs 0
+  name bg
+  label "input \[value number]"
+  xpos -394
+  ypos -1356
+  number 1
+ }
+ Remove {
+  operation keep
+  channels rgb
+  name Remove2
+  xpos -394
+  ypos -1268
+ }
+ Dot {
+  name Dot38
+  xpos -360
+  ypos -1015
+ }
+ Project3D2 {
+  inputs 2
+  project_on front
+  crop false
+  name Project3D3
+  xpos -394
+  ypos -325
+ }
+ Input {
+  inputs 0
+  name geo
+  label "input \[value number]"
+  xpos -842
+  ypos -1344
+ }
+ Dot {
+  name Dot35
+  xpos -808
+  ypos -1157
+ }
+ ApplyMaterial {
+  inputs 2
+  name ApplyMaterial4
+  xpos -842
+  ypos -325
+ }
+ Reformat {
+  inputs 0
+  format "2048 2048 0 0 2048 2048 1 square_2K"
+  box_fixed true
+  name Reformat2
+  label "if you change this, the metric will go out of whack"
+  xpos -495
+  ypos -12
+ }
+ Reformat {
+  inputs 0
+  format "1024 1024 0 0 1024 1024 1 square_1K"
+  box_fixed true
+  name Reformat1
+  label "if you change this, the metric will go out of whack"
+  xpos -605
+  ypos -103
+ }
+ Reformat {
+  inputs 0
+  format "512 512 0 0 512 512 1 square_512"
+  box_fixed true
+  name Reformat3
+  label "if you change this, the metric will go out of whack"
+  xpos -719
+  ypos -164
+ }
+ Switch {
+  inputs 3
+  which {{pulldownresolution}}
+  name Switch1
+  xpos -719
+ }
+ ScanlineRender {
+  inputs 3
+  conservative_shader_sampling false
+  ztest_enabled false
+  projection_mode uv
+  ambient 0.67
+  motion_vectors_type distance
+  name ScanlineRender2
+  xpos -842
+  ypos 75
+ }
+ Dot {
+  name Dot1
+  xpos -808
+  ypos 287
+ }
+set Ne4065600 [stack 0]
+ STMap {
+  inputs 2
+  uv rgb
+  name STMap7
+  xpos -649
+  ypos 277
+ }
+ Dot {
+  name Dot3
+  xpos -615
+  ypos 424
+ }
+push $Ne4065600
+ Switch {
+  inputs 2
+  which {{rewrap}}
+  name Switch2
+  xpos -842
+  ypos 420
+ }
+ Output {
+  name Output1
+  xpos -842
+  ypos 550
+ }
+end_group
+

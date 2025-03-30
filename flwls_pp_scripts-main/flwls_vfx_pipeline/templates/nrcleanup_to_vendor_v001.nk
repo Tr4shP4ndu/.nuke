@@ -1,0 +1,494 @@
+#! /opt/Nuke13.1v2/libnuke-13.1.2.so -nx
+version 13.1 v2
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="0" y="28" w="2560" h="1241" maximized="1" screen="0">
+        <splitter orientation="1">
+            <split size="40"/>
+            <dock id="" hideTitles="1" activePageId="Toolbar.1">
+                <page id="Toolbar.1"/>
+            </dock>
+            <split size="1897" stretch="1"/>
+            <splitter orientation="2">
+                <split size="703"/>
+                <dock id="" activePageId="Viewer.1">
+                    <page id="Viewer.1"/>
+                </dock>
+                <split size="495"/>
+                <dock id="" activePageId="DAG.1" focus="true">
+                    <page id="DAG.1"/>
+                    <page id="Curve Editor.1"/>
+                    <page id="DopeSheet.1"/>
+                </dock>
+            </splitter>
+            <split size="615"/>
+            <dock id="" activePageId="Properties.1">
+                <page id="Properties.1"/>
+                <page id="uk.co.thefoundry.backgroundrenderview.1"/>
+            </dock>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name /Volumes/shared/vfx/filipe.correia/repos/flwls_pp_scripts/nuke/flwls_vfx_pipeline/templates/nrcleanup_to_vendor_v001.nk
+ project_directory "\[python \{nuke.script_directory()\}]"
+ last_frame 1
+ lock_range true
+ fps 25
+ format "1920 1080 0 0 1920 1080 1 HD_1080"
+ proxy_type scale
+ proxy_format "1024 778 0 0 1024 778 1 1K_Super_35(full-ap)"
+ colorManagement OCIO
+ defaultViewerLUT "OCIO LUTs"
+ workingSpaceLUT default
+ monitorLut ACES/sRGB
+ monitorOutLUT "sRGB (ACES)"
+ int8Lut matte_paint
+ int16Lut texture_paint
+ logLut compositing_log
+ floatLut "ACES - ACES2065-1"
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode2
+ tile_color 0x7f7f7fff
+ label "neural render"
+ note_font_size 42
+ xpos -1588
+ ypos -201
+ border_width 10
+ bdwidth 317
+ bdheight 258
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode3
+ tile_color 0x7f7f7fff
+ gl_color 0xf4aaffff
+ label reboxed
+ note_font_size 42
+ xpos -2127
+ ypos -198
+ border_width 10
+ bdwidth 294
+ bdheight 251
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode5
+ tile_color 0x7f7f7fff
+ label "denoised plate"
+ note_font_size 42
+ xpos -598
+ ypos -225
+ border_width 10
+ bdwidth 317
+ bdheight 258
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode6
+ tile_color 0x7f7f7fff
+ label plate
+ note_font_size 42
+ xpos -61
+ ypos -223
+ border_width 10
+ bdwidth 122
+ bdheight 253
+}
+BackdropNode {
+ inputs 0
+ name exr
+ tile_color 0x7f7f7fff
+ label "nr cleanup element\nexr"
+ note_font_size 42
+ xpos -2281
+ ypos 2495
+ border_width 10
+ bdwidth 602
+ bdheight 242
+}
+BackdropNode {
+ inputs 0
+ name exr1
+ tile_color 0x7f7f7fff
+ gl_color 0x6a55ffff
+ label "review (over BG)"
+ note_font_size 42
+ xpos -659
+ ypos 2501
+ border_width 10
+ bdwidth 438
+ bdheight 229
+}
+BackdropNode {
+ inputs 0
+ name prep_nodes
+ tile_color 0x71c67100
+ note_font_size 42
+ xpos -2255
+ ypos -1778
+ bdwidth 991
+ bdheight 1155
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode1
+ tile_color 0x7f7f7fff
+ label "preview merge"
+ note_font_size 42
+ xpos -607
+ ypos 1914
+ appearance Border
+ border_width 10
+ bdwidth 335
+ bdheight 251
+ z_order 1
+}
+Read {
+ inputs 0
+ file_type exr
+ localizationPolicy off
+ format "1920 1080 0 0 1920 1080 1 HD_1080"
+ first 0
+ last 0
+ frame_mode "start at"
+ frame 1
+ origfirst 0
+ origlast 0
+ origset true
+ version 187
+ colorspace "ACES - ACES2065-1"
+ name PLATE
+ xpos -40
+ ypos -141
+}
+Dot {
+ name Dot2
+ xpos -6
+ ypos 18
+}
+Read {
+ inputs 0
+ file_type exr
+ localizationPolicy on
+ format "1920 1080 0 0 1920 1080 1 HD_1080"
+ origset true
+ version 187
+ colorspace "ACES - ACES2065-1"
+ name REBOXED
+ xpos -2020
+ ypos -71
+}
+Dot {
+ name Dot6
+ xpos -1986
+ ypos 114
+}
+set N7eb09600 [stack 0]
+Dot {
+ name REBOXED_INPUT
+ label REBOXED_INPUT
+ xpos -1986
+ ypos 210
+}
+Premult {
+ name Premult1
+ xpos -2020
+ ypos 1598
+}
+Dot {
+ name Dot4
+ xpos -1986
+ ypos 2058
+}
+set N3e723200 [stack 0]
+Crop {
+ box {0 0 {root.width} {root.height}}
+ name Crop1
+ label "SAFETY CROP\nCAN BE REMOVED"
+ xpos -2020
+ ypos 2402
+}
+Dot {
+ name Dot1
+ xpos -1986
+ ypos 2586
+}
+Write {
+ channels rgba
+ file "\[value script_directory]/\[value scriptname]_renders/\[value scriptversion]/exr/\[value scriptname_with_version].%06d.exr"
+ colorspace default
+ file_type exr
+ metadata "all metadata"
+ interleave "channels and layers"
+ first_part rgba
+ version 4
+ in_colorspace scene_linear
+ out_colorspace scene_linear
+ name Write3
+ label "\[value file]"
+ xpos -2020
+ ypos 2618
+ addUserKnob {20 FlwlsPipeline}
+ addUserKnob {1 script_directory}
+ script_directory "\[python nuke.script_directory()]"
+ addUserKnob {1 scriptname_with_version}
+ scriptname_with_version "\[basename \[file rootname \[value root.name]]]"
+ addUserKnob {1 scriptname}
+ scriptname "\[regsub -all \{_v\\d+\} \[value scriptname_with_version] \"\"]"
+ addUserKnob {1 scriptversion}
+ scriptversion "\[regexp -inline \{v\\d+\} \[value root.name]]"
+ addUserKnob {1 render_typ l render_type}
+ render_typ task_exr
+}
+Read {
+ inputs 0
+ file_type png
+ localizationPolicy off
+ format "1024 1024 0 0 1024 1024 1 square_1K"
+ frame_mode "start at"
+ frame 1
+ origset true
+ version 187
+ colorspace "ACES - ACEScct"
+ name NEURAL_RENDER
+ xpos -1470
+ ypos -117
+}
+Dot {
+ name Dot3
+ xpos -1436
+ ypos 18
+}
+Read {
+ inputs 0
+ file_type exr
+ format "1920 1080 0 0 1920 1080 1 HD_1080"
+ first 0
+ last 0
+ frame_mode "start at"
+ frame 1
+ origfirst 0
+ origlast 0
+ origset true
+ version 7
+ colorspace "ACES - ACES2065-1"
+ name PRECOMP
+ xpos -2020
+ ypos -1701
+}
+set N3e6c7900 [stack 0]
+Dot {
+ name PRECOMP_INPUT
+ label PRECOMP_INPUT
+ note_font "Bitstream Vera Sans Bold"
+ note_font_size 40
+ xpos -1986
+ ypos -1446
+}
+Remove {
+ channels forward
+ name Remove1
+ xpos -2020
+ ypos -1216
+}
+Remove {
+ channels backward
+ name Remove2
+ xpos -2020
+ ypos -1168
+}
+add_layer {fotd_stmap fotd_stmap.red fotd_stmap.green fotd_stmap.blue fotd_stmap.alpha}
+Remove {
+ channels fotd_stmap
+ name Remove3
+ xpos -2020
+ ypos -1120
+}
+add_layer {grade_nr_input grade_nr_input.red grade_nr_input.green grade_nr_input.blue grade_nr_input.alpha}
+Remove {
+ channels grade_nr_input
+ name Remove4
+ xpos -2020
+ ypos -1048
+}
+add_layer {grade_plate_input grade_plate_input.red grade_plate_input.green grade_plate_input.blue grade_plate_input.alpha}
+Remove {
+ channels grade_plate_input
+ name Remove5
+ xpos -2020
+ ypos -1000
+}
+add_layer {grain grain.red grain.green grain.blue grain.alpha}
+Remove {
+ channels grain
+ name Remove6
+ xpos -2020
+ ypos -952
+}
+add_layer {nr_boundary nr_boundary.red nr_boundary.green nr_boundary.blue nr_boundary.alpha}
+Remove {
+ channels nr_boundary
+ name Remove7
+ xpos -2020
+ ypos -904
+}
+add_layer {refocus refocus.red refocus.green refocus.blue refocus.alpha}
+Remove {
+ channels refocus
+ name Remove8
+ xpos -2020
+ ypos -832
+}
+set N3e6e7200 [stack 0]
+LayerContactSheet {
+ width 7680
+ height 6480
+ showLayerNames true
+ name LayerContactSheet1
+ xpos -1800
+ ypos -826
+}
+push $N7eb09600
+LayerContactSheet {
+ width 3840
+ height 2160
+ showLayerNames true
+ name LayerContactSheet2
+ xpos -1800
+ ypos 110
+}
+push $N3e6e7200
+Write {
+ channels all
+ file "\[python nuke.script_directory()]/../reboxed/\[lindex \[split \[value \[topnode].file] \"/\"] end-5]/\[lindex \[split \[lindex \[split \[value \[topnode].file] \"/\"] end] \".\"] 0].######.exr"
+ file_type exr
+ autocrop true
+ metadata "all metadata"
+ interleave "channels and layers"
+ first_part rgba
+ create_directories true
+ first {{PRECOMP.first_frame}}
+ last {{PRECOMP.last_frame}}
+ use_limit true
+ checkHashOnRead false
+ version 10
+ in_colorspace scene_linear
+ out_colorspace scene_linear
+ name WRITE_STRIPPED_PRECOMP
+ label "\[value file]"
+ xpos -2020
+ ypos -700
+}
+push $N3e6c7900
+Viewer {
+ frame 1
+ frame_range 1-1
+ fps 25
+ viewerProcess "sRGB (ACES)"
+ name Viewer1
+ xpos -2240
+ ypos -1450
+}
+NoOp {
+ inputs 0
+ name Prep_vendor_script1
+ label "\[value current_context]"
+ xpos -1580
+ ypos -1072
+ addUserKnob {20 Prep_vendor_script}
+ addUserKnob {1 current_context}
+ addUserKnob {22 get_context_from_script_name t "Figures out required inputs, but doesn't know about the \"inputs\" version" T "import json\ndef _get_context_from_script_name(script_name: str):\n    try:\n        script_name_parts = script_name.split('_')\n        context_dict = \{\}\n        context_dict\['workspace_root'] = '/Volumes/workspace'\n        if \"nr\" in script_name_parts:\n            if \"cleanup\" in script_name_parts:\n                context_dict\['task'] = \"vfx_nr_cleanup\"\n        elif \"inpaint\" in script_name_parts:\n            context_dict\['task'] = \"vfx_inpaint\"\n        elif \"occlusion\" in script_name_parts:\n            context_dict\['task'] = \"vfx_occlusion\"\n        if context_dict\['task'] in ('vfx_occlusion', 'vfx_inpaint'):\n            context_dict\['level'] = 'Shot'\n        elif context_dict\['task'] == 'vfx_nr_cleanup':\n            context_dict\['level'] = 'ShotLanguageVariant'        \n        context_dict\['show'] = script_name_parts\[0]\n        context_dict\['episode'] = int(script_name_parts\[1]\[2:4])\n        context_dict\['part'] = int(script_name_parts\[2]\[2:4])\n        context_dict\['shot'] = int(script_name_parts\[3])\n        if context_dict\['level'] == 'ShotLanguageVariant':\n            context_dict\['language'] = script_name_parts\[4]\n            context_dict\['variant'] = f\"\{script_name_parts\[5]\}_\{script_name_parts\[6]\}\"\n            \n        return context_dict\n    except TypeError as e:\n        raise TypeError(f'\{e\}\\nError when extracting context from script name. Does the script name contain all the context')\n\nnuke.thisNode().knob(\"current_context\").setValue(json.dumps(_get_context_from_script_name(Path(nuke.scriptName()).name)))\n" +STARTLINE}
+ addUserKnob {22 fill_precomp_read_node t "Gets the latest 'version' in the 'in' folder and uses that to fill the PRECOMP node.\nAlso sets the start frame to 1" T "import json\nfrom pathlib import Path\nfrom typing import Dict\n\ndef _get_sequence_path_in_fromUserText_format(sequence_folder: Path(), extension:str):\n    filepaths = list(sequence_folder.glob(f'*\{extension\}'))\n    filepaths.sort()\n    start_frame_path = filepaths\[0]\n    first_frame_number = int(re.search(r'\\.(\[0-9]\{6\})', start_frame_path.stem).group(1))\n    start_frame_name = re.sub(r'\\.(\[0-9]\{6\})', '.######', start_frame_path.name)\n    return f'\{start_frame_path.parent / start_frame_name\} \{first_frame_number\}-\{first_frame_number + len(filepaths)-1\}'\n\ndef _get_precomp_path_from_context(context_dict: Dict) -> Path:\n\n#    context = json.loads(nuke.toNode(\"Prep_vendor_script1\").knob(\"current_context\").value())\n    context = context_dict\n    precomp_path = Path(context\['workspace_root'])\n    precomp_path = precomp_path / \"shows\" / context\['show'] / \"episodes\" / f'ep\{context\[\"episode\"]:02\}' / \"parts\" / f'pt\{context\[\"part\"]:02\}' / \"shots\" / f'\{context\[\"shot\"]:04\}' / \"languages\" / context\[\"language\"]  / \"variants\" / f'\{context\[\"variant\"]\}' / \"tasks\" / \"vfx_nr_cleanup\" / \"in\" \n    \n    precomp_path = list(precomp_path.iterdir())\n    precomp_path.sort(reverse=True)\n    \n    precomp_path = precomp_path\[0] / \"PRECOMP\" / context\['variant'] / \"PRECOMP\" / \"precomp\"\n    return precomp_path\n\ndef _get_context() -> Dict:\n    return json.loads(nuke.thisNode().knob(\"current_context\").value())\n\n#context = json.loads(nuke.toNode(\"Prep_vendor_script1\").knob(\"current_context\").value())\ncontext = _get_context()\nprecomp_path = _get_precomp_path_from_context(context_dict = context)\nprecomp_path_as_string = _get_sequence_path_in_fromUserText_format(sequence_folder=precomp_path, extension=\"exr\")\nprecomp_node = nuke.toNode('PRECOMP')\nprecomp_node.knob('file').fromUserText(precomp_path_as_string)\nprecomp_node.knob('frame_mode').setValue('start at')\nprecomp_node.knob('frame').setValue('1')" +STARTLINE}
+ addUserKnob {41 file l File T PRECOMP.file}
+ addUserKnob {41 render_rebox T WRITE_STRIPPED_PRECOMP.Render}
+ addUserKnob {22 fill_reboxed_rad_node l fill_reboxed_read_node T "import json\nfrom pathlib import Path\nfrom typing import Dict\n\ndef _get_sequence_path_in_fromUserText_format(sequence_folder: Path(), extension:str):\n    filepaths = list(sequence_folder.glob(f'*\{extension\}'))\n    filepaths.sort()\n    start_frame_path = filepaths\[0]\n    first_frame_number = int(re.search(r'\\.(\[0-9]\{6\})', start_frame_path.stem).group(1))\n    start_frame_name = re.sub(r'\\.(\[0-9]\{6\})', '.######', start_frame_path.name)\n    return f'\{start_frame_path.parent / start_frame_name\} \{first_frame_number\}-\{first_frame_number + len(filepaths)-1\}'\n\ndef _get_path_from_context(context_dict: Dict) -> Path:\n\n#    context = json.loads(nuke.toNode(\"Prep_vendor_script1\").knob(\"current_context\").value())\n    context = context_dict\n    path = Path(context\['workspace_root'])\n    path = path / \"shows\" / context\['show'] / \"episodes\" / f'ep\{context\[\"episode\"]:02\}' / \"parts\" / f'pt\{context\[\"part\"]:02\}' / \"shots\" / f'\{context\[\"shot\"]:04\}' / \"languages\" / context\[\"language\"]  / \"variants\" / f'\{context\[\"variant\"]\}' / \"tasks\" / \"vfx_nr_cleanup\" / \"to_vendor\" / \"reboxed\"\n    \n    path = list(path.iterdir())\n    path.sort(reverse=True)\n    \n    path = path\[0]\n    return path\n\ndef _get_context() -> Dict:\n    return json.loads(nuke.thisNode().knob(\"current_context\").value())\n\ncontext = _get_context()\npath = _get_path_from_context(context_dict = context)\npath_as_string = _get_sequence_path_in_fromUserText_format(sequence_folder=path, extension=\"exr\")\nnode = nuke.toNode('REBOXED')\nnode.knob('file').fromUserText(path_as_string)" +STARTLINE}
+ addUserKnob {41 file_1 l File T REBOXED.file}
+ addUserKnob {22 set_root_preferences t "Looks at the \"REBOX\" node to set root settings.\nfirst_frame\nlast_frame\nfps\nformat" T "node = nuke.toNode('REBOXED')\nnuke.root().knob('first_frame').setValue(node.firstFrame())\nnuke.root().knob('last_frame').setValue(node.lastFrame())\nnuke.root().knob('lock_range').setValue(True)\nnuke.root().knob('fps').setValue(node.metadata(\"input/frame_rate\"))\nnuke.root().knob('format').setValue(node.knob('format').value())" +STARTLINE}
+ addUserKnob {22 get_cornerpins T "def get_format(format_name: str) -> format:\n    format = \"\"\n    for nuke_format in nuke.formats():\n        if nuke_format.name() == format_name:\n            format = nuke_format\n    if format == \"\":\n        raise ValueError(f\"Could not find format: \{format_name\}, try on of these \{\[format.name() for format in nuke.formats()]\}\")\n\n    return format\n\ndef set_reformat_node_format(reformat_node: node, format_name:str):\n    format = get_format(format_name)\n    reformat_node.knob(\"format\").setValue(format)\n\n\n\nprecomp_metapin = nuke.nodes.NR_Generate_Cornerpin_flw()\nprecomp_metapin.setInput(0, nuke.toNode(\"REBOXED\"))\nexport_knob = precomp_metapin.knob(\"Exportcp\")\nexport_knob.execute()\nexport_knob.execute()\n\nfor cornerpin in nuke.allNodes(\"CornerPin2D\"):\n    cornerpin.knob(\"from2\").setExpression(\"input.width\",0)\n    cornerpin.knob(\"from3\").setExpression(\"input.width\",0)\n    cornerpin.knob(\"from3\").setExpression(\"input.height\",1)\n    cornerpin.knob(\"from4\").setExpression(\"input.height\",1)\n\nnuke.delete(precomp_metapin)\n\ncp1 = nuke.toNode(\"CornerPin2D1\")\ncp1.knob(\"invert\").setValue(True)\ncp1.setInput(0, nuke.toNode(\"REBOXED_INPUT\"))\ncp1.setYpos(cp1.ypos()+200)\n\nreformat_1 = nuke.nodes.Reformat()\nreformat_1.setInput(0, cp1)\nset_reformat_node_format(reformat_node=reformat_1, format_name= \"square_1K\")\nreformat_1.knob(\"resize\").setValue(\"distort\")\n\ncp2 = nuke.toNode(\"CornerPin2D2\")\ncp2.setInput(0, reformat_1)\n\ncp2.setYpos(cp2.ypos()+200)\n\nreformat_2 = nuke.nodes.Reformat()\nreformat_2.setInput(0,cp2)\nreformat_2.knob(\"resize\").setValue(\"none\")\nreformat_2.knob(\"center\").setValue(False)\n\npremult_node = nuke.toNode(\"Premult1\")\npremult_node.setInput(0, reformat_2)" +STARTLINE}
+ addUserKnob {22 fill_write_review_mov_audio t "Fills the \"Write_review_mov\" \"audiofile\" knob with path to \".../to_vendor/audio/...\" " T "import json\nfrom pathlib import Path\nfrom typing import Dict\n\ndef _get_sequence_path_in_fromUserText_format(sequence_folder: Path(), extension:str):\n    filepaths = list(sequence_folder.glob(f'*\{extension\}'))\n    filepaths.sort()\n    start_frame_path = filepaths\[0]\n    first_frame_number = int(re.search(r'\\_(\[0-9]\{6\})', start_frame_path.stem).group(1))\n    start_frame_name = re.sub(r'\\_(\[0-9]\{6\})', '_######', start_frame_path.name)\n    return f'\{start_frame_path.parent / start_frame_name\} \{first_frame_number\}-\{first_frame_number + len(filepaths)-1\}'\n\ndef _get_precomp_path_from_context(context_dict: Dict) -> Path:\n    context = context_dict\n    path = Path(context\['workspace_root'])\n    path = path / \"shows\" / context\['show'] / \"episodes\" / f'ep\{context\[\"episode\"]:02\}' / \"parts\" / f'pt\{context\[\"part\"]:02\}' / \"shots\" / f'\{context\[\"shot\"]:04\}' / \"languages\" / context\[\"language\"]  / \"variants\" / f'\{context\[\"variant\"]\}' / \"tasks\" / \"vfx_nr_cleanup\" / \"to_vendor\" / \"audio\"\n    \n    path = list(path.iterdir())\n    path = path\[0]\n    return path\n\ndef _get_context() -> Dict:\n    return json.loads(nuke.thisNode().knob(\"current_context\").value())\n\n\ncontext = _get_context()\npath = _get_precomp_path_from_context(context_dict = context)\n#path_as_string = _get_sequence_path_in_fromUserText_format(sequence_folder=path, extension=\"exr\")\nnode = nuke.toNode('Write_review_mov')\nnode.knob('mov64_audiofile').setValue(path.as_posix())\n" +STARTLINE}
+ addUserKnob {41 mov64_audiofile l "Audio File" T Write_review_mov.mov64_audiofile}
+ addUserKnob {22 fill_denoised_plate_read_node t "Links the \"DENOISED_PLATE\" read node to the latest denoised plate in the to_vendor folder\n" T "import json\nfrom pathlib import Path\nfrom typing import Dict\n\ndef _get_sequence_path_in_fromUserText_format(sequence_folder: Path(), extension:str):\n    filepaths = list(sequence_folder.glob(f'*\{extension\}'))\n    filepaths.sort()\n    start_frame_path = filepaths\[0]\n    first_frame_number = int(re.search(r'\\.(\[0-9]\{6\})', start_frame_path.stem).group(1))\n    start_frame_name = re.sub(r'\\.(\[0-9]\{6\})', '.######', start_frame_path.name)\n    return f'\{start_frame_path.parent / start_frame_name\} \{first_frame_number\}-\{first_frame_number + len(filepaths)-1\}'\n\ndef _get_precomp_path_from_context(context_dict: Dict) -> Path:\n    context = context_dict\n    path = Path(context\['workspace_root'])\n    path = path / \"shows\" / context\['show'] / \"episodes\" / f'ep\{context\[\"episode\"]:02\}' / \"parts\" / f'pt\{context\[\"part\"]:02\}' / \"shots\" / f'\{context\[\"shot\"]:04\}' / \"languages\" / context\[\"language\"]  / \"variants\" / f'\{context\[\"variant\"]\}' / \"tasks\" / \"vfx_nr_cleanup\" / \"to_vendor\" / \"denoised_plate\"\n    \n    return path\n\ndef _get_context() -> Dict:\n    return json.loads(nuke.thisNode().knob(\"current_context\").value())\n\n\ncontext = _get_context()\npath = _get_precomp_path_from_context(context_dict = context)\npath_as_string = _get_sequence_path_in_fromUserText_format(sequence_folder=path, extension=\"exr\")\nnode = nuke.toNode('DNS_PLATE')\nnode.knob('file').fromUserText(path_as_string)\nnode.knob('frame_mode').setValue('start at')\nnode.knob('frame').setValue('1')\n" +STARTLINE}
+ addUserKnob {41 file_3 l File T DNS_PLATE.file}
+ addUserKnob {22 fill_neural_render_read_node t "Fills the \"NEURAL_RENDER\" Read node with the latest contents of .../to_vendor/neural_render\n" T "import json\nfrom pathlib import Path\nfrom typing import Dict\n\ndef _get_sequence_path_in_fromUserText_format(sequence_folder: Path(), extension:str):\n    filepaths = list(sequence_folder.glob(f'*\{extension\}'))\n    filepaths.sort()\n    start_frame_path = filepaths\[0]\n    first_frame_number = int(re.search(r'\\.(\[0-9]\{6\})', start_frame_path.stem).group(1))\n    start_frame_name = re.sub(r'\\.(\[0-9]\{6\})', '.######', start_frame_path.name)\n    return f'\{start_frame_path.parent / start_frame_name\} \{first_frame_number\}-\{first_frame_number + len(filepaths)-1\}'\n\ndef _get_precomp_path_from_context(context_dict: Dict) -> Path:\n    context = context_dict\n    path = Path(context\['workspace_root'])\n    path = path / \"shows\" / context\['show'] / \"episodes\" / f'ep\{context\[\"episode\"]:02\}' / \"parts\" / f'pt\{context\[\"part\"]:02\}' / \"shots\" / f'\{context\[\"shot\"]:04\}' / \"languages\" / context\[\"language\"]  / \"variants\" / f'\{context\[\"variant\"]\}' / \"tasks\" / \"vfx_nr_cleanup\" / \"to_vendor\" / \"neural_render\"\n    \n    return path\n\ndef _get_context() -> Dict:\n    return json.loads(nuke.thisNode().knob(\"current_context\").value())\n\n\ncontext = _get_context()\npath = _get_precomp_path_from_context(context_dict = context)\npath_as_string = _get_sequence_path_in_fromUserText_format(sequence_folder=path, extension=\"png\")\nnode = nuke.toNode('NEURAL_RENDER')\nnode.knob('file').fromUserText(path_as_string)\nnode.knob('frame_mode').setValue('start at')\nnode.knob('frame').setValue('1')\n" +STARTLINE}
+ addUserKnob {41 file_2 l File T NEURAL_RENDER.file}
+ addUserKnob {22 fill_plate_read_node t "Fills the \"PLATE\" node with the contents of \".../to_vendor/plate/\"" T "import json\nfrom pathlib import Path\nfrom typing import Dict\n\ndef _get_sequence_path_in_fromUserText_format(sequence_folder: Path(), extension:str):\n    filepaths = list(sequence_folder.glob(f'*\{extension\}'))\n    filepaths.sort()\n    start_frame_path = filepaths\[0]\n    first_frame_number = int(re.search(r'\\_(\[0-9]\{6\})', start_frame_path.stem).group(1))\n    start_frame_name = re.sub(r'\\_(\[0-9]\{6\})', '_######', start_frame_path.name)\n    return f'\{start_frame_path.parent / start_frame_name\} \{first_frame_number\}-\{first_frame_number + len(filepaths)-1\}'\n\ndef _get_precomp_path_from_context(context_dict: Dict) -> Path:\n    context = context_dict\n    path = Path(context\['workspace_root'])\n    path = path / \"shows\" / context\['show'] / \"episodes\" / f'ep\{context\[\"episode\"]:02\}' / \"parts\" / f'pt\{context\[\"part\"]:02\}' / \"shots\" / f'\{context\[\"shot\"]:04\}' / \"languages\" / context\[\"language\"]  / \"variants\" / f'\{context\[\"variant\"]\}' / \"tasks\" / \"vfx_nr_cleanup\" / \"to_vendor\" / \"plate\"\n    \n    return path\n\ndef _get_context() -> Dict:\n    return json.loads(nuke.thisNode().knob(\"current_context\").value())\n\n\ncontext = _get_context()\npath = _get_precomp_path_from_context(context_dict = context)\npath_as_string = _get_sequence_path_in_fromUserText_format(sequence_folder=path, extension=\"exr\")\nnode = nuke.toNode('PLATE')\nnode.knob('file').fromUserText(path_as_string)\nnode.knob('frame_mode').setValue('start at')\nnode.knob('frame').setValue('1')\n" +STARTLINE}
+ addUserKnob {41 file_4 l File T PLATE.file}
+ addUserKnob {22 delete_prep_nodes T "backdrop_node = nuke.toNode(\"prep_nodes\")\ninner_nodes = backdrop_node.getNodes()\nfor inner_node in inner_nodes:\n    if not inner_node.name()==nuke.thisNode().name():\n        nuke.delete(inner_node)\nnuke.delete(backdrop_node)\nnuke.delete(nuke.thisNode())" +STARTLINE}
+}
+push $N3e723200
+Read {
+ inputs 0
+ file_type exr
+ localizationPolicy off
+ format "1920 1080 0 0 1920 1080 1 HD_1080"
+ first 0
+ last 0
+ frame_mode "start at"
+ frame 1
+ origfirst 0
+ origlast 0
+ origset true
+ version 187
+ colorspace "ACES - ACES2065-1"
+ name DNS_PLATE
+ xpos -480
+ ypos -141
+}
+Dot {
+ name Dot5
+ xpos -446
+ ypos -6
+}
+Merge2 {
+ inputs 2
+ name Merge1
+ xpos -480
+ ypos 2054
+}
+Dot {
+ name Dot9
+ xpos -446
+ ypos 2586
+}
+Write {
+ channels {rgba.red rgba.green rgba.blue -rgba.alpha}
+ file "\[value script_directory]/\[value scriptname]_renders/\[value scriptversion]/review_mov/\[value scriptname_with_version].mov"
+ colorspace color_picking
+ file_type mov
+ mov64_format "mov (QuickTime / MOV)"
+ mov64_codec appr
+ mov64_fps {{root.fps}}
+ mov_h264_codec_profile "High 4:2:0 8-bit"
+ mov64_pixel_format {{0}}
+ mov64_quality High
+ mov64_fast_start true
+ mov64_write_timecode true
+ mov64_gop_size 12
+ mov64_b_frames 0
+ mov64_bitrate 20000
+ mov64_bitrate_tolerance 4000000
+ mov64_quality_min 1
+ mov64_quality_max 3
+ create_directories true
+ checkHashOnRead false
+ version 4
+ name Write_review_mov
+ xpos -480
+ ypos 2624
+ addUserKnob {20 FlwlsPipeline}
+ addUserKnob {1 script_directory}
+ script_directory "\[python nuke.script_directory()]"
+ addUserKnob {1 scriptname_with_version}
+ scriptname_with_version "\[basename \[file rootname \[value root.name]]]"
+ addUserKnob {1 scriptname}
+ scriptname "\[regsub -all \{_v\\d+\} \[value scriptname_with_version] \"\"]"
+ addUserKnob {1 scriptversion}
+ scriptversion "\[regexp -inline \{v\\d+\} \[value root.name]]"
+ addUserKnob {1 render_type}
+ render_type review_mov
+}

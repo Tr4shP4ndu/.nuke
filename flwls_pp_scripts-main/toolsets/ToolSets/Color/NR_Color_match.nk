@@ -1,0 +1,1491 @@
+BackdropNode {
+ inputs 0
+ name BackdropNode14
+ tile_color 0xb3a07600
+ label NR_Color_match
+ note_font_size 42
+ selected true
+ xpos 3073
+ ypos -143
+ bdwidth 904
+ bdheight 833
+ z_order -2
+}
+Dot {
+ inputs 0
+ name Dot32
+ label "DNS PLATE"
+ note_font_size 30
+ selected true
+ xpos 3731
+ ypos 166
+}
+Dot {
+ inputs 0
+ name Dot101
+ label "FOTD TRACK"
+ note_font_size 30
+ selected true
+ xpos 3515
+ ypos 166
+}
+Dot {
+ inputs 0
+ name Dot37
+ label "PT ST MAP"
+ note_font_size 30
+ selected true
+ xpos 3181
+ ypos 166
+}
+push $cut_paste_input
+Dot {
+ name Dot50
+ label SOURCE
+ note_font_size 30
+ selected true
+ xpos 3362
+ ypos 166
+}
+Group {
+ inputs 4
+ name ReColour_flw1
+ tile_color 0xff5555ff
+ selected true
+ xpos 3454
+ ypos 360
+ addUserKnob {20 User}
+ addUserKnob {41 size T Seanqualize2.size}
+ addUserKnob {41 mix T Seanqualize2.mix}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode12
+  tile_color 0xbbbbbbff
+  label "SEANQUALIZE + AUTOMORPH"
+  note_font_size 42
+  xpos -286
+  ypos 23
+  bdwidth 1876
+  bdheight 1028
+  z_order -1
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode13
+  tile_color 0x5f6e8100
+  label "MOUTH MASK"
+  note_font_size 42
+  xpos -292
+  ypos -732
+  bdwidth 308
+  bdheight 727
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode15
+  tile_color 0xff0000ff
+  note_font_size 42
+  xpos 294
+  ypos 829
+  bdwidth 216
+  bdheight 116
+ }
+ Input {
+  inputs 0
+  name nr
+  label "(input \[value number])"
+  xpos 356
+  ypos -982
+ }
+ Dot {
+  name Dot13
+  xpos 390
+  ypos -864
+ }
+ Dilate {
+  channels alpha
+  size {{input.width/100}}
+  name Dilate8
+  xpos 356
+  ypos -552
+ }
+ Dot {
+  name Dot27
+  xpos 390
+  ypos -111
+ }
+set N87554f00 [stack 0]
+ Dot {
+  name Dot28
+  xpos 390
+  ypos 135
+ }
+set N87554800 [stack 0]
+ Dot {
+  name Dot81
+  xpos 637
+  ypos 135
+ }
+ Group {
+  name bb_crop
+  tile_color 0xffaaaaff
+  xpos 603
+  ypos 638
+  addUserKnob {20 User}
+  addUserKnob {6 exbbox l "use external bbox" +STARTLINE}
+  addUserKnob {26 ""}
+  addUserKnob {41 box T Crop2.box}
+  addUserKnob {26 ""}
+  addUserKnob {41 reformat T Crop2.reformat}
+  addUserKnob {41 crop l "black outside" -STARTLINE T Crop2.crop}
+ }
+  Input {
+   inputs 0
+   name source
+   xpos 508
+   ypos 517
+  }
+  Dot {
+   name Dot36
+   xpos 542
+   ypos 557
+  }
+set N87536b00 [stack 0]
+  Crop {
+   box {{parent.BBoxToFormat.inputBBox.x} {parent.BBoxToFormat.inputBBox.y} {parent.BBoxToFormat.inputBBox.r} {parent.BBoxToFormat.inputBBox.t}}
+   reformat true
+   crop false
+   name Crop2
+   xpos 619
+   ypos 656
+  }
+set N87536400 [stack 0]
+  Output {
+   name Output1
+   xpos 603
+   ypos 770
+  }
+push $N87536400
+  Viewer {
+   frame_range 1001-1160
+   name Viewer1
+   xpos 730
+   ypos -10
+   hide_input true
+  }
+  Input {
+   inputs 0
+   name external_bbox
+   label "(input \[value number])"
+   xpos 285
+   ypos 487
+   number 1
+  }
+push $N87536b00
+  Switch {
+   inputs 2
+   which {{exbbox}}
+   name Switch1
+   xpos 342
+   ypos 600
+  }
+  Group {
+   name BBoxToFormat
+   onCreate "n = nuke.thisNode()\ninputFormat = n.knob(\"inputFormat\")\ninputBBox = n.knob(\"inputBBox\")\ncrop = nuke.toNode(\"Crop6\")\ncropb = crop.knob('box')\noutputBBox = n.knob('outputBBox')\noutputBBoxCenter = n.knob(\"outputBBoxCenter\")\n\ninputFormat.setFlag(0x0000000000008000)\ninputBBox.setFlag(0x0000000000008000)\ncropb.setFlag(0x0000000000008000)\noutputBBox.setFlag(0x0000000000008000)\noutputBBoxCenter.setFlag(0x0000000000008000)\n\nn = nuke.thisNode()\nn.knob(\"overscan\").setRange(0,400)\nn.knob(\"overscanPercent\").setRange(1,4)"
+   knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\nif k.name() == \"overscanType\":\n    if n.knob(\"overscanType\").getValue() == 1:\n        n.knob(\"overscanPercent\").setVisible(True)\n        n.knob(\"overscan\").setVisible(False)\n    else:\n        n.knob(\"overscanPercent\").setVisible(False)\n        n.knob(\"overscan\").setVisible(True)"
+   tile_color 0xa57aaaff
+   note_font_color 0xffffffff
+   xpos 477
+   ypos 655
+   addUserKnob {20 CropBBox}
+   addUserKnob {4 type l Type +INVISIBLE M {"To Format" "To BBox"}}
+   addUserKnob {41 intersect T Crop6.intersect}
+   addUserKnob {6 blackOutside l "Black Outside" -STARTLINE}
+   addUserKnob {4 overscanType l "Overscan Type:" M {Pixels Percentage}}
+   overscanType Percentage
+   addUserKnob {14 overscan l Overscan +HIDDEN R 0 400}
+   addUserKnob {14 overscanPercent l "Overscan Percent" R 1 4}
+   overscanPercent 1
+   addUserKnob {20 inputBbox l "BBox Data" n 1}
+   addUserKnob {15 inputFormat l "Input Format"}
+   inputFormat {0 0 {input.width} {input.height}}
+   addUserKnob {15 inputBBox l "Input BBox"}
+   inputBBox {{input.bbox.x} {input.bbox.y} {input.bbox.r} {input.bbox.t}}
+   addUserKnob {12 outputBBoxCenter l OutputBBoxCenter}
+   outputBBoxCenter {{OutputBBox1.outputBBoxCenter.w} {OutputBBox1.outputBBoxCenter.h}}
+   addUserKnob {15 outputBBox l "Output BBox"}
+   outputBBox {{OutputBBox1.OutputBBox} {OutputBBox1.OutputBBox} {OutputBBox1.OutputBBox} {OutputBBox1.OutputBBox}}
+   addUserKnob {20 endGroup n -1}
+   addUserKnob {20 info_1 l Info}
+   addUserKnob {26 creator l Creator: T "<b><big>Tony Lyons"}
+   addUserKnob {26 desc l Description: t "crop to inputformat\n\ndisplays values of input bbox" T CropBBox}
+   addUserKnob {26 ver l Version: T v02}
+  }
+   Input {
+    inputs 0
+    name Input
+    xpos 261
+    ypos 394
+   }
+   Dot {
+    name Dot2
+    note_font_size 41
+    xpos 295
+    ypos 462
+   }
+set N874ff200 [stack 0]
+   Dot {
+    name Dot1
+    note_font_size 41
+    xpos -160
+    ypos 462
+   }
+set N874feb00 [stack 0]
+push $N874ff200
+   Crop {
+    box {{curve} {curve} {input.width} {input.height}}
+    crop {{parent.blackOutside}}
+    name Crop6
+    xpos 261
+    ypos 510
+    addUserKnob {20 User}
+    addUserKnob {22 cropToBbox l "Crop to Bounding Box" -STARTLINE T codeBBox()}
+   }
+set N874fe400 [stack 0]
+   Remove {
+    operation keep
+    channels none
+    name Remove1
+    xpos 120
+    ypos 504
+   }
+set N874fdd00 [stack 0]
+   Transform {
+    scale {{parent.overscanPercent} {parent.overscanPercent}}
+    center {{input.bbox.r/2} {input.bbox.t/2}}
+    shutteroffset centred
+    name Transform1
+    xpos 120
+    ypos 555
+   }
+push $N874fdd00
+   AdjBBox {
+    numpixels {{parent.overscan} {parent.overscan}}
+    name AdjBBox1
+    xpos -5
+    ypos 510
+   }
+   Switch {
+    inputs 2
+    which {{overscanType}}
+    name Switch2
+    label "\[value which]"
+    xpos -5
+    ypos 549
+   }
+   Merge2 {
+    inputs 2
+    bbox intersection
+    Achannels {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+    Bchannels {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+    output {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+    name Merge1
+    xpos -5
+    ypos 647
+    disable {{!parent.Crop6.intersect}}
+   }
+push $N874feb00
+   CopyBBox {
+    inputs 2
+    name CopyBBox1
+    xpos -194
+    ypos 653
+   }
+   BlackOutside {
+    name BlackOutside1
+    xpos -194
+    ypos 692
+    disable {{!parent.blackOutside}}
+   }
+   Dot {
+    name Dot4
+    note_font_size 41
+    xpos -160
+    ypos 769
+   }
+set N874dab00 [stack 0]
+push $N874fe400
+   Switch {
+    inputs 2
+    which {{"overscanType == 0 ? overscan.w != 0 || overscan.h != 0 : overscanPercent.w != 1 || overscanPercent.h != 1 ? 1 : 0"}}
+    name Switch1
+    label "\[value which]"
+    xpos 261
+    ypos 759
+   }
+set N874da400 [stack 0]
+   Output {
+    name Output1
+    xpos 261
+    ypos 921
+   }
+push $N874da400
+   NoOp {
+    name OutputBBox1
+    xpos 378
+    ypos 821
+    addUserKnob {20 User}
+    addUserKnob {15 OutputBBox l "Output BBox"}
+    OutputBBox {{input.bbox.x} {input.bbox.y} {input.bbox.r} {input.bbox.t}}
+    addUserKnob {14 outputBBoxCenter l "Output BBox Center" R 0 100}
+    outputBBoxCenter {{OutputBBox.x+(OutputBBox.r-OutputBBox.x)/2} {OutputBBox.y+(OutputBBox.t-OutputBBox.y)/2}}
+   }
+push $N874dab00
+   Viewer {
+    frame_range 1001-1160
+    name Viewer1
+    xpos 620
+    ypos -10
+    hide_input true
+   }
+  end_group
+ end_group
+push $N87554800
+ Dot {
+  name Dot85
+  xpos 390
+  ypos 795
+ }
+set N874d8800 [stack 0]
+ Dot {
+  name Dot86
+  xpos 550
+  ypos 795
+ }
+ Dot {
+  name Dot41
+  xpos 550
+  ypos 970
+ }
+ Input {
+  inputs 0
+  name pt_stmap
+  label "(input \[value number])"
+  xpos 137
+  ypos -981
+  number 1
+ }
+ Dot {
+  name Dot12
+  xpos 171
+  ypos -864
+ }
+ Dot {
+  name Dot1
+  xpos 171
+  ypos -216
+ }
+ Constant {
+  inputs 0
+  channels rgb
+  format "1024 1024 0 0 1024 1024 1 square_1K"
+  name Constant3
+  xpos -182
+  ypos -552
+ }
+ Roto {
+  output alpha
+  cliptype none
+  curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 2097664}
+    {t x44000000 x44000000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}
+    {curvegroup Ellipse1 512 bezier
+     {{cc
+       {f 8192}
+       {px 1
+        {xc2503618 0}
+        {x43ffe000 x438c4000}
+        {x42503620 0}
+        {0 xc217e0d8}
+        {x44178000 x43aea000}
+        {0 x4217e0d8}
+        {x42503620 0}
+        {x43ffe000 x43d48aab}
+        {xc2503618 0}
+        {0 x4217e0d8}
+        {x43d0c000 x43aea000}
+        {0 xc217e0d8}}}
+      {cc
+       {f 8192}
+       {p
+        {{{1 xc2503618}}
+      {{1 0}}}
+        {{{1 0}}
+      {{1 0}}}
+        {{{1 x42503620}}
+      {{1 0}}}
+        {{{1 0}}
+      {{1 xc217e0d8}}}
+        {{{1 0}}
+      {{1 0}}}
+        {{{1 0}}
+      {{1 x4217e0d8}}}
+        {{{1 x42503620}}
+      {{1 0}}}
+        {{{1 0}}
+      {{1 0}}}
+        {{{1 xc2503618}}
+      {{1 0}}}
+        {{{1 0}}
+      {{1 x4217e0d8}}}
+        {{{1 0}}
+      {{1 0}}}
+        {{{1 0}}
+      {{1 xc217e0d8}}}}}}
+     {tx 1 x43ffe000 x43aea000}
+     {a osw x41200000 osf 0 str 1 spx x44800000 spy x44428000 sb 1 tt x40e00000}}}}}}
+  toolbox {selectAll {
+  { selectAll str 1 ssx 1 ssy 1 sf 1 }
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 tt 6 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 tt 7 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+  toolbar_brush_hardness 0.200000003
+  toolbar_source_transform_scale {1 1}
+  toolbar_source_transform_center {1024 778}
+  colorOverlay {0 0 0 0}
+  lifetime_type "all frames"
+  motionblur_shutter_offset_type centred
+  source_black_outside true
+  name Roto3
+  xpos -182
+  ypos -427
+ }
+ Blur {
+  channels alpha
+  size 30
+  name Blur2
+  xpos -182
+  ypos -351
+ }
+set N87493200 [stack 0]
+ STMap {
+  inputs 2
+  uv rgb
+  name STMap5
+  xpos -182
+  ypos -226
+ }
+ Dot {
+  name Dot39
+  xpos -148
+  ypos 281
+ }
+push $N87554800
+ Dot {
+  name Dot29
+  xpos 96
+  ypos 135
+ }
+ Premult {
+  name Premult4
+  xpos 62
+  ypos 280
+ }
+ Multiply {
+  inputs 1+1
+  value 0
+  name Multiply1
+  xpos 62
+  ypos 511
+ }
+set N87490f00 [stack 0]
+ Input {
+  inputs 0
+  name fosd_stmap
+  label "(input \[value number])"
+  xpos 982
+  ypos -975
+  number 2
+ }
+ Dot {
+  name Dot14
+  xpos 1016
+  ypos -864
+ }
+push $N87493200
+ Dot {
+  name Dot30
+  label "MOUTH MASK \n"
+  note_font_size 30
+  xpos 759
+  ypos -341
+ }
+ STMap {
+  inputs 2
+  uv rgb
+  name STMap9
+  xpos 982
+  ypos -351
+ }
+push $N87554f00
+ Dot {
+  name Dot31
+  label "\n"
+  note_font_size 30
+  xpos 1304
+  ypos -111
+ }
+ Input {
+  inputs 0
+  name dns_ref
+  label "(input \[value number])"
+  xpos 1430
+  ypos -966
+  number 3
+ }
+ Dot {
+  name Dot15
+  xpos 1464
+  ypos -864
+ }
+ Dot {
+  name Dot40
+  xpos 1464
+  ypos 411
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy5
+  xpos 1270
+  ypos 401
+ }
+ Premult {
+  name Premult5
+  xpos 1131
+  ypos 407
+ }
+ Multiply {
+  inputs 1+1
+  value 0
+  name Multiply3
+  xpos 982
+  ypos 401
+ }
+ Group {
+  inputs 2
+  name Automorph1
+  help "by Sean Danischevsky and Allar Kaasik at Flawless AI, 2021"
+  xpos 982
+  ypos 511
+  addUserKnob {20 Automorph t "by Sean Danischevsky and Allar Kaasik 2021"}
+  addUserKnob {7 morph t "Amount of morphing"}
+  morph 1
+  addUserKnob {7 dissolve}
+  addUserKnob {6 smoothstep t "When not using a mask input, adds a smoothstep to the morph slider" +STARTLINE}
+  smoothstep true
+  addUserKnob {41 channels T Keymix1.channels}
+  addUserKnob {41 maskChannel l "mask channel" T Keymix1.maskChannel}
+  addUserKnob {41 invertMask l invert T Keymix1.invertMask}
+  addUserKnob {41 mix T Keymix1.mix}
+  addUserKnob {41 bbox l "Set BBox to" T Keymix1.bbox}
+  addUserKnob {26 ""}
+  addUserKnob {41 mask_falloff l "mask falloff" T Dissolve2.which}
+  addUserKnob {6 output_morph_mask l "output morph mask" +STARTLINE}
+  addUserKnob {26 ""}
+  addUserKnob {41 vectorDetailReg l "Vector Detail" T VectorGenerator1.vectorDetailReg}
+  addUserKnob {41 strengthReg l Strength T VectorGenerator1.strengthReg}
+ }
+  Input {
+   inputs 0
+   name Input0
+   label "(input \[value number])"
+   xpos 610
+   ypos -72
+  }
+set N87426400 [stack 0]
+  Retime {
+   input.first 1001
+   input.last 1298
+   output.first 1001
+   output.last 1596
+   speed 0.5
+   filter none
+   time ""
+   name Retime1
+   xpos 610
+   ypos 83
+  }
+  Input {
+   inputs 0
+   name Input1
+   label "(input \[value number])"
+   xpos 830
+   ypos -72
+   number 1
+  }
+set N87425600 [stack 0]
+  Retime {
+   input.first 1001
+   input.last 1298
+   output.first 1001
+   output.last 1596
+   speed 0.5
+   filter none
+   time ""
+   name Retime3
+   xpos 830
+   ypos 83
+  }
+push $N87426400
+  FrameHold {
+   firstFrame {{t//2}}
+   name FrameHold1
+   xpos 170
+   ypos 120
+  }
+  Dot {
+   name Dot1
+   xpos 648
+   ypos 211
+  }
+set N87424100 [stack 0]
+push $N87425600
+  FrameHold {
+   firstFrame {{t//2}}
+   name FrameHold2
+   xpos 367
+   ypos 123
+  }
+  Dot {
+   name Dot2
+   xpos 868
+   ypos 211
+  }
+set N873ff200 [stack 0]
+  Switch {
+   inputs 2
+   which {{frame%2}}
+   name Switch2
+   xpos 836
+   ypos 329
+  }
+  VectorGenerator {
+   motionEstimation Regularized
+   vectorDetailReg 1
+   name VectorGenerator1
+   xpos 836
+   ypos 433
+  }
+  set C873fe400 [stack 0]
+set N873fe400 [stack 0]
+push $N873ff200
+push $N87424100
+  Switch {
+   inputs 2
+   which {{frame%2}}
+   name Switch1
+   xpos 620
+   ypos 327
+  }
+clone $C873fe400 {
+   xpos 620
+   ypos 429
+   selected false
+  }
+set N873fd600 [stack 0]
+  Copy {
+   inputs 2
+   from0 -rgba.alpha
+   to0 -rgba.alpha
+   channels forward
+   name Copy1
+   xpos 620
+   ypos 533
+  }
+set N873fcf00 [stack 0]
+  Retime {
+   input.first 1001
+   input.last 1298
+   output.first 1001
+   output.last 1149
+   speed 2
+   filter none
+   time ""
+   name Retime2
+   xpos 610
+   ypos 611
+  }
+push $N873fd600
+push $N873fe400
+  Copy {
+   inputs 2
+   from0 -rgba.alpha
+   to0 -rgba.alpha
+   channels forward
+   name Copy2
+   xpos 836
+   ypos 534
+  }
+set N873fc100 [stack 0]
+  Retime {
+   input.first 1001
+   input.last 1298
+   output.first 1001
+   output.last 1149
+   speed 2
+   filter none
+   time ""
+   name Retime4
+   xpos 872
+   ypos 635
+  }
+  Dissolve {
+   inputs 0
+   which 0.5
+   name Dissolve2
+   xpos 1050
+   ypos 912
+  }
+  Input {
+   inputs 0
+   name morph_mask
+   label "(input \[value number])"
+   xpos 1337
+   ypos -72
+   number 2
+  }
+add_layer {morph_mask morph_mask.a}
+  Shuffle2 {
+   fromInput1 {{0} B}
+   out1 morph_mask
+   fromInput2 {{0} B}
+   mappings "1 rgba.alpha 0 3 morph_mask.a 0 0"
+   name Shuffle1
+   xpos 1334
+   ypos 11
+  }
+  Dot {
+   name Dot16
+   xpos 1368
+   ypos 727
+  }
+set N873cdd00 [stack 0]
+  Invert {
+   name Invert2
+   xpos 1439
+   ypos 779
+  }
+  Gamma {
+   value {{2*(1-parent.Dissolve2.which) x1061 0.76}}
+   name Gamma2
+   xpos 1439
+   ypos 817
+  }
+  Invert {
+   name Invert3
+   xpos 1439
+   ypos 855
+  }
+push $N873cdd00
+  Gamma {
+   value {{parent.Dissolve2.which*2}}
+   name Gamma1
+   xpos 1235
+   ypos 807
+  }
+  Switch {
+   inputs 2
+   which {{parent.Dissolve2.which>0.5}}
+   name Switch4
+   xpos 1336
+   ypos 923
+  }
+set N87b96b00 [stack 0]
+  Dot {
+   name Dot7
+   xpos 1528
+   ypos 1308
+  }
+push $N87426400
+push $N87b96b00
+  Multiply {
+   value {{parent.morph}}
+   name Multiply1
+   xpos 1270
+   ypos 984
+  }
+  Dot {
+   name Dot5
+   xpos 1370
+   ypos 1064
+  }
+set N87b94f00 [stack 0]
+  Dot {
+   name Dot14
+   xpos 1370
+   ypos 1154
+  }
+  Dot {
+   name Dot13
+   xpos 946
+   ypos 1154
+  }
+push $N873fc100
+  FrameHold {
+   firstFrame {{t*2}}
+   name FrameHold4
+   xpos 720
+   ypos 672
+  }
+  Dot {
+   name Dot10
+   xpos 870
+   ypos 763
+  }
+set N87b83200 [stack 0]
+  Copy {
+   inputs 2
+   from0 morph_mask.a
+   to0 rotopaint_mask.a
+   name Copy3
+   xpos 830
+   ypos 1176
+  }
+  Premult {
+   channels forward
+   alpha rotopaint_mask.a
+   name Premult2
+   xpos 830
+   ypos 1224
+  }
+  IDistort {
+   uv forward
+   uv_scale {{1-parent.morph}}
+   name IDistort5
+   xpos 830
+   ypos 1320
+  }
+push $N87b94f00
+  Dot {
+   name Dot12
+   xpos 1161
+   ypos 1064
+  }
+  Invert {
+   name Invert1
+   xpos 1050
+   ypos 1056
+  }
+  Dot {
+   name Dot6
+   xpos 764
+   ypos 1064
+  }
+push $N873fcf00
+  FrameHold {
+   firstFrame {{t*2}}
+   name FrameHold3
+   xpos 390
+   ypos 552
+  }
+  Dot {
+   name Dot8
+   xpos 318
+   ypos 684
+  }
+set N87b5b900 [stack 0]
+  Copy {
+   inputs 2
+   from0 morph_mask.a
+   to0 morph_mask.a
+   name Copy4
+   xpos 610
+   ypos 1200
+  }
+  Premult {
+   channels forward
+   alpha morph_mask.a
+   name Premult1
+   xpos 620
+   ypos 1234
+  }
+  IDistort {
+   uv forward
+   uv_scale {{parent.morph}}
+   name IDistort6
+   xpos 610
+   ypos 1344
+  }
+  Dissolve {
+   inputs 2
+   which {{parent.smoothstep?smoothstep(0,1,parent.dissolve):(parent.dissolve)}}
+   name Dissolve3
+   xpos 769
+   ypos 1392
+  }
+  Keymix {
+   inputs 3
+   name Keymix1
+   xpos 558
+   ypos 1512
+  }
+  Remove {
+   channels rotopaint_mask
+   name Remove3
+   xpos 556
+   ypos 1752
+  }
+  Remove {
+   channels morph_mask
+   name Remove1
+   xpos 556
+   ypos 1824
+   disable {{parent.output_morph_mask}}
+  }
+push $N87b83200
+  Dot {
+   name Dot11
+   xpos 318
+   ypos 852
+  }
+  IDistort {
+   uv forward
+   uv_scale {{1-parent.morph}}
+   name IDistort2
+   xpos 390
+   ypos 1512
+  }
+push $N87b5b900
+  Dot {
+   name Dot9
+   xpos 98
+   ypos 636
+  }
+  IDistort {
+   uv forward
+   uv_scale {{parent.morph}}
+   name IDistort1
+   xpos 170
+   ypos 1512
+  }
+  Dissolve {
+   inputs 2
+   channels {{{Keymix1.channels}}}
+   which {{parent.smoothstep?smoothstep(0,1,parent.dissolve):(parent.dissolve)}}
+   name Dissolve1
+   label "channels from Keymix1"
+   xpos 280
+   ypos 1597
+  }
+  Switch {
+   inputs 2
+   which {{"\[exists parent.input2]"}}
+   name Switch3
+   xpos 280
+   ypos 1907
+  }
+  Remove {
+   channels motion
+   name Remove2
+   xpos 280
+   ypos 1944
+  }
+  Output {
+   name Output1
+   xpos 280
+   ypos 2003
+  }
+ end_group
+set N87426b00 [stack 0]
+ Dot {
+  name Dot33
+  xpos 836
+  ypos 673
+ }
+push $N87426b00
+ Blur {
+  size {{"-((bb_crop.Crop2.box.x - bb_crop.Crop2.box.r) + (bb_crop.Crop2.box.y - bb_crop.Crop2.box.t)) / 15"}}
+  name Blur9
+  xpos 982
+  ypos 631
+ }
+ Unpremult {
+  name Unpremult4
+  xpos 982
+  ypos 713
+ }
+ Dot {
+  name Dot34
+  xpos 1016
+  ypos 758
+ }
+ Merge2 {
+  inputs 2
+  name Merge4
+  xpos 802
+  ypos 754
+ }
+ Dot {
+  name Dot38
+  xpos 836
+  ypos 889
+ }
+push 0
+push $N87490f00
+ Dot {
+  name Dot35
+  xpos -87
+  ypos 521
+ }
+push $N87490f00
+ Blur {
+  size {{"-((bb_crop.Crop2.box.x - bb_crop.Crop2.box.r) + (bb_crop.Crop2.box.y - bb_crop.Crop2.box.t)) / 15"}}
+  name Blur7
+  xpos 62
+  ypos 636
+ }
+ Unpremult {
+  name Unpremult3
+  xpos 62
+  ypos 697
+ }
+ Dot {
+  name Dot36
+  xpos 96
+  ypos 740
+ }
+ Merge2 {
+  inputs 2
+  name Merge3
+  xpos -121
+  ypos 736
+ }
+ Dot {
+  name Dot42
+  xpos -87
+  ypos 889
+ }
+push $N874d8800
+ Group {
+  inputs 4
+  name Seanqualize2
+  help "Applies the look of the input image, by locally adjusting the colour of the source image. The size of the filter determines the spread of the adjustment: a small number looks more like the input, a large number looks like the source. If a reference image is connect, the difference between source and reference is applied to the input image."
+  xpos 356
+  ypos 885
+  addUserKnob {20 User l Seanqualise t "by Sean Danischevsky sean@danischevsky.com"}
+  addUserKnob {26 sean l "" t "for latest version, email sean@seandanischevsky.com" +STARTLINE T "Seanqualise by Sean Danischevsky 1999, 2001, 2011, 2015, 2018"}
+  addUserKnob {41 size T Blur2.size}
+  addUserKnob {6 luma l "luminance only" +STARTLINE}
+  addUserKnob {6 zdefocus l "z defocus" t "Input z channel controls the amount of blur: black for 0 blur, white for 'size' pixels blur." +STARTLINE}
+  addUserKnob {41 maskChannel l "mask channel" T Keymix1.maskChannel}
+  addUserKnob {41 invertMask l invert T Keymix1.invertMask}
+  addUserKnob {41 mix T Keymix1.mix}
+ }
+  BackdropNode {
+   inputs 0
+   name BackdropNode1
+   tile_color 0x44415100
+   label "seanqualize\nby Sean Danischevsky \n1999, 2001, 2011, 2015"
+   note_font_size 42
+   xpos -206
+   ypos -807
+   bdwidth 1985
+   bdheight 1432
+  }
+  Input {
+   inputs 0
+   name mask
+   label "(input \[value number])"
+   xpos 730
+   ypos -904
+   number 2
+  }
+set N87aca400 [stack 0]
+  Input {
+   inputs 0
+   name source
+   label "(input \[value number])"
+   xpos 290
+   ypos -904
+   number 1
+  }
+set N87ac9d00 [stack 0]
+push $N87ac9d00
+  Clamp {
+   maximum_enable false
+   name Clamp1
+   xpos -40
+   ypos -568
+  }
+  Merge2 {
+   inputs 2
+   operation from
+   name Merge1
+   xpos -40
+   ypos -490
+  }
+  Input {
+   inputs 0
+   name Input
+   label "(input \[value number])"
+   xpos 510
+   ypos -904
+  }
+set N87aaeb00 [stack 0]
+push $N87aaeb00
+  Clamp {
+   maximum_enable false
+   name Clamp2
+   xpos 620
+   ypos -880
+  }
+set N87aae400 [stack 0]
+  Merge2 {
+   inputs 2
+   operation from
+   name Merge5
+   xpos 180
+   ypos -490
+  }
+  Merge2 {
+   inputs 2
+   operation max
+   name Merge2
+   xpos 70
+   ypos -418
+  }
+set N87a9b900 [stack 0]
+  Input {
+   inputs 0
+   name reference
+   label "(input \[value number])"
+   xpos 1060
+   ypos -904
+   number 3
+  }
+set N87a9b200 [stack 0]
+push $N87a9b200
+  Clamp {
+   maximum_enable false
+   name Clamp3
+   xpos 950
+   ypos -520
+  }
+  Merge2 {
+   inputs 2
+   operation from
+   name Merge11
+   xpos 1060
+   ypos -418
+  }
+  Merge2 {
+   inputs 2
+   operation max
+   name Merge10
+   xpos 950
+   ypos -370
+  }
+set N87a98100 [stack 0]
+push $N87aae400
+push $N87a9b200
+push $N87a98100
+  Merge2 {
+   inputs 2
+   operation plus
+   name Merge9
+   xpos 1170
+   ypos -298
+  }
+set N87a6f900 [stack 0]
+  Copy {
+   inputs 2
+   from0 depth.Z
+   to0 depth.Z
+   name Copy2
+   xpos 1243
+   ypos -136
+  }
+  ZDefocus2 {
+   math direct
+   size {{Blur2.size}}
+   max_size {{size}}
+   legacy_resize_mode false
+   show_legacy_resize_mode false
+   shape 0
+   name ZDefocus1
+   xpos 1280
+   ypos -64
+  }
+  set C87a6eb00 [stack 0]
+push $N87a6f900
+  Blur {
+   size 66
+   quality 100
+   crop false
+   name Blur2
+   xpos 1170
+   ypos -64
+  }
+  set C87a6dd00 [stack 0]
+  Switch {
+   inputs 2
+   which {{zdefocus}}
+   name zdefocus
+   xpos 1170
+   ypos -12
+  }
+push $N87aae400
+push $N87a9b900
+push $N87ac9d00
+  Merge2 {
+   inputs 2
+   operation plus
+   name Merge6
+   xpos 232
+   ypos -226
+  }
+set N87a6cf00 [stack 0]
+  Copy {
+   inputs 2
+   from0 depth.Z
+   to0 depth.Z
+   name Copy3
+   xpos 290
+   ypos -160
+  }
+clone $C87a6eb00 {
+   xpos 400
+   ypos -64
+   selected false
+  }
+push $N87a6cf00
+clone $C87a6dd00 {
+   xpos 70
+   ypos -64
+   selected false
+  }
+  Switch {
+   inputs 2
+   which {{zdefocus}}
+   name zdefocus2
+   xpos 400
+   ypos -26
+  }
+set N87a36b00 [stack 0]
+  Merge2 {
+   inputs 2
+   operation divide
+   Achannels rgb
+   Bchannels rgb
+   output rgb
+   name Merge15
+   xpos 1170
+   ypos 14
+  }
+  Saturation {
+   saturation 0
+   name Saturation1
+   xpos 1170
+   ypos 60
+   disable {{!luma}}
+  }
+  set C87a35d00 [stack 0]
+push $N87a9b900
+push $N87aaeb00
+  Merge2 {
+   inputs 2
+   operation plus
+   name Merge7
+   xpos 510
+   ypos -178
+  }
+set N87a35600 [stack 0]
+  Merge2 {
+   inputs 2
+   operation multiply
+   Achannels rgb
+   Bchannels rgb
+   output rgb
+   name Merge12
+   xpos 1170
+   ypos 86
+  }
+  Merge2 {
+   inputs 2
+   operation from
+   name Merge13
+   xpos 1170
+   ypos 254
+  }
+set N87a34800 [stack 0]
+push $N87aaeb00
+  Keymix {
+   inputs 3
+   name Keymix1
+   xpos 950
+   ypos 344
+  }
+  set C87a34100 [stack 0]
+push $N87a34800
+push $N87aaeb00
+  Dissolve {
+   inputs 2
+   which {{parent.Keymix1.mix}}
+   name Dissolve1
+   xpos 1170
+   ypos 368
+  }
+  set C879ef900 [stack 0]
+  Switch {
+   inputs 2
+   which {{"\[exists parent.input2]" x1015 1}}
+   name MaskConnectedTest1
+   xpos 950
+   ypos 470
+  }
+push $N87aca400
+push $N87a9b900
+push $N87aae400
+push $N87a35600
+  Copy {
+   inputs 2
+   from0 depth.Z
+   to0 depth.Z
+   name Copy1
+   xpos 620
+   ypos -208
+  }
+clone $C87a6eb00 {
+   xpos 599
+   ypos -112
+   selected false
+  }
+push $N87a35600
+clone $C87a6dd00 {
+   xpos 510
+   ypos -112
+   selected false
+  }
+  Switch {
+   inputs 2
+   which {{zdefocus}}
+   name zdefocus1
+   xpos 510
+   ypos -74
+  }
+push $N87a36b00
+  Merge2 {
+   inputs 2
+   operation divide
+   Achannels rgb
+   Bchannels rgb
+   output rgb
+   name Merge3
+   xpos 400
+   ypos 38
+  }
+clone $C87a35d00 {
+   xpos 400
+   ypos 64
+   selected false
+  }
+push $N87a6cf00
+  Merge2 {
+   inputs 2
+   operation multiply
+   Achannels rgb
+   Bchannels rgb
+   output rgb
+   name Merge4
+   xpos 290
+   ypos 158
+  }
+  Merge2 {
+   inputs 2
+   operation from
+   name Merge8
+   xpos 290
+   ypos 230
+  }
+set N879b7200 [stack 0]
+push $N87aaeb00
+clone $C87a34100 {
+   inputs 3
+   xpos 612
+   ypos 280
+   selected false
+  }
+push $N879b7200
+push $N87aaeb00
+clone $C879ef900 {
+   inputs 2
+   xpos 290
+   ypos 320
+   selected false
+  }
+  Switch {
+   inputs 2
+   which {{"\[exists parent.input2]" x1015 1}}
+   name MaskConnectedTest
+   xpos 510
+   ypos 398
+  }
+  Switch {
+   inputs 2
+   which {{"\[exists parent.input3]" x1015 1}}
+   name ReferenceConnectedTest
+   xpos 510
+   ypos 494
+  }
+  Output {
+   name Output1
+   xpos 510
+   ypos 758
+  }
+ end_group
+ CopyBBox {
+  inputs 2
+  name CopyBBox1
+  xpos 356
+  ypos 966
+ }
+ Dot {
+  name Dot11
+  xpos 390
+  ypos 1027
+ }
+ Output {
+  name Output1
+  xpos 390
+  ypos 1127
+ }
+end_group
+Dot {
+ name Dot43
+ label OUTPUT
+ note_font_size 40
+ selected true
+ xpos 3488
+ ypos 461
+}
+

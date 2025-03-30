@@ -1,0 +1,732 @@
+#! /opt/Nuke13.1v2/libnuke-13.1.2.so -nx
+version 13.1 v2
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="0" y="28" w="2560" h="1241" maximized="1" screen="0">
+        <splitter orientation="1">
+            <split size="40"/>
+            <dock id="" hideTitles="1" activePageId="Toolbar.1">
+                <page id="Toolbar.1"/>
+            </dock>
+            <split size="1897" stretch="1"/>
+            <splitter orientation="2">
+                <split size="703"/>
+                <dock id="" activePageId="Viewer.1">
+                    <page id="Viewer.1"/>
+                </dock>
+                <split size="495"/>
+                <dock id="" activePageId="DAG.1" focus="true">
+                    <page id="DAG.1"/>
+                    <page id="Curve Editor.1"/>
+                    <page id="DopeSheet.1"/>
+                </dock>
+            </splitter>
+            <split size="615"/>
+            <dock id="" activePageId="Properties.1">
+                <page id="Properties.1"/>
+                <page id="uk.co.thefoundry.backgroundrenderview.1"/>
+            </dock>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name /Volumes/shared/vfx/filipe.correia/repos/flwls_pp_scripts/nuke/flwls_vfx_pipeline/templates/vfx_occlusion_v005.nk
+ colorManagement OCIO
+ defaultViewerLUT "OCIO LUTs"
+ workingSpaceLUT default
+ monitorLut ACES/sRGB
+ monitorOutLUT "sRGB (ACES)"
+ int8Lut matte_paint
+ int16Lut texture_paint
+ logLut compositing_log
+ floatLut default
+ onScriptLoad "exec(\"\"\"\\n'''\\nThis module contains Python scripts for to be used in callbacks in nuke root\\nWhen copying these into the callbacks convert them to oneliners\\n'''\\n\\n\\n'''\\nonScriptLoad\\nFills task input Read nodes\\n'''\\n\\nfrom pathlib import Path\\nimport re\\nimport nuke\\n\\ndenoise_plate = nuke.toNode('DNS_PLATE')\\n\\ndef _get_context_from_script_name(script_name: str):\\n    try:\\n        script_name_parts = script_name.split('_')\\n        context_dict = \{\}\\n        context_dict\['workspace_root'] = Path('/Volumes/workspace')\\n        if \"nr\" in script_name_parts:\\n            if \"cleanup\" in script_name_parts:\\n                context_dict\['task'] = \"vfx_nr_cleanup\"\\n        elif \"inpaint\" in script_name_parts:\\n            context_dict\['task'] = \"vfx_inpaint\"\\n        elif \"occlusion\" in script_name_parts:\\n            context_dict\['task'] = \"vfx_occlusion\"\\n        if context_dict\['task'] in ('vfx_occlusion', 'vfx_inpaint'):\\n            context_dict\['level'] = 'Shot'\\n        elif context_dict\['task'] == 'vfx_nr_cleanup':\\n            context_dict\['level'] = 'ShotLanguageVariant'\\n        context_dict\['show'] = script_name_parts\[0]\\n        context_dict\['episode'] = int(script_name_parts\[1]\[2:4])\\n        context_dict\['part'] = int(script_name_parts\[2]\[2:4])\\n        context_dict\['shot'] = int(script_name_parts\[3])\\n        if context_dict\['level'] == 'ShotLanguageVariant':\\n            context_dict\['language'] = script_name_parts\[4]\\n            context_dict\['variant'] = f\"\{script_name_parts\[5]\}_\{script_name_parts\[6]\}\"\\n        return context_dict\\n    except TypeError as e:\\n        raise TypeError(f'\{e\}\\\\nError when extracting context from script name. Does the script name contain all the context')\\n\\ndef _get_task_path(context: dict) -> Path:\\n    cntx = context\\n    shot_path = cntx\['workspace_root'] / 'shows' / cntx\['show'] / 'episodes' / f\"ep\{cntx\['episode']:02d\}\" / 'parts' / f\"pt\{cntx\['part']:02d\}\" / 'shots' / f\"\{cntx\['shot']:04d\}\"\\n    task_path = None\\n    if cntx\['level'] == 'Shot':\\n        task = None\\n        if cntx\['task'] == 'vfx_inpaint':\\n            task = 'vfx_inpainting'\\n        elif cntx\['task'] == 'vfx_occlusion':\\n            task = 'vfx_occlusions'\\n        if task:\\n            task_path = shot_path / 'tasks' / task\\n    elif cntx\['level'] == 'ShotLanguageVariant':\\n        task_path = shot_path / 'languages' / cntx\['language'] / 'variants' / cntx\['variant'] / 'tasks' / cntx\['task']\\n\\n    if not task_path:\\n        raise ValueError(\"task_path must not be None\")\\n    return task_path\\n\\ndef _latest_in_version(task_path: Path):\\n    in_path = task_path / 'in'\\n    folders = \[f for f in in_path.glob('v\[0-9]\[0-9]\[0-9]') if f.is_dir()]\\n    folders.sort(reverse=True)\\n    return folders\[0]\\n\\ndef _get_sequence_path_in_fromUserText_format(sequence_folder: Path, extension: str):\\n    filepaths = list(sequence_folder.glob(f'*\{extension\}'))\\n    filepaths.sort()\\n    start_frame_path = filepaths\[0]\\n    first_frame_number = int(re.search(r'\\\\.(\[0-9]\{6\})', start_frame_path.stem).group(1))\\n    start_frame_name = re.sub(r'\\\\.(\[0-9]\{6\})', '.######', start_frame_path.name)\\n    return f'\{start_frame_path.parent / start_frame_name\} \{first_frame_number\}-\{first_frame_number + len(filepaths) - 1\}'\\n\\ndef _get_variant_from_scriptname():\\n    return \"_\".join(Path(nuke.scriptName()).stem.split('_')\[5:7])\\n\\nif denoise_plate:\\n    if denoise_plate.knob('file').value() == \"\":\\n        script_name = Path(nuke.root().name()).stem\\n        context = _get_context_from_script_name(script_name)\\n        task_path = _get_task_path(context)\\n        denoise_plate_folder = _latest_in_version(task_path) / 'DENOISED' / 'plate'\\n        denoise_plate_seq = _get_sequence_path_in_fromUserText_format(sequence_folder=denoise_plate_folder, extension='exr')\\n        denoise_plate.knob('file').fromUserText(denoise_plate_seq)\\n        denoise_plate\['frame'].setValue('1')\\n        denoise_plate\['frame_mode'].setValue('start_at')\\n        nuke.root().knob('first_frame').setValue(denoise_plate.firstFrame())\\n        nuke.root().knob('last_frame').setValue(denoise_plate.lastFrame())\\n        nuke.root().knob('lock_range').setValue(True)\\n        nuke.root().knob('fps').setValue(denoise_plate.metadata(\"input/frame_rate\"))\\n        nuke.root().knob('format').setValue(denoise_plate.knob('format').value())\\n\\nprecompNodeName = 'PRECOMP'\\nprecompExists = bool(\[n for n in nuke.allNodes() if n.name() == precompNodeName])\\nif not precompExists:\\n    pass\\nelse:\\n    precomp_plate = nuke.toNode('PRECOMP')\\n    if precomp_plate.knob('file').value() == \"\":\\n        script_name = Path(nuke.root().name()).stem\\n        context = _get_context_from_script_name(script_name)\\n        task_path = _get_task_path(context)\\n        precomp_plate_folder = _latest_in_version(task_path) / 'PRECOMP' / _get_variant_from_scriptname() / 'PRECOMP' / 'precomp'\\n        precomp_plate_seq = _get_sequence_path_in_fromUserText_format(sequence_folder=precomp_plate_folder, extension='exr')\\n        precomp_plate.knob('file').fromUserText(precomp_plate_seq)\\n        precomp_plate\['frame'].setValue('1')\\n        precomp_plate\['frame_mode'].setValue('start_at')\\n\\n\\n\\n\\n\\n'''\\nonScriptLoad\\nFills task input Read nodes\\nONELINER\\n'''\\n\"\"\")"
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode1
+ tile_color 0x7f7f7fff
+ label "Edge treatment"
+ note_font_size 42
+ xpos 1407
+ ypos 687
+ bdwidth 1297
+ bdheight 782
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode2
+ tile_color 0x7f7f7fff
+ gl_color 0x999999ff
+ label "dns plate"
+ note_font_size 42
+ xpos 1700
+ ypos -1046
+ border_width 10
+ bdwidth 232
+ bdheight 237
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode3
+ tile_color 0x7f7f7fff
+ label matte
+ note_font_size 42
+ xpos 825
+ ypos -90
+ bdwidth 439
+ bdheight 370
+}
+BackdropNode {
+ inputs 0
+ name exrbd
+ tile_color 0x7f7f7fff
+ gl_color 0xff3fff
+ label "occlusion element exr"
+ note_font_size 42
+ xpos 1612
+ ypos 2492
+ border_width 10
+ bdwidth 491
+ bdheight 210
+}
+BackdropNode {
+ inputs 0
+ name movbd
+ tile_color 0x7f7f7fff
+ label "             review"
+ note_font_size 42
+ xpos 284
+ ypos 2340
+ border_width 10
+ bdwidth 740
+ bdheight 332
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode5
+ tile_color 0x7f7f7fff
+ label qc
+ note_font_size 42
+ xpos 550
+ ypos 1857
+ bdwidth 187
+ bdheight 167
+ z_order 1
+}
+Roto {
+ inputs 0
+ output alpha
+ curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 2097664}
+    {t x44f00000 x44870000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}}}}}
+ toolbox {selectAll {
+  { selectAll str 1 ssx 1 ssy 1 sf 1 }
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 tt 6 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 tt 7 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createOpenSpline str 1 ssx 1 ssy 1 sf 1 tt 10 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+ toolbar_brush_hardness 0.200000003
+ toolbar_source_transform_scale {1 1}
+ toolbar_source_transform_center {320 240}
+ colorOverlay {0 0 0 0}
+ lifetime_type "all frames"
+ lifetime_start -175
+ lifetime_end -175
+ view {}
+ motionblur_on true
+ motionblur_shutter_offset_type centred
+ source_black_outside true
+ name Roto1
+ xpos 993
+ ypos 95
+}
+Dot {
+ name Dot8
+ xpos 1027
+ ypos 602
+}
+set N504aab00 [stack 0]
+Dot {
+ name Dot9
+ xpos 1027
+ ypos 1572
+}
+set N504a9d00 [stack 0]
+push $N504aab00
+Read {
+ inputs 0
+ file_type exr
+ format "3840 2160 0 0 3840 2160 1 UHD_4K"
+ proxy_format "3840 2160 0 0 3840 2160 1 UHD_4K"
+ first 1001
+ before black
+ last 1181
+ after black
+ origfirst 1001
+ origlast 1181
+ origset true
+ colorspace "ACES - ACES2065-1"
+ auto_alpha true
+ name DENOISE_PLATE
+ tile_color 0x8498a0ff
+ xpos 1783
+ ypos -961
+}
+Dot {
+ name Dot1
+ xpos 1817
+ ypos -831
+}
+Dot {
+ name Dot2
+ xpos 1817
+ ypos -351
+}
+set Nd4deb900 [stack 0]
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 rgba.alpha
+ name Copy1
+ xpos 1783
+ ypos 592
+}
+Copy {
+ inputs 2
+ from0 rgba.alpha
+ to0 rgba.alpha
+ name Copy2
+ xpos 1783
+ ypos 1562
+}
+Premult {
+ name Premult1
+ xpos 1783
+ ypos 1941
+}
+set Nd4dea400 [stack 0]
+Crop {
+ box {0 0 {root.width} {root.height}}
+ intersect true
+ name Crop1
+ label "SAFETY CROP\nCAN BE REMOVED"
+ xpos 1783
+ ypos 2217
+}
+Dot {
+ name Dot3
+ xpos 1817
+ ypos 2568
+}
+Write {
+ channels rgba
+ file "\[value task_folder]/renders/\[value scriptversion]/occlusions/\[value scriptname_with_version].%06d.exr"
+ file_type exr
+ autocrop true
+ metadata "all metadata"
+ interleave "channels and layers"
+ first_part rgba
+ create_directories true
+ version 6
+ beforeRender "exec(\"\"\"\\nfrom datetime import datetime\\nimport nuke\\nfrom pathlib import Path\\nimport re\\nfrom typing import Optional\\n\\ndef _nuke_current_script_name() -> Path:\\n    return Path(nuke.scriptName())\\n\\ndef _find_version(file_name: str) -> Optional\[str]:\\n    match = re.search(r'_v\\\\d+', file_name)\\n    if match:\\n        return match.group()\\n    else:\\n        return None\\n\\ndef _get_version_from_nuke_script_name(script_name: Path) -> str:\\n    version = _find_version(script_name.stem)\\n    if version == None:\\n        raise ValueError(\"Couldn't find version number in current Nuke script name\")\\n    else:\\n        version = version\[1:]\\n    return version\\n\\ndef _get_render_version_folder(script_name: Path) -> Path:\\n    version = _get_version_from_nuke_script_name(script_name)\\n    render_version_folder = script_name.parents\[1] / \"renders\" / version\\n    return render_version_folder\\n\\ndef _get_script_backup_path(script_name: Path) -> Path:\\n    current_time = datetime.utcnow().strftime(\"%Y-%m-%d__%H-%M-%S\") + \"UTC\"\\n    script_backup_folder = _get_render_version_folder(script_name) / 'script'\\n    script_backup_folder.mkdir(exist_ok=True, parents=True)\\n    return script_backup_folder / f\"\{script_name.stem\}_backup_\{current_time\}.nk\"\\n\\ndef save_backup_nuke_script():\\n    script_backup_path = _get_script_backup_path(_nuke_current_script_name())\\n    if not script_backup_path.is_file():\\n        nuke.scriptSaveToTemp(script_backup_path.as_posix())\\nsave_backup_nuke_script()\\n\"\"\")"
+ name WRITE_VFX_OCCLUSION_ELEMENT
+ label "\[value file]"
+ xpos 1783
+ ypos 2611
+ addUserKnob {20 FlwlsPipeline}
+ addUserKnob {1 task_folder}
+ task_folder "\[join \[lrange \[split \[python nuke.script_directory()]  \"/\"] 0 end-1] \"/\"]"
+ addUserKnob {1 script_directory}
+ script_directory "\[python nuke.script_directory()]"
+ addUserKnob {1 scriptname_with_version}
+ scriptname_with_version "\[basename \[file rootname \[value root.name]]]"
+ addUserKnob {1 scriptversion}
+ scriptversion "\[regexp -inline \{v\\d+\} \[value scriptname_with_version]]"
+}
+push $Nd4dea400
+push $N504a9d00
+push $Nd4deb900
+Dot {
+ name Dot4
+ xpos 641
+ ypos -351
+}
+Group {
+ inputs 3
+ name Matte_qc_flw1
+ tile_color 0xff5555ff
+ xpos 607
+ ypos 1941
+ addUserKnob {20 User}
+ addUserKnob {6 externalmatte l "external matte" +STARTLINE}
+ externalmatte true
+ addUserKnob {26 ""}
+ addUserKnob {4 outputstyle l "output style" M {"colour overlay" checker grey black none "matte element" review "" ""}}
+ addUserKnob {26 ""}
+ addUserKnob {4 overlaycolour l "overlay colour" M {red blue green ""}}
+ addUserKnob {7 overlaylevel l "overlay level"}
+ overlaylevel 0.5
+}
+ Constant {
+  inputs 0
+  channels rgb
+  name Constant2
+  xpos 550
+  ypos 895
+ }
+ Reformat {
+  type "to box"
+  box_width {{input0.width}}
+  box_height {{input0.height}}
+  box_fixed true
+  name Reformat2
+  xpos 550
+  ypos 984
+ }
+ FrameRange {
+  first_frame {{input0.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange5
+  xpos 550
+  ypos 1021
+ }
+ Input {
+  inputs 0
+  name occlusion_element
+  label "input \[value number]"
+  xpos 345
+  ypos -112
+  number 2
+ }
+ Dot {
+  name Dot2
+  xpos 379
+  ypos 850
+ }
+set Nd4e06b00 [stack 0]
+ Dot {
+  name Dot3
+  xpos 379
+  ypos 1087
+ }
+set Nd4e06400 [stack 0]
+ Merge2 {
+  inputs 2
+  operation under
+  name Merge3
+  xpos 550
+  ypos 1083
+ }
+set Nd4e05d00 [stack 0]
+ FrameRange {
+  first_frame {{input0.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange3
+  xpos 1383
+  ypos 1229
+  hide_input true
+ }
+ ModifyMetaData {
+  metadata {
+   {set input/frame "\[value input0.frame]"}
+  }
+  name ModifyMetaData3
+  xpos 1383
+  ypos 1255
+ }
+ Constant {
+  inputs 0
+  channels rgb
+  color 0.5
+  name Constant1
+  xpos 549
+  ypos 616
+ }
+ Reformat {
+  type "to box"
+  box_width {{input0.width}}
+  box_height {{input0.height}}
+  box_fixed true
+  name Reformat1
+  xpos 549
+  ypos 729
+ }
+ FrameRange {
+  first_frame {{input0.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange6
+  xpos 549
+  ypos 784
+ }
+push $Nd4e06b00
+ Merge2 {
+  inputs 2
+  operation under
+  name Merge1
+  xpos 549
+  ypos 846
+ }
+set Nd4e5ab00 [stack 0]
+ FrameRange {
+  first_frame {{input0.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange2
+  xpos 1263
+  ypos 1260
+  hide_input true
+ }
+ ModifyMetaData {
+  metadata {
+   {set input/frame "\[value input0.frame]"}
+  }
+  name ModifyMetaData2
+  xpos 1263
+  ypos 1286
+ }
+ Input {
+  inputs 0
+  name matte
+  label "input \[value number]"
+  xpos -350
+  ypos -125
+  number 1
+ }
+ ModifyMetaData {
+  metadata {
+   {set input/frame "\[value input0.frame]"}
+  }
+  name ModifyMetaData4
+  xpos -350
+  ypos 313
+ }
+ Dot {
+  name Dot5
+  xpos -316
+  ypos 681
+ }
+set Nd4e58800 [stack 0]
+ Input {
+  inputs 0
+  name plate
+  label "input \[value number]"
+  xpos -170
+  ypos -125
+ }
+ Dot {
+  name Dot6
+  xpos -136
+  ypos 238
+ }
+set Nd4e4f900 [stack 0]
+ ModifyMetaData {
+  metadata {
+   {set input/frame "\[value input0.frame]"}
+  }
+  name ModifyMetaData5
+  xpos -170
+  ypos 311
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy1
+  xpos -170
+  ypos 671
+  disable {{1-externalmatte x1 1}}
+ }
+ Dot {
+  name Dot13
+  xpos -136
+  ypos 784
+ }
+set Nd4e4e400 [stack 0]
+push $Nd4e58800
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy2
+  xpos -350
+  ypos 774
+  disable {{externalmatte}}
+ }
+ Dot {
+  name Dot12
+  xpos -316
+  ypos 1092
+ }
+set Nd4e4d600 [stack 0]
+ Dot {
+  name Dot9
+  xpos -316
+  ypos 1146
+ }
+set Nd4e4cf00 [stack 0]
+ Dot {
+  name Dot10
+  xpos -316
+  ypos 1200
+ }
+push $Nd4e4cf00
+push $Nd4e4d600
+push $Nd4e4e400
+ Dot {
+  name Dot1
+  xpos -136
+  ypos 850
+ }
+set Nd4e4c100 [stack 0]
+ Grade {
+  inputs 1+1
+  channels {rgba.red -rgba.green -rgba.blue none}
+  whitepoint {{overlaylevel}}
+  name red
+  xpos -170
+  ypos 1088
+  disable {{"1-(overlaycolour == 0)"}}
+ }
+ Grade {
+  inputs 1+1
+  channels {-rgba.red rgba.green -rgba.blue none}
+  whitepoint {{overlaylevel}}
+  name green
+  xpos -170
+  ypos 1142
+  disable {{"1-(overlaycolour == 2)"}}
+ }
+ Grade {
+  inputs 1+1
+  channels {-rgba.red -rgba.green rgba.blue none}
+  whitepoint {{overlaylevel}}
+  name blue
+  xpos -170
+  ypos 1196
+  disable {{"1-(overlaycolour == 1)"}}
+ }
+ Dot {
+  name Dot7
+  xpos -136
+  ypos 1648
+ }
+set Nd4e60f00 [stack 0]
+ FrameRange {
+  first_frame {{input0.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange1
+  xpos 1145
+  ypos 1283
+  hide_input true
+ }
+ ModifyMetaData {
+  metadata {
+   {set input/frame "\[value input0.frame]"}
+  }
+  name ModifyMetaData1
+  xpos 1145
+  ypos 1309
+ }
+ AppendClip {
+  inputs 3
+  meta_from_first false
+  time ""
+  name AppendClip1
+  xpos 1263
+  ypos 1644
+ }
+push $Nd4e4c100
+ Premult {
+  name Premult1
+  xpos 105
+  ypos 846
+ }
+ Dot {
+  name Dot11
+  xpos 139
+  ypos 1500
+ }
+push $Nd4e4f900
+ Dot {
+  name Dot8
+  xpos 981
+  ypos 238
+ }
+push $Nd4e05d00
+push $Nd4e5ab00
+ CheckerBoard2 {
+  inputs 0
+  name CheckerBoard1
+  xpos 558
+  ypos 1184
+ }
+ Reformat {
+  type "to box"
+  box_width {{input0.width}}
+  box_height {{input0.height}}
+  box_fixed true
+  name Reformat3
+  xpos 558
+  ypos 1271
+ }
+ FrameRange {
+  first_frame {{input0.first_frame}}
+  last_frame {{input0.last_frame}}
+  time ""
+  name FrameRange7
+  xpos 558
+  ypos 1317
+ }
+push $Nd4e06400
+ Dot {
+  name Dot4
+  xpos 379
+  ypos 1393
+ }
+ Merge2 {
+  inputs 2
+  operation under
+  name Merge2
+  xpos 558
+  ypos 1389
+ }
+push $Nd4e60f00
+ Switch {
+  inputs 7
+  which {{outputstyle}}
+  name Switch1
+  xpos 947
+  ypos 1644
+ }
+ Output {
+  name Output1
+  xpos 947
+  ypos 1699
+ }
+end_group
+Text2 {
+ font_size_toolbar 35
+ font_width_toolbar 100
+ font_height_toolbar 100
+ message "frame \[format %03d \[frame]]        \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _]     "
+ old_message {{102 114 97 109 101 32 48 48 49 32 32 32 32 32 32 32 32 32 102 112 115 32 32 32 32 32 32 32 32 32 32 116 105 109 101 99 111 100 101 32 91 116 105 109 101 99 111 100 101 93 32 32 32 32 32 32 32 32 32 32 118 102 120 32 111 99 99 108 117 115 105 111 110 32 118 48 48 53 32 32 32 32 32}
+   }
+ old_expression_markers {{6 8 17 16 60 77}
+   }
+ box {{DENOISE_PLATE.width/120} {DENOISE_PLATE.width/120} {DENOISE_PLATE.width-DENOISE_PLATE.width/120} {DENOISE_PLATE.height-DENOISE_PLATE.width/120}}
+ yjustify bottom
+ transforms {{0 2}
+   }
+ font_size_values {{0 35 0 35 1 35 2 35 3 35 4 35 5 35 6 35 7 35 8 35 9 35 10 35 11 35 12 35 13 35 14 35 15 35 16 35 17 35 18 35 19 35 20 35 21 35 22 35 23 35 24 35 25 35 26 35 27 35 28 35 29 35 30 35 31 35 32 35 33 35 34 35 35 35 36 35 37 35 38 35 39 35 40 35 41 35 42 35 43 35 44 35 45 35 46 35 47 35 48 35 49 35 50 35 51 35 52 35 53 35 54 35 55 35 56 35 57 35 58 35 59 35 60 35 61 35 62 35 63 35 64 35 65 35 66 35 67 35 68 35 69 35 70 35 71 35 72 35 73 35 74 35 75 35 76 35 77 35 78 35 79 35 80 35 81 35 82 35 78 35 79 35 80 35}
+   }
+ font {{ Bitstream Charter : Bold : BitstreamCharterBold.pfb : 0 }}
+ global_font_scale {{DENOISE_PLATE.width/3840}}
+ font_size 35
+ center {1920 1080}
+ cursor_initialised true
+ autofit_bbox false
+ initial_cursor_position {{0 2160}
+   }
+ group_animations {{0} imported: 0 selected: items: "root transform/"}
+ animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+   }
+ color 0.75
+ enable_background true
+ background_opacity 0.75
+ background_border_x 40
+ background_border_y 10
+ name flwls_burnin
+ tile_color 0xff5555ff
+ label "frame \[frame]          \[metadata input/frame_rate] fps          timecode \[timecode]          \[split \[lrange \[split \[basename \[value root.name]] .] 0 end-1] _] "
+ xpos 607
+ ypos 2234
+}
+Write {
+ channels rgba
+ file "\[value task_folder]/renders/\[value scriptversion]/review_exr/\[value scriptname_with_version].%06d.exr"
+ file_type exr
+ metadata "all metadata"
+ interleave "channels and layers"
+ first_part rgba
+ create_directories true
+ version 6
+ name WRITE_REVIEW_EXR
+ label "\[value file]"
+ xpos 607
+ ypos 2429
+ addUserKnob {20 FlwlsPipeline}
+ addUserKnob {1 task_folder}
+ task_folder "\[join \[lrange \[split \[python nuke.script_directory()]  \"/\"] 0 end-1] \"/\"]"
+ addUserKnob {1 script_directory}
+ script_directory "\[python nuke.script_directory()]"
+ addUserKnob {1 scriptname_with_version}
+ scriptname_with_version "\[basename \[file rootname \[value root.name]]]"
+ addUserKnob {1 scriptversion}
+ scriptversion "\[regexp -inline \{v\\d+\} \[value scriptname_with_version]]"
+}
+Dot {
+ name REVIEW_NODE_INPUT
+ xpos 641
+ ypos 2558
+}
+Write {
+ channels rgba
+ file "\[value task_folder]/renders/\[value scriptversion]/review_mov/\[value scriptname_with_version].mov"
+ colorspace color_picking
+ file_type mov
+ mov64_format "mov (QuickTime / MOV)"
+ mov64_codec appr
+ mov64_fps {{root.fps}}
+ mov_h264_codec_profile "High 4:2:0 8-bit"
+ mov64_pixel_format {{0}}
+ mov64_quality High
+ mov64_fast_start true
+ mov64_write_timecode true
+ mov64_gop_size 12
+ mov64_b_frames 0
+ mov64_bitrate 20000
+ mov64_bitrate_tolerance 4000000
+ mov64_quality_min 1
+ mov64_quality_max 3
+ create_directories true
+ checkHashOnRead false
+ on_error black
+ version 6
+ name WRITE_REVIEW_MOV
+ label "\[value file]"
+ xpos 607
+ ypos 2592
+ addUserKnob {20 FlwlsPipeline}
+ addUserKnob {1 task_folder}
+ task_folder "\[join \[lrange \[split \[python nuke.script_directory()]  \"/\"] 0 end-1] \"/\"]"
+ addUserKnob {1 script_directory}
+ script_directory "\[python nuke.script_directory()]"
+ addUserKnob {1 scriptname_with_version}
+ scriptname_with_version "\[basename \[file rootname \[value root.name]]]"
+ addUserKnob {1 scriptversion}
+ scriptversion "\[regexp -inline \{v\\d+\} \[value scriptname_with_version]]"
+}

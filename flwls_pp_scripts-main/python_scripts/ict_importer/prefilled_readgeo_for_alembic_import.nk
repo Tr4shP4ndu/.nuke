@@ -1,0 +1,66 @@
+#! /opt/Nuke13.1v2/libnuke-13.1.2.so -nx
+version 13.1 v2
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="0" y="28" w="2560" h="1225" maximized="1" screen="0">
+        <splitter orientation="1">
+            <split size="40"/>
+            <dock id="" hideTitles="1" activePageId="Toolbar.1">
+                <page id="Toolbar.1"/>
+            </dock>
+            <split size="1897" stretch="1"/>
+            <splitter orientation="2">
+                <split size="694"/>
+                <dock id="" activePageId="Viewer.1">
+                    <page id="Viewer.1"/>
+                </dock>
+                <split size="488"/>
+                <dock id="" activePageId="DAG.1" focus="true">
+                    <page id="DAG.1"/>
+                    <page id="Curve Editor.1"/>
+                    <page id="DopeSheet.1"/>
+                </dock>
+            </splitter>
+            <split size="615"/>
+            <dock id="" activePageId="Properties.1">
+                <page id="Properties.1"/>
+                <page id="uk.co.thefoundry.backgroundrenderview.1"/>
+            </dock>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name /Volumes/shared/vfx/oliverb/git/blender_3d_asset_convert/read_geo.nk
+ frame 1001
+ first_frame 1001
+ last_frame 1100
+ fps 23.976
+ format "3840 2160 0 0 3840 2160 1 UHD_4K"
+ proxy_type scale
+ proxy_format "1024 778 0 0 1024 778 1 1K_Super_35(full-ap)"
+ colorManagement OCIO
+ defaultViewerLUT "OCIO LUTs"
+ workingSpaceLUT scene_linear
+ monitorLut ACES/sRGB
+ monitorOutLUT "No Operation"
+ int8Lut matte_paint
+ int16Lut texture_paint
+ logLut compositing_log
+ floatLut "ACES - ACES2065-1"
+ set_by_user_template true
+}
+ReadGeo2 {
+ inputs 0
+ file Head.abc
+ localizationPolicy on
+ version 1
+ read_on_each_frame true
+ frame_rate 23.976
+ use_geometry_colors false
+ scene_view {{0} imported: 0 selected: 0 items: /root/Head/Head}
+ name ReadGeo1
+ xpos 495
+ ypos -55
+}

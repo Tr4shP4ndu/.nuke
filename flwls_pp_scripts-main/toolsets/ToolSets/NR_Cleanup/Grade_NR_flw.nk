@@ -1,0 +1,216 @@
+set cut_paste_input [stack 0]
+version 13.1 v2
+BackdropNode {
+ inputs 0
+ name BackdropNode1
+ tile_color 0x5f6e8100
+ label "   "
+ note_font_size 42
+ selected true
+ xpos 2541
+ ypos -1734
+ bdwidth 407
+ bdheight 410
+}
+Dot {
+ inputs 0
+ name Dot19
+ label PRECOMP
+ note_font "Bitstream Vera Sans Bold"
+ note_font_size 30
+ selected true
+ xpos 2892
+ ypos -1847
+}
+Dot {
+ name Dot31
+ selected true
+ xpos 2892
+ ypos -1829
+}
+Dot {
+ name Dot110
+ selected true
+ xpos 2892
+ ypos -1654
+}
+set Ncb6e0100 [stack 0]
+Dot {
+ name Dot111
+ selected true
+ xpos 2585
+ ypos -1654
+}
+add_layer {grade_plate_input grade_plate_input.red grade_plate_input.green grade_plate_input.blue grade_plate_input.alpha}
+Shuffle2 {
+ fromInput1 {{0} B}
+ in1 grade_plate_input
+ fromInput2 {{0} B}
+ mappings "4 grade_plate_input.red 0 0 rgba.red 0 0 grade_plate_input.green 0 1 rgba.green 0 1 grade_plate_input.blue 0 2 rgba.blue 0 2 grade_plate_input.alpha 0 3 rgba.alpha 0 3"
+ name PLATEGRADE
+ label "SHUFFLE PLATE REF"
+ selected true
+ xpos 2551
+ ypos -1588
+}
+clone node7fefcb6c2b00|Blur|17868 Blur {
+ size 35
+ name Blur11
+ selected true
+ xpos 2551
+ ypos -1517
+}
+set Ccb6c2b00 [stack 0]
+Dot {
+ name Dot109
+ selected true
+ xpos 2585
+ ypos -1350
+}
+push $Ncb6e0100
+add_layer {grade_nr_input grade_nr_input.red grade_nr_input.green grade_nr_input.blue grade_nr_input.alpha}
+Shuffle2 {
+ fromInput1 {{0} B}
+ in1 grade_nr_input
+ fromInput2 {{0} B}
+ mappings "4 grade_nr_input.red 0 0 rgba.red 0 0 grade_nr_input.green 0 1 rgba.green 0 1 grade_nr_input.blue 0 2 rgba.blue 0 2 grade_nr_input.alpha 0 3 rgba.alpha 0 3"
+ name NRGRADE
+ label "SHUFFLE NR GRADE\n"
+ selected true
+ xpos 2858
+ ypos -1589
+}
+clone $Ccb6c2b00 {
+ xpos 2858
+ ypos -1518
+ selected true
+}
+Dot {
+ name Dot108
+ selected true
+ xpos 2892
+ ypos -1443
+}
+Merge2 {
+ inputs 2
+ operation divide
+ Achannels rgb
+ Bchannels rgb
+ output rgb
+ name Merge15
+ selected true
+ xpos 2858
+ ypos -1354
+}
+Dot {
+ name Dot39
+ selected true
+ xpos 2892
+ ypos -1177
+}
+push $cut_paste_input
+Dot {
+ name Dot32
+ label NR
+ note_font "Bitstream Vera Sans Bold"
+ note_font_size 30
+ selected true
+ xpos 3285
+ ypos -1842
+}
+Dot {
+ name Dot33
+ selected true
+ xpos 3285
+ ypos -1824
+}
+Dot {
+ name Dot18
+ selected true
+ xpos 3285
+ ypos -1647
+}
+Group {
+ inputs 2
+ name Mix_graded
+ tile_color 0xff5555ff
+ selected true
+ xpos 3251
+ ypos -1181
+ addUserKnob {20 User}
+ addUserKnob {7 mix}
+}
+ Input {
+  inputs 0
+  name B
+  xpos -145
+  ypos 111
+ }
+ Dot {
+  name Dot18
+  xpos -111
+  ypos 204
+ }
+set Ncb66eb00 [stack 0]
+ Dot {
+  name Dot2
+  xpos 162
+  ypos 204
+ }
+ Dot {
+  name Dot3
+  xpos 162
+  ypos 972
+ }
+push $Ncb66eb00
+ Input {
+  inputs 0
+  name A
+  label "(input \[value number])"
+  xpos -648
+  ypos 120
+  number 1
+ }
+ Dot {
+  name Dot1
+  xpos -614
+  ypos 681
+ }
+push $Ncb66eb00
+ Dot {
+  name Dot112
+  xpos -398
+  ypos 204
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge11
+  xpos -432
+  ypos 677
+ }
+ Dot {
+  name Dot17
+  xpos -398
+  ypos 852
+ }
+ Blend {
+  inputs 2
+  weight0 {{parent.mix}}
+  weight1 {{1-weight0}}
+  name Blend_graded
+  xpos -145
+  ypos 842
+ }
+ CopyBBox {
+  inputs 2
+  name CopyBBox1
+  xpos -145
+  ypos 968
+ }
+ Output {
+  name Output1
+  xpos -145
+  ypos 1054
+ }
+end_group

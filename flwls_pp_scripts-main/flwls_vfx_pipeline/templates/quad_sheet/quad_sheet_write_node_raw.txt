@@ -1,0 +1,29 @@
+set cut_paste_input [stack 0]
+version 13.1 v2
+push $cut_paste_input
+Write {
+ file fake.mov
+ colorspace "Output - Rec.709"
+ file_type mov
+ mov64_format "mov (QuickTime / MOV)"
+ mov64_codec h264
+ mov_h264_codec_profile "High 4:2:0 8-bit"
+ mov64_pixel_format {{0}}
+ mov64_quality Best
+ mov64_audiofile fake.wav
+ mov64_fast_start true
+ mov64_write_timecode true
+ mov64_gop_size 12
+ mov64_b_frames 0
+ mov64_bitrate 50000
+ mov64_bitrate_tolerance 0
+ mov64_quality_min 1
+ mov64_quality_max 1
+ last 10
+ checkHashOnRead false
+ version 2
+ name Writer
+ selected false
+ xpos 0
+ ypos 0
+}

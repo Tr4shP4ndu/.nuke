@@ -1,0 +1,380 @@
+#! C:/Program Files/Nuke15.0v2/nuke-15.0.2.dll -nx
+version 15.0 v2
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="0" y="0" w="1917" h="1026" screen="0">
+        <splitter orientation="1">
+            <split size="40"/>
+            <dock id="" hideTitles="1" activePageId="Toolbar.1">
+                <page id="Toolbar.1"/>
+            </dock>
+            <split size="1254" stretch="1"/>
+            <splitter orientation="2">
+                <split size="578"/>
+                <dock id="" activePageId="Viewer.1">
+                    <page id="Viewer.1"/>
+                </dock>
+                <split size="406"/>
+                <dock id="" activePageId="DAG.1" focus="true">
+                    <page id="DAG.1"/>
+                    <page id="Curve Editor.1"/>
+                    <page id="DopeSheet.1"/>
+                </dock>
+            </splitter>
+            <split size="615"/>
+            <dock id="" activePageId="Properties.1">
+                <page id="Properties.1"/>
+                <page id="uk.co.thefoundry.backgroundrenderview.1"/>
+                <page id="Scenegraph.1"/>
+            </dock>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name E:/Youtube/rim/Nuke15.nk
+ frame 25
+ format "2048 1556 0 0 2048 1556 1 2K_Super_35(full-ap)"
+ proxy_type scale
+ proxy_format "1024 778 0 0 1024 778 1 1K_Super_35(full-ap)"
+ colorManagement Nuke
+ workingSpaceLUT linear
+ monitorLut sRGB
+ monitorOutLUT rec709
+ int8Lut sRGB
+ int16Lut sRGB
+ logLut Cineon
+ floatLut linear
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode1
+ tile_color 0x7171c600
+ label "make sure to crop\nbeforehand\n\npremult after if\nnecessary."
+ xpos 144
+ ypos -38
+ bdwidth 152
+ bdheight 220
+}
+BlinkScript {
+ inputs 0
+ recompileCount 1
+ ProgramGroup 1
+ KernelDescription "3 \"ClusteredGradient\" iterate pixelWise fb950a9cc90c7b9a987916d349d9bfd5db750e4a7c00f1627b88491ada4c9b72 2 \"src\" Read Random \"dst\" Write Point 9 \"Gradient Length\" Float 1 AADIQg== \"Gradient Power\" Float 1 AAAAQA== \"Rotation\" Float 1 AAAAAA== \"Falloff Style\" Int 1 AAAAAA== \"Smoothing\" Float 1 AAAAAA== \"Smooth Falloff\" Float 1 AAAAQA== \"Smoothing Samples\" Int 1 CgAAAA== \"Edge Threshold\" Float 1 AAAAAA== \"Effect Only\" Bool 1 AA== 9 \"gradientLength\" 1 1 Default \"gradientPower\" 1 1 Default \"rotation\" 1 1 Default \"falloffStyle\" 1 1 Default \"smoothing\" 1 1 Default \"smoothFalloff\" 1 1 Default \"smoothSamples\" 1 1 Default \"edgeThreshold\" 1 1 Default \"effectOnly\" 1 1 Default 1 \"gradientDir\" Float 2 1 AAAAAAAAAAA="
+ kernelSource "kernel ClusteredGradient : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRandom> src;\n  Image<eWrite> dst;\n  \n  param:\n    float gradientLength;\n    float gradientPower;\n    float rotation;\n    int falloffStyle;\n    float smoothing;       \n    float smoothFalloff;   \n    int smoothSamples;     \n    float edgeThreshold;\n    bool effectOnly;       \n    \n  local:\n    float2 gradientDir;\n    \n  void define() \{\n    defineParam(gradientLength, \"Gradient Length\", 100.0f);\n    defineParam(gradientPower, \"Gradient Power\", 2.0f);\n    defineParam(rotation, \"Rotation\", 0.0f);\n    defineParam(falloffStyle, \"Falloff Style\", 0);\n    defineParam(smoothing, \"Smoothing\", 0.0f);\n    defineParam(smoothFalloff, \"Smooth Falloff\", 2.0f);\n    defineParam(smoothSamples, \"Smoothing Samples\", 10);\n    defineParam(edgeThreshold, \"Edge Threshold\", 0.0f);\n    defineParam(effectOnly, \"Effect Only\", false);\n  \}\n\n  void init() \{\n    float rotationRad = rotation * 3.14159f / 180.0f;\n    gradientDir.x = sin(rotationRad);\n    gradientDir.y = cos(rotationRad);\n  \}\n  \n  bool inBounds(int2 pos) \{\n    return pos.x >= src.bounds.x1 && pos.x < src.bounds.x2 &&\n           pos.y >= src.bounds.y1 && pos.y < src.bounds.y2;\n  \}\n  \n  float smoothstepCustom(float edge0, float edge1, float x) \{\n    float t = x;\n    if (t < edge0) t = edge0;\n    if (t > edge1) t = edge1;\n    t = (t - edge0) / (edge1 - edge0);\n    return t * t * (3.0f - 2.0f * t);\n  \}\n  \n  float calculateFalloff(float factor) \{\n    if (factor < 0.0f) factor = 0.0f;\n    if (factor > 1.0f) factor = 1.0f;\n    \n    float result = factor;\n    \n    if (falloffStyle == 0) \{\n        result = factor;\n    \}\n    else if (falloffStyle == 1) \{\n        result = factor * factor;\n    \}\n    else if (falloffStyle == 2) \{\n        result = 1.0f - exp(-factor * 3.0f);\n    \}\n    else if (falloffStyle == 3) \{\n        result = smoothstepCustom(0.0f, 1.0f, factor);\n    \}\n    \n    return result;\n  \}\n  \n  float findEdgeDistance(int2 pos, float2 dir) \{\n    float2 currentPos;\n    currentPos.x = float(pos.x);\n    currentPos.y = float(pos.y);\n    \n    float maxDist = gradientLength * 2.0f;\n    float stepSize = 1.0f;\n    float totalDist = 0.0f;\n    \n    while (totalDist < maxDist) \{\n      currentPos.x -= dir.x * stepSize;\n      currentPos.y -= dir.y * stepSize;\n      \n      int2 checkPos;\n      checkPos.x = int(currentPos.x);\n      checkPos.y = int(currentPos.y);\n      \n      if (!inBounds(checkPos)) \{\n        break;\n      \}\n      \n      float alpha = src(checkPos.x, checkPos.y, 3);\n      if (alpha < 0.01f) \{\n        return totalDist;\n      \}\n      \n      totalDist += stepSize;\n    \}\n    \n    return maxDist;\n  \}\n  \n  float calculateSmoothedDistance(int2 pos) \{\n    if (smoothing <= 0.0f || smoothSamples <= 1) \{\n      return findEdgeDistance(pos, gradientDir);\n    \}\n    \n    float baseAngle = atan2(gradientDir.x, gradientDir.y);\n    float angleRange = smoothing * 0.5f;\n    float angleStep = angleRange / float(smoothSamples);\n    \n    float totalWeight = 0.0f;\n    float weightedDist = 0.0f;\n    \n    // Center sample\n    float centerDist = findEdgeDistance(pos, gradientDir);\n    weightedDist += centerDist;\n    totalWeight += 1.0f;\n    \n    // Sample around center\n    for (int i = 1; i <= smoothSamples; i++) \{\n      // Positive angle\n      float anglePos = baseAngle + float(i) * angleStep;\n      float2 dirPos;\n      dirPos.x = sin(anglePos);\n      dirPos.y = cos(anglePos);\n      float distPos = findEdgeDistance(pos, dirPos);\n      \n      // Negative angle\n      float angleNeg = baseAngle - float(i) * angleStep;\n      float2 dirNeg;\n      dirNeg.x = sin(angleNeg);\n      dirNeg.y = cos(angleNeg);\n      float distNeg = findEdgeDistance(pos, dirNeg);\n      \n      float weight = pow(1.0f - (float(i) / float(smoothSamples)), smoothFalloff);\n      \n      weightedDist += (distPos + distNeg) * weight;\n      totalWeight += 2.0f * weight;\n    \}\n    \n    return weightedDist / totalWeight;\n  \}\n  \n  float cleanupEdge(float gradientFactor, int2 pos) \{\n    if (edgeThreshold <= 0.0f) return gradientFactor;\n    \n    if (gradientFactor < edgeThreshold) \{\n        float neighborSum = 0.0f;\n        int samples = 0;\n        \n        for (int dy = -1; dy <= 1; dy++) \{\n            for (int dx = -1; dx <= 1; dx++) \{\n                if (dx == 0 && dy == 0) continue;\n                \n                int2 checkPos;\n                checkPos.x = pos.x + dx;\n                checkPos.y = pos.y + dy;\n                \n                if (inBounds(checkPos)) \{\n                    float alpha = src(checkPos.x, checkPos.y, 3);\n                    if (alpha > 0.01f) \{\n                        neighborSum += 1.0f;\n                        samples++;\n                    \}\n                \}\n            \}\n        \}\n        \n        if (samples > 0) \{\n            float avgNeighbor = neighborSum / float(samples);\n            if (avgNeighbor < 0.5f) \{\n                return gradientFactor * (avgNeighbor * 2.0f);\n            \}\n        \}\n    \}\n    \n    return gradientFactor;\n  \}\n  \n  void process(int2 pos) \{\n    float4 sourceColor = src(pos.x, pos.y);\n    dst() = sourceColor;\n    \n    if (sourceColor.w > 0.0f) \{\n      float dist = calculateSmoothedDistance(pos);\n      float factor = dist / gradientLength;\n      factor = calculateFalloff(factor);\n      factor = pow(factor, gradientPower);\n      \n      // Apply edge cleanup\n      factor = cleanupEdge(factor, pos);\n      \n      float4 result;\n      if (effectOnly) \{\n        // Show only the gradient effect (inverted)\n        result.x = 1.0f - factor;\n        result.y = 1.0f - factor;\n        result.z = 1.0f - factor;\n        result.w = sourceColor.w;  // Keep original alpha\n      \} else \{\n        // Blend with original image\n        result.x = 1.0f - (1.0f - sourceColor.x) * factor;\n        result.y = 1.0f - (1.0f - sourceColor.y) * factor;\n        result.z = 1.0f - (1.0f - sourceColor.z) * factor;\n        result.w = sourceColor.w;\n      \}\n      \n      dst() = result;\n    \}\n  \}\n\};"
+ rebuild ""
+ protectKernelWhenPublishing true
+ specifiedFormat true
+ rebuild_finalise ""
+ name BlinkScript1
+ tile_color 0xeaf400ff
+ xpos 308
+ ypos 219
+}
+Radial {
+ inputs 0
+ area {512 389 1536 1167}
+ softness 0
+ name Radial5
+ xpos -150
+ ypos -321
+}
+Crop {
+ box {0 0 2048 1556}
+ name Crop7
+ xpos -150
+ ypos -297
+}
+Transform {
+ translate {-160 101}
+ scale 0.22
+ center {1024 778}
+ name Transform5
+ xpos -150
+ ypos -273
+}
+Radial {
+ inputs 0
+ area {512 389 1536 1167}
+ softness 0
+ name Radial4
+ xpos -260
+ ypos -297
+}
+Crop {
+ box {0 0 2048 1556}
+ name Crop6
+ xpos -260
+ ypos -273
+}
+Transform {
+ translate {153 54}
+ scale {0.1480000019 0.5299999714}
+ center {1024 778}
+ name Transform4
+ xpos -260
+ ypos -225
+}
+Merge2 {
+ inputs 2
+ name Merge4
+ xpos -150
+ ypos -201
+}
+Radial {
+ inputs 0
+ area {512 389 1536 1167}
+ softness 0
+ name Radial3
+ xpos -40
+ ypos -345
+}
+Crop {
+ box {0 0 2048 1556}
+ name Crop3
+ xpos -40
+ ypos -321
+}
+Transform {
+ translate {720 104}
+ scale 0.72
+ center {1024 778}
+ name Transform3
+ xpos -40
+ ypos -297
+}
+Radial {
+ inputs 0
+ area {512 389 1536 1167}
+ softness 0
+ name Radial2
+ xpos 290
+ ypos -345
+}
+Crop {
+ box {0 0 2048 1556}
+ name Crop2
+ xpos 290
+ ypos -321
+}
+Transform {
+ translate {720 104}
+ center {1024 778}
+ name Transform1
+ xpos 290
+ ypos -297
+}
+Radial {
+ inputs 0
+ area {512 389 1536 1167}
+ softness 0
+ name Radial1
+ xpos 180
+ ypos -321
+}
+Crop {
+ box {0 0 2048 1556}
+ name Crop1
+ xpos 180
+ ypos -297
+}
+Merge2 {
+ inputs 2
+ name Merge1
+ xpos 180
+ ypos -249
+}
+Merge2 {
+ inputs 2
+ operation stencil
+ name Merge2
+ xpos 180
+ ypos -225
+}
+Merge2 {
+ inputs 2
+ operation stencil
+ name Merge3
+ xpos 180
+ ypos -177
+}
+Transform {
+ translate {-332 -16}
+ center {1024 778}
+ name Transform2
+ xpos 180
+ ypos -129
+}
+Crop {
+ box {0 0 2048 1556}
+ name Crop4
+ xpos 180
+ ypos 63
+}
+Group {
+ name CA_RimLight
+ tile_color 0xeff900ff
+ xpos 180
+ ypos 106
+ addUserKnob {20 ClusteredGradient}
+ addUserKnob {41 "Local GPU: " T BlinkScript2.gpuName}
+ addUserKnob {41 "Use GPU if Available" T BlinkScript2.useGPUIfAvailable}
+ addUserKnob {26 "" +STARTLINE}
+ addUserKnob {41 "Gradient Length" T "BlinkScript2.ClusteredGradient_Gradient Length"}
+ addUserKnob {41 "Gradient Power" T "BlinkScript2.ClusteredGradient_Gradient Power"}
+ addUserKnob {41 Rotation T BlinkScript2.ClusteredGradient_Rotation}
+ addUserKnob {41 "Falloff Style" T "BlinkScript2.ClusteredGradient_Falloff Style"}
+ addUserKnob {41 Smoothing T BlinkScript2.ClusteredGradient_Smoothing}
+ addUserKnob {41 "Smooth Falloff" T "BlinkScript2.ClusteredGradient_Smooth Falloff"}
+ addUserKnob {41 "Smoothing Samples" T "BlinkScript2.ClusteredGradient_Smoothing Samples"}
+ addUserKnob {41 "Edge Threshold" T "BlinkScript2.ClusteredGradient_Edge Threshold"}
+ addUserKnob {41 "Effect Only" T "BlinkScript2.ClusteredGradient_Effect Only"}
+ addUserKnob {26 "" +STARTLINE}
+ addUserKnob {41 format T BlinkScript2.format}
+}
+ Input {
+  inputs 0
+  name src
+  xpos 470
+  ypos 72
+ }
+ BlinkScript {
+  recompileCount 1
+  ProgramGroup 1
+  KernelDescription "3 \"ClusteredGradient\" iterate pixelWise fb950a9cc90c7b9a987916d349d9bfd5db750e4a7c00f1627b88491ada4c9b72 2 \"src\" Read Random \"dst\" Write Point 9 \"Gradient Length\" Float 1 AADIQg== \"Gradient Power\" Float 1 AAAAQA== \"Rotation\" Float 1 AAAAAA== \"Falloff Style\" Int 1 AAAAAA== \"Smoothing\" Float 1 AAAAAA== \"Smooth Falloff\" Float 1 AAAAQA== \"Smoothing Samples\" Int 1 CgAAAA== \"Edge Threshold\" Float 1 AAAAAA== \"Effect Only\" Bool 1 AA== 9 \"gradientLength\" 1 1 Default \"gradientPower\" 1 1 Default \"rotation\" 1 1 Default \"falloffStyle\" 1 1 Default \"smoothing\" 1 1 Default \"smoothFalloff\" 1 1 Default \"smoothSamples\" 1 1 Default \"edgeThreshold\" 1 1 Default \"effectOnly\" 1 1 Default 1 \"gradientDir\" Float 2 1 AAAAAAAAAAA="
+  EncodedSource "1 5983 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"
+  rebuild ""
+  "ClusteredGradient_Gradient Power" 0.26
+  ClusteredGradient_Rotation 150
+  ClusteredGradient_Smoothing 3
+  "ClusteredGradient_Smoothing Samples" 50
+  "ClusteredGradient_Effect Only" true
+  protectKernelWhenPublishing true
+  specifiedFormat true
+  rebuild_finalise ""
+  name BlinkScript2
+  xpos 470
+  ypos 112
+ }
+ Output {
+  name Output1
+  xpos 470
+  ypos 212
+ }
+end_group
+Premult {
+ name Premult1
+ xpos 180
+ ypos 135
+}
+Grade {
+ gamma 0.475
+ name Grade1
+ xpos 180
+ ypos 159
+}
+Grid {
+ inputs 0
+ number 11
+ size 50
+ name Grid1
+ xpos 558
+ ypos 12
+}
+Grade {
+ white 0.035
+ multiply {1 0.231999 0 1}
+ multiply_panelDropped true
+ name Grade2
+ xpos 558
+ ypos 36
+}
+set N818de800 [stack 0]
+Crop {
+ box {0 0 2048 1556}
+ name Crop5
+ xpos 413
+ ypos 62
+}
+Group {
+ name CA_RimLight1
+ tile_color 0xeff900ff
+ xpos 413
+ ypos 93
+ addUserKnob {20 ClusteredGradient}
+ addUserKnob {41 "Local GPU: " T BlinkScript2.gpuName}
+ addUserKnob {41 "Use GPU if Available" T BlinkScript2.useGPUIfAvailable}
+ addUserKnob {26 ""}
+ addUserKnob {41 "Gradient Length" T "BlinkScript2.ClusteredGradient_Gradient Length"}
+ addUserKnob {41 "Gradient Power" T "BlinkScript2.ClusteredGradient_Gradient Power"}
+ addUserKnob {41 Rotation T BlinkScript2.ClusteredGradient_Rotation}
+ addUserKnob {41 "Falloff Style" T "BlinkScript2.ClusteredGradient_Falloff Style"}
+ addUserKnob {41 Smoothing T BlinkScript2.ClusteredGradient_Smoothing}
+ addUserKnob {41 "Smooth Falloff" T "BlinkScript2.ClusteredGradient_Smooth Falloff"}
+ addUserKnob {41 "Smoothing Samples" T "BlinkScript2.ClusteredGradient_Smoothing Samples"}
+ addUserKnob {41 "Edge Threshold" T "BlinkScript2.ClusteredGradient_Edge Threshold"}
+ addUserKnob {41 "Effect Only" T "BlinkScript2.ClusteredGradient_Effect Only"}
+ addUserKnob {26 ""}
+ addUserKnob {41 format T BlinkScript2.format}
+}
+ Input {
+  inputs 0
+  name src
+  xpos 470
+  ypos 72
+ }
+ BlinkScript {
+  recompileCount 1
+  ProgramGroup 1
+  KernelDescription "3 \"ClusteredGradient\" iterate pixelWise fb950a9cc90c7b9a987916d349d9bfd5db750e4a7c00f1627b88491ada4c9b72 2 \"src\" Read Random \"dst\" Write Point 9 \"Gradient Length\" Float 1 AADIQg== \"Gradient Power\" Float 1 AAAAQA== \"Rotation\" Float 1 AAAAAA== \"Falloff Style\" Int 1 AAAAAA== \"Smoothing\" Float 1 AAAAAA== \"Smooth Falloff\" Float 1 AAAAQA== \"Smoothing Samples\" Int 1 CgAAAA== \"Edge Threshold\" Float 1 AAAAAA== \"Effect Only\" Bool 1 AA== 9 \"gradientLength\" 1 1 Default \"gradientPower\" 1 1 Default \"rotation\" 1 1 Default \"falloffStyle\" 1 1 Default \"smoothing\" 1 1 Default \"smoothFalloff\" 1 1 Default \"smoothSamples\" 1 1 Default \"edgeThreshold\" 1 1 Default \"effectOnly\" 1 1 Default 1 \"gradientDir\" Float 2 1 AAAAAAAAAAA="
+  EncodedSource "1 5983 EKY7XAJUdiL3JYTVEKMYRmVVDSOVD7SsUZEmh4TDdi0oYdyssRXz4xRZ8ndXMoxSIGoT12lTg7vsDcpppf0X5uhzzHpyEFNYlCyQKD4V5aBpQdtyCbffdrGfGMDnL4siYwtzDRH7V4Lz01FtZt1WzC7iWwaJz2akbqD8Ob8Ce2qUogGQTsnEvxJMFwGXWFeHtngO01zlCNxMCBVsGUNZD22+xFgaWvK4okPa7Ssm7mffbjivBHr3bwcIQFKebHzGC3SN3kB+f7NJJXLau7Y0VFexPRlnNlfg06zQKHlBX+el5n7WRhQRKEHpz8q5iejQ1lbr283tTk46ArxVEG7RdrQFRk0/4uVyALCVlxl0uhNnGvE6cqpSdWipcGDR369do1mSPfEmm9toR4BFARJVuV8XY4ZB2WepnniDFEIX7CxpSxI8mPBLiLEDFqjGJOxfG5sNHVvWMz0NOvpjKsYt9OryiSpEZawQo2nlyYkSY3/BKBT8iHVS8Ic8mM8bJYJuaqgRSpPLi/ROnn94jNoBeidLofkqUIJ8EAnOOBe/W8nHmoPR6AAuKAoO57FdsQoUx19J4QNbFPIlrF8BCrqlHX1ntxKa/OGKqQLH6P28T1Pl5WYYKiPqCl7MrAtu7VRBmbDkZML22+oH68G3Kfgs9+V7ZDCd1ZXglgI0MDs68FmxJmGTr7pY5GQQkqo11ed3qVWmoFR1itkGIC4bHTVySvBIdn1jI4VszxA2MfHnVMqiFoeik338+WqpQhrlY35xjOGzN73xCeEZQws3j5aU5PhlxWe3f0HzEdXI1/tYH4XV/4/rPOVy1luUKcXbm6jGWZj+qNG7hpSWUaTKaMjxYxi/dOQEANga4mTmA+lLo/asWE/qdotMAdNj1gqrA/Ff9FW9JWUvAADzwXHCbhoKbN0279AH/BFbibGpUoGQf1twPOkXDDELVDOUuKU4oILIXv58FYGnFlF45DGov03CPIM/ba3eV+UBqDCY1XHEnpZenwQDkrpcBfXyHwYHgYdB8fsPuVzuU73+L3syocFncm2jOkIKPeUOyr7KaFqbHpS+oRHpO2/fg7WKNwu9GSCUBHTolYlRtf5LrvHnFHuNj2HNpy9fNxQrtMPBs7Ft+uoXAqVbb5Lxj7KtBdTJPSoH9fhXSr93JEjK6YLzAiCe5tzHA1obyiLcwCa7KzWB9ZNGbKMOqrA7ZowAVJETGDTMqQODDNGSPMQ9CU2jNkxlRLq9Nr+fMml4+R1Q0EIMgaxJt1ORtxt2Iyc1WW3do49QqGUHejSKwGKYq6Yk9/eD0JqzPOVlKf48R3QV5bJKDS9CFqq7VM1iaLLbZfQeoN7gJS5GpSd0b9zoXtv4tMtkXnifNs3/ocucsZAgLty295XGCubso0jWBqXvXogSy1Vi2XcfdOrl8nL+1SHkNmqIovxPuTyP0LoGlZ2W9gY+dALgHAPxFMezpzTtBqHdyMJXpOYAD12gmMvPF0sVYDIpRiIogjgLGEFzkC1Oajd9c89OADMT2RbPBF2jxX1jjuimyTl5ea0x1eDQRdq0CzO6C9eRoZjOd2NT5XyLbI+0cz7bN80/CAmx+d6Ca9VbqrZQ5U3uHlWNhkXIMVNm2yoXYC0YF6ZnOyxFAR6oW813Uzlgkf3JHmVRNsPEVgJPKLVt6cg4yAzbGsknVtiZoVJLcSiV3H2HsROP/wKNbeeULCP+SXMtr8sHbVSJQD4Vtyb8rSDbBvuRWUNyvfvGJbAEEdmvZSALh1+st8pcbHWIUW9MHcB7IeQZnmlQVcUkzOFvlYJguF2RDN4CcYSs+FBv2K5JNNzXVn9A6qNARR/pyU6Q+aIPHCoyGEMruWgISA06xwtKTNY8PYSJTWZSE1Da+2qPtOMzDJs1JlUie8cB3QuBNZExXaEVjI8Wnp3blSv7g1eu3uzOWt4aCAKg63zV7Cw4j1l1cF7AmBtJMroJ6Cap4W/nLrbWabJ0BtKjBfKxtGkwqVwd0hU9m+p130PLDm3V2O3H/o1Pj6vFlS937M4i99olyNToO8iJgWB9uN74dL32rIgRjlQ9J2JqPU7CprCX7IGMylUgUqkTpK5ks1cwU+b6XepESU1OaFu7b08GIUxTa2bw0rEkt9jCfPcHrr6Hikq3mzrFDbYv2qSWtVTjipoyt67K845HR8vpVaIqXRBHh+rqbt9sHtKAUbdYvZ8ViIjgGZWcYAV9/6Ci2YQBlqs0C/4n8fPYGn4tR+0WpBJkPrgKn3SmSqDugk9/l6f7GW6Q+J8ZM+cmkUAzEZ89GY3RCZWFCOm2dT3xmTbfc9P0y73bERwTF37EEUw46AhLAjdU+aTLO8rrUHzwwY3ZrTdrYLoGJlVW+ITWHslyWxmf4Xi/6KmLQckwUaD5qqo4hRrVchFXW99BZTapH7CLjN3FR5c4knkgW0DuufJwLASCjgIE0mq9CEc68QM0RY2lH2qgEWbYvSAozRk3I11KPmENc9XrxoPRvN8e7vw1UUOW33Xj5jtJHXbJQDpR9D0R5DON96sK29+8xIvnKanINrCyp81wxRqmkKJFFGUIZePYPcwuvONwsO2QryYVGHKTEe3D9o1WO6mQyPAty+vgZOf9IPKHaA4kjTPyGVBBd1DhVrvV+ZzYP/6BT4+CtB1gVDTuJn7aU5zT0doXCi6kw4u+4WFsTfri0BfQCkf0cUi05EYsRgv9ghRTHK3iUti1vXHNo+M9H5fPfr0BV5JJoOgo1A9MYYULvmSQo+lEW5/owfxGDCd/gYG9K+UMTAHcux6oJfzP5HlQ5opWui8RwI4rOmZn/TYhPoMvIv22bexgrheFySnSAznFyO50TZDX0qeQkY7A0FotcBfUz0pWVX6ylPIsrRilGMDqRZCpLWtKfMxyb5fLrHCkSAArgJ9cfFmNv1h2MrinSSzx7KOsbAEdCwV/FGRk2RyURi0hcGMaih19geoiPjNuuQj6vRjd5GA6kLf+GzJonUFCsQUtvU7ZXR6QJZ35Ef5/cGe9eql05egi3VQm+rzt7G/rI6+WuxcL7f7D9tI4zvJhn+qtSidi3sEasbQC4re9ZW16ZUVFSNOCfIDt4/GQLCLyG7B4KoXd2LEe1f4oIe7+iaU5ips/H83v0BmgPZzLacHhOBbflAP3/kLKCTADuCO7MNhPF98ZlWhonOJFl6ydR3yNocIjKjGUoCuc9dvWnMRajGi1PDEV2XpnZ6rM9ptJOcvRfzYJr+A9o9+3WKKsdIjJDkPdsT5NafvvU015pi44tt0i0kxgZBMFw0w6o4Q24CwKsM7YQ/07jOSnKY95U4cnBba0YS9qoUuh4v6GVVJ5MCscrwKXyhG/qWnb5hDyJ9zFueIV8MtW374LZQL0FJ7sEjF2DJBWkyw5aPLhmPArgr0w/FOPHLSw/0/u1ysbRR3MSICN6PME46wLRR8QcRpDmCglp3xnDSYvrOETnJ/4N7Iq9FFDbfOLZFtVABzdP2RO1PB76leNs3KxkfSTHNE2GXO+39rfcfY66bizaYi2njn4tyQzH8tamzmscaNA/Y2beaRDqyyMkn4NO+pqC37HOivTtYEyZwMbydswIkQyIHsitPLZktUTEJyZLmOyLIwx+okD2/wyhg7E/vRMAhs6+0qXs82uC763KlgVo/j/MK5auDTeMOosZARCdcwxY7m6l/ups2j0N2cZkWobm2imC/5d9guV2hfyPp35w+HVTmWEnzxcHfCWqusuugJLmpqzWduhY9G9urkCr0hjx2c/cLuP5mfotz0U0+0zP0t1vXVgqn2oQF6fNq5xFVzVLY+9s+rlrJeijkVLMzc/3Usnfy/2wi8Znky8FA6n9LXk80PeQ+gdlt0lDZH+D5K8tyYz8O9hT6KcdiEZhx8ts8tKV4wDjihRFc+49H2iuRolpOjAFzDlWKdnF7dmOOq8ehvAHOyjn6wgT/CE+IlixkJCAu0xENndXPh3OUB/vu1fJ20vODWljoFPGrzV6Gl8Db6oWnTcaoOr9rj4udSlzmZEXwqRS1zGWCJBBP/cP6kHE/tmEa7Gny/oGT3VgedxIypdoYVAvmu3+y2+EGNWrNXmnGnWOD14R7igF7FkWRtgW6ATHIDSlT25tWHA/53ehZbgku6q0n6+8i1jD1bZvWdmOwHKKQ1hblntt+nsJKWqq/W8SehYuYL1g2GsP7K4ELUvvfXwIsms2LMQ0ynRkFwfWU6pzAmxF0W11hUIUnDAXyISYkztMID4tScxHDNuJ22FWKf3uNF9dK7NNgBXNnLDUQkAOc9+kwcwUQf2fbDmV1XnUTBzSCx2UCY+5yHSDA7NgWbn9hm8Q8BWxyGW8V4ZtCWDvaXJo4qNBiq9U4HonM5l6GX92DvEA4iMkuTgrAPMGLiLEEeSxHM5FmrlNFbPYBSNkkMQBqnaBAX9jx0df0dTbJC8ASHmoiorjq7qwIxWRPlEUcjcUSZJB7sMm34F2Cf8UmsgnGcCoAUsColE+bMiQiiT1dgiy8QfArNJlBWSj7CRL2Ky5CpyyN31sJ66JovfPtpOUbxXHN4mYSpyoew2kuZB2QEtTKd1mhs4HxEk/KmmI0rdsQFqonXM83ezTnZkh5OtzyRYlLvK4t9Hu/WOyusfOi0TcKvkjeBrNW4QYETtqxt3ExqQMO57zJU4AkF995bsn0yMUgdO0Y0zmOPYD3HjwOVImzaJB9inCVFbX+gN1oXWJTEWIs4xB00zAvwlz6Xs5nZvxbBh3f1jIMqAPFwdCZrsE+f3B3xtPCfBPc7c60CCNUMz1m/gFrV2Y16zKCm35VG3ob20zC6icWrWIhA5WirLUx+lb2Rmj5sm5jbMNaECanDd2tD2l349tf3UTCbD8OFCQqMqprshU3dDBJAQVpUu7VgwUi7hmwn4q4UYt6Ks2lmVOLVTPgka2ZwGoEDavSm66Dluf89g3WGmgIQ8npNM0delWtdSjBGPtroA1WQe4fSN/4AIwgqDs4xK0iqKrKdbrzVOq0jE6PgiCof83FZ1NDGrT6Hb0v9c3TUGqWega99R4WspjzC53hKdwRfd98VnC46tEQZaPEZP+LL5ydcITmDiZHk8qYJCo4cPdBPKHukkuwhM8YnTPGzwDRjS4QBCf7a3OXJyWnJnn0A7QbteYHCigqavkzM5SFFUv5WlnGDkbCIB0xOV/mHRxQdzunxSOIOl4r7nSarZoRbIuMd4xZAi6SmBpFs9poGRns9Ky1SWmAZx6bDXAPg7XtySZ01LPETvQ0jJmZLwuP97dUH6Kp4cagGyiFS4wUrxdf7muD0hubUPJAph0In28fb7fHjou7+siM+60EnM+L6QDKT0SPW+Krr64xRoSN5v4ZDcFdZXn3LIqVdDmtL5M3PSMHh9PAYDc0Dg+UqU0GAalnOFUWrML8NEI6PyRRruHSOBssAGYmUeK858wueV7vzgt5cdy+kqsmT4TNa17V6IPi7cS3+nMNZS4OuH0WC+DR6fa0jQHcAgOikAe/ANF31lY+irEyJXfVkj+isRVwbdFfz/DuTaMYGOO3vPM1i8VhDJBwhYuiuJuWDdtnCTh88ivHJ1MRdwrh5EYTRiKHFPtk9XUaPPRv0EGYbCGx55ZjNblFdRjIDCBCTYkcD9e2VFxGSfVr1VXGsbXVIrG44TYO2eCQPD5NXpnVsDmWB2LhKHhFDc1TsN0d+LN6H89wUG7adMIq8DdNVCoLwJmMnmzZjhruyXCV99ryM+3HFo5NC3eD7aWR76Z5oKjKQeWTJM3gwC50EzX0F4Rq8pHrnZaRrtvYmC+7VB4O6dwIbLjFsPhfRpAsBYX77LToYKiSf3ByxeZogBmUhsLikN8gjl02jvVxY9vhaYwU5UJFWmCfgiz2S15QMneMWhmA2iy2lGfUjayx9KB4Dy5Cb83K/akc9M/niS9oPZA4m7FuoM4rWSnUJuNIKDTey4+GXc4tktmeRMLxt/h1l5XuoIzFR4V8u4UTKeUyyukfk4KScbyBNja0gkMdKb5kmdOx/c8mcYzekMigROLPQb4y5x1rc15xOXqRHib4vP+r6IOOt92/r0CiS1znF6XFZmy0PvbSIboFx/Cm1i74yYn0MyjBm0EB/1+wlBgR5gXWoGicgQgxd7HAITvTL+ZW4ps0BAQK/0mbBxXnDZZ7wo19jzvSAeebJaZOAw+kmVjkeJ05tFJhX6FSxaNdSesZ56ZpOJKjuxhZb9xjRWkFUzBID6AuCX1tMg7ej11ucrLNjkyUnl015Q+UO7DpbRch9Hq6rPyfWoNKQ5A/ArnZ2hKg14bcJDZNedapb0sRIp/vlnWsGXTDNzwVz6pyV7jsX6uY1jcYE9xGcUnNvYjo0eu+8ucGz3AFoqNegYFSLLhwFU63lqx9i/DK/QsOeyQ2TarF8nOC1G6CgdnkWwLBRyI95prlC1/rNGrgKDsIqrXH12rFNqnWLUqb3myG99E9Llmw7JiXMOKcEVRmgQdb/ZV4h+1VVH19hYiKDdV1x2anuwXiMiE9F1UUhkACfpdtlwZEUcedbszNSwFWeSUx/odSo6DGZakNONoXCyNNYKZ7dLJkdM7Mj3a+xhKQ6kwetChlSwshBzrhePAI6LXT1q7WgdTTQ0U/bDeo7dumW3HyygSTrx/49Gb2Je9F8HvNh4fBeCYpwGlLI3pFnwg6Y/lp/STeV6SsLLm8iPLa50XgsaRzlTTNvqQjeMFjimX683jOYq3J5ifrzr7H+O91O9/GnRIQyHShwmN/20rheNxw1kdDmt/VwPGtJP50tFfgBBJfQBg0s4swHBgJn9BY1VFOdH9Rlh2S0ZcM7DA7LtEgswb7gInllJAxhn23OD8rCDDlL2XIvhAC+xVku2o/S9x8tk9WJIKme7tGRMub2e3Jl1FCscViuiupmV4+iZmGHjCNiJx2IeJ0P0gCstLjdCW0J+TgRVyV2AfsYogN/L2bHKJ3QyEjqMt3QOfGfUVSHCpinf013tjUqazsGYg/hBgUt9FkZrt/yGaDOiMp6ppYN8qJAK3weJP5OmKThu9ZZtU0wyRRGqrHt/IsCPEbMa9nudBI6yapBZmPMl5tMpgB8wJUi9iRRc7Z5ptgm+ojFt4Jpp8m2i31wpF99SaJG3LiYgHT5duJZCRv//kTXCmNH9uOCQ0GwW90HfyHy1g798jLXFVWpTi+ocBR/Hx8Mn1iqfdzkzxoo7bpXlDjPgR8cbFK7u7sQqscBXy31bpbodLvFamF4PMjnJcbXo/g/jHqMIq+6gJNmDArlfdOsw532pcObClv2wfIXGFwm9cBXRn/cd+w8Qb44ihWrIN6RnavPpobWYPmHQixtPSHEGrOK9nLucNBZ+xYmTQ4mPGiAkj8GeNfaeeQ0aJq3E8Xasc3PWYO2gu+390doREW0Ril1RayGboopxrnjPIVOmBtaxyK9+gFAMqHzenUSD9qp03XvSfvm86H2DhqT/VgPG4LiCRnT/Ozc3doMwAqD8Gio0KCSiAzpyC2iyyS+MCdL/TgPcfLi/ZkP9ICmdw9uP4k9aWhgfCO57sxI8WdV5TbDyOCB7Afl9p0YNGKi6Xwtxv5R9LGXx4MFXE9A/lCvq2ixjbaQLo2P9vOf0cm0V5o6za7cA/2/fn/xpIvA1YZgSQolhCXDYeNEUdoZ+PNXK+vbHaBt62g+GN0HaX6scB2XA0qjDPzWUnr0kZBv2C4nbH/EpHhLLhQpAy+J0UCnrgTd/qOKQ4PCMYl9JmN5ryRFn9vT+pc5+9cN5s9MVU8wjWWY/omtlQneVbkvQxOmR+ewWD9CH+TzuOnJsizFxObICvjMj3WNZcS2zfiabI7tSrSI67GYfAPGg5W3aI3u14Ts+MhLpdI1lodCuQwwWtpLyYgswKph/0+l2NKgVKSR0nt5RqV0bO3KyafXJKhI9ZYp03O+KOyckMLUyAgVX0ghq4iv5Hal37AJ828RkqdVAsiCr6RowtUudmSOkOlnPiZa+g1URlr4vWqavesraEg4="
+  rebuild ""
+  "ClusteredGradient_Gradient Length" 54
+  "ClusteredGradient_Gradient Power" 0.18
+  ClusteredGradient_Rotation 210
+  "ClusteredGradient_Falloff Style" 2
+  ClusteredGradient_Smoothing 1
+  "ClusteredGradient_Smooth Falloff" 0.46
+  "ClusteredGradient_Smoothing Samples" 50
+  "ClusteredGradient_Effect Only" true
+  protectKernelWhenPublishing true
+  specifiedFormat true
+  rebuild_finalise ""
+  name BlinkScript2
+  xpos 470
+  ypos 112
+ }
+ Output {
+  name Output1
+  xpos 470
+  ypos 212
+ }
+end_group
+Grade {
+ white 1.94
+ gamma 0.57
+ name Grade3
+ xpos 413
+ ypos 117
+}
+push $N818de800
+Merge2 {
+ inputs 2
+ operation plus
+ name Merge5
+ selected true
+ xpos 551
+ ypos 153
+}
+set N49951c00 [stack 0]
+push $N49951c00
+Viewer {
+ inputs 2
+ frame_range 1-100
+ monitorOutNDISenderName "NukeX - Nuke15 - Viewer1"
+ monitorOutOutputTransform rec709
+ name Viewer1
+ xpos 950
+ ypos 111
+}

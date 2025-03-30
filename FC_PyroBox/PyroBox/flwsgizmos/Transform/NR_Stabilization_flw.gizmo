@@ -1,0 +1,102 @@
+Group {
+ name NR_Stabilization_flw
+ tile_color 0x513a00ff
+ label "\n\[value type_cp]"
+ note_font "Bitstream Vera Sans Bold"
+ note_font_color 0xffb800ff
+ selected true
+ addUserKnob {20 user l "Position Correction"}
+ addUserKnob {26 node_title l "" t " " +STARTLINE T "<font size = 5>NR_Stabilization"}
+ addUserKnob {26 made_by l "" +STARTLINE T "<font color = '#eba834'><b>by Filipe Correia"}
+ addUserKnob {26 _1 l "" +STARTLINE}
+ addUserKnob {1 ReadNodeName l "Read Node"}
+ ReadNodeName PRECOMP
+ addUserKnob {22 generate_internal_cornerpins l "<font color = '#eba834'><b>Generate Internal CornerPins" t "Fetches metadata to get the x and y values for the cornerpin to generate the values per frame and populate the cp_stab.\n\nCan be done anywhere in the node graph if the PRECOMP read node exists. " T "import nuke\n\n\n\n\ndef extract_reposition_points_from_read_node(read_node):\n\n\n\n    reposition_points_dict_list = \[]\n\n\n\n\n    # Store the original frame range\n    original_first_frame = read_node\['first'].value()\n    original_last_frame = read_node\['last'].value()\n\n\n\n\n    for frame_number in range(int(read_node.firstFrame()), int(read_node.lastFrame()) + 1):\n        # Set the frame number of the Read node\n        read_node\['first'].setValue(frame_number)\n        read_node\['last'].setValue(frame_number)\n\n\n\n\n        metadata = extract_exr_metadata(read_node)\n\n\n\n\n        if metadata is not None:\n            reposition_points = \{\n                \"frame_number\": frame_number,\n                \"cpToTwoY\": metadata.get(\"exr/nuke/cpToTwoY\", None),\n                \"cpToOneY\": metadata.get(\"exr/nuke/cpToOneY\", None),\n                \"cpToOneX\": metadata.get(\"exr/nuke/cpToOneX\", None),\n                \"cpToFourY\": metadata.get(\"exr/nuke/cpToFourY\", None),\n                \"cpToFourX\": metadata.get(\"exr/nuke/cpToFourX\", None),\n                \"cpToThreeY\": metadata.get(\"exr/nuke/cpToThreeY\", None),\n                \"cpToThreeX\": metadata.get(\"exr/nuke/cpToThreeX\", None),\n                \"cpToTwoX\": metadata.get(\"exr/nuke/cpToTwoX\", None)\n            \}\n            reposition_points_dict_list.append(reposition_points)\n\n\n\n\n    # Restore the original frame range\n    read_node\['first'].setValue(original_first_frame)\n    read_node\['last'].setValue(original_last_frame)\n\n\n\n\n    return reposition_points_dict_list\n\n\n\n\n\ndef extract_exr_metadata(read_node):\n    try:\n        metadata_dict = read_node.metadata()\n        return metadata_dict\n    except Exception as e:\n        print(f\"Error extracting metadata: \{e\}\")\n        return None\n\n\n\n\ndef _generate_cornerpin_from_reposition_points(reposition_points_list):\n    reposition_node = nuke.toNode(\"cp_stab\")\n    reposition_node\['to1'].setAnimated()\n    reposition_node\['to2'].setAnimated()\n    reposition_node\['to3'].setAnimated()\n    reposition_node\['to4'].setAnimated()\n\n\n\n\n    for reposition_points in reposition_points_list:\n        if reposition_points\[\"cpToOneX\"] is None:\n            continue\n        frame_number = int(reposition_points\[\"frame_number\"])\n        cpToOneX_value = float(reposition_points\[\"cpToOneX\"])  \n        cpToOneY_value = float(reposition_points\[\"cpToOneY\"])  \n        cpToTwoX_value = float(reposition_points\[\"cpToTwoX\"])  \n        cpToTwoY_value = float(reposition_points\[\"cpToTwoY\"])  \n        cpToThreeX_value = float(reposition_points\[\"cpToThreeX\"])  \n        cpToThreeY_value = float(reposition_points\[\"cpToThreeY\"])  \n        cpToFourX_value = float(reposition_points\[\"cpToFourX\"])  \n        cpToFourY_value = float(reposition_points\[\"cpToFourY\"])  \n\n\n\n\n        reposition_node\['to1'].setValueAt(cpToOneX_value, frame_number, 0)\n        reposition_node\['to1'].setValueAt(cpToOneY_value, frame_number, 1)\n        reposition_node\['to2'].setValueAt(cpToTwoX_value, frame_number, 0)\n        reposition_node\['to2'].setValueAt(cpToTwoY_value, frame_number, 1)\n        reposition_node\['to3'].setValueAt(cpToThreeX_value, frame_number, 0)\n        reposition_node\['to3'].setValueAt(cpToThreeY_value, frame_number, 1)\n        reposition_node\['to4'].setValueAt(cpToFourX_value, frame_number, 0)\n        reposition_node\['to4'].setValueAt(cpToFourY_value, frame_number, 1)\n\n\n\n\n\ndef main():\n\n\n\n    this_group = nuke.thisNode()\n    read_node_name = this_group\[\"ReadNodeName\"].value()\n    \n    read_node = nuke.toNode(read_node_name)\n    if read_node.Class() == \"Read\":\n\n\n\n        # Get the repostion from top node metadata\n        reposition_points_list = extract_reposition_points_from_read_node(read_node)\n\n\n\n        # Generate CornerPin and Reformat nodes from the extracted reposition points\n        _generate_cornerpin_from_reposition_points(reposition_points_list)\n    else:\n        nuke.message(f\"\{read_node_name\} is has to be Read node\")\n\n\n\nmain()" +STARTLINE}
+ addUserKnob {22 generate_external_cornerpins l "<font color = '#eba834'><b>Generate External Cornerpins" t "Generates a cornerpin outside of the Gizmo" T "import nuke\n\n\n\ndef extract_reposition_points_from_read_node(read_node):\n\n\n\n    reposition_points_dict_list = \[]\n\n\n\n    # Store the original frame range\n    original_first_frame = read_node\['first'].value()\n    original_last_frame = read_node\['last'].value()\n\n\n\n    for frame_number in range(int(read_node.firstFrame()), int(read_node.lastFrame()) + 1):\n        # Set the frame number of the Read node\n        read_node\['first'].setValue(frame_number)\n        read_node\['last'].setValue(frame_number)\n\n\n\n        metadata = extract_exr_metadata(read_node)\n\n\n\n        if metadata is not None:\n            reposition_points = \{\n                \"frame_number\": frame_number,\n                \"cpToTwoY\": metadata.get(\"exr/nuke/cpToTwoY\", None),\n                \"cpToOneY\": metadata.get(\"exr/nuke/cpToOneY\", None),\n                \"cpToOneX\": metadata.get(\"exr/nuke/cpToOneX\", None),\n                \"cpToFourY\": metadata.get(\"exr/nuke/cpToFourY\", None),\n                \"cpToFourX\": metadata.get(\"exr/nuke/cpToFourX\", None),\n                \"cpToThreeY\": metadata.get(\"exr/nuke/cpToThreeY\", None),\n                \"cpToThreeX\": metadata.get(\"exr/nuke/cpToThreeX\", None),\n                \"cpToTwoX\": metadata.get(\"exr/nuke/cpToTwoX\", None)\n            \}\n            reposition_points_dict_list.append(reposition_points)\n\n\n\n    # Restore the original frame range\n    read_node\['first'].setValue(original_first_frame)\n    read_node\['last'].setValue(original_last_frame)\n\n\n\n    return reposition_points_dict_list\n\n\n\ndef extract_exr_metadata(read_node):\n    try:\n        metadata_dict = read_node.metadata()\n        return metadata_dict\n    except Exception as e:\n        print(f\"Error extracting metadata: \{e\}\")\n        return None\n\n\n\ndef _generate_cornerpin_from_reposition_points(reposition_points_list):\n    \n    this_group = nuke.thisNode()\n    xpos = this_group.xpos()\n    ypos = this_group.ypos()\n    this_group.end()\n\n\n    # Create a new CornerPin node at the root level outside of group\n    CornerPin_stabilize = nuke.nodes.CornerPin2D()\n    CornerPin_stabilize.setInput(0, None)\n    CornerPin_stabilize.setXYpos(xpos+100, ypos+100)\n    CornerPin_stabilize.setName('CornerPin_Stabilize')\n    \n    # Set default \"from\" resolution to 1024x1024\n    CornerPin_stabilize\['invert'].setValue(True)\n    CornerPin_stabilize\['from2'].setValue(\[1024, 0])\n    CornerPin_stabilize\['from3'].setValue(\[1024, 1024])\n    CornerPin_stabilize\['from4'].setValue(\[0, 1024])\n\n\n\n    # Set the \"to\" points to be animated\n    CornerPin_stabilize\['to1'].setAnimated()\n    CornerPin_stabilize\['to2'].setAnimated()\n    CornerPin_stabilize\['to3'].setAnimated()\n    CornerPin_stabilize\['to4'].setAnimated()\n\n\n\n    for reposition_points in reposition_points_list:\n        # skip sparse frames\n        if reposition_points\[\"cpToOneX\"] is None:\n            continue\n        frame_number = int(reposition_points\[\"frame_number\"])\n        CornerPin_stabilize\['to1'].setValueAt(float(reposition_points\[\"cpToOneX\"]), frame_number, 0)\n        CornerPin_stabilize\['to1'].setValueAt(float(reposition_points\[\"cpToOneY\"]), frame_number, 1)\n        CornerPin_stabilize\['to2'].setValueAt(float(reposition_points\[\"cpToTwoX\"]), frame_number, 0)\n        CornerPin_stabilize\['to2'].setValueAt(float(reposition_points\[\"cpToTwoY\"]), frame_number, 1)\n        CornerPin_stabilize\['to3'].setValueAt(float(reposition_points\[\"cpToThreeX\"]), frame_number, 0)\n        CornerPin_stabilize\['to3'].setValueAt(float(reposition_points\[\"cpToThreeY\"]), frame_number, 1)\n        CornerPin_stabilize\['to4'].setValueAt(float(reposition_points\[\"cpToFourX\"]), frame_number, 0)\n        CornerPin_stabilize\['to4'].setValueAt(float(reposition_points\[\"cpToFourY\"]), frame_number, 1)\n\n\n\n    # Create and configure the Reformat node\n    reformat_node = nuke.nodes.Reformat()\n    reformat_node.setInput(0, CornerPin_stabilize)\n    reformat_node.setName(\"Reformat_Stabilize\")\n    reformat_node\['format'].setValue(\"square_1K\")\n    reformat_node\['resize'].setValue(\"none\")\n    reformat_node\['center'].setValue(False)\n    reformat_node\['filter'].setValue(\"Lanczos6\")\n\n\n    # Duplicate the Cornerpin_stabilize\n    for node in nuke.allNodes(): node.setSelected(False)\n    reposition_copy = nuke.createNode(CornerPin_stabilize.Class(), CornerPin_stabilize.writeKnobs(nuke.WRITE_NON_DEFAULT_ONLY | nuke.TO_SCRIPT), inpanel=False)\n    reposition_copy.setName(\"CornerPin_Stabilize\")\n    reposition_copy.setInput(0,reformat_node)\n    reposition_copy\['invert'].setValue(False)\n    reposition_copy.setXYpos(CornerPin_stabilize.xpos(), CornerPin_stabilize.ypos() + 200)\n\n\n    # Create and configure the Reformat node\n    re_reformat_node = nuke.nodes.Reformat()\n    re_reformat_node.setInput(0, reposition_copy)\n    re_reformat_node.setName(\"Reformat_MatchMove\")\n    re_reformat_node\['resize'].setValue(\"none\")\n    re_reformat_node\['center'].setValue(False)\n    re_reformat_node\['filter'].setValue(\"Lanczos6\")\n\n\n\n\ndef main():\n\n\n    this_group = nuke.thisNode()\n    read_node_name = this_group\[\"ReadNodeName\"].value()\n    \n    read_node = nuke.toNode(read_node_name)\n    if read_node.Class() == \"Read\":\n\n\n        # Get the repostion from top node metadata\n        reposition_points_list = extract_reposition_points_from_read_node(read_node)\n\n\n        # Generate CornerPin and Reformat nodes from the extracted reposition points\n        _generate_cornerpin_from_reposition_points(reposition_points_list)\n    else:\n        nuke.message(f\"\{read_node_name\} is has to be Read node\")\n\n\nmain()" +STARTLINE}
+ addUserKnob {26 _2 l "" +STARTLINE}
+ addUserKnob {4 type_cp l "<font color = '#eba834'><b>Transformation" t "Default is Stabilized CornerPin to bring it to 1K resolution stabilized face. \nCopy the name node and after worked has been done paste it at the end and switch it to MatchMoved CornePin to bring it back to normal " M {"Stabilized CornerPin" "MatchMoved Cornerpin" "" ""}}
+ addUserKnob {26 text l "" +STARTLINE}
+ addUserKnob {20 stab_reformat l "Stabilized Reformat" n 1}
+ addUserKnob {41 format l "output format" T ref_1k.format}
+ addUserKnob {41 filter T Reformat1.filter}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {20 mm_reformat l "MatchMove Reformat" n 1}
+ mm_reformat 0
+ addUserKnob {41 format_1 l "output format" T ref_original.format}
+ addUserKnob {41 filter_1 l filter T ref_original.filter}
+ addUserKnob {20 endGroup_1 l endGroup n -1}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos -480
+  ypos -10
+ }
+ CornerPin2D {
+  to1 {0 0}
+  to2 {0 0}
+  to3 {0 0}
+  to4 {0 0}
+  invert true
+  filter Lanczos6
+  from1 {0 0}
+  from2 {{ref_1k.format.w x1 1024 1024 x14 1024 x40 1024 x108 1024} 0}
+  from3 {{ref_1k.format.w x1 1024 1024 x14 1024 x40 1024 x108 1024} {ref_1k.format.h x1 1024 1024 x14 1024 x40 1024 x108 1024}}
+  from4 {0 {ref_1k.format.h x1 1024 1024 x14 1024 x40 1024 x108 1024}}
+  name cp_stab
+  xpos -480
+  ypos 567
+  disable {{type_cp x1 0}}
+ }
+ Reformat {
+  format {{{parent.ref_1k.format}}}
+  resize none
+  center false
+  filter Lanczos6
+  name Reformat1
+  xpos -480
+  ypos 661
+  disable {{type_cp}}
+ }
+ CornerPin2D {
+  to1 {{parent.cp_stab.to1} {parent.cp_stab.to1}}
+  to2 {{parent.cp_stab.to2} {parent.cp_stab.to2}}
+  to3 {{parent.cp_stab.to3} {parent.cp_stab.to3}}
+  to4 {{parent.cp_stab.to4} {parent.cp_stab.to4}}
+  invert false
+  filter Lanczos6
+  from1 {0 0}
+  from2 {{ref_1k.format.w} 0}
+  from3 {{ref_1k.format.w} {ref_1k.format.h}}
+  from4 {0 {ref_1k.format.h}}
+  name cp_mm
+  xpos -480
+  ypos 775
+  disable {{!type_cp}}
+ }
+ Reformat {
+  resize none
+  center false
+  filter Lanczos6
+  name ref_original
+  xpos -480
+  ypos 878
+  disable {{!type_cp}}
+ }
+ Output {
+  name Output1
+  xpos -480
+  ypos 1334
+ }
+ Reformat {
+  inputs 0
+  format "1024 1024 0 0 1024 1024 1 square_1K"
+  resize none
+  center false
+  filter Lanczos6
+  name ref_1k
+  xpos -920
+  ypos 584
+ }
+end_group
+

@@ -1,0 +1,98 @@
+set cut_paste_input [stack 0]
+version 13.1 v2
+BackdropNode {
+ inputs 0
+ name BackdropNode9
+ tile_color 0xffaaaaff
+ gl_color 0x3a3a24ff
+ label "ST_MAP tracker box generation"
+ note_font_size 42
+ selected true
+ xpos -608
+ ypos -232
+ bdwidth 925
+ bdheight 831
+ z_order -1
+}
+push $cut_paste_input
+Dot {
+ name Dot1
+ label CAMERA
+ note_font_size 30
+ selected true
+ xpos -362
+ ypos 265
+}
+Dot {
+ name Dot23
+ selected true
+ xpos -362
+ ypos 352
+}
+set N18427200 [stack 0]
+Dot {
+ name Dot18
+ selected true
+ xpos -362
+ ypos 452
+}
+push $N18427200
+push 0
+Constant {
+ inputs 0
+ channels rgb
+ format "2048 2048 0 0 2048 2048 1 square_2K"
+ name Constant1
+ selected true
+ xpos -8
+ ypos -30
+}
+Expression {
+ expr0 (x+0.5)/width
+ expr1 (y+0.5)/height
+ expr2 0
+ name Expression1
+ selected true
+ xpos -8
+ ypos 160
+}
+Card2 {
+ image_aspect false
+ rows 1
+ columns 1
+ control_points {3 3 3 6 
+
+1 {-0.5 -0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0 0 0} 
+1 {0 -0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0.5 0 0} 
+1 {0.5 -0.5 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {1 0 0} 
+1 {-0.5 0 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0 0.5 0} 
+1 {0 0 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0.5 0.5 0} 
+1 {0.5 0 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {1 0.5 0} 
+1 {-0.5 0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0 1 0} 
+1 {0 0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0.5 1 0} 
+1 {0.5 0.5 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {1 1 0} }
+ name Card1
+ selected true
+ xpos -8
+ ypos 237
+}
+TransformGeo {
+ inputs 3
+ translate {0 0 0.75}
+ uniform_scale 2
+ name TransformGeo1
+ selected true
+ xpos -8
+ ypos 348
+}
+push 0
+ScanlineRender {
+ inputs 3
+ conservative_shader_sampling false
+ projection_mode perspective
+ motion_vectors_type distance
+ name ScanlineRender1
+ selected true
+ xpos -8
+ ypos 448
+}

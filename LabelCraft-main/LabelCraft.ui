@@ -1,0 +1,909 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SmartLabel</class>
+ <widget class="QWidget" name="SmartLabel">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>1354</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>500</width>
+    <height>200</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Label Craft</string>
+  </property>
+  <property name="windowOpacity">
+   <double>0.950000000000000</double>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(45, 45, 45);
+color: rgb(213, 213, 213);</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <layout class="QVBoxLayout" name="mainwindow">
+     <item>
+      <widget class="QGroupBox" name="NodeClass_group">
+       <property name="title">
+        <string>node</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <layout class="QHBoxLayout" name="horlay_label">
+          <item>
+           <widget class="QTextEdit" name="edt_NodeLabel">
+            <property name="cursor" stdset="0">
+             <cursorShape>IBeamCursor</cursorShape>
+            </property>
+            <property name="acceptRichText">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="vertlay_common_knobs">
+          <property name="leftMargin">
+           <number>50</number>
+          </property>
+          <property name="rightMargin">
+           <number>50</number>
+          </property>
+          <property name="bottomMargin">
+           <number>10</number>
+          </property>
+          <item>
+           <layout class="QHBoxLayout" name="horlay_checkable_knobs">
+            <item>
+             <widget class="QCheckBox" name="ckx_HideInput">
+              <property name="text">
+               <string>&amp;hide input   </string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="ckx_PostageStamp">
+              <property name="text">
+               <string>&amp;postage stamp   </string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="ckx_Bookmark">
+              <property name="text">
+               <string>bookmar&amp;k   </string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="ckx_Disable">
+              <property name="text">
+               <string>&amp;disable   </string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horlay_color_nodes">
+            <item>
+             <widget class="QPushButton" name="btn_NodeColor">
+              <property name="toolTip">
+               <string>Set a custom color to selected node.</string>
+              </property>
+              <property name="text">
+               <string>set &amp;color</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btn_random_color">
+              <property name="toolTip">
+               <string>Set a random color to selected node.</string>
+              </property>
+              <property name="text">
+               <string>&amp;random color</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="grp_Read">
+          <property name="title">
+           <string>read</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_7" columnstretch="0,0,0">
+           <item row="1" column="0">
+            <widget class="QLabel" name="lbl_ReadChannels">
+             <property name="text">
+              <string>channels</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="cbx_Channels">
+             <property name="toolTip">
+              <string> Select a Layer to shuffle it.</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="lbl_ReadColorspace">
+             <property name="text">
+              <string>colorspace</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="2">
+            <widget class="QComboBox" name="cbx_Colorspace">
+             <property name="toolTip">
+              <string> Sets the color transform used to convert this file to Nuke's working space.</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QPushButton" name="btn_Shuffle">
+             <property name="toolTip">
+              <string> Shuffle out the selected Layer.</string>
+             </property>
+             <property name="text">
+              <string>shuffle it!</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" colspan="3">
+            <layout class="QHBoxLayout" name="horlay_shuffle_bw">
+             <property name="spacing">
+              <number>10</number>
+             </property>
+             <property name="leftMargin">
+              <number>50</number>
+             </property>
+             <property name="rightMargin">
+              <number>50</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="btn_shuffle_white">
+               <property name="toolTip">
+                <string> Shuffle / Set all Channels to White.</string>
+               </property>
+               <property name="text">
+                <string>alpha full white</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btn_shuffle_black">
+               <property name="toolTip">
+                <string> Shuffle / Set all Channels to Black.</string>
+               </property>
+               <property name="text">
+                <string>alpha full black</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="2" column="0" colspan="3">
+            <layout class="QHBoxLayout" name="horlay_shuffle_channels">
+             <property name="leftMargin">
+              <number>50</number>
+             </property>
+             <property name="topMargin">
+              <number>5</number>
+             </property>
+             <property name="rightMargin">
+              <number>50</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="btn_shuffle_red">
+               <property name="toolTip">
+                <string> Shuffle / Set the Red Channel.</string>
+               </property>
+               <property name="text">
+                <string>red</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btn_shuffle_green">
+               <property name="toolTip">
+                <string> Shuffle / Set the Green Channel.</string>
+               </property>
+               <property name="text">
+                <string>green</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btn_shuffle_blue">
+               <property name="toolTip">
+                <string> Shuffle / Set the Blue Channel.</string>
+               </property>
+               <property name="text">
+                <string>blue</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btn_shuffle_alpha">
+               <property name="toolTip">
+                <string> Shuffle / Set the Alpha Channel.</string>
+               </property>
+               <property name="text">
+                <string>alpha</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="grp_Roto">
+          <property name="title">
+           <string>roto/ rotopaint</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_9" columnstretch="1,5,0">
+           <item row="2" column="0">
+            <widget class="QLabel" name="lbl_Premult">
+             <property name="text">
+              <string>premultiply</string>
+             </property>
+             <property name="buddy">
+              <cstring>cbx_RotoPremult</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="lbl_Output">
+             <property name="text">
+              <string>output</string>
+             </property>
+             <property name="buddy">
+              <cstring>cbx_RotoOutput</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="lbl_Cliptype">
+             <property name="text">
+              <string>clip to</string>
+             </property>
+             <property name="buddy">
+              <cstring>cbx_RotoCliptype</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QComboBox" name="cbx_RotoCliptype">
+             <property name="toolTip">
+              <string> Select the crop to output.</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QCheckBox" name="ckx_RotoReplace">
+             <property name="text">
+              <string>replace</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="2">
+            <widget class="QComboBox" name="cbx_RotoPremult">
+             <property name="toolTip">
+              <string> Premultiply multiplies the chosen input channels with a mask representing the roto shapes.</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="2">
+            <widget class="QComboBox" name="cbx_RotoOutput">
+             <property name="toolTip">
+              <string> The roto shapes are rendered into these output channels. The output channels are the same for all shapes created using this node - you cannot create a subset of shapes and output them to a different channel.</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="grp_Tracker">
+          <property name="title">
+           <string>tracker</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout" columnstretch="0,2,2">
+           <item row="0" column="0">
+            <widget class="QLabel" name="lbl_TrackerTransform">
+             <property name="text">
+              <string>transform</string>
+             </property>
+             <property name="buddy">
+              <cstring>cbx_TrackerTransform</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="lbl_TrackerRefFrame">
+             <property name="text">
+              <string>reference frame</string>
+             </property>
+             <property name="buddy">
+              <cstring>spn_TrackerRefFrame</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="spn_TrackerRefFrame">
+             <property name="toolTip">
+              <string> Sets the frame in the input sequence to use as the reference or identity frame.</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QPushButton" name="btn_TrackerGetFrame">
+             <property name="toolTip">
+              <string> use alt + g as shortcut
+ Set current frame from viewer</string>
+             </property>
+             <property name="text">
+              <string>&amp;set to current</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="2">
+            <widget class="QComboBox" name="cbx_TrackerTransform">
+             <property name="toolTip">
+              <string> Sets the type of transform to apply.</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="grp_Merge">
+          <property name="title">
+           <string>merge</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_2" columnstretch="1,1,5">
+           <item row="2" column="1">
+            <widget class="QDoubleSpinBox" name="spn_Mix">
+             <property name="toolTip">
+              <string> Dissolves between the original image at 0 and the full merge at 1.</string>
+             </property>
+             <property name="decimals">
+              <number>2</number>
+             </property>
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.010000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QSlider" name="sld_Mix">
+             <property name="toolTip">
+              <string> Dissolves between the original image at 0 and the full merge at 1.</string>
+             </property>
+             <property name="pageStep">
+              <number>1</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="2">
+            <widget class="QComboBox" name="cbx_MergeBBox">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt; Sets the output bounding box type and any data outside this region is clipped off.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="lbl_MergeOperation">
+             <property name="text">
+              <string>operation</string>
+             </property>
+             <property name="buddy">
+              <cstring>cbx_MergeOperation</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="lbl_MergeBbox">
+             <property name="text">
+              <string>bbox</string>
+             </property>
+             <property name="buddy">
+              <cstring>cbx_MergeBBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="lbl_Mix">
+             <property name="text">
+              <string>mix</string>
+             </property>
+             <property name="buddy">
+              <cstring>sld_Mix</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="2">
+            <widget class="QComboBox" name="cbx_MergeOperation">
+             <property name="toolTip">
+              <string> Sets the Merge algorithm to use.</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="grp_Info">
+          <property name="title">
+           <string>info</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,0,0,0,0">
+           <item row="1" column="1">
+            <widget class="QComboBox" name="cbx_InfoAlign">
+             <property name="toolTip">
+              <string>set alignment for Backdrop and StickyNote</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="lbl_InfoAlign">
+             <property name="text">
+              <string>align</string>
+             </property>
+             <property name="buddy">
+              <cstring>cbx_InfoAlign</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QPushButton" name="btn_FontColor">
+             <property name="text">
+              <string>font color</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="lbl_InfoZOrder">
+             <property name="text">
+              <string>z order</string>
+             </property>
+             <property name="buddy">
+              <cstring>spn_InfoZOrder</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="3">
+            <widget class="QFontComboBox" name="fnt_FontFace"/>
+           </item>
+           <item row="3" column="1">
+            <widget class="QSpinBox" name="spn_InfoZOrder">
+             <property name="toolTip">
+              <string>set zOrder for Backdrop</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="lbl_Font">
+             <property name="text">
+              <string>font</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3" colspan="2">
+            <widget class="QComboBox" name="cbx_InfoIcon">
+             <property name="toolTip">
+              <string>put an Icon at the beginning of the text</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="4">
+            <widget class="QCheckBox" name="ckx_InfoItalic">
+             <property name="toolTip">
+              <string>set font as italic to Backdrop and StickyNote</string>
+             </property>
+             <property name="text">
+              <string>&amp;italic</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="lbl_InfoIcon">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="text">
+              <string>icon</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="buddy">
+              <cstring>cbx_InfoIcon</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="lbl_InfoFontSize">
+             <property name="text">
+              <string>font size</string>
+             </property>
+             <property name="buddy">
+              <cstring>spn_InfoFontSize</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="spn_InfoFontSize">
+             <property name="toolTip">
+              <string>set the font size to Backdrop and StickyNote</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QCheckBox" name="ckx_InfoBold">
+             <property name="toolTip">
+              <string>set font as bold to Backdrop and StickyNote</string>
+             </property>
+             <property name="text">
+              <string>&amp;bold</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="grp_Filter">
+          <property name="title">
+           <string>filter</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_3" columnstretch="1,1,5">
+           <item row="1" column="2">
+            <widget class="QSlider" name="sld_FilterSize">
+             <property name="toolTip">
+              <string>set filter size for Filter nodes</string>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="spn_FilterSize">
+             <property name="toolTip">
+              <string>set filter size for Filter nodes</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="lbl_FilterSize">
+             <property name="text">
+              <string>size</string>
+             </property>
+             <property name="buddy">
+              <cstring>spn_FilterSize</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="lbl_Channels">
+             <property name="text">
+              <string>channels</string>
+             </property>
+             <property name="buddy">
+              <cstring>cbx_FilterChannels</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QSlider" name="sld_FilterSizeB">
+             <property name="toolTip">
+              <string>set filter size for Filter nodes</string>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QDoubleSpinBox" name="spn_FilterSizeB">
+             <property name="toolTip">
+              <string>set filter size for Filter nodes</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="lbl_FilterSizeB">
+             <property name="text">
+              <string>size h</string>
+             </property>
+             <property name="buddy">
+              <cstring>sld_FilterSizeB</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="2">
+            <widget class="QComboBox" name="cbx_FilterChannels">
+             <property name="toolTip">
+              <string>set channel for Filter nodes</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="grp_Switch">
+          <property name="title">
+           <string>switch</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_6">
+           <item row="0" column="0">
+            <widget class="QLabel" name="lbl_SwitchWhich">
+             <property name="text">
+              <string>which</string>
+             </property>
+             <property name="buddy">
+              <cstring>edt_SwitchWhich</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="lbl_value_A">
+             <property name="text">
+              <string>value A</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="buddy">
+              <cstring>spn_Switch_value_A</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="4">
+            <widget class="QSpinBox" name="spn_Switch_value_B">
+             <property name="toolTip">
+              <string>set second frame value for inrange expression</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QLabel" name="lbl_value_B">
+             <property name="text">
+              <string>value B</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="buddy">
+              <cstring>spn_Switch_value_B</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QSpinBox" name="spn_Switch_value_A">
+             <property name="toolTip">
+              <string>set frame value for expressions</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="4">
+            <widget class="QLineEdit" name="edt_SwitchWhich">
+             <property name="toolTip">
+              <string>set input value for Switch and Dissolve</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QSpinBox" name="spn_Switch_value_C"/>
+           </item>
+           <item row="3" column="4">
+            <widget class="QSpinBox" name="spn_Switch_value_D"/>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLabel" name="lbl_value_C">
+             <property name="text">
+              <string>value C</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="3">
+            <widget class="QLabel" name="lbl_value_D">
+             <property name="text">
+              <string>value D</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="grp_Colorspaces">
+          <property name="title">
+           <string>colorspace</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_5" columnstretch="0,5,2">
+           <item row="1" column="1">
+            <widget class="QComboBox" name="cbx_ColorValueB">
+             <property name="toolTip">
+              <string>set out colorspace for OCIOColorspace and Colorspace</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2" rowspan="2">
+            <widget class="QPushButton" name="btn_ColorspaceSwap">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>60</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>swap between in and out values
+use alt + c as shortcut</string>
+             </property>
+             <property name="text">
+              <string>swap &amp;colors</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="cbx_ColorValueA">
+             <property name="toolTip">
+              <string>set log2lin/ lin2log to Log2Lin
+set in colorspace for OCIOColorspace and Colorspace</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="lbl_ColorValueA">
+             <property name="text">
+              <string>in</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="lbl_ColorValueB">
+             <property name="text">
+              <string>out</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="grp_Scanline">
+          <property name="title">
+           <string>scanline</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_8">
+           <item row="0" column="0">
+            <widget class="QLabel" name="lbl_projection_mode">
+             <property name="text">
+              <string>projection mode</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QComboBox" name="cbx_projection_mode"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horlay_credits">
+       <property name="topMargin">
+        <number>10</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="lbl_credits">
+         <property name="font">
+          <font>
+           <family>MS Shell Dlg 2</family>
+           <pointsize>6</pointsize>
+           <weight>50</weight>
+           <italic>false</italic>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>credits</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>edt_NodeLabel</tabstop>
+  <tabstop>ckx_HideInput</tabstop>
+  <tabstop>ckx_PostageStamp</tabstop>
+  <tabstop>ckx_Bookmark</tabstop>
+  <tabstop>ckx_Disable</tabstop>
+  <tabstop>btn_NodeColor</tabstop>
+  <tabstop>btn_random_color</tabstop>
+  <tabstop>cbx_Colorspace</tabstop>
+  <tabstop>cbx_Channels</tabstop>
+  <tabstop>btn_Shuffle</tabstop>
+  <tabstop>btn_shuffle_red</tabstop>
+  <tabstop>btn_shuffle_green</tabstop>
+  <tabstop>btn_shuffle_blue</tabstop>
+  <tabstop>btn_shuffle_alpha</tabstop>
+  <tabstop>btn_shuffle_white</tabstop>
+  <tabstop>btn_shuffle_black</tabstop>
+  <tabstop>cbx_RotoOutput</tabstop>
+  <tabstop>cbx_RotoPremult</tabstop>
+  <tabstop>cbx_RotoCliptype</tabstop>
+  <tabstop>ckx_RotoReplace</tabstop>
+  <tabstop>cbx_TrackerTransform</tabstop>
+  <tabstop>spn_TrackerRefFrame</tabstop>
+  <tabstop>btn_TrackerGetFrame</tabstop>
+  <tabstop>cbx_MergeOperation</tabstop>
+  <tabstop>cbx_MergeBBox</tabstop>
+  <tabstop>spn_Mix</tabstop>
+  <tabstop>sld_Mix</tabstop>
+  <tabstop>fnt_FontFace</tabstop>
+  <tabstop>btn_FontColor</tabstop>
+  <tabstop>cbx_InfoAlign</tabstop>
+  <tabstop>cbx_InfoIcon</tabstop>
+  <tabstop>spn_InfoFontSize</tabstop>
+  <tabstop>ckx_InfoBold</tabstop>
+  <tabstop>ckx_InfoItalic</tabstop>
+  <tabstop>spn_InfoZOrder</tabstop>
+  <tabstop>cbx_FilterChannels</tabstop>
+  <tabstop>spn_FilterSize</tabstop>
+  <tabstop>sld_FilterSize</tabstop>
+  <tabstop>spn_FilterSizeB</tabstop>
+  <tabstop>sld_FilterSizeB</tabstop>
+  <tabstop>edt_SwitchWhich</tabstop>
+  <tabstop>spn_Switch_value_A</tabstop>
+  <tabstop>spn_Switch_value_B</tabstop>
+  <tabstop>spn_Switch_value_C</tabstop>
+  <tabstop>spn_Switch_value_D</tabstop>
+  <tabstop>cbx_ColorValueA</tabstop>
+  <tabstop>cbx_ColorValueB</tabstop>
+  <tabstop>btn_ColorspaceSwap</tabstop>
+  <tabstop>cbx_projection_mode</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

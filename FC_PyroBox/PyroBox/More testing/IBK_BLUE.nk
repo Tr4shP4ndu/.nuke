@@ -1,0 +1,93 @@
+set cut_paste_input [stack 0]
+version 12.2 v5
+push $cut_paste_input
+IBKColourV3 {
+ name IBKColourV3_18
+ label "Main\nBlue"
+ selected true
+ xpos -185
+ ypos -45
+ Size 0.5
+ erode 1
+}
+IBKColourV3 {
+ name IBKColourV3_10
+ label "Patch Main"
+ selected true
+ xpos -185
+ ypos 5
+ Size {{parent.IBKColourV3_18.Size}}
+ off {{parent.IBKColourV3_18.off}}
+ mult {{parent.IBKColourV3_18.mult} {parent.IBKColourV3_18.mult} {parent.IBKColourV3_18.mult}}
+ multi 2
+}
+IBKColourV3 {
+ name IBKColourV3_11
+ selected true
+ xpos -185
+ ypos 43
+ Size {{parent.IBKColourV3_18.Size}}
+ off {{parent.IBKColourV3_18.off}}
+ mult {{parent.IBKColourV3_18.mult} {parent.IBKColourV3_18.mult} {parent.IBKColourV3_18.mult}}
+ multi {{parent.IBKColourV3_10.multi*2}}
+}
+IBKColourV3 {
+ name IBKColourV3_12
+ selected true
+ xpos -185
+ ypos 69
+ Size {{parent.IBKColourV3_18.Size}}
+ off {{parent.IBKColourV3_18.off}}
+ mult {{parent.IBKColourV3_18.mult} {parent.IBKColourV3_18.mult} {parent.IBKColourV3_18.mult}}
+ multi {{parent.IBKColourV3_11.multi*2}}
+}
+IBKColourV3 {
+ name IBKColourV3_13
+ selected true
+ xpos -185
+ ypos 95
+ Size {{parent.IBKColourV3_18.Size}}
+ off {{parent.IBKColourV3_18.off}}
+ mult {{parent.IBKColourV3_18.mult} {parent.IBKColourV3_18.mult} {parent.IBKColourV3_18.mult}}
+ multi {{parent.IBKColourV3_12.multi*2}}
+}
+IBKColourV3 {
+ name IBKColourV3_14
+ selected true
+ xpos -185
+ ypos 121
+ Size {{parent.IBKColourV3_18.Size}}
+ off {{parent.IBKColourV3_18.off}}
+ mult {{parent.IBKColourV3_18.mult} {parent.IBKColourV3_18.mult} {parent.IBKColourV3_18.mult}}
+ multi {{parent.IBKColourV3_13.multi*2}}
+}
+IBKColourV3 {
+ name IBKColourV3_15
+ selected true
+ xpos -185
+ ypos 147
+ Size {{parent.IBKColourV3_18.Size}}
+ off {{parent.IBKColourV3_18.off}}
+ mult {{parent.IBKColourV3_18.mult} {parent.IBKColourV3_18.mult} {parent.IBKColourV3_18.mult}}
+ multi {{parent.IBKColourV3_14.multi*2}}
+}
+IBKColourV3 {
+ name IBKColourV3_16
+ selected true
+ xpos -185
+ ypos 173
+ Size {{parent.IBKColourV3_18.Size}}
+ off {{parent.IBKColourV3_18.off}}
+ mult {{parent.IBKColourV3_18.mult} {parent.IBKColourV3_18.mult} {parent.IBKColourV3_18.mult}}
+ multi {{parent.IBKColourV3_15.multi*2}}
+}
+IBKColourV3 {
+ name IBKColourV3_17
+ selected true
+ xpos -185
+ ypos 199
+ Size {{parent.IBKColourV3_18.Size}}
+ off {{parent.IBKColourV3_18.off}}
+ mult {{parent.IBKColourV3_18.mult} {parent.IBKColourV3_18.mult} {parent.IBKColourV3_18.mult}}
+ multi 128
+}

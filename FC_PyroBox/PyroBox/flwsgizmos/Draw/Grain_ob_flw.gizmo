@@ -1,0 +1,1434 @@
+set cut_paste_input [stack 0]
+version 13.1 v2
+push 0
+push 0
+push $cut_paste_input
+Group {
+ inputs 3
+ name O_Grain_flw
+ tile_color 0x5555ff
+ label "\[value scatter]"
+ note_font "DejaVu Sans"
+ note_font_size 12
+ selected true
+ xpos 850
+ ypos 8775
+ mapsize {0.1829959514 0.2022375215}
+ addUserKnob {20 User}
+ addUserKnob {4 scatter l output M {regrain "grain plate" "scattered grain" "" "" "" ""}}
+ addUserKnob {26 ""}
+ addUserKnob {6 scatter_1 l scatter +STARTLINE}
+ addUserKnob {6 externalgrain l "use external grain" t "may look incorrect if normalisation is not matched" +STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {7 diffthreshold l "scatter threshold" t "Adjusting this slider will adjust how much PLATE grain is replaced with SCATTERED grain. The higher this slider, more plate grain is used. " R 0 2}
+ diffthreshold 1.5
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode1
+  tile_color 0xb5b3b600
+  label "normalisation "
+  note_font_size 42
+  xpos -525
+  ypos -95
+  bdwidth 1954
+  bdheight 734
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode2
+  tile_color 0x627a6d00
+  label "regrain "
+  note_font_size 42
+  xpos -518
+  ypos 2175
+  bdwidth 1994
+  bdheight 949
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode3
+  tile_color 0xd3776a00
+  label "scatter "
+  note_font_size 42
+  xpos -222
+  ypos 960
+  bdwidth 939
+  bdheight 352
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode4
+  tile_color 0x627a6d00
+  label "scatter threshold  "
+  note_font_size 42
+  xpos -308
+  ypos -686
+  bdwidth 802
+  bdheight 284
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode5
+  tile_color 0x1f00ffff
+  note_font_size 42
+  xpos 444
+  ypos 3430
+  bdheight 323
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode6
+  tile_color 0x6e7b7400
+  label "Depenadancies "
+  note_font_size 42
+  xpos -342
+  ypos -1193
+  bdwidth 2907
+  bdheight 356
+ }
+ Input {
+  inputs 0
+  name DegrainedPlate
+  label "(input \[value number])"
+  xpos 438
+  ypos -1104
+  number 1
+ }
+ Dot {
+  name Dot10
+  xpos 472
+  ypos -602
+ }
+set Ndc95c800 [stack 0]
+ Dot {
+  name Dot11
+  xpos 470
+  ypos -19
+ }
+set Ndc95c100 [stack 0]
+ Dot {
+  name Dot1
+  xpos 470
+  ypos 55
+ }
+set Ndc93f900 [stack 0]
+ Dot {
+  name Dot2
+  xpos -123
+  ypos 55
+ }
+ Input {
+  inputs 0
+  name Plate
+  label "(input \[value number])"
+  xpos 909
+  ypos -1104
+  number 2
+ }
+push $Ndc95c100
+ Merge2 {
+  inputs 2
+  operation minus
+  name Merge5
+  xpos 907
+  ypos -23
+ }
+set Ndc93e400 [stack 0]
+push $Ndc93f900
+ Blur {
+  size {{input.width/2}}
+  name Blur1
+  xpos 592
+  ypos 45
+ }
+push $Ndc93f900
+ Dot {
+  name Dot15
+  xpos 470
+  ypos 108
+ }
+set Ndc93d600 [stack 0]
+ Merge2 {
+  inputs 2
+  operation from
+  name Merge2
+  xpos 592
+  ypos 104
+ }
+push $Ndc93d600
+ Dot {
+  name Dot13
+  xpos 470
+  ypos 165
+ }
+ Merge2 {
+  inputs 2
+  operation from
+  mix 0.37
+  name Merge3
+  xpos 592
+  ypos 161
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  name Merge7
+  xpos 907
+  ypos 161
+ }
+ Dot {
+  name Dot4
+  xpos 943
+  ypos 1157
+ }
+set Ndc917200 [stack 0]
+ Group {
+  inputs 2
+  name O_Scatter
+  tile_color 0x333333ff
+  xpos -157
+  ypos 1153
+ }
+  BackdropNode {
+   inputs 0
+   name BackdropNode1
+   tile_color 0xb3a07600
+   label "luminance separation"
+   note_font_size 42
+   xpos -3479
+   ypos -825
+   bdwidth 951
+   bdheight 1155
+  }
+  BackdropNode {
+   inputs 0
+   name BackdropNode2
+   tile_color 0xb3a07600
+   label "dependancies "
+   note_font_size 42
+   xpos -3255
+   ypos -1355
+   bdwidth 4182
+   bdheight 247
+  }
+  BackdropNode {
+   inputs 0
+   name BackdropNode3
+   tile_color 0xb5b3b600
+   label "remove highlights and shadows"
+   note_font_size 42
+   xpos -639
+   ypos -72
+   bdwidth 744
+   bdheight 275
+  }
+  BackdropNode {
+   inputs 0
+   name BackdropNode4
+   tile_color 0x85a9c300
+   label "flip scatter   "
+   note_font_size 42
+   xpos -976
+   ypos 427
+   bdwidth 1029
+   bdheight 517
+  }
+  BackdropNode {
+   inputs 0
+   name BackdropNode5
+   tile_color 0x85a9c300
+   gl_color 0xff3fff
+   label "scroll scatter   "
+   note_font_size 42
+   xpos -976
+   ypos 1049
+   bdwidth 1024
+   bdheight 715
+  }
+  BackdropNode {
+   inputs 0
+   name BackdropNode6
+   tile_color 0x85a9c300
+   label "flip scatter   "
+   note_font_size 42
+   xpos -976
+   ypos 1909
+   bdwidth 1025
+   bdheight 666
+  }
+  BackdropNode {
+   inputs 0
+   name BackdropNode7
+   tile_color 0x627a6d00
+   label "Noise breakup"
+   note_font_size 42
+   xpos -399
+   ypos 2712
+   bdwidth 444
+   bdheight 791
+  }
+  Input {
+   inputs 0
+   name dns_plate
+   label "(input \[value number])"
+   xpos -3069
+   ypos -1248
+   number 1
+  }
+  Dot {
+   name Dot32
+   xpos -3035
+   ypos -656
+  }
+set Ndc8eeb00 [stack 0]
+  Dot {
+   name Dot33
+   xpos -3353
+   ypos -656
+  }
+  Keyer {
+   invert true
+   operation "luminance key"
+   range {0.075 0.075 1 1}
+   name Keyer1
+   xpos -3387
+   ypos -552
+  }
+  Dot {
+   name Dot36
+   xpos -3353
+   ypos -438
+  }
+push $Ndc8eeb00
+  Dot {
+   name Dot34
+   xpos -2674
+   ypos -656
+  }
+  Keyer {
+   operation "luminance key"
+   range {0.5 0.5 1 1}
+   name Keyer2
+   xpos -2708
+   ypos -542
+  }
+  Dot {
+   name Dot37
+   xpos -2674
+   ypos -438
+  }
+  Merge2 {
+   inputs 2
+   name Merge6
+   xpos -3070
+   ypos -442
+  }
+  Invert {
+   name Invert1
+   xpos -3070
+   ypos -388
+  }
+  Dot {
+   name Dot38
+   label "mids\n"
+   note_font_size 40
+   xpos -3036
+   ypos 24
+  }
+  Dot {
+   name Dot23
+   xpos -559
+   ypos 24
+  }
+set Ndc8ce400 [stack 0]
+  Dot {
+   name Dot3
+   xpos -559
+   ypos 135
+  }
+push $Ndc8ce400
+  Invert {
+   name Invert2
+   xpos -416
+   ypos 14
+  }
+  Input {
+   inputs 0
+   name normalised_grain
+   label "input \[value number]"
+   xpos 702
+   ypos -1241
+  }
+  OCIOColorSpace {
+   in_colorspace scene_linear
+   out_colorspace "ACES - ACEScct"
+   name OCIOColorSpace2
+   xpos 702
+   ypos -1150
+  }
+  Dot {
+   name Dot8
+   xpos 736
+   ypos -268
+  }
+set Ndc8cc100 [stack 0]
+  Dot {
+   name Dot2
+   xpos -136
+   ypos -268
+  }
+  Merge2 {
+   inputs 2
+   operation stencil
+   name Merge7
+   xpos -170
+   ypos 20
+  }
+  Copy {
+   inputs 2
+   from0 rgba.alpha
+   to0 rgba.alpha
+   name Copy7
+   xpos -170
+   ypos 125
+  }
+  Premult {
+   name Premult7
+   xpos -170
+   ypos 266
+  }
+  Dot {
+   name Dot4
+   xpos -136
+   ypos 522
+  }
+set Ndc89dd00 [stack 0]
+  Dot {
+   name Dot5
+   xpos -438
+   ypos 522
+  }
+set Ndc89d600 [stack 0]
+  Dot {
+   name Dot11
+   xpos -619
+   ypos 522
+  }
+set Ndc89cf00 [stack 0]
+  Dot {
+   name Dot7
+   xpos -784
+   ypos 522
+  }
+  Transform {
+   scale {-1 -1}
+   center {{input.width/2} {input.height/2}}
+   name w_flip2
+   xpos -818
+   ypos 610
+  }
+  Dot {
+   name Dot9
+   xpos -784
+   ypos 830
+  }
+push $Ndc89cf00
+  Transform {
+   scale {1 -1}
+   center {{parent.w_flip2.center.x} {parent.w_flip2.center.y}}
+   name w_flip1
+   xpos -653
+   ypos 611
+  }
+  Dot {
+   name Dot10
+   xpos -619
+   ypos 775
+  }
+push $Ndc89d600
+  Transform {
+   scale {-1 1}
+   center {{parent.w_flip2.center.x} {parent.w_flip2.center.y}}
+   name w_flip
+   xpos -472
+   ypos 610
+  }
+  Dot {
+   name Dot6
+   xpos -438
+   ypos 721
+  }
+push $Ndc89dd00
+  Merge2 {
+   inputs 2
+   name Merge1
+   xpos -170
+   ypos 717
+  }
+  Merge2 {
+   inputs 2
+   name Merge2
+   xpos -170
+   ypos 771
+  }
+  Merge2 {
+   inputs 2
+   name Merge3
+   xpos -170
+   ypos 826
+  }
+  Crop {
+   box {0 0 {input0.width} {input0.height}}
+   name Crop1
+   xpos -170
+   ypos 878
+  }
+  Dot {
+   name Dot12
+   xpos -136
+   ypos 1144
+  }
+set Ndc847900 [stack 0]
+  Dot {
+   name Dot13
+   xpos -438
+   ypos 1144
+  }
+  Group {
+   name Scroll_sd3
+   help "Copyright 2022 Sean Danischevsky"
+   tile_color 0xaaffffff
+   xpos -472
+   ypos 1196
+   addUserKnob {20 User}
+   addUserKnob {41 translate T TransformControl.translate}
+   addUserKnob {41 filter T TransformControl.filter}
+   addUserKnob {41 motionblur T TransformControl.motionblur}
+   addUserKnob {41 shutter T TransformControl.shutter}
+   addUserKnob {41 shutteroffset l "shutter offset" T TransformControl.shutteroffset}
+   addUserKnob {41 shuttercustomoffset l "" -STARTLINE T TransformControl.shuttercustomoffset}
+  }
+   Input {
+    inputs 0
+    name Input1
+    xpos 610
+    ypos -397
+   }
+set Ndc846400 [stack 0]
+   Transform {
+    translate {{Transformx1.translate.x<0?Transformx1.translate.x+width:Transformx1.translate.x-width} 0}
+    center {960 540}
+    filter {{TransformControl.filter}}
+    motionblur {{TransformControl.motionblur x1089 0}}
+    shutter {{TransformControl.shutter}}
+    shutteroffset {{TransformControl.shutteroffset}}
+    shuttercustomoffset {{TransformControl.shuttercustomoffset}}
+    name TransformxSlave1
+    xpos 720
+    ypos -253
+   }
+push $Ndc846400
+   Transform {
+    translate {{fmod(TransformControl.translate.main.x,width)} 0}
+    center {960 540}
+    filter {{TransformControl.filter}}
+    motionblur {{TransformControl.motionblur x1089 0}}
+    shutter {{TransformControl.shutter}}
+    shutteroffset {{TransformControl.shutteroffset}}
+    shuttercustomoffset {{TransformControl.shuttercustomoffset}}
+    name Transformx1
+    xpos 500
+    ypos -253
+   }
+   Merge2 {
+    inputs 2
+    operation plus
+    name Merge4
+    xpos 610
+    ypos -181
+   }
+set Ndc844f00 [stack 0]
+   Transform {
+    translate {0 {Transformy1.translate.y<0?Transformy1.translate.y+height:Transformy1.translate.y-height}}
+    center {960 540}
+    filter {{TransformControl.filter}}
+    motionblur {{TransformControl.motionblur x1089 0}}
+    shutter {{TransformControl.shutter}}
+    shutteroffset {{TransformControl.shutteroffset}}
+    shuttercustomoffset {{TransformControl.shuttercustomoffset}}
+    name TransformySlave1
+    xpos 720
+    ypos -85
+   }
+push $Ndc844f00
+   Transform {
+    translate {0 {fmod(TransformControl.translate.main.y,height)}}
+    center {960 540}
+    filter {{TransformControl.filter}}
+    motionblur {{TransformControl.motionblur x1089 0}}
+    shutter {{TransformControl.shutter}}
+    shutteroffset {{TransformControl.shutteroffset}}
+    shuttercustomoffset {{TransformControl.shuttercustomoffset}}
+    name Transformy1
+    xpos 500
+    ypos -133
+   }
+   Merge2 {
+    inputs 2
+    operation plus
+    name Merge5
+    xpos 500
+    ypos -61
+   }
+   Crop {
+    box {0 0 {width i} {height i}}
+    name CropOut1
+    xpos 500
+    ypos 59
+   }
+   Output {
+    name Output1
+    xpos 500
+    ypos 179
+   }
+push $Ndc846400
+   TransformMasked {
+    translate {{normalised_grain.width*0.1} 0}
+    center {{width/2} {height/2}}
+    filter impulse
+    name TransformControl
+    xpos 280
+    ypos -338
+   }
+  end_group
+  Dot {
+   name Dot18
+   xpos -438
+   ypos 1253
+  }
+push $Ndc847900
+  Merge2 {
+   inputs 2
+   operation under
+   name Merge4
+   xpos -170
+   ypos 1249
+  }
+  Dot {
+   name Dot27
+   xpos -136
+   ypos 1349
+  }
+set Ndc818f00 [stack 0]
+  Dot {
+   name Dot28
+   xpos -619
+   ypos 1349
+  }
+  Group {
+   name Scroll_sd2
+   help "Copyright 2022 Sean Danischevsky"
+   tile_color 0xaaffffff
+   xpos -653
+   ypos 1398
+   addUserKnob {20 User}
+   addUserKnob {41 translate T TransformControl.translate}
+   addUserKnob {41 filter T TransformControl.filter}
+   addUserKnob {41 motionblur T TransformControl.motionblur}
+   addUserKnob {41 shutter T TransformControl.shutter}
+   addUserKnob {41 shutteroffset l "shutter offset" T TransformControl.shutteroffset}
+   addUserKnob {41 shuttercustomoffset l "" -STARTLINE T TransformControl.shuttercustomoffset}
+  }
+   Input {
+    inputs 0
+    name Input1
+    xpos 610
+    ypos -397
+   }
+set Ndcfd7900 [stack 0]
+   Transform {
+    translate {{Transformx1.translate.x<0?Transformx1.translate.x+width:Transformx1.translate.x-width} 0}
+    center {960 540}
+    filter {{TransformControl.filter}}
+    motionblur {{TransformControl.motionblur x1089 0}}
+    shutter {{TransformControl.shutter}}
+    shutteroffset {{TransformControl.shutteroffset}}
+    shuttercustomoffset {{TransformControl.shuttercustomoffset}}
+    name TransformxSlave1
+    xpos 720
+    ypos -253
+   }
+push $Ndcfd7900
+   Transform {
+    translate {{fmod(TransformControl.translate.main.x,width)} 0}
+    center {960 540}
+    filter {{TransformControl.filter}}
+    motionblur {{TransformControl.motionblur x1089 0}}
+    shutter {{TransformControl.shutter}}
+    shutteroffset {{TransformControl.shutteroffset}}
+    shuttercustomoffset {{TransformControl.shuttercustomoffset}}
+    name Transformx1
+    xpos 500
+    ypos -253
+   }
+   Merge2 {
+    inputs 2
+    operation plus
+    name Merge4
+    xpos 610
+    ypos -181
+   }
+set Ndcfd6400 [stack 0]
+   Transform {
+    translate {0 {Transformy1.translate.y<0?Transformy1.translate.y+height:Transformy1.translate.y-height}}
+    center {960 540}
+    filter {{TransformControl.filter}}
+    motionblur {{TransformControl.motionblur x1089 0}}
+    shutter {{TransformControl.shutter}}
+    shutteroffset {{TransformControl.shutteroffset}}
+    shuttercustomoffset {{TransformControl.shuttercustomoffset}}
+    name TransformySlave1
+    xpos 720
+    ypos -85
+   }
+push $Ndcfd6400
+   Transform {
+    translate {0 {fmod(TransformControl.translate.main.y,height)}}
+    center {960 540}
+    filter {{TransformControl.filter}}
+    motionblur {{TransformControl.motionblur x1089 0}}
+    shutter {{TransformControl.shutter}}
+    shutteroffset {{TransformControl.shutteroffset}}
+    shuttercustomoffset {{TransformControl.shuttercustomoffset}}
+    name Transformy1
+    xpos 500
+    ypos -133
+   }
+   Merge2 {
+    inputs 2
+    operation plus
+    name Merge5
+    xpos 500
+    ypos -61
+   }
+   Crop {
+    box {0 0 {width i} {height i}}
+    name CropOut1
+    xpos 500
+    ypos 59
+   }
+   Output {
+    name Output1
+    xpos 500
+    ypos 179
+   }
+push $Ndcfd7900
+   TransformMasked {
+    translate {{normalised_grain.width/0.25} 0}
+    center {{width/2} {height/2}}
+    filter impulse
+    name TransformControl
+    xpos 280
+    ypos -338
+   }
+  end_group
+  Dot {
+   name Dot17
+   xpos -619
+   ypos 1465
+  }
+push $Ndc818f00
+  Merge2 {
+   inputs 2
+   operation under
+   name Merge5
+   xpos -170
+   ypos 1461
+  }
+  Dot {
+   name Dot14
+   xpos -136
+   ypos 1563
+  }
+set Ndcfb2400 [stack 0]
+  Dot {
+   name Dot15
+   xpos -796
+   ypos 1563
+  }
+  Group {
+   name Scroll_sd1
+   help "Copyright 2022 Sean Danischevsky"
+   tile_color 0xaaffffff
+   xpos -830
+   ypos 1629
+   addUserKnob {20 User}
+   addUserKnob {41 translate T TransformControl.translate}
+   addUserKnob {41 filter T TransformControl.filter}
+   addUserKnob {41 motionblur T TransformControl.motionblur}
+   addUserKnob {41 shutter T TransformControl.shutter}
+   addUserKnob {41 shutteroffset l "shutter offset" T TransformControl.shutteroffset}
+   addUserKnob {41 shuttercustomoffset l "" -STARTLINE T TransformControl.shuttercustomoffset}
+  }
+   Input {
+    inputs 0
+    name Input1
+    xpos 610
+    ypos -397
+   }
+set Ndcfb0f00 [stack 0]
+   Transform {
+    translate {{Transformx1.translate.x<0?Transformx1.translate.x+width:Transformx1.translate.x-width} 0}
+    center {960 540}
+    filter {{TransformControl.filter}}
+    motionblur {{TransformControl.motionblur x1089 0}}
+    shutter {{TransformControl.shutter}}
+    shutteroffset {{TransformControl.shutteroffset}}
+    shuttercustomoffset {{TransformControl.shuttercustomoffset}}
+    name TransformxSlave1
+    xpos 720
+    ypos -253
+   }
+push $Ndcfb0f00
+   Transform {
+    translate {{fmod(TransformControl.translate.main.x,width)} 0}
+    center {960 540}
+    filter {{TransformControl.filter}}
+    motionblur {{TransformControl.motionblur x1089 0}}
+    shutter {{TransformControl.shutter}}
+    shutteroffset {{TransformControl.shutteroffset}}
+    shuttercustomoffset {{TransformControl.shuttercustomoffset}}
+    name Transformx1
+    xpos 500
+    ypos -253
+   }
+   Merge2 {
+    inputs 2
+    operation plus
+    name Merge4
+    xpos 610
+    ypos -181
+   }
+set Ndcf77900 [stack 0]
+   Transform {
+    translate {0 {Transformy1.translate.y<0?Transformy1.translate.y+height:Transformy1.translate.y-height}}
+    center {960 540}
+    filter {{TransformControl.filter}}
+    motionblur {{TransformControl.motionblur x1089 0}}
+    shutter {{TransformControl.shutter}}
+    shutteroffset {{TransformControl.shutteroffset}}
+    shuttercustomoffset {{TransformControl.shuttercustomoffset}}
+    name TransformySlave1
+    xpos 720
+    ypos -85
+   }
+push $Ndcf77900
+   Transform {
+    translate {0 {fmod(TransformControl.translate.main.y,height)}}
+    center {960 540}
+    filter {{TransformControl.filter}}
+    motionblur {{TransformControl.motionblur x1089 0}}
+    shutter {{TransformControl.shutter}}
+    shutteroffset {{TransformControl.shutteroffset}}
+    shuttercustomoffset {{TransformControl.shuttercustomoffset}}
+    name Transformy1
+    xpos 500
+    ypos -133
+   }
+   Merge2 {
+    inputs 2
+    operation plus
+    name Merge5
+    xpos 500
+    ypos -61
+   }
+   Crop {
+    box {0 0 {width i} {height i}}
+    name CropOut1
+    xpos 500
+    ypos 59
+   }
+   Output {
+    name Output1
+    xpos 500
+    ypos 179
+   }
+push $Ndcfb0f00
+   TransformMasked {
+    translate {{normalised_grain.width/2} 0}
+    center {{width/2} {height/2}}
+    filter impulse
+    name TransformControl
+    xpos 280
+    ypos -338
+   }
+  end_group
+  Dot {
+   name Dot16
+   xpos -796
+   ypos 1700
+  }
+push $Ndcfb2400
+  Merge2 {
+   inputs 2
+   operation under
+   name Merge8
+   xpos -170
+   ypos 1696
+  }
+  Crop {
+   box {0 0 {input0.width} {input0.height}}
+   name Crop3
+   xpos -170
+   ypos 1730
+  }
+  Dot {
+   name Dot19
+   xpos -136
+   ypos 2004
+  }
+set Ndcf3f200 [stack 0]
+  Dot {
+   name Dot20
+   xpos -438
+   ypos 2004
+  }
+  Transform {
+   scale {-1 1}
+   center {{parent.w_flip3.center.x} {parent.w_flip3.center.y}}
+   name w_flip5
+   xpos -472
+   ypos 2038
+  }
+  Dot {
+   name Dot26
+   xpos -438
+   ypos 2088
+  }
+push $Ndcf3f200
+  Merge2 {
+   inputs 2
+   name Merge9
+   xpos -170
+   ypos 2084
+  }
+  Dot {
+   name Dot1
+   xpos -136
+   ypos 2154
+  }
+set Ndcf3cf00 [stack 0]
+  Dot {
+   name Dot30
+   xpos -619
+   ypos 2154
+  }
+  Transform {
+   scale {1 -1}
+   center {{parent.w_flip3.center.x} {parent.w_flip3.center.y}}
+   name w_flip4
+   xpos -653
+   ypos 2204
+  }
+  Dot {
+   name Dot25
+   xpos -619
+   ypos 2257
+  }
+push $Ndcf3cf00
+  Merge2 {
+   inputs 2
+   name Merge10
+   xpos -170
+   ypos 2253
+  }
+  Dot {
+   name Dot21
+   xpos -136
+   ypos 2324
+  }
+set Ndcf1ab00 [stack 0]
+  Dot {
+   name Dot22
+   xpos -784
+   ypos 2324
+  }
+  Transform {
+   scale {-1 -1}
+   center {{input.width/2} {input.height/2}}
+   name w_flip3
+   xpos -818
+   ypos 2367
+  }
+  Dot {
+   name Dot24
+   xpos -784
+   ypos 2427
+  }
+push $Ndcf1ab00
+  Merge2 {
+   inputs 2
+   name Merge11
+   xpos -170
+   ypos 2423
+  }
+  Crop {
+   box {0 0 {input0.width} {input0.height}}
+   name Crop4
+   xpos -170
+   ypos 2472
+  }
+  Dot {
+   name Dot40
+   xpos -136
+   ypos 2792
+  }
+set Ndcf18100 [stack 0]
+  Dot {
+   name Dot29
+   xpos -265
+   ypos 2792
+  }
+  Dot {
+   name Dot31
+   xpos -265
+   ypos 2901
+  }
+set Ndceef200 [stack 0]
+  Remove {
+   name Remove1
+   xpos -299
+   ypos 2951
+  }
+  Noise {
+   output {-rgba.red rgba.green -rgba.blue rgba.alpha}
+   size {{(random(1,frame*1)*2)+16}}
+   zoffset 1.38
+   octaves 100
+   lacunarity 1
+   gain 1
+   gamma 0.245
+   center {1920 1080}
+   name Noise2
+   xpos -299
+   ypos 3028
+  }
+  Clamp {
+   minimum 0.49
+   maximum 0.5
+   MinClampTo_enable true
+   MaxClampTo_enable true
+   name Clamp2
+   xpos -299
+   ypos 3087
+  }
+  Dot {
+   name Dot35
+   xpos -265
+   ypos 3190
+  }
+push $Ndceef200
+  Dot {
+   name Dot39
+   xpos -355
+   ypos 2901
+  }
+  Multiply {
+   inputs 1+1
+   channels alpha
+   value 0
+   name Multiply2
+   xpos -389
+   ypos 3180
+  }
+  Group {
+   name Scroll_sd4
+   xpos -389
+   ypos 3260
+   addUserKnob {20 User}
+   addUserKnob {41 translate T TransformControl.translate}
+   addUserKnob {41 filter T TransformControl.filter}
+   addUserKnob {41 motionblur T TransformControl.motionblur}
+   addUserKnob {41 shutter T TransformControl.shutter}
+   addUserKnob {41 shutteroffset l "shutter offset" T TransformControl.shutteroffset}
+   addUserKnob {41 shuttercustomoffset l "" -STARTLINE T TransformControl.shuttercustomoffset}
+  }
+   Input {
+    inputs 0
+    name Input1
+    xpos 610
+    ypos -397
+   }
+set Ndced0800 [stack 0]
+   Transform {
+    translate {{Transformx1.translate.x<0?Transformx1.translate.x+width:Transformx1.translate.x-width} 0}
+    center {960 540}
+    filter {{TransformControl.filter}}
+    motionblur {{TransformControl.motionblur x1089 0}}
+    shutter {{TransformControl.shutter}}
+    shutteroffset {{TransformControl.shutteroffset}}
+    shuttercustomoffset {{TransformControl.shuttercustomoffset}}
+    name TransformxSlave1
+    selected true
+    xpos 720
+    ypos -253
+   }
+push $Ndced0800
+   Transform {
+    translate {{fmod(TransformControl.translate.main.x,width)} 0}
+    center {960 540}
+    filter {{TransformControl.filter}}
+    motionblur {{TransformControl.motionblur x1089 0}}
+    shutter {{TransformControl.shutter}}
+    shutteroffset {{TransformControl.shutteroffset}}
+    shuttercustomoffset {{TransformControl.shuttercustomoffset}}
+    name Transformx1
+    xpos 500
+    ypos -253
+   }
+   Merge2 {
+    inputs 2
+    operation plus
+    name Merge4
+    xpos 610
+    ypos -181
+   }
+set Ndceab200 [stack 0]
+   Transform {
+    translate {0 {Transformy1.translate.y<0?Transformy1.translate.y+height:Transformy1.translate.y-height}}
+    center {960 540}
+    filter {{TransformControl.filter}}
+    motionblur {{TransformControl.motionblur x1089 0}}
+    shutter {{TransformControl.shutter}}
+    shutteroffset {{TransformControl.shutteroffset}}
+    shuttercustomoffset {{TransformControl.shuttercustomoffset}}
+    name TransformySlave1
+    xpos 720
+    ypos -85
+   }
+push $Ndceab200
+   Transform {
+    translate {0 {fmod(TransformControl.translate.main.y,height)}}
+    center {960 540}
+    filter {{TransformControl.filter}}
+    motionblur {{TransformControl.motionblur x1089 0}}
+    shutter {{TransformControl.shutter}}
+    shutteroffset {{TransformControl.shutteroffset}}
+    shuttercustomoffset {{TransformControl.shuttercustomoffset}}
+    name Transformy1
+    xpos 500
+    ypos -133
+   }
+   Merge2 {
+    inputs 2
+    operation plus
+    name Merge5
+    xpos 500
+    ypos -61
+   }
+   Crop {
+    box {0 0 {width i} {height i}}
+    name CropOut1
+    xpos 500
+    ypos 59
+   }
+   Output {
+    name Output1
+    xpos 500
+    ypos 179
+   }
+push $Ndced0800
+   TransformMasked {
+    translate {{random((frame)/10)*1000} 0}
+    center {{width/2} {height/2}}
+    filter impulse
+    name TransformControl
+    xpos 280
+    ypos -338
+   }
+  end_group
+  Premult {
+   name Premult2
+   xpos -389
+   ypos 3327
+  }
+push $Ndcf18100
+  Merge2 {
+   inputs 2
+   name Merge13
+   xpos -170
+   ypos 3327
+  }
+  Crop {
+   box {0 0 {input0.width} {input0.height}}
+   name Crop5
+   xpos -170
+   ypos 3440
+  }
+push $Ndc8cc100
+  Merge2 {
+   inputs 2
+   name Merge12
+   xpos 702
+   ypos 3440
+  }
+  OCIOColorSpace {
+   in_colorspace "ACES - ACEScct"
+   out_colorspace scene_linear
+   name OCIOColorSpace7
+   xpos 702
+   ypos 4759
+  }
+  Crop {
+   box {0 0 {input0.width} {input0.height}}
+   name Crop2
+   xpos 702
+   ypos 4804
+  }
+  Output {
+   name Output1
+   xpos 702
+   ypos 4900
+  }
+ end_group
+ Crop {
+  box {0 0 {Plate.width} {Plate.height}}
+  crop false
+  name Crop3
+  xpos -155
+  ypos 1229
+ }
+ Dot {
+  name Dot6
+  xpos -121
+  ypos 1598
+ }
+set Ndce6c800 [stack 0]
+ Dot {
+  name Dot14
+  xpos -121
+  ypos 3514
+ }
+ Input {
+  inputs 0
+  name DegrainedComp
+  label "(input \[value number])"
+  xpos -332
+  ypos -1081
+ }
+ Dot {
+  name Dot9
+  xpos -298
+  ypos -602
+ }
+set Ndce3f200 [stack 0]
+push $Ndc95c800
+ Merge2 {
+  inputs 2
+  operation difference
+  name Merge8
+  xpos 36
+  ypos -606
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 rgba.red 0 0 rgba.alpha 0 3"
+  name Shuffle4
+  xpos 36
+  ypos -522
+ }
+ Clamp {
+  minimum {{(diffthreshold*0.01)}}
+  maximum {{(diffthreshold*0.01)+0.0001}}
+  MinClampTo_enable true
+  MaxClampTo_enable true
+  name Clamp3
+  xpos 36
+  ypos -444
+ }
+ Dot {
+  name Dot24
+  label "diff mask\n"
+  note_font_size 30
+  xpos 70
+  ypos 2651
+ }
+push $Ndce3f200
+ Dot {
+  name Dot7
+  xpos -298
+  ypos 2296
+ }
+set Ndce2b200 [stack 0]
+ Dot {
+  name Dot12
+  xpos 380
+  ypos 2296
+ }
+set Ndce2ab00 [stack 0]
+ Blur {
+  size {{input.width/2}}
+  name Blur2
+  xpos 537
+  ypos 2286
+ }
+push $Ndce2ab00
+ Dot {
+  name Dot17
+  xpos 380
+  ypos 2350
+ }
+set Ndce29d00 [stack 0]
+ Merge2 {
+  inputs 2
+  operation from
+  name Merge9
+  xpos 537
+  ypos 2346
+ }
+push $Ndce29d00
+ Dot {
+  name Dot16
+  xpos 380
+  ypos 2406
+ }
+ Merge2 {
+  inputs 2
+  operation from
+  mix 0.37
+  name Merge10
+  xpos 537
+  ypos 2402
+ }
+ Crop {
+  box {0 0 {input.width} {input.height}}
+  name Crop1
+  xpos 537
+  ypos 2438
+ }
+ Input {
+  inputs 0
+  name ExternalGrain
+  label "(input \[value number])"
+  xpos 2380
+  ypos -1069
+  number 3
+ }
+ Dot {
+  name Dot5
+  xpos 2414
+  ypos 1892
+ }
+push $Ndce6c800
+push $Ndc917200
+ Switch {
+  inputs 2
+  which {{scatter_1}}
+  name Switch1
+  label "TURNS ON SCATTER"
+  xpos 909
+  ypos 1594
+ }
+ Switch {
+  inputs 2
+  which {{externalgrain}}
+  name Switch3
+  label "USE EXTRENAL GRAIN"
+  xpos 909
+  ypos 1888
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge4
+  xpos 909
+  ypos 2438
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy3
+  xpos 909
+  ypos 2641
+ }
+ Premult {
+  name Premult3
+  xpos 909
+  ypos 2725
+ }
+push $Ndc93e400
+ Dot {
+  name Dot20
+  xpos 1303
+  ypos -19
+ }
+ Dot {
+  name Dot21
+  xpos 1305
+  ypos 2817
+ }
+set Ndce00100 [stack 0]
+ Merge2 {
+  inputs 2
+  name Merge6
+  xpos 909
+  ypos 2813
+ }
+set Ndcdcf900 [stack 0]
+push $Ndcdcf900
+push $Ndce00100
+ Dot {
+  name Dot18
+  xpos 1305
+  ypos 3352
+ }
+ Switch {
+  inputs 3
+  which {{scatter}}
+  name Switch4
+  xpos 454
+  ypos 3348
+ }
+push $Ndce2b200
+ Dot {
+  name Dot3
+  xpos -298
+  ypos 2972
+ }
+push $Ndcdcf900
+ Merge2 {
+  inputs 2
+  operation plus
+  name Merge1
+  xpos 909
+  ypos 2968
+ }
+ Dot {
+  name Dot8
+  xpos 943
+  ypos 3514
+ }
+ Switch {
+  inputs 3
+  which {{scatter}}
+  name Switch2
+  xpos 454
+  ypos 3510
+ }
+ Crop {
+  box {0 0 {Plate.width} {Plate.height}}
+  crop false
+  name Crop2
+  xpos 454
+  ypos 3677
+ }
+ Output {
+  name Output1
+  xpos 454
+  ypos 3723
+ }
+end_group
+

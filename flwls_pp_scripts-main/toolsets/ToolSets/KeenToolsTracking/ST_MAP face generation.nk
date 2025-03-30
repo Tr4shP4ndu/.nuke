@@ -1,0 +1,80 @@
+set cut_paste_input [stack 0]
+version 13.1 v2
+BackdropNode {
+ inputs 0
+ name BackdropNode10
+ tile_color 0xffaaaaff
+ gl_color 0x3a3a24ff
+ label "ST_MAP face generation"
+ note_font_size 42
+ selected true
+ xpos -606
+ ypos 622
+ bdwidth 610
+ bdheight 833
+}
+Dot {
+ inputs 0
+ name Dot2
+ label CAMERA
+ note_font_size 30
+ selected true
+ xpos -456
+ ypos 1218
+}
+Dot {
+ name Dot5
+ selected true
+ xpos -456
+ ypos 1319
+}
+Constant {
+ inputs 0
+ channels rgb
+ format "2048 2048 0 0 2048 2048 1 square_2K"
+ name Constant2
+ selected true
+ xpos -202
+ ypos 816
+}
+Expression {
+ expr0 (x+0.5)/width
+ expr1 (y+0.5)/height
+ expr2 0
+ name Expression2
+ selected true
+ xpos -202
+ ypos 1006
+}
+push $cut_paste_input
+Dot {
+ name Dot3
+ label GEO
+ note_font_size 30
+ selected true
+ xpos -456
+ ypos 1026
+}
+Dot {
+ name Dot4
+ selected true
+ xpos -456
+ ypos 1144
+}
+ApplyMaterial {
+ inputs 2
+ name ApplyMaterial1
+ selected true
+ xpos -202
+ ypos 1140
+}
+push 0
+ScanlineRender {
+ inputs 3
+ conservative_shader_sampling false
+ motion_vectors_type distance
+ name ScanlineRender2
+ selected true
+ xpos -202
+ ypos 1315
+}

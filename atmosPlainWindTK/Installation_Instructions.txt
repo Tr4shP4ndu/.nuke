@@ -1,0 +1,11 @@
+Thank you for supporting toolsTK toolset!
+
+To install tool please follow these steps:
+
+1. Unzip and copy content of provided zip file into your .nuke folder.
+2. On some systems files and folders starting with '.' are hidden so you need to be able to 'cd' into it from terminal or unhide these folders in system settings in order to copy files
+3. If you have already modified menu.py file or have tools from other packages then do not replace your menu.py file, but instead just add lines from one that I provide to the end of your menu.py file.
+4. Now you should be able to enjoy the tool
+
+More information about installation on different systems available at www.vfxtim.com
+

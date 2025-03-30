@@ -1,0 +1,1319 @@
+#! /opt/Nuke13.1v2/libnuke-13.1.2.so -nx
+version 13.1 v2
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="0" y="28" w="2560" h="1241" maximized="1" screen="0">
+        <splitter orientation="1">
+            <split size="40"/>
+            <dock id="" hideTitles="1" activePageId="Toolbar.1">
+                <page id="Toolbar.1"/>
+            </dock>
+            <split size="1897" stretch="1"/>
+            <splitter orientation="2">
+                <split size="703"/>
+                <dock id="" activePageId="Viewer.1">
+                    <page id="Viewer.1"/>
+                </dock>
+                <split size="495"/>
+                <dock id="" activePageId="DAG.1" focus="true">
+                    <page id="DAG.1"/>
+                    <page id="Curve Editor.1"/>
+                    <page id="DopeSheet.1"/>
+                </dock>
+            </splitter>
+            <split size="615"/>
+            <dock id="" activePageId="Properties.1">
+                <page id="Properties.1"/>
+                <page id="uk.co.thefoundry.backgroundrenderview.1"/>
+            </dock>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name /Volumes/shared/vfx/filipe.correia/repos/flwls_pp_scripts/nuke/flwls_vfx_pipeline/templates/vfx_nr_cleanup_v005.nk
+ frame 1001
+ first_frame 1001
+ last_frame 1001
+ lock_range true
+ format "1920 1080 0 0 1920 1080 1 HD_1080"
+ proxy_type scale
+ proxy_format "1024 778 0 0 1024 778 1 1K_Super_35(full-ap)"
+ colorManagement OCIO
+ defaultViewerLUT "OCIO LUTs"
+ workingSpaceLUT default
+ monitorLut ACES/sRGB
+ monitorOutLUT "sRGB (ACES)"
+ int8Lut matte_paint
+ int16Lut texture_paint
+ logLut compositing_log
+ floatLut "ACES - ACES2065-1"
+ onScriptLoad "exec(\"\"\"\\nfrom pathlib import Path\\nimport re\\n\\ndenoise_plate = nuke.toNode('DNS_PLATE')\\nprecomp_plate = nuke.toNode('PRECOMP')\\n\\ndef _get_context_from_script_name(script_name: str):\\n    try:\\n        script_name_parts = script_name.split('_')\\n        context_dict = \{\}\\n        context_dict\['workspace_root'] = Path('/Volumes/workspace')\\n        if \"nr\" in script_name_parts:\\n            if \"cleanup\" in script_name_parts:\\n                context_dict\['task'] = \"vfx_nr_cleanup\"\\n        elif \"inpaint\" in script_name_parts:\\n            context_dict\['task'] = \"vfx_inpaint\"\\n        elif \"occlusion\" in script_name_parts:\\n            context_dict\['task'] = \"vfx_occlusion\"\\n        if context_dict\['task'] in ('vfx_occlusion', 'vfx_inpaint'):\\n            context_dict\['level'] = 'Shot'\\n        elif context_dict\['task'] == 'vfx_nr_cleanup':\\n            context_dict\['level'] = 'ShotLanguageVariant'        \\n        context_dict\['show'] = script_name_parts\[0]\\n        context_dict\['episode'] = int(script_name_parts\[1]\[2:4])\\n        context_dict\['part'] = int(script_name_parts\[2]\[2:4])\\n        context_dict\['shot'] = int(script_name_parts\[3])\\n        if context_dict\['level'] == 'ShotLanguageVariant':\\n            context_dict\['language'] = script_name_parts\[4]\\n            context_dict\['variant'] = f\"\{script_name_parts\[5]\}_\{script_name_parts\[6]\}\"\\n            \\n        return context_dict\\n    except TypeError as e:\\n        raise TypeError(f'\{e\}\\\\nError when extracting context from script name. Does the script name contain all the context')\\n\\ndef _get_task_path(context: dict) -> Path:\\n    cntx = context\\n    shot_path = cntx\['workspace_root'] / 'shows' / cntx\['show'] / 'episodes' / f\"ep\{cntx\['episode']:02d\}\" / 'parts' / f\"pt\{cntx\['part']:02d\}\" / 'shots' / f\"\{cntx\['shot']:04d\}\" \\n    task_path = None\\n    if cntx\['level'] == 'Shot':\\n        task = None\\n        if cntx\['task'] == 'vfx_inpaint':\\n            task = 'vfx_inpainting'\\n        elif cntx\['task'] == 'vfx_occlusion':\\n            task = 'vfx_occlusions'\\n        if task:\\n            task_path = shot_path / 'tasks' / task \\n    elif cntx\['level'] == 'ShotLanguageVariant':\\n        task_path = shot_path / 'languages' / cntx\['language'] / 'variants' / cntx\['variant'] / 'tasks' / cntx\['task']\\n\\n    if not task_path:\\n        raise ValueError(\"task_path must not be None\")\\n    return task_path\\n\\n\\ndef _latest_in_version(task_path: Path):\\n    in_path = task_path / 'in'\\n    folders = \[f for f in in_path.glob('v\[0-9]\[0-9]\[0-9]') if f.is_dir()]\\n    folders.sort(reverse=True)\\n    return folders\[0]\\n\\ndef _get_sequence_path_in_fromUserText_format(sequence_folder: Path(), extension:str):\\n    filepaths = list(sequence_folder.glob(f'*\{extension\}'))\\n    filepaths.sort()\\n    start_frame_path = filepaths\[0]\\n    first_frame_number = int(re.search(r'\\\\.(\[0-9]\{6\})', start_frame_path.stem).group(1))\\n    start_frame_name = re.sub(r'\\\\.(\[0-9]\{6\})', '.######', start_frame_path.name)\\n    return f'\{start_frame_path.parent / start_frame_name\} \{first_frame_number\}-\{first_frame_number + len(filepaths)-1\}'\\n\\ndef _get_variant_from_scriptname():\\n    return \"_\".join(Path(nuke.scriptName()).stem.split('_')\[5:7])\\n\\nif denoise_plate:\\n    if denoise_plate.knob('file').value() == \"\":\\n        script_name = Path(nuke.root().name()).stem\\n        context = _get_context_from_script_name(script_name)\\n        task_path = _get_task_path(context)\\n        denoise_plate_folder = _latest_in_version(task_path) / 'DENOISED' / 'plate'\\n        denoise_plate_seq = _get_sequence_path_in_fromUserText_format(sequence_folder =denoise_plate_folder, extension='exr')\\n        denoise_plate.knob('file').fromUserText(denoise_plate_seq)\\n        nuke.root().knob('first_frame').setValue(denoise_plate.firstFrame())\\n        nuke.root().knob('last_frame').setValue(denoise_plate.lastFrame())\\n        nuke.root().knob('lock_range').setValue(True)\\n        nuke.root().knob('fps').setValue(denoise_plate.metadata(\"input/frame_rate\"))\\n        nuke.root().knob('format').setValue(denoise_plate.knob('format').value())\\n\\nif precomp_plate:\\n    if precomp_plate.knob('file').value() == \"\":\\n        script_name = Path(nuke.root().name()).stem\\n        context = _get_context_from_script_name(script_name)\\n        task_path = _get_task_path(context)\\n        precomp_plate_folder = _latest_in_version(task_path) / 'PRECOMP' / _get_variant_from_scriptname() / 'PRECOMP' / 'precomp'\\n        precomp_plate_seq = _get_sequence_path_in_fromUserText_format(sequence_folder =precomp_plate_folder, extension='exr')\\n        precomp_plate.knob('file').fromUserText(precomp_plate_seq)\\n\"\"\")"
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode3
+ tile_color 0x7f7f7fff
+ gl_color 0xf4aaffff
+ label precomp
+ note_font_size 42
+ xpos -2106
+ ypos -197
+ border_width 10
+ bdwidth 294
+ bdheight 251
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode5
+ tile_color 0x7f7f7fff
+ label "DNS plate"
+ note_font_size 42
+ xpos -522
+ ypos -216
+ border_width 10
+ bdwidth 209
+ bdheight 253
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode6
+ tile_color 0x7f7f7fff
+ label plate
+ note_font_size 42
+ xpos -32
+ ypos -213
+ border_width 10
+ bdwidth 122
+ bdheight 253
+}
+BackdropNode {
+ inputs 0
+ name exr
+ tile_color 0x7f7f7fff
+ label "nr cleanup element\nexr"
+ note_font_size 42
+ xpos -2273
+ ypos 2498
+ border_width 10
+ bdwidth 602
+ bdheight 242
+}
+BackdropNode {
+ inputs 0
+ name exr1
+ tile_color 0x7f7f7fff
+ gl_color 0x6a55ffff
+ label "review (over BG)"
+ note_font_size 42
+ xpos -643
+ ypos 2500
+ border_width 10
+ bdwidth 438
+ bdheight 229
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode1
+ tile_color 0x7f7f7fff
+ label "preview merge"
+ note_font_size 42
+ xpos -599
+ ypos 1917
+ appearance Border
+ border_width 10
+ bdwidth 335
+ bdheight 251
+ z_order 1
+}
+Read {
+ inputs 0
+ file_type exr
+ localizationPolicy on
+ format "3840 2160 0 0 3840 2160 1 UHD_4K"
+ first 1001
+ last 1161
+ origfirst 1001
+ origlast 1161
+ origset true
+ version 187
+ colorspace "ACES - ACES2065-1"
+ name PLATE
+ xpos -12
+ ypos -134
+}
+Dot {
+ name Dot2
+ xpos 22
+ ypos 9
+}
+Read {
+ inputs 0
+ file_type png
+ format "1024 1024 0 0 1024 1024 1 square_1K"
+ first 1001
+ last 1161
+ origfirst 1001
+ origlast 1161
+ origset true
+ version 7
+ colorspace "ACES - ACES2065-1"
+ name PRECOMP
+ xpos -2005
+ ypos -122
+}
+Dot {
+ name Dot6
+ xpos -1971
+ ypos 215
+}
+set N504aa400 [stack 0]
+LayerContactSheet {
+ width 3840
+ height 2160
+ showLayerNames true
+ name LayerContactSheet2
+ xpos -1760
+ ypos 211
+}
+Constant {
+ inputs 0
+ channels rgb
+ format "1024 1024 0 0 1024 1024 1 square_1K"
+ name Constant2
+ xpos -2165
+ ypos 517
+}
+Roto {
+ output alpha
+ cliptype none
+ curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 2097664}
+    {t x44000000 x44000000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}
+    {curvegroup BSpline1 512 bspline
+     {{cc
+       {f 8192}
+       {p
+        {{a}     x4357b071 x43f54000}
+        {{a}     x4371ac58 x44016000}
+        {{a}     x435f0000 x4410a000}
+        {{a}     x439fdaf1 x441dcd24}
+        {{a}     x43c4c000 x441ac000}
+        {{a}     x441d98e8 x441a050f}
+        {{a}     x442fd02a x441ddcf9}
+        {{a}     x4448a66f x4410eb6f}
+        {{a}     x4443ed50 x4401d9f3}
+        {{a}     x444b4adc x43f4ced9}
+        {{a}     x444f625e x4399b539}
+        {{a}     x444bc9e0 x434539fc}
+        {{a}     x4429ae48 x42fbfa8c}
+        {{a t x3f7f7cee}     x44002c7c x42c7f7e8}
+        {{a}     x43add546 x42ffb740}
+        {{a}     x434c2145 x4348b32a}
+        {{a}     x433bac70 x43a70f82}}}
+      {cc
+       {f 8192}
+       {p
+        {{a}     xc1ffc648 x40c55a80}
+        {{a}     xc1f58310 x41376340}
+        {{a}     xc1d2fae8 x41b815c0}
+        {{a}     xc1016b00 x420835a0}
+        {{a}     x41b12340 x41d8d8a0}
+        {{a}     xc1b39c60 x41d6cd60}
+        {{a}     x40e79d80 x4208f930}
+        {{a}     x41cfaa60 x41bbd100}
+        {{a}     x41f354c0 x41447000}
+        {{a}     x420107c0 x4082e6c0}
+        {{a}     x411f9900 xbf35a400}
+        {{a}     x413abf40 xc116c000}
+        {{a}     x4092eb00 xc1647b48}
+        {{a t x3f7f7cee}     xbdad4000 xc16fff10}
+        {{a}     xc094f080 xc1642778}
+        {{a}     xc13f7520 xc110b880}
+        {{a}     xc11fe040 xbec99000}}}}
+     {tx x4484a000 x44006000 x43daa8ba}
+     {a osw x41200000 osf 0 str 1 spx x44f00000 spy x44870000 sb 1 ltn x4484a000 ltm x4484a000 tt x40c00000}}}}}}
+ toolbox {selectAll {
+  { selectAll str 1 ssx 1 ssy 1 sf 1 }
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 tt 6 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 tt 7 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+ toolbar_brush_hardness 0.200000003
+ toolbar_source_transform_scale {1 1}
+ toolbar_source_transform_center {1920 1080}
+ colorOverlay {0 0 0 0}
+ lifetime_type "all frames"
+ lifetime_start 1061
+ lifetime_end 1061
+ motionblur_shutter_offset_type centred
+ source_black_outside true
+ name facemask1
+ xpos -2165
+ ypos 666
+}
+push $N504aa400
+Group {
+ inputs 2
+ name faceon1
+ tile_color 0xff5555ff
+ xpos -2005
+ ypos 672
+ addUserKnob {20 control}
+ addUserKnob {6 premult +STARTLINE}
+ addUserKnob {20 fmasking l "face mask"}
+ addUserKnob {20 adjustmask l "adjust mask" n 1}
+ addUserKnob {41 size_5 l "erode calculated mask" T Dilate3.size}
+ addUserKnob {6 disableinpaintmask l "disable inpaint mask" +STARTLINE}
+ addUserKnob {20 endGroup_2 n -1}
+ addUserKnob {20 remask l "draw mask" n 1}
+ remask 0
+ addUserKnob {6 enablemask l "draw mask" +STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {41 size l soften T Blur1.size}
+ addUserKnob {41 size_1 l erode T Dilate2.size}
+ addUserKnob {41 size_2 l "edge blur" T Blur2.size}
+ addUserKnob {20 endGroup_3 n -1}
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {20 grade}
+ addUserKnob {20 group l "adjust local grade" n 1}
+ addUserKnob {6 modifylocalgrade l "modify local grade" +STARTLINE}
+ addUserKnob {41 size_6 l size T Blur11.size}
+ addUserKnob {7 grade_mix l mix}
+ grade_mix 1
+ addUserKnob {20 endGroup_4 l endGroup n -1}
+ addUserKnob {20 adjust_grade l "adjust global grade" n 1}
+ adjust_grade 0
+ addUserKnob {41 blackpoint_1 l blackpoint T Grade2.blackpoint}
+ addUserKnob {41 whitepoint_1 l whitepoint T Grade2.whitepoint}
+ addUserKnob {26 ""}
+ addUserKnob {41 white_1 l gain T Grade2.white}
+ addUserKnob {41 gamma_1 l gamma T Grade2.gamma}
+ addUserKnob {26 ""}
+ addUserKnob {41 black l lift T Grade2.black}
+ addUserKnob {20 endGroup_1 n -1}
+ addUserKnob {20 focus}
+ addUserKnob {6 enablefocus l enable +STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {41 size_3 l defocus T Soften1.size}
+ addUserKnob {41 size_4 l sharpen T sharper.size}
+ addUserKnob {20 motionblur l "motion blur"}
+ addUserKnob {6 enablemotionblur l "motion blur" +STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {41 scale l "motion amount" T VectorBlur1.scale}
+ addUserKnob {41 motion_falloff l "motion falloff" T VectorBlur1.motion_falloff}
+ addUserKnob {41 offset l "shutter offset" T VectorBlur1.offset}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode3
+  tile_color 0xccccccff
+  label "custom masking"
+  note_font_size 42
+  xpos -604
+  ypos 2547
+  bdwidth 1108
+  bdheight 823
+  z_order -1
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode1
+  tile_color 0x388e8e00
+  label link
+  note_font_size 42
+  xpos -912
+  ypos 2606
+  bdheight 122
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode2
+  tile_color 0x388e8e00
+  label link
+  note_font_size 42
+  xpos -485
+  ypos 3112
+  bdheight 173
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode4
+  tile_color 0xb3a07600
+  label "Adjust Grade "
+  note_font_size 42
+  xpos -501
+  ypos -422
+  bdwidth 301
+  bdheight 238
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode5
+  tile_color 0x47726100
+  label "Focus adjustment"
+  note_font_size 42
+  xpos -501
+  ypos 540
+  bdwidth 597
+  bdheight 852
+ }
+ Input {
+  inputs 0
+  name precomp
+  label "input \[value number]"
+  xpos -1141
+  ypos -1625
+ }
+set N503c7200 [stack 0]
+ Dot {
+  name Dot7
+  xpos -1107
+  ypos 2108
+ }
+set N503c6b00 [stack 0]
+ Dot {
+  name Dot11
+  xpos -1107
+  ypos 3835
+ }
+set N503c6400 [stack 0]
+ Dot {
+  name Dot19
+  xpos -1107
+  ypos 3919
+ }
+push $N503c6400
+push $N503c7200
+ Dot {
+  name Dot6
+  xpos -362
+  ypos -1615
+ }
+add_layer {recolour recolour.red recolour.green recolour.blue}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 recolour
+  fromInput2 {{0} B}
+  mappings "4 recolour.red 0 0 rgba.red 0 0 recolour.green 0 1 rgba.green 0 1 recolour.blue 0 2 rgba.blue 0 2 black -1 -1 rgba.alpha 0 3"
+  name Shuffle2
+  xpos -396
+  ypos -1525
+  disable {{1-enablefocus}}
+ }
+add_layer {refocus refocus.red refocus.green refocus.blue refocus.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 refocus
+  fromInput2 {{0} B}
+  mappings "4 refocus.red 0 0 rgba.red 0 0 refocus.green 0 1 rgba.green 0 1 refocus.blue 0 2 rgba.blue 0 2 refocus.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle3
+  xpos -396
+  ypos -1450
+  disable {{1-enablemotionblur}}
+ }
+ Dot {
+  name Dot12
+  xpos -362
+  ypos -1167
+ }
+set N503c4100 [stack 0]
+ Dot {
+  name Dot112
+  xpos -185
+  ypos -1167
+ }
+set N5039f900 [stack 0]
+add_layer {reboxed reboxed.red reboxed.green reboxed.blue reboxed.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 reboxed
+  fromInput2 {{0} B}
+  mappings "4 reboxed.red 0 0 rgba.red 0 0 reboxed.green 0 1 rgba.green 0 1 reboxed.blue 0 2 rgba.blue 0 2 reboxed.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle16
+  label "SHUFFLE REBOXED NR\n"
+  xpos -219
+  ypos -1100
+ }
+ Dot {
+  name Dot107
+  xpos -185
+  ypos -795
+ }
+set N5039eb00 [stack 0]
+ Dot {
+  name Dot15
+  xpos -185
+  ypos -682
+ }
+push $N5039eb00
+push $N5039f900
+ Dot {
+  name Dot110
+  xpos -16
+  ypos -1167
+ }
+set N5039dd00 [stack 0]
+ Dot {
+  name Dot111
+  xpos 263
+  ypos -1167
+ }
+add_layer {grade_plate_input grade_plate_input.red grade_plate_input.green grade_plate_input.blue grade_plate_input.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 grade_plate_input
+  fromInput2 {{0} B}
+  mappings "4 grade_plate_input.red 0 0 rgba.red 0 0 grade_plate_input.green 0 1 rgba.green 0 1 grade_plate_input.blue 0 2 rgba.blue 0 2 grade_plate_input.alpha 0 3 rgba.alpha 0 3"
+  name PLATEGRADE
+  label "SHUFFLE PLATE REF"
+  xpos 229
+  ypos -1101
+ }
+ Blur {
+  size 30
+  name Blur11
+  xpos 229
+  ypos -1030
+ }
+ set C5039c800 [stack 0]
+ Dot {
+  name Dot109
+  xpos 263
+  ypos -956
+ }
+push $N5039dd00
+add_layer {grade_nr_input grade_nr_input.red grade_nr_input.green grade_nr_input.blue grade_nr_input.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 grade_nr_input
+  fromInput2 {{0} B}
+  mappings "4 grade_nr_input.red 0 0 rgba.red 0 0 grade_nr_input.green 0 1 rgba.green 0 1 grade_nr_input.blue 0 2 rgba.blue 0 2 grade_nr_input.alpha 0 3 rgba.alpha 0 3"
+  name NRGRADE
+  label "SHUFFLE NR GRADE\n"
+  xpos -50
+  ypos -1102
+ }
+clone $C5039c800 {
+  xpos -50
+  ypos -1029
+  selected false
+ }
+ Dot {
+  name Dot108
+  xpos -16
+  ypos -956
+ }
+ Merge2 {
+  inputs 2
+  operation divide
+  Achannels rgb
+  Bchannels rgb
+  output rgb
+  name Merge15
+  xpos 86
+  ypos -960
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge11
+  xpos 86
+  ypos -799
+ }
+ Blend {
+  inputs 2
+  weight0 {{grade_mix}}
+  weight1 {{1-grade_mix x15 0}}
+  name Blend2
+  xpos 86
+  ypos -692
+ }
+set Nd4fe5600 [stack 0]
+ Dot {
+  name Dot14
+  xpos 120
+  ypos -608
+ }
+push $N503c4100
+ Switch {
+  inputs 2
+  which {{modifylocalgrade}}
+  name Switch1
+  xpos -396
+  ypos -612
+ }
+ Grade {
+  black_clamp false
+  name Grade2
+  xpos -396
+  ypos -303
+ }
+ ZDefocus2 {
+  size {{parent.Soften1.size+0.001}}
+  max_size 100
+  legacy_resize_mode false
+  show_legacy_resize_mode false
+  name ZDefocus1
+  xpos -396
+  ypos 650
+  disable {{1-enablefocus}}
+ }
+ Colorspace {
+  colorspace_out HSV
+  name Colorspace4
+  xpos -396
+  ypos 807
+  disable {{"1-(enablefocus || modifylocalgrade)"}}
+ }
+ Dot {
+  name Dot33
+  xpos -362
+  ypos 860
+ }
+set Nd4fa7200 [stack 0]
+ Dot {
+  name Dot8
+  xpos -114
+  ypos 860
+ }
+ Dot {
+  name Dot9
+  xpos -114
+  ypos 1220
+ }
+push $Nd4fa7200
+ Sharpen {
+  size 0
+  name sharper
+  xpos -396
+  ypos 1004
+  disable {{"1-(enablefocus || modifylocalgrade)"}}
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  from1 rgba.red
+  to1 rgba.red
+  from2 rgba.green
+  to2 rgba.green
+  name Copy3
+  xpos -396
+  ypos 1198
+  disable {{"1-(enablefocus || modifylocalgrade)"}}
+ }
+ Colorspace {
+  colorspace_in HSV
+  name Colorspace1
+  xpos -396
+  ypos 1290
+  disable {{"1-(enablefocus || modifylocalgrade)"}}
+ }
+ Dot {
+  name Dot13
+  xpos -362
+  ypos 1974
+ }
+set Nd4fa4800 [stack 0]
+ Dot {
+  name Dot10
+  xpos -250
+  ypos 1974
+ }
+ Dot {
+  name Dot5
+  xpos -250
+  ypos 2261
+ }
+push $N503c6b00
+push $Nd4fa4800
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy2
+  xpos -396
+  ypos 2098
+ }
+add_layer {inpaintingmasks inpaintingmasks.red inpaintingmasks.green inpaintingmasks.blue inpaintingmasks.alpha}
+ Copy {
+  inputs 2
+  from0 inpaintingmasks.blue
+  to0 rgba.alpha
+  name Copy4
+  xpos -396
+  ypos 2251
+  disable {{1-disableinpaintmask x1001 1 x1200 0}}
+ }
+ Dot {
+  name Dot1
+  xpos -362
+  ypos 2635
+ }
+set Nd4f76400 [stack 0]
+add_layer {stmap stmap.red stmap.green stmap.blue stmap.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 stmap
+  fromInput2 {{0} B}
+  mappings "4 stmap.red 0 0 rgba.red 0 0 stmap.green 0 1 rgba.green 0 1 stmap.alpha 0 3 rgba.alpha 0 3 black -1 -1 rgba.blue 0 2"
+  name Shuffle1
+  xpos -475
+  ypos 2790
+ }
+ Dot {
+  name Dot17
+  xpos -441
+  ypos 2899
+ }
+set Nd4f75600 [stack 0]
+ Constant {
+  inputs 0
+  channels rgb
+  format "1024 1024 0 0 1024 1024 1 square_1K"
+  name Constant2
+  xpos -114
+  ypos 2702
+ }
+ Roto {
+  output alpha
+  cliptype none
+  curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 2097664}
+    {t x44000000 x44000000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}
+    {curvegroup Rectangle1 512 bezier
+     {{cc
+       {f 8192}
+       {px x447a4000
+        {0 xc31d5554}
+        {xc2400000 x44886000}
+        {x43bd0000 0}
+        {xc3bd0000 0}
+        {x4487c000 x44886000}
+        {0 xc31d5554}
+        {0 x431d5554}
+        {x4487c000 x441ac000}
+        {xc3bd0000 0}
+        {x43bd0000 0}
+        {xc2400000 x441ac000}
+        {0 x431d5554}}}     idem}
+     {tx x447a4000 x4401c000 x4455c000}
+     {a osw x41200000 osf 0 str 1 spx x44f00000 spy x44870000 sb 1 ltn x447a4000 ltm x447a4000 tt x41000000}}}}}}
+  toolbox {selectAll {
+  { selectAll str 1 ssx 1 ssy 1 sf 1 }
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 tt 6 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 tt 7 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 tt 8 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { brush str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { eraser src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { clone src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+  toolbar_brush_hardness 0.200000003
+  toolbar_source_transform_scale {1 1}
+  toolbar_source_transform_center {1920 1080}
+  colorOverlay {0 0 0 0}
+  lifetime_type "all frames"
+  lifetime_start 1001
+  lifetime_end 1001
+  motionblur_shutter_offset_type centred
+  source_black_outside true
+  name facemask1
+  xpos -114
+  ypos 2821
+ }
+ STMap {
+  inputs 2
+  uv rgba
+  filter impulse
+  name STMap1
+  xpos -114
+  ypos 2889
+ }
+ Blur {
+  size {{"- ((CropToBBox_flw1.Crop2.box.x - CropToBBox_flw1.Crop2.box.r) + (CropToBBox_flw1.Crop2.box.y - CropToBBox_flw1.Crop2.box.t)) /100"}}
+  name Blur3
+  xpos -114
+  ypos 2996
+ }
+ Dot {
+  name CUT_
+  label "    CUT UPPER MASK"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 30
+  xpos -80
+  ypos 3119
+ }
+push $Nd4f76400
+add_layer {fotd_stmap fotd_stmap.red fotd_stmap.green fotd_stmap.blue fotd_stmap.alpha}
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 fotd_stmap
+  fromInput2 {{0} B}
+  mappings "4 fotd_stmap.red 0 0 rgba.red 0 0 fotd_stmap.green 0 1 rgba.green 0 1 fotd_stmap.alpha 0 3 rgba.alpha 0 3 black -1 -1 rgba.blue 0 2"
+  name Shuffle4
+  xpos -318
+  ypos 2789
+ }
+ Input {
+  inputs 0
+  name mask
+  label "input \[value number]"
+  xpos -902
+  ypos 2556
+  number 1
+ }
+ Blur {
+  name Blur1
+  xpos -902
+  ypos 2686
+ }
+ Dot {
+  name Dot16
+  xpos -868
+  ypos 2915
+ }
+ Dot {
+  name Dot2
+  xpos -868
+  ypos 2962
+ }
+set Nd4f1b200 [stack 0]
+ STMap {
+  inputs 2
+  uv rgba
+  filter impulse
+  name STMap2
+  xpos -318
+  ypos 2952
+ }
+set Nd4f1ab00 [stack 0]
+ Dilate {
+  size -2
+  name Dilate4
+  xpos -318
+  ypos 3031
+ }
+ Dilate {
+  name Dilate2
+  xpos -318
+  ypos 3102
+ }
+ set Cd4f19d00 [stack 0]
+ Blur {
+  name Blur2
+  xpos -318
+  ypos 3157
+ }
+ set Cd4f19600 [stack 0]
+push $Nd4f75600
+push $Nd4f1b200
+ Dot {
+  name Dot4
+  xpos -868
+  ypos 3004
+ }
+ STMap {
+  inputs 2
+  uv rgba
+  filter impulse
+  name STMap4
+  xpos -475
+  ypos 2994
+ }
+ Dilate {
+  size -2
+  name Dilate1
+  xpos -475
+  ypos 3047
+ }
+clone $Cd4f19d00 {
+  xpos -475
+  ypos 3193
+  selected false
+ }
+clone $Cd4f19600 {
+  xpos -475
+  ypos 3243
+  selected false
+ }
+ Merge2 {
+  inputs 2
+  mix {{1-disableinpaintmask}}
+  name Merge1
+  xpos -318
+  ypos 3249
+ }
+ Multiply {
+  inputs 1+1
+  value 0
+  name Multiply1
+  xpos -114
+  ypos 3243
+ }
+push $Nd4f76400
+ Dot {
+  name Dot18
+  xpos 58
+  ypos 2635
+ }
+set Nd4ee1600 [stack 0]
+ Dot {
+  name Dot3
+  xpos 419
+  ypos 2635
+ }
+ Dilate {
+  channels alpha
+  name Dilate3
+  xpos 385
+  ypos 3115
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  mix {{enablemask}}
+  name Copy1
+  xpos 385
+  ypos 3243
+ }
+ VectorBlur2 {
+  channels rgba
+  uv motion
+  scale 1
+  motion_falloff 0.4
+  name VectorBlur1
+  xpos 385
+  ypos 3597
+  disable {{"1-(enablemotionblur || enablefocus || modifylocalgrade)"}}
+ }
+add_layer {grain grain.red grain.green grain.blue grain.alpha}
+ Remove {
+  operation keep
+  channels rgba
+  channels2 grain
+  name Remove1
+  xpos 385
+  ypos 3687
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels inpaintingmasks
+  name Copy5
+  xpos 385
+  ypos 3819
+ }
+ CopyBBox {
+  inputs 2
+  name CopyBBox1
+  xpos 385
+  ypos 3915
+ }
+ Premult {
+  name Premult1
+  xpos 385
+  ypos 3965
+  disable {{1-(premult) x1025 1}}
+ }
+ Output {
+  name Output1
+  xpos 385
+  ypos 4030
+ }
+push $Nd4ee1600
+ Group {
+  name CropToBBox_flw1
+  help "Copyright 2022 Flawless"
+  tile_color 0xff5555ff
+  note_font_size 12
+  xpos 24
+  ypos 3003
+  addUserKnob {20 User}
+  addUserKnob {6 exbbox l "use external bbox" +STARTLINE}
+  addUserKnob {26 ""}
+  addUserKnob {41 box T Crop2.box}
+  addUserKnob {26 ""}
+  addUserKnob {41 reformat T Crop2.reformat}
+  addUserKnob {41 crop l "black outside" -STARTLINE T Crop2.crop}
+ }
+  Input {
+   inputs 0
+   name Input
+   label "input \[value number]"
+   xpos 508
+   ypos 517
+  }
+  Dot {
+   name Dot36
+   xpos 542
+   ypos 557
+  }
+set Nd4eb4100 [stack 0]
+  Crop {
+   box {{parent.BBoxToFormat.inputBBox.x} {parent.BBoxToFormat.inputBBox.y} {parent.BBoxToFormat.inputBBox.r} {parent.BBoxToFormat.inputBBox.t}}
+   name Crop2
+   xpos 619
+   ypos 656
+  }
+  Output {
+   name Output1
+   xpos 603
+   ypos 770
+  }
+  Input {
+   inputs 0
+   name external_bbox
+   label "input \[value number]"
+   selected true
+   xpos 285
+   ypos 487
+   number 1
+  }
+push $Nd4eb4100
+  Switch {
+   inputs 2
+   which {{exbbox}}
+   name Switch1
+   xpos 342
+   ypos 600
+  }
+  Group {
+   name BBoxToFormat
+   onCreate "n = nuke.thisNode()\ninputFormat = n.knob(\"inputFormat\")\ninputBBox = n.knob(\"inputBBox\")\ncrop = nuke.toNode(\"Crop6\")\ncropb = crop.knob('box')\noutputBBox = n.knob('outputBBox')\noutputBBoxCenter = n.knob(\"outputBBoxCenter\")\n\ninputFormat.setFlag(0x0000000000008000)\ninputBBox.setFlag(0x0000000000008000)\ncropb.setFlag(0x0000000000008000)\noutputBBox.setFlag(0x0000000000008000)\noutputBBoxCenter.setFlag(0x0000000000008000)\n\nn = nuke.thisNode()\nn.knob(\"overscan\").setRange(0,400)\nn.knob(\"overscanPercent\").setRange(1,4)"
+   knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\nif k.name() == \"overscanType\":\n    if n.knob(\"overscanType\").getValue() == 1:\n        n.knob(\"overscanPercent\").setVisible(True)\n        n.knob(\"overscan\").setVisible(False)\n    else:\n        n.knob(\"overscanPercent\").setVisible(False)\n        n.knob(\"overscan\").setVisible(True)"
+   tile_color 0xa57aaaff
+   note_font "Verdana Bold"
+   note_font_color 0xffffffff
+   xpos 337
+   ypos 666
+   addUserKnob {20 CropBBox}
+   addUserKnob {4 type l Type +INVISIBLE M {"To Format" "To BBox"}}
+   addUserKnob {41 intersect T Crop6.intersect}
+   addUserKnob {6 blackOutside l "Black Outside" -STARTLINE}
+   addUserKnob {4 overscanType l "Overscan Type:" M {Pixels Percentage}}
+   overscanType Percentage
+   addUserKnob {14 overscan l Overscan +HIDDEN R 0 400}
+   addUserKnob {14 overscanPercent l "Overscan Percent" R 1 4}
+   overscanPercent 1
+   addUserKnob {20 inputBbox l "BBox Data" n 1}
+   addUserKnob {15 inputFormat l "Input Format"}
+   inputFormat {0 0 {input.width} {input.height}}
+   addUserKnob {15 inputBBox l "Input BBox"}
+   inputBBox {{input.bbox.x} {input.bbox.y} {input.bbox.r} {input.bbox.t}}
+   addUserKnob {12 outputBBoxCenter l OutputBBoxCenter}
+   outputBBoxCenter {{OutputBBox1.outputBBoxCenter.w} {OutputBBox1.outputBBoxCenter.h}}
+   addUserKnob {15 outputBBox l "Output BBox"}
+   outputBBox {{OutputBBox1.OutputBBox} {OutputBBox1.OutputBBox} {OutputBBox1.OutputBBox} {OutputBBox1.OutputBBox}}
+   addUserKnob {20 endGroup n -1}
+   addUserKnob {20 info_1 l Info}
+   addUserKnob {26 creator l Creator: T "<b><big>Tony Lyons"}
+   addUserKnob {26 desc l Description: t "crop to inputformat\n\ndisplays values of input bbox" T CropBBox}
+   addUserKnob {26 ver l Version: T v02}
+  }
+   Input {
+    inputs 0
+    name Input
+    xpos 261
+    ypos 394
+   }
+   Dot {
+    name Dot2
+    note_font_size 41
+    xpos 295
+    ypos 462
+   }
+set Nd4e88f00 [stack 0]
+   Dot {
+    name Dot1
+    note_font_size 41
+    xpos -160
+    ypos 462
+   }
+set Nd4e88800 [stack 0]
+push $Nd4e88f00
+   Crop {
+    box {{curve} {curve} {input.width} {input.height}}
+    crop {{parent.blackOutside}}
+    name Crop6
+    xpos 261
+    ypos 510
+    addUserKnob {20 User}
+    addUserKnob {22 cropToBbox l "Crop to Bounding Box" -STARTLINE T codeBBox()}
+   }
+set Nd4e88100 [stack 0]
+   Remove {
+    operation keep
+    channels none
+    name Remove1
+    xpos 120
+    ypos 504
+   }
+set Nd4e6b900 [stack 0]
+   Transform {
+    scale {{parent.overscanPercent} {parent.overscanPercent}}
+    center {{input.bbox.r/2} {input.bbox.t/2}}
+    shutteroffset centred
+    name Transform1
+    xpos 120
+    ypos 555
+   }
+push $Nd4e6b900
+   AdjBBox {
+    numpixels {{parent.overscan} {parent.overscan}}
+    name AdjBBox1
+    xpos -5
+    ypos 510
+   }
+   Switch {
+    inputs 2
+    which {{overscanType}}
+    name Switch2
+    label "\[value which]"
+    xpos -5
+    ypos 549
+   }
+   Merge2 {
+    inputs 2
+    bbox intersection
+    Achannels {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+    Bchannels {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+    output {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+    name Merge1
+    xpos -5
+    ypos 647
+    disable {{!parent.Crop6.intersect}}
+   }
+push $Nd4e88800
+   CopyBBox {
+    inputs 2
+    name CopyBBox1
+    xpos -194
+    ypos 653
+   }
+   BlackOutside {
+    name BlackOutside1
+    xpos -194
+    ypos 692
+    disable {{!parent.blackOutside}}
+   }
+   Dot {
+    name Dot4
+    note_font_size 41
+    xpos -160
+    ypos 769
+   }
+set Nd4e68800 [stack 0]
+push $Nd4e88100
+   Switch {
+    inputs 2
+    which {{"overscanType == 0 ? overscan.w != 0 || overscan.h != 0 : overscanPercent.w != 1 || overscanPercent.h != 1 ? 1 : 0"}}
+    name Switch1
+    label "\[value which]"
+    xpos 261
+    ypos 759
+   }
+set Nd4e68100 [stack 0]
+   Output {
+    name Output1
+    xpos 261
+    ypos 921
+   }
+push $Nd4e68100
+   NoOp {
+    name OutputBBox1
+    xpos 378
+    ypos 821
+    addUserKnob {20 User}
+    addUserKnob {15 OutputBBox l "Output BBox"}
+    OutputBBox {{input.bbox.x} {input.bbox.y} {input.bbox.r} {input.bbox.t}}
+    addUserKnob {14 outputBBoxCenter l "Output BBox Center" R 0 100}
+    outputBBoxCenter {{OutputBBox.x+(OutputBBox.r-OutputBBox.x)/2} {OutputBBox.y+(OutputBBox.t-OutputBBox.y)/2}}
+   }
+push $Nd4e68800
+   Viewer {
+    frame_range 1001-1160
+    name Viewer1
+    selected true
+    xpos 620
+    ypos -10
+    hide_input true
+   }
+  end_group
+ end_group
+push $Nd4f1ab00
+push $Nd4fe5600
+ Viewer {
+  inputs 2
+  frame_range 170-170
+  fps 23.97602463
+  gain 4.8
+  viewerProcess "sRGB (ACES)"
+  name Viewer1
+  xpos 390
+  ypos -799
+  hide_input true
+ }
+ Soften {
+  inputs 0
+  size 0
+  name Soften1
+  xpos -245
+  ypos 650
+  disable {{"1-(enablefocus || modifylocalgrade)"}}
+ }
+end_group
+Premult {
+ name Premult1
+ xpos -2005
+ ypos 1892
+}
+Dot {
+ name Dot4
+ xpos -1971
+ ypos 2056
+}
+set Nd4e2cf00 [stack 0]
+Crop {
+ box {0 0 {root.width} {root.height}}
+ name Crop1
+ label "SAFETY CROP\nCAN BE REMOVED"
+ xpos -2005
+ ypos 2390
+}
+Dot {
+ name Dot1
+ xpos -1971
+ ypos 2591
+}
+Write {
+ channels rgba
+ file "\[value script_directory]/\[value scriptname]_renders/\[value scriptversion]/exr/\[value scriptname_with_version].%06d.exr"
+ colorspace "ACES - ACES2065-1"
+ file_type exr
+ metadata "all metadata"
+ interleave "channels and layers"
+ first_part rgba
+ version 4
+ in_colorspace scene_linear
+ out_colorspace scene_linear
+ beforeRender "exec(\"\"\"\\nfrom datetime import datetime\\nfrom pathlib import Path\\nimport re\\nimport nuke\\nimport nukescripts\\n\\nscript_path = Path(nuke.scriptName())\\nscript_dir = script_path.parent\\nscript_name = script_path.stem\\nscript_name_without_version = re.sub(f'_v\\\\d+', '', script_name)\\nversion = nukescripts.version_get(script_path.as_posix(),'v')\\n\\nrender_dir = script_dir / f\"\{script_name_without_version\}_renders\" / f\"\{''.join(version)\}\"\\n\\n\\nrender_dir.mkdir(parents=True, exist_ok=True)\\n\\n\\n\\nscript_snapshot_path = render_dir / 'script'\\nscript_snapshot_path.mkdir(exist_ok=True)\\ncurrent_time = datetime.utcnow().strftime(\"%Y-%m-%d__%H-%M-%S\") + \"UTC\"\\nscript_snapshot_path = script_snapshot_path / f\"\{script_name\}_snapshot_\{current_time\}.nk\"\\nnuke.scriptSaveToTemp(script_snapshot_path.as_posix())\\n\"\"\")"
+ name Write3
+ label "\[value file]"
+ xpos -2005
+ ypos 2609
+ addUserKnob {20 FlwlsPipeline}
+ addUserKnob {1 script_directory}
+ script_directory "\[python nuke.script_directory()]"
+ addUserKnob {1 scriptname_with_version}
+ scriptname_with_version "\[basename \[file rootname \[value root.name]]]"
+ addUserKnob {1 scriptname}
+ scriptname "\[regsub -all \{_v\\d+\} \[value scriptname_with_version] \"\"]"
+ addUserKnob {1 scriptversion}
+ scriptversion "\[regexp -inline \{v\\d+\} \[value root.name]]"
+ addUserKnob {1 render_typ l render_type}
+ render_typ task_exr
+}
+push $Nd4e2cf00
+Read {
+ inputs 0
+ file_type exr
+ localizationPolicy on
+ format "3840 2160 0 0 3840 2160 1 UHD_4K"
+ first 1001
+ last 1161
+ origfirst 1001
+ origlast 1161
+ origset true
+ version 187
+ colorspace "ACES - ACES2065-1"
+ name DNS_PLATE
+ xpos -456
+ ypos -136
+}
+Dot {
+ name Dot5
+ xpos -422
+ ypos -1
+}
+Merge2 {
+ inputs 2
+ name Merge1
+ xpos -456
+ ypos 2052
+}
+Dot {
+ name Dot9
+ xpos -422
+ ypos 2581
+}
+Write {
+ channels {rgba.red rgba.green rgba.blue -rgba.alpha}
+ file "\[value script_directory]/\[value scriptname]_renders/\[value scriptversion]/review_mov/\[value scriptname_with_version].mov"
+ colorspace color_picking
+ file_type mov
+ mov64_format "mov (QuickTime / MOV)"
+ mov64_codec h264
+ mov64_fps {{root.fps}}
+ mov_h264_codec_profile "High 4:2:0 8-bit"
+ mov64_pixel_format {{0}}
+ mov64_quality Best
+ mov64_fast_start true
+ mov64_write_timecode true
+ mov64_gop_size 12
+ mov64_b_frames 0
+ mov64_bitrate 50000
+ mov64_bitrate_tolerance 0
+ mov64_quality_min 1
+ mov64_quality_max 1
+ create_directories true
+ checkHashOnRead false
+ version 4
+ name Write6
+ onCreate "exec(\"\"\"\\nfrom pathlib import Path\\nimport re\\nimport nuke\\nimport os\\n\\ndef build_lang_context(script_name):\\n    split_name = os.path.basename(script_name).split(\"_\")\\n\\n    context = \{\}\\n\\n    context\[\"show\"] = split_name\[0]\\n    context\[\"episode\"] = split_name\[1]\\n    context\[\"part\"] = split_name\[2]\\n    context\[\"shot\"] = split_name\[3]\\n    context\[\"language\"] = split_name\[4]\\n\\n    return context\\n\\ndef get_highest_folder_name(directory):\\n    folder_names = \[name for name in os.listdir(directory) if os.path.isdir(os.path.join(directory, name))]\\n    if not folder_names:\\n        return None\\n    highest_folder = max(folder_names, key=lambda x: int(x\[1:]))\\n    return highest_folder\\n\\n\\n\\ncontext = build_lang_context((nuke.root().name()))\\n \\naudio_tree = str(Path(\"/Volumes\") / \"pipeline\" / \"shows\" / context\[\"show\"] / \"publish\" / \"episode\" / context\[\"episode\"] / \"part\" / context\[\"part\"] / \"shot\" / context\[\"shot\"] / \"language\" / context\[\"language\"] / \"AUDIO\")\\naudio_file_tree = str(Path(audio_tree) / get_highest_folder_name(audio_tree) / \"audio\")\\naudio_file = os.listdir(audio_file_tree)\\nlatest_shot_lang_audio = str(Path(audio_file_tree) / audio_file\[0])\\n\\n#print(latest_shot_lang_audio)\\nnuke.thisNode().knob(\"mov64_audiofile\").setValue(latest_shot_lang_audio)\\n\"\"\")"
+ xpos -456
+ ypos 2599
+ addUserKnob {20 FlwlsPipeline}
+ addUserKnob {1 script_directory}
+ script_directory "\[python nuke.script_directory()]"
+ addUserKnob {1 scriptname_with_version}
+ scriptname_with_version "\[basename \[file rootname \[value root.name]]]"
+ addUserKnob {1 scriptname}
+ scriptname "\[regsub -all \{_v\\d+\} \[value scriptname_with_version] \"\"]"
+ addUserKnob {1 scriptversion}
+ scriptversion "\[regexp -inline \{v\\d+\} \[value root.name]]"
+ addUserKnob {1 render_type}
+ render_type review_mov
+}

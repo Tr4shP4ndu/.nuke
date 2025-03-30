@@ -1,0 +1,377 @@
+Group {
+name Seanqualize_flw1
+ tile_color 0xff5555ff
+ help "Copyright 2022 Flawless"
+help "Applies the look of the input image, by locally adjusting the colour of the source image. The size of the filter determines the spread of the adjustment: a small number looks more like the input, a large number looks like the source. If a reference image is connect, the difference between source and reference is applied to the input image."
+selected true
+addUserKnob {20 User l Seanqualise t "by Sean Danischevsky sean@danischevsky.com"}
+addUserKnob {26 sean l "" t "for latest version, email sean@seandanischevsky.com" +STARTLINE T "Seanqualise by Sean Danischevsky 1999, 2001, 2011, 2015, 2018"}
+addUserKnob {41 size T Blur2.size}
+addUserKnob {6 luma l "luminance only" +STARTLINE}
+addUserKnob {6 zdefocus l "z defocus" t "Input z channel controls the amount of blur: black for 0 blur, white for 'size' pixels blur." +STARTLINE}
+addUserKnob {41 maskChannel l "mask channel" T Keymix1.maskChannel}
+addUserKnob {41 invertMask l invert T Keymix1.invertMask}
+addUserKnob {41 mix T Keymix1.mix}
+}
+BackdropNode {
+inputs 0
+name BackdropNode1
+tile_color 0x44415100
+label "seanqualize\nby Sean Danischevsky \n1999, 2001, 2011, 2015"
+note_font_size 42
+xpos -206
+ypos -807
+bdwidth 1985
+bdheight 1432
+}
+Input {
+inputs 0
+name mask
+label "(input \[value number])"
+xpos 730
+ypos -904
+number 2
+}
+set Nfbcb800 [stack 0]
+Input {
+inputs 0
+name source
+label "(input \[value number])"
+xpos 290
+ypos -904
+number 1
+}
+set N103d7280 [stack 0]
+push $N103d7280
+Clamp {
+maximum_enable false
+name Clamp1
+xpos -40
+ypos -568
+}
+Merge2 {
+inputs 2
+operation from
+name Merge1
+xpos -40
+ypos -490
+}
+Input {
+inputs 0
+name Input
+label "(input \[value number])"
+xpos 510
+ypos -904
+}
+set N74efa40 [stack 0]
+push $N74efa40
+Clamp {
+maximum_enable false
+name Clamp2
+xpos 620
+ypos -880
+}
+set N103da590 [stack 0]
+Merge2 {
+inputs 2
+operation from
+name Merge5
+xpos 180
+ypos -490
+}
+Merge2 {
+inputs 2
+operation max
+name Merge2
+xpos 70
+ypos -418
+}
+set N104eb8b0 [stack 0]
+Input {
+inputs 0
+name reference
+label "(input \[value number])"
+xpos 1060
+ypos -904
+number 3
+}
+set N105b5160 [stack 0]
+push $N105b5160
+Clamp {
+maximum_enable false
+name Clamp3
+xpos 950
+ypos -520
+}
+Merge2 {
+inputs 2
+operation from
+name Merge11
+xpos 1060
+ypos -418
+}
+Merge2 {
+inputs 2
+operation max
+name Merge10
+xpos 950
+ypos -370
+}
+set N10191d90 [stack 0]
+push $N103da590
+push $N105b5160
+push $N10191d90
+Merge2 {
+inputs 2
+operation plus
+name Merge9
+xpos 1170
+ypos -298
+}
+set N104dd5f0 [stack 0]
+Copy {
+inputs 2
+from0 depth.Z
+to0 depth.Z
+name Copy2
+xpos 1243
+ypos -136
+}
+ZDefocus2 {
+math direct
+size {{Blur2.size}}
+max_size {{size}}
+legacy_resize_mode false
+show_legacy_resize_mode false
+shape 0
+name ZDefocus1
+xpos 1280
+ypos -64
+}
+set C103e4e80 [stack 0]
+push $N104dd5f0
+Blur {
+size 7
+quality 100
+crop false
+name Blur2
+xpos 1170
+ypos -64
+}
+set C77cd120 [stack 0]
+Switch {
+inputs 2
+which {{zdefocus}}
+name zdefocus
+xpos 1170
+ypos -12
+}
+push $N103da590
+push $N104eb8b0
+push $N103d7280
+Merge2 {
+inputs 2
+operation plus
+name Merge6
+xpos 232
+ypos -226
+}
+set N108e0330 [stack 0]
+Copy {
+inputs 2
+from0 depth.Z
+to0 depth.Z
+name Copy3
+xpos 290
+ypos -160
+}
+clone $C103e4e80 {
+xpos 400
+ypos -64
+selected true
+}
+push $N108e0330
+clone $C77cd120 {
+xpos 70
+ypos -64
+selected false
+}
+Switch {
+inputs 2
+which {{zdefocus}}
+name zdefocus2
+xpos 400
+ypos -26
+}
+set N1018b270 [stack 0]
+Merge2 {
+inputs 2
+operation divide
+Achannels rgb
+Bchannels rgb
+output rgb
+name Merge15
+xpos 1170
+ypos 14
+}
+Saturation {
+saturation 0
+name Saturation1
+xpos 1170
+ypos 60
+disable {{!luma}}
+}
+set C106f0a10 [stack 0]
+push $N104eb8b0
+push $N74efa40
+Merge2 {
+inputs 2
+operation plus
+name Merge7
+xpos 510
+ypos -178
+}
+set N103f4ad0 [stack 0]
+Merge2 {
+inputs 2
+operation multiply
+Achannels rgb
+Bchannels rgb
+output rgb
+name Merge12
+xpos 1170
+ypos 86
+}
+Merge2 {
+inputs 2
+operation from
+name Merge13
+xpos 1170
+ypos 254
+}
+set Ned995700 [stack 0]
+push $N74efa40
+Keymix {
+inputs 3
+name Keymix1
+xpos 950
+ypos 344
+}
+set C102dfd20 [stack 0]
+push $Ned995700
+push $N74efa40
+Dissolve {
+inputs 2
+which {{parent.Keymix1.mix}}
+name Dissolve1
+xpos 1170
+ypos 368
+}
+set C1069a970 [stack 0]
+Switch {
+inputs 2
+which {{"\[exists parent.input2]" x1015 1}}
+name MaskConnectedTest1
+xpos 950
+ypos 470
+}
+push $Nfbcb800
+push $N104eb8b0
+push $N103da590
+push $N103f4ad0
+Copy {
+inputs 2
+from0 depth.Z
+to0 depth.Z
+name Copy1
+xpos 620
+ypos -208
+}
+clone $C103e4e80 {
+xpos 599
+ypos -112
+selected false
+}
+push $N103f4ad0
+clone $C77cd120 {
+xpos 510
+ypos -112
+selected false
+}
+Switch {
+inputs 2
+which {{zdefocus}}
+name zdefocus1
+xpos 510
+ypos -74
+}
+push $N1018b270
+Merge2 {
+inputs 2
+operation divide
+Achannels rgb
+Bchannels rgb
+output rgb
+name Merge3
+xpos 400
+ypos 38
+}
+clone $C106f0a10 {
+xpos 400
+ypos 64
+selected false
+}
+push $N108e0330
+Merge2 {
+inputs 2
+operation multiply
+Achannels rgb
+Bchannels rgb
+output rgb
+name Merge4
+xpos 290
+ypos 158
+}
+Merge2 {
+inputs 2
+operation from
+name Merge8
+xpos 290
+ypos 230
+}
+set Ne05d1790 [stack 0]
+push $N74efa40
+clone $C102dfd20 {
+inputs 3
+xpos 612
+ypos 280
+selected false
+}
+push $Ne05d1790
+push $N74efa40
+clone $C1069a970 {
+inputs 2
+xpos 290
+ypos 320
+selected false
+}
+Switch {
+inputs 2
+which {{"\[exists parent.input2]" x1015 1}}
+name MaskConnectedTest
+xpos 510
+ypos 398
+}
+Switch {
+inputs 2
+which {{"\[exists parent.input3]" x1015 1}}
+name ReferenceConnectedTest
+xpos 510
+ypos 494
+}
+Output {
+name Output1
+xpos 510
+ypos 758
+}
+end_group

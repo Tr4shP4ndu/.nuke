@@ -1,0 +1,165 @@
+Group {
+ name NR_Rebox_flw1
+ tile_color 0xff5555ff
+ selected true
+ addUserKnob {20 User}
+ addUserKnob {41 invert T CornerPin2D1.invert}
+ addUserKnob {6 custommeta l Custom_metadata +STARTLINE}
+ addUserKnob {41 format l "output format" T Reformat1.format}
+}
+ Input {
+  inputs 0
+  name Metadata
+  label "(input \[value number])"
+  xpos -1144
+  ypos 426
+  number 1
+ }
+ Dot {
+  name Dot5
+  xpos -1110
+  ypos 700
+ }
+ Input {
+  inputs 0
+  name Input
+  label "(input \[value number])"
+  xpos -588
+  ypos 438
+ }
+ Dot {
+  name Dot2
+  xpos -554
+  ypos 501
+ }
+set Nd2b68100 [stack 0]
+ Dot {
+  name Dot4
+  xpos -870
+  ypos 501
+ }
+ Switch {
+  inputs 2
+  which {{parent.custommeta}}
+  name Switch2
+  xpos -904
+  ypos 696
+ }
+set Nc7493200 [stack 0]
+ Dot {
+  name Dot3
+  xpos -870
+  ypos 1119
+ }
+push $Nc7493200
+push $Nd2b68100
+ CopyMetaData {
+  inputs 2
+  name CopyMetaData1
+  xpos -588
+  ypos 696
+ }
+set Nc7492400 [stack 0]
+ CornerPin2D {
+  to1 {{"\[metadata exr/nuke/cpToOneX]"} {"\[metadata exr/nuke/cpToOneY]"}}
+  to2 {{"\[metadata exr/nuke/cpToTwoX]"} {"\[metadata exr/nuke/cpToTwoY]"}}
+  to3 {{"\[metadata exr/nuke/cpToThreeX]"} {"\[metadata exr/nuke/cpToThreeY]"}}
+  to4 {{"\[metadata exr/nuke/cpToFourX]"} {"\[metadata exr/nuke/cpToFourY]"}}
+  invert false
+  from1 {0 0}
+  from2 {{input0.width} 0}
+  from3 {{input0.width} {input0.height}}
+  from4 {0 {input0.height}}
+  name CornerPin2D2
+  xpos -588
+  ypos 853
+ }
+set Nc7491d00 [stack 0]
+push $Nc7491d00
+ Constant {
+  inputs 0
+  channels rgb
+  name Constant1
+  xpos -416
+  ypos 639
+ }
+ Reformat {
+  type "to box"
+  box_width {{root.width}}
+  box_height {{root.height}}
+  box_fixed true
+  name Reformat2
+  xpos -416
+  ypos 764
+ }
+ Merge2 {
+  inputs 2
+  name Merge1
+  xpos -416
+  ypos 853
+ }
+ CopyBBox {
+  inputs 2
+  name CopyBBox1
+  xpos -416
+  ypos 887
+ }
+set Nd2ae9600 [stack 0]
+ Dot {
+  name Dot7
+  xpos -382
+  ypos 954
+ }
+push $Nc7492400
+ CornerPin2D {
+  to1 {{"\[metadata exr/nuke/cpToOneX]"} {"\[metadata exr/nuke/cpToOneY]"}}
+  to2 {{"\[metadata exr/nuke/cpToTwoX]"} {"\[metadata exr/nuke/cpToTwoY]"}}
+  to3 {{"\[metadata exr/nuke/cpToThreeX]"} {"\[metadata exr/nuke/cpToThreeY]"}}
+  to4 {{"\[metadata exr/nuke/cpToFourX]"} {"\[metadata exr/nuke/cpToFourY]"}}
+  invert true
+  from1 {0 0}
+  from2 {{root.width} 0}
+  from3 {{root.width} {root.height}}
+  from4 {0 {root.height}}
+  name CornerPin2D1
+  xpos -742
+  ypos 853
+ }
+ Reformat {
+  format "1024 1024 0 0 1024 1024 1 square_1K"
+  resize distort
+  name Reformat1
+  xpos -742
+  ypos 944
+ }
+ Switch {
+  inputs 2
+  which {{1-parent.CornerPin2D1.invert}}
+  name Switch1
+  xpos -588
+  ypos 950
+ }
+ CopyMetaData {
+  inputs 2
+  name CopyMetaData2
+  xpos -588
+  ypos 1115
+ }
+ Output {
+  name Output1
+  xpos -588
+  ypos 1253
+ }
+push $Nd2ae9600
+ Viewer {
+  frame 5
+  frame_range 0-169
+  fps 25
+  viewerProcess "sRGB (ACES)"
+  name Viewer1
+  xpos 290
+  ypos -10
+  hide_input true
+ }
+end_group
+

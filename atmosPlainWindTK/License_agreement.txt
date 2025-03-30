@@ -1,0 +1,50 @@
+Software License Agreement
+
+This Software License Agreement (the "Agreement") is entered into by and between VFXTIM.COM ("Licensor") and the user ("Licensee").
+
+1. License Grant:
+Licensor hereby grants Licensee a non-exclusive, non-transferable license to use the tools and scripts provided by Licensor (the "Software") for educational or commercial use in accordance with the terms and conditions of this Agreement.
+
+2. Restrictions:
+a. Modification: Licensee shall not modify, adapt, or create derivative works based on the Software.
+b. Redistribution: Licensee shall not redistribute, sell, lease, sublicense, or otherwise transfer the Software or any portion thereof to any third party without the prior written consent of Licensor.
+
+3. Ownership:
+Licensor retains all right, title, and interest in and to the Software, including all intellectual property rights.
+
+4. No Warranty:
+The Software is provided "as is" without any warranty of any kind, either expressed or implied, including but not limited to the implied warranties of merchantability and fitness for a particular purpose.
+
+5. Limitation of Liability:
+In no event shall Licensor be liable for any damages, whether in contract, tort, or otherwise, arising out of or in connection with the use or performance of the Software.
+
+6. Written Consent:
+Licensee shall obtain written consent from Licensor before modifying, redistributing, or engaging in any other activities not expressly permitted by this Agreement.
+
+7. Termination:
+This Agreement is effective until terminated by either party. Licensee may terminate the Agreement by ceasing the use of the Software. Licensor may terminate the Agreement if Licensee breaches any of its terms.
+
+
+Disclaimer of Liability for Data Loss or Loss of Service VFXTIM.COM ("the Company")
+
+This agreement ("Agreement") is entered into by and between VFXTIM.COM, hereinafter referred to as the "Company," and the user, hereinafter referred to as the "User."
+
+Acknowledgment of Risks:
+The User acknowledges and understands that the use of templates, tools or scripts provided by the Company involves potential risks, including but not limited to the risk of data loss or loss of service.
+
+Waiver of Responsibility:
+The Company shall not be held liable for any direct, indirect, incidental, special, or consequential damages arising out of the use or inability to use the templates, tools or scripts, including but not limited to data loss or loss of service.
+
+Backup Responsibility:
+The User is solely responsible for implementing and maintaining regular backups of their data. The Company strongly recommends the User to regularly back up all critical data to prevent potential loss.
+
+No Warranty:
+The templates, tools or scripts is provided "as is" and without warranties of any kind, either expressed or implied. The Company disclaims all warranties, including but not limited to the implied warranties of merchantability and fitness for a particular purpose.
+
+Limitation of Liability:
+In no event shall the Company be liable for any damages, whether in contract, tort, or otherwise, arising out of or in connection with the use of the templates, tools or scripts.
+
+Indemnification:
+The User agrees to indemnify and hold harmless the Company, its officers, employees, and agents from and against any claims, liabilities, damages, losses, and expenses arising out of the User's use of the templates, tools or scripts.
+
+By using the templates, tools or scripts, the User agrees to the terms and conditions outlined in this Agreement. If the User does not agree with these terms, they should refrain from using the templates, tools or scripts.

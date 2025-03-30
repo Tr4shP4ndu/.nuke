@@ -1,0 +1,30 @@
+set cut_paste_input [stack 0]
+version 13.1 v2
+push $cut_paste_input
+Text2 {
+ font_size_toolbar 100
+ font_width_toolbar 100
+ font_height_toolbar 100
+ message "\[frame]\n"
+ old_message {{49 10}
+   }
+ old_expression_markers {{0 0}
+   }
+ box {{"\[python 0]"} {"\[python 0]"} {"\[python nuke.toNode(\\\"Slapcomp\\\").knobs()\\\[\\\"format\\\"\\].value().width()/2]"} {"\[python nuke.toNode(\\\"Slapcomp\\\").knobs()\\\[\\\"format\\\"\\].value().height()/2]"}}
+ xjustify center
+ transforms {{0 2}
+   }
+ cursor_position 8
+ center {1920 1080}
+ cursor_initialised true
+ autofit_bbox false
+ initial_cursor_position {{0 1080}
+   }
+ group_animations {{0} imported: 0 selected: items: "root transform/"}
+ animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+   }
+ name Contact_Sheet_Text
+ selected false
+ xpos 0
+ ypos 0
+}

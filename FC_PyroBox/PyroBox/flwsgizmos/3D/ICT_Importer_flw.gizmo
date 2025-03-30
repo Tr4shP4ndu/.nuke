@@ -1,0 +1,24 @@
+NoOp {
+ name ICT_Importer_flw1
+ onCreate "exec(\"\"\"\nimport python_scripts.generate_ict_cam_geo\nimport nuke\nnode = nuke.thisNode()\npython_scripts.generate_ict_cam_geo.prefill_dependencies(node)\n\"\"\")"
+ knobChanged "exec(\"\"\"\nimport nuke\nnode = nuke.thisNode()\n\nif node\[\"teeth_style\"].value() == \"CUSTOM\":\n    nuke.thisNode().knob(\"custom_teeth_path\").setEnabled(True)\nelse:\n    nuke.thisNode().knob(\"custom_teeth_path\").setEnabled(False)\n\"\"\")"
+ tile_color 0xff5959ff
+ note_font "DejaVu Sans"
+ note_font_size 12
+ selected true
+ hide_input true
+ addUserKnob {20 User l Import}
+ addUserKnob {26 Title l " " T "<font size=\"4\">Flawless ICT Importer</font>"}
+ addUserKnob {26 dependencies l " "}
+ addUserKnob {2 plate_path l Plate t "A directory pointing towards a plate. In VFX workspaces, this will be pre filled. "}
+ addUserKnob {2 fosd_path l FOSD t "A directory containing FOSD fitting params. In VFX workspaces, this will be pre filled when the data is available. "}
+ addUserKnob {2 pt_path l PT t "A directory containing FOSD fitting params. In VFX workspaces, this will be pre filled when the data is available. "}
+ addUserKnob {26 teeth l " "}
+ addUserKnob {4 teeth_style l "Teeth Style" t "\nNONE imports no teeth. \n\nDEFAULT imports the detailed ICT teeth geo. \n\nFLAT imports a less detailed teeth geo.\n\nCUSTOM imports an OBJ of your chosing, rigged to the provided fitting params. \n" M {NONE DEFAULT FLAT CUSTOM "" "" "" "" "" ""}}
+ addUserKnob {2 custom_teeth_path l "Custom Teeth" t "Such objects will need to be in the .obj format named TeethTop_LP.obj and TeethBottom_LP.obj. If they have been created or modified in any external 3d modelling package, please edit them in a text editor and remove any extra / unnecessary metadata." +DISABLED}
+ addUserKnob {6 Importtongue l "Import Tongue" +STARTLINE}
+ addUserKnob {26 abc l "  "}
+ addUserKnob {2 alembic_out_dir l "Alembic Output" t "A directory where ABC files are saved. When working in VFX workspaces, please ignore this field. "}
+ addUserKnob {26 import l " "}
+ addUserKnob {22 run l "Import ICT as ABC" -STARTLINE T "import python_scripts.generate_ict_cam_geo\nimport nuke\n\n\n\n\nnode = nuke.thisNode()\n\n\n\n\nplate_path = node\['plate_path'].value()\nfosd_params_path = node\['fosd_path'].value()\npt_params_path = node\['pt_path'].value()\nteeth_option = node\['teeth_style'].value()\ncustom_teeth_path = node\['custom_teeth_path'].value()\noutput = node\['alembic_out_dir'].value()\n# GATHERS USERS OUTPUT DECISION\nIMPORT_TOUNGE = node\['Importtongue'].value()\n# VALIDATE OUTPUT DECISION\n\n\n\n\n# Call the generate_ict_cam_geo function and pass the values\npython_scripts.generate_ict_cam_geo.generate_ict_cam_geo(plate_path, fosd_params_path, pt_params_path, output, teeth_option, custom_teeth_path, IMPORT_TOUNGE)\n\n"}
+}

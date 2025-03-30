@@ -1,0 +1,12 @@
+Group {
+inputs 0
+name Playlist_Reader
+onCreate "exec(\"from python_scripts.flow_playlist_reader.callback_handler import *; callback_handler(\{'node' : nuke.thisNode(), 'knob' : nuke.thisKnob(),\})\")"
+knobChanged "exec(\"from python_scripts.flow_playlist_reader.callback_handler import *; callback_handler(\{'node' : nuke.thisNode(), 'knob' : nuke.thisKnob(),\})\")"
+tile_color 0x7d89ffff
+addUserKnob {2 CSVInput l "CSV File Input" t "Select a CSV File exported from Flow"}
+addUserKnob {22 LoadCSV l "Load CSV" t "Load CSV" +STARTLINE}
+addUserKnob {4 SwapContext l "<font color = '#7d89ff'><b> Swap Context" t "Swap Context" M {example}}
+addUserKnob {4 SwapInput l "<font color = '#7d89ff'><b> Swap Input" t "Swap Input" M {example}}
+}
+end_group

@@ -1,0 +1,1447 @@
+set cut_paste_input [stack 0]
+version 13.1 v2
+BackdropNode {
+ inputs 0
+ name BackdropNode1
+ tile_color 0xffaaaaff
+ gl_color 0x3a3a24ff
+ label KT_Track
+ note_font_size 42
+ selected true
+ xpos -1474
+ ypos 620
+ bdwidth 788
+ bdheight 833
+}
+Dot {
+ inputs 0
+ name Dot10
+ label "  GEO"
+ note_font_size 30
+ selected true
+ xpos -1111
+ ypos 742
+}
+push $cut_paste_input
+Dot {
+ name Dot8
+ label "  PLATE"
+ note_font_size 30
+ selected true
+ xpos -899
+ ypos 742
+}
+Dot {
+ name Dot9
+ selected true
+ xpos -899
+ ypos 1013
+}
+set Neca32400 [stack 0]
+FaceTracker {
+ inputs 2
+ mask3d {}
+ face_detection {}
+ controls ""
+ animated_pins_storage {22 serialization::archive 17 0 1 0 0 0 1 0 0 0 0
+}
+ model_stored_version 223
+ keyframes {}
+ translate {{curve} {curve} {curve}}
+ rotate {{curve} {curve} {curve}}
+ current_transform_xform_order RST
+ current_transform_rot_order XYZ
+ ModelEmotionsStorageKnob {223 57}
+ output_transformed_geo false
+ name FaceTracker1
+ selected true
+ xpos -1145
+ ypos 1009
+}
+Camera {
+ inputs 0
+ rot_order XYZ
+ translate {{FaceTracker1.cam_translate} {FaceTracker1.cam_translate} {FaceTracker1.cam_translate}}
+ rotate {{FaceTracker1.cam_rotate} {FaceTracker1.cam_rotate} {FaceTracker1.cam_rotate}}
+ focal 1
+ haperture 1
+ vaperture 1
+ name Camera1
+ selected true
+ xpos -1360
+ ypos 989
+}
+push $Neca32400
+Group {
+ inputs 3
+ name TrackingMetric_v003_flw1
+ help "Copyright 2022 Flawless"
+ tile_color 0xff5555ff
+ label "Score \[format %.2f \[value mean_track_error]]"
+ selected true
+ xpos -1145
+ ypos 1282
+ addUserKnob {20 User}
+ addUserKnob {22 calculate_tracking_score l "Calculate Tracking Score" T "node= nuke.thisNode()\nfirst_frame= node.input(0).firstFrame()\nlast_frame= node.input(0).lastFrame()\n\nwith node:\n   curvetool= nuke.toNode(\"CurveTool1\")\n   nuke.execute(curvetool, first_frame, last_frame, 1)\n\ndef calculate_max_track_error():\n    curvetool_values = \[node\['intensitydata'].animation(0).evaluate(frame) for frame in range(first_frame, last_frame+ 1)]\n    return max(curvetool_values)\n\nnode\['max_track_error'].setValue(calculate_max_track_error())" +STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {41 intensitydata l "track error" t "per frame" T CurveTool1.intensitydata}
+ addUserKnob {7 mean_track_error l "mean track error"}
+ mean_track_error {{"(intensitydata.integrate(input1.first_frame-.5, input1.last_frame+.5)/ (input1.last_frame-input1.first_frame+1))"}}
+ addUserKnob {7 max_track_error l "max track error"}
+ addUserKnob {26 ""}
+ addUserKnob {4 output_style l "output style" M {"heat map" wireframe unwrap "allar uber" all "" "" ""}}
+ output_style all
+ addUserKnob {26 ""}
+ addUserKnob {7 wfmix l "overlay mix"}
+ wfmix 0.2
+ addUserKnob {26 ""}
+ addUserKnob {6 corneroverlay l "corner overlay" +STARTLINE}
+ corneroverlay true
+ addUserKnob {7 overlayscale l "overlay scale"}
+ overlayscale 1
+ addUserKnob {4 overlaystyle l Layout t "Change this if the overlay box covers your track" M {lower left right}}
+ addUserKnob {26 ""}
+ addUserKnob {26 text l playblast +INVISIBLE T "     (will replace previous playblast)"}
+ addUserKnob {41 Render_1 l Render +INVISIBLE T OUT_MOV.Render}
+ addUserKnob {41 Render +INVISIBLE T dataset.Render}
+ addUserKnob {41 file +INVISIBLE T dataset.file}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode1
+  tile_color 0xd3776a00
+  label "QC           "
+  note_font_size 42
+  xpos 2025
+  ypos 1000
+  bdwidth 1462
+  bdheight 1528
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode2
+  tile_color 0x47726100
+  label "Corner Overlay"
+  note_font_size 42
+  xpos 4333
+  ypos 64
+  bdwidth 1299
+  bdheight 1525
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode24
+  tile_color 0xb3a07600
+  label "control:\nfile "
+  note_font_size 42
+  xpos 2695
+  ypos 2868
+  bdwidth 220
+  bdheight 528
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode3
+  tile_color 0x44415100
+  label "Tracking score"
+  note_font_size 42
+  xpos -1102
+  ypos 680
+  bdwidth 1592
+  bdheight 1305
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode4
+  tile_color 0x47726100
+  label Unwrap
+  note_font_size 42
+  xpos -927
+  ypos -453
+  bdwidth 757
+  bdheight 832
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode5
+  tile_color 0x47726100
+  label "Corner Overlay"
+  note_font_size 42
+  xpos 5747
+  ypos 30
+  bdwidth 1307
+  bdheight 1539
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode6
+  tile_color 0xab901e00
+  label "Geo Overlay"
+  note_font_size 42
+  xpos 3882
+  ypos -1283
+  bdwidth 422
+  bdheight 454
+ }
+ Input {
+  inputs 0
+  name cam
+  label "input \[value number]"
+  xpos 1362
+  ypos -1609
+  number 1
+ }
+ Dot {
+  name Dot14
+  xpos 1396
+  ypos -126
+ }
+set Nec9cf900 [stack 0]
+ Dot {
+  name Dot6
+  xpos 1397
+  ypos 76
+ }
+set Nec9cf200 [stack 0]
+push $Nec9cf900
+ Input {
+  inputs 0
+  name bg
+  label "input \[value number]"
+  selected true
+  xpos -237
+  ypos -1566
+ }
+set Nec9ceb00 [stack 0]
+ Remove {
+  operation keep
+  channels rgb
+  name Remove1
+  xpos -237
+  ypos -1316
+ }
+ Crop {
+  box {0 120 3840 2040}
+  name Crop1
+  xpos -237
+  ypos -1243
+ }
+ Multiply {
+  channels alpha
+  value {{1-ExcludeFrames_flw1.excluded_trainig}}
+  name Multiply3
+  xpos -237
+  ypos -1182
+ }
+ Dot {
+  name Dot8
+  xpos -203
+  ypos -1063
+ }
+set Nec9cc800 [stack 0]
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 white -1 -1 rgba.alpha 0 3"
+  name Shuffle2
+  xpos -260
+  ypos -277
+  disable true
+ }
+ Project3D2 {
+  inputs 2
+  project_on front
+  crop false
+  name Project3D1
+  xpos -260
+  ypos -125
+ }
+ Input {
+  inputs 0
+  name Geo
+  label "input \[value number]"
+  xpos -708
+  ypos -1555
+  number 2
+ }
+ Dot {
+  name Dot10
+  xpos -674
+  ypos -957
+ }
+set Nd390eb00 [stack 0]
+ ApplyMaterial {
+  inputs 2
+  name ApplyMaterial1
+  xpos -708
+  ypos -125
+ }
+ Reformat {
+  inputs 0
+  format "1024 1024 0 0 1024 1024 1 square_1K"
+  name Reformat1
+  label "if you change this, the metric will go out of whack"
+  xpos -612
+  ypos -24
+ }
+set Nd390dd00 [stack 0]
+ ScanlineRender {
+  inputs 3
+  conservative_shader_sampling false
+  ztest_enabled false
+  projection_mode uv
+  ambient 0.67
+  motion_vectors_type distance
+  name ScanlineRender1
+  xpos -708
+  ypos 69
+ }
+set Nd390d600 [stack 0]
+ TimeClip {
+  time ""
+  first {{input1.first_frame}}
+  before bounce
+  last {{input1.last_frame}}
+  after bounce
+  frame_mode "start at"
+  frame 1001
+  origfirst 1001
+  origlast 1939
+  origset true
+  mask_metadata true
+  name TimeClip2
+  xpos -708
+  ypos 760
+ }
+set Nd390c800 [stack 0]
+ Dot {
+  name Dot1
+  xpos -302
+  ypos 764
+ }
+set Nd390c100 [stack 0]
+ Dot {
+  name Dot7
+  xpos 302
+  ypos 764
+ }
+set Nd38df900 [stack 0]
+ VectorGenerator {
+  motionEstimation Regularized
+  matteChannel "Source Alpha"
+  name VectorGenerator3
+  xpos 268
+  ypos 1447
+ }
+set Nd38df200 [stack 0]
+ LayerContactSheet {
+  width 1024
+  height 1024
+  showLayerNames true
+  name LayerContactSheet1
+  xpos 400
+  ypos 1458
+ }
+push $Nec9cf200
+push $Nec9cf900
+push $Nec9cc800
+ Project3D2 {
+  inputs 2
+  project_on front
+  crop false
+  name Project3D2
+  xpos -917
+  ypos -617
+ }
+push $Nd390eb00
+ ApplyMaterial {
+  inputs 2
+  name ApplyMaterial3
+  xpos -917
+  ypos 349
+ }
+push $Nd390dd00
+ ScanlineRender {
+  inputs 3
+  conservative_shader_sampling false
+  projection_mode uv
+  ambient 0.67
+  motion_vectors_type distance
+  name ScanlineRender3
+  xpos -612
+  ypos 349
+ }
+push $Nec9cc800
+push $Nec9cf200
+ FaceBuilder2 {
+  inputs 0
+  ktFaceBuilder {22 serialization::archive 17 0 10 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 6 23 116 5 23 57 0 0 0 1.000000000e+00 2.000000000e+00 2.000000000e+00 2.000000000e+00 3 1.000000000e+00 9 1 1 0 1 1 1 0 1 0 6 0 0 0 0 0 0 0 0 3 0 0 0 3.900000080e-02 3.999999911e-02 3.900000080e-02 0.000000000e+00 0.000000000e+00 8.509799838e-01 9.607840180e-01 7.842999883e-03 6.156859994e-01 1.00000000000000008e-05 8.00000000000000017e-02 1.00000000000000000e+00 0.00000000000000000e+00 0
+}
+  name FaceBuilder1
+  xpos -1291
+  ypos -111
+ }
+push $Nd390dd00
+ ScanlineRender {
+  inputs 2
+  conservative_shader_sampling false
+  ztest_enabled false
+  projection_mode uv
+  ambient 0.67
+  motion_vectors_type distance
+  name ScanlineRender9
+  xpos -1291
+  ypos -12
+ }
+ Dot {
+  name Dot19
+  xpos -1257
+  ypos 1856
+ }
+push $Nd38df900
+push 0
+push $Nd390c800
+ Dot {
+  name Dot2
+  xpos -1058
+  ypos 764
+ }
+ TimeOffset {
+  time_offset -1
+  time ""
+  name TimeOffset1
+  xpos -1092
+  ypos 933
+ }
+ Dot {
+  name Dot5
+  xpos -1058
+  ypos 1634
+ }
+push $Nd390c100
+ TimeOffset {
+  time_offset 1
+  time ""
+  name TimeOffset2
+  xpos -336
+  ypos 936
+ }
+ Merge2 {
+  inputs 3+1
+  operation min
+  name Merge8
+  xpos -336
+  ypos 1630
+ }
+push $Nd38df200
+ Shuffle2 {
+  fromInput1 {{0} B}
+  in1 motion
+  fromInput2 {{0} B}
+  mappings "4 forward.u 0 0 rgba.red 0 0 forward.v 0 1 rgba.green 0 1 backward.u 0 2 rgba.blue 0 2 backward.v 0 3 rgba.alpha 0 3"
+  name Shuffle5
+  xpos 268
+  ypos 1525
+ }
+ Merge2 {
+  inputs 2
+  operation mask
+  name Merge1
+  xpos 268
+  ypos 1630
+ }
+ Expression {
+  expr0 sqrt(r**2+g**2+b**2+a**2)
+  channel1 none
+  channel2 none
+  name Expression3
+  xpos 268
+  ypos 1758
+ }
+ Remove {
+  operation keep
+  channels {rgba.red -rgba.green -rgba.blue none}
+  name Remove3
+  xpos 268
+  ypos 1805
+ }
+ Merge2 {
+  inputs 2
+  operation stencil
+  name Merge13
+  xpos 268
+  ypos 1852
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 rgba.blue 0 2 rgba.red 0 0 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 black -1 -1 rgba.alpha 0 3"
+  name Shuffle6
+  xpos 268
+  ypos 1900
+ }
+set Nd3871d00 [stack 0]
+ Multiply {
+  value 0.13
+  name Multiply2
+  xpos 633
+  ypos 1830
+ }
+ Invert {
+  channels rgb
+  name Invert2
+  xpos 633
+  ypos 1888
+ }
+ Grade {
+  whitepoint 2.45
+  white_clamp true
+  name Grade2
+  xpos 633
+  ypos 1914
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 white -1 -1 rgba.green 0 1 rgba.alpha 0 3 rgba.alpha 0 3 white -1 -1 rgba.blue 0 2 rgba.red 0 0 rgba.red 0 0"
+  name Shuffle1
+  xpos 633
+  ypos 1940
+ }
+ Colorspace {
+  colorspace_in HSV
+  name Colorspace1
+  xpos 633
+  ypos 1996
+ }
+push $Nd390eb00
+ Dot {
+  name Dot12
+  label "GEO HIDDEN"
+  note_font "Bitstream Vera Sans Bold"
+  note_font_size 30
+  xpos 1049
+  ypos 1870
+  hide_input true
+ }
+ ApplyMaterial {
+  inputs 2
+  name ApplyMaterial4
+  xpos 1015
+  ypos 2002
+ }
+push 0
+ ScanlineRender {
+  inputs 3
+  conservative_shader_sampling false
+  transparency false
+  ztest_enabled false
+  motion_vectors_type distance
+  name ScanlineRender4
+  xpos 1363
+  ypos 2002
+ }
+ Merge2 {
+  inputs 2
+  operation mask
+  bbox intersection
+  name Merge4
+  xpos 1363
+  ypos 2205
+ }
+ Dot {
+  name Dot4
+  xpos 2152
+  ypos 2209
+ }
+set Nd383d600 [stack 0]
+ Grade {
+  white {1.67 0.92 0.26 1.64}
+  white_panelDropped true
+  black_clamp false
+  name Grade1
+  xpos 2118
+  ypos 2293
+ }
+ HueCorrect {
+  hue {sat {}
+    lum {curve 1 1 1 0.04019618034 1 1 1}
+    red {}
+    green {}
+    blue {}
+    r_sup {}
+    g_sup {}
+    b_sup {}
+    sat_thrsh {}}
+  name HueCorrect1
+  xpos 2118
+  ypos 2319
+ }
+ CheckerBoard2 {
+  inputs 0
+  color0 0
+  color1 1
+  color2 0
+  color3 1
+  name CheckerBoard1
+  xpos 3022
+  ypos 1123
+ }
+ Clamp {
+  name Clamp1
+  xpos 3022
+  ypos 1221
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 rgba.red 0 0 rgba.alpha 0 3"
+  name Shuffle7
+  xpos 3022
+  ypos 1282
+ }
+ Constant {
+  inputs 0
+  color {0 0 1 1}
+  color_panelDropped true
+  name Constant3
+  xpos 2879
+  ypos 1180
+ }
+ Reformat {
+  type "to box"
+  box_width {{input0.width}}
+  box_height {{input0.height}}
+  box_fixed true
+  black_outside true
+  pbb true
+  name Reformat11
+  xpos 2879
+  ypos 1358
+ }
+set Nd35ea400 [stack 0]
+ Dilate {
+  size -10
+  name Dilate2
+  xpos 3042
+  ypos 1379
+ }
+push $Nd35ea400
+ Multiply {
+  inputs 1+1
+  value 0
+  name Multiply4
+  xpos 2947
+  ypos 1421
+ }
+ Multiply {
+  inputs 1+1
+  value {{1-ExcludeFrames_flwls.excluded_trainig}}
+  name Multiply5
+  xpos 3014
+  ypos 1515
+ }
+ Constant {
+  inputs 0
+  color 1
+  name Constant2
+  xpos 2653
+  ypos 1174
+ }
+ Constant {
+  inputs 0
+  color {{(parent.CurveTool1.intensitydata)/2.5} {(-(parent.CurveTool1.intensitydata)/10)+1} 0 1}
+  color_panelDropped true
+  name Constant1
+  xpos 2510
+  ypos 1366
+ }
+ Merge2 {
+  inputs 2
+  mix {{ExcludeFrames_flwls.excluded_trainig}}
+  name Merge14
+  xpos 2653
+  ypos 1395
+ }
+ Reformat {
+  type "to box"
+  box_width {{input0.width}}
+  box_height {{input0.height}}
+  box_fixed true
+  black_outside true
+  pbb true
+  name Reformat3
+  xpos 2653
+  ypos 1462
+ }
+set Nd35cd600 [stack 0]
+ Dilate {
+  size -10
+  name Dilate1
+  xpos 2792
+  ypos 1456
+ }
+push $Nd35cd600
+ Multiply {
+  inputs 1+1
+  value 0
+  name Multiply1
+  xpos 2792
+  ypos 1566
+ }
+ Merge2 {
+  inputs 2
+  mix {{ExcludeFrames_flwls.excluded_vubbing}}
+  name Merge15
+  xpos 3014
+  ypos 1571
+ }
+ Reformat {
+  type "to box"
+  box_width {{root.width}}
+  box_height {{root.height}}
+  box_fixed true
+  resize fill
+  name Reformat6
+  xpos 3014
+  ypos 1597
+ }
+ Constant {
+  inputs 0
+  channels rgb
+  color {0 0 0 0}
+  format "3840 2160 0 0 3840 2160 1 UHD_4K"
+  name Constant4
+  xpos 3484
+  ypos 1186
+ }
+ Text2 {
+  font_size_toolbar 60
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "        max track error \[format %.2f \[value max_track_error]]                                                                               "
+  old_message {{32 32 32 32 32 32 32 32 109 97 120 32 116 114 97 99 107 32 101 114 114 111 114 32 48 46 48 48 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32}
+    }
+  old_expression_markers {{24 27}
+    }
+  box {15 15 {input.width} {input.height-20}}
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 60 1 60 2 60 3 60 4 60 0 60 1 60 2 60 3 60 4 60 1 60 2 60 3 60 4 60 5 60 6 60 7 60 8 60 9 60 10 60 11 60 12 60 13 60 14 60 15 60 16 60 17 60 18 60 19 60 20 60 21 60 22 60 23 60 24 60 25 60 26 60 27 60 28 60 29 60 30 60 31 60 32 60 33 60 34 60 35 60 36 60 37 60 38 60 39 60 40 60 41 60 42 60 43 60 44 60 45 60 46 60 47 60 48 60 49 60 50 60 51 60 52 60 53 60 54 60 55 60 56 60 57 60 58 60 59 60 60 60 61 60 62 60 63 60 64 60 65 60 66 60 67 60 68 60 69 60 70 60 71 60 72 60 73 60 74 60 75 60 76 60 77 60 78 60 79 60 80 60 81 60 82 60 83 60 84 60 85 60 86 60 87 60 88 60 89 60 90 60 91 60 92 60 93 60 94 60 95 60 96 60 97 60 98 60 99 60 100 60 101 60 102 60 103 60 104 60 105 60 106 60 0 50 1 50 2 50 3 50 4 50}
+    }
+  cursor_position 134
+  font {{ WenQuanYi Zen Hei : Regular : wqy-zenhei/wqy-zenhei.ttc : 0 }}
+  font_size 60
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  enable_background true
+  name Text1
+  xpos 3484
+  ypos 1282
+ }
+ Text2 {
+  font_size_toolbar 60
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "        \[getenv USER]                                        "
+  old_message {{32 32 32 32 32 32 32 32 115 101 97 110 46 100 97 110 105 115 99 104 101 118 115 107 121 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32}
+    }
+  old_expression_markers {{8 24}
+    }
+  box {15 15 {input.width x1023 3840} {input.height-20 x1023 1996}}
+  transforms {{0 2}
+    }
+  font_size_values {{0 60 1 60 2 60 3 60 4 60 5 60 6 60 7 60 8 60 9 60 10 60 11 60 12 60 13 60 14 60 15 60 16 60 17 60 18 60 19 60 20 60 21 60 22 60 23 60 24 60 25 60 25 60 26 60 27 60 28 60 29 60 30 60 31 60 32 60 33 60 34 60 35 60 36 60 37 60 38 60 39 60 40 60 41 60 42 60 43 60 44 60 45 60 46 60 47 60 48 60 49 60 50 60 51 60 52 60 53 60 54 60 55 60 56 60 57 60 58 60 59 60 60 60 61 60 62 60 63 60 64 60 8 50 9 50 10 50 11 50 12 50 13 50 14 50 15 50 16 50 17 50 18 50 19 50 25 50}
+    }
+  cursor_position 22
+  font {{ WenQuanYi Zen Hei : Regular : wqy-zenhei/wqy-zenhei.ttc : 0 }}
+  font_size 60
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  enable_background true
+  name Text5
+  xpos 3484
+  ypos 1317
+ }
+ Text2 {
+  font_size_toolbar 60
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "                                                      mean track error \[format %.2f \[value mean_track_error]]         "
+  old_message {{32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 109 101 97 110 32 116 114 97 99 107 32 101 114 114 111 114 32 48 46 48 48 32 32 32 32 32 32 32 32 32}
+    }
+  old_expression_markers {{71 74}
+    }
+  box {15 15 {input.width} {input.height-20}}
+  xjustify right
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 60 1 60 2 60 3 60 4 60 5 60 6 60 7 60 8 60 9 60 10 60 11 60 12 60 13 60 14 60 15 60 16 60 17 60 18 60 19 60 20 60 21 60 22 60 23 60 24 60 25 60 26 60 27 60 28 60 29 60 30 60 31 60 32 60 33 60 34 60 35 60 36 60 37 60 38 60 39 60 40 60 41 60 42 60 43 60 44 60 45 60 46 60 47 60 48 60 49 60 50 60 51 60 52 60 53 60 54 60 55 60 56 60 57 60 58 60 59 60 60 60 61 60 62 60 63 60 64 60 65 60 66 60 67 60 68 60 69 60 70 60 71 60 72 60 73 60 74 60 75 60 76 60 77 60 78 60 79 60 80 60 81 60 82 60 83 60}
+    }
+  cursor_position 70
+  font {{ WenQuanYi Zen Hei : Regular : wqy-zenhei/wqy-zenhei.ttc : 0 }}
+  font_size 60
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  enable_background true
+  name Text2
+  xpos 3484
+  ypos 1373
+ }
+ Text2 {
+  font_size_toolbar 60
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "                                          frame \[frame]         "
+  old_message {{32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 32 102 114 97 109 101 32 54 48 32 32 32 32 32 32 32 32 32}
+    }
+  old_expression_markers {{48 49}
+    }
+  box {15 15 {input.width} {input.height-20}}
+  xjustify right
+  transforms {{0 2}
+    }
+  font_size_values {{0 60 1 60 2 60 3 60 4 60 5 60 6 60 7 60 8 60 9 60 10 60 11 60 12 60 13 60 14 60 15 60 16 60 17 60 18 60 19 60 20 60 21 60 22 60 23 60 24 60 25 60 26 60 27 60 28 60 29 60 30 60 31 60 32 60 33 60 34 60 35 60 36 60 37 60 38 60 39 60 40 60 41 60 42 60 43 60 44 60 45 60 46 60 47 60 48 60 49 60 48 60 50 60 51 60 52 60 53 60 54 60 55 60 56 60 57 60 58 60}
+    }
+  cursor_position 64
+  font {{ WenQuanYi Zen Hei : Regular : wqy-zenhei/wqy-zenhei.ttc : 0 }}
+  font_size 60
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  enable_background true
+  name Text3
+  xpos 3484
+  ypos 1413
+ }
+ Text2 {
+  font_size_toolbar 60
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "\[file tail \[python nuke.root().name()]]"
+  old_message {{102 108 119 108 115 95 118 102 120 95 103 105 122 109 111 95 116 111 111 108 107 105 116 95 99 111 108 108 101 99 116 105 111 110 95 118 48 48 49 46 110 107}
+    }
+  old_expression_markers {{0 41}
+    }
+  box {15 15 3840 {input.height-20}}
+  xjustify center
+  transforms {{0 2}
+    }
+  font_size_values {{0 60 1 60 2 60 3 60 4 60 5 60 6 60 7 60 8 60 9 60 10 60 11 60 12 60 13 60 14 60 15 60 16 60 17 60 18 60 19 60 20 60 21 60 22 60 23 60 24 60 25 60 26 60 27 60 28 60 29 60 30 60 31 60 32 60 33 60 34 60 35 60 36 60 37 60 38 60 39 60 40 60 41 60 0 60 1 60 2 60 3 60}
+    }
+  font {{ WenQuanYi Zen Hei : Regular : wqy-zenhei/wqy-zenhei.ttc : 0 }}
+  font_size 60
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  initial_cursor_position {{1920 1080}
+    }
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  enable_background true
+  name Text6
+  xpos 3484
+  ypos 1466
+ }
+ Reformat {
+  type "to box"
+  box_width {{root.width}}
+  box_height {{root.height}}
+  box_fixed true
+  resize fill
+  name Reformat12
+  xpos 3484
+  ypos 1492
+ }
+push $Nd390c800
+ Reformat {
+  format "1024 1024 0 0 1024 1024 1 square_1K"
+  name Reformat9
+  xpos 5985
+  ypos 1124
+ }
+ Reformat {
+  type scale
+  scale {{overlayscale}}
+  name Reformat10
+  xpos 6098
+  ypos 1194
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 white -1 -1 rgba.alpha 0 3"
+  name Shuffle4
+  xpos 6273
+  ypos 1274
+ }
+ BlackOutside {
+  name BlackOutside1
+  xpos 6273
+  ypos 1336
+ }
+ Transform {
+  center {512 512}
+  name Transform2
+  xpos 6273
+  ypos 1372
+ }
+set Nd3534800 [stack 0]
+ Position {
+  translate {{(root.width)-(1024*overlayscale) x1003 0} 0}
+  name Position1
+  xpos 6273
+  ypos 1439
+ }
+set Nd3534100 [stack 0]
+push $Nd3534800
+ Position {
+  translate {0 {root.height-(1024*overlayscale)}}
+  name Position2
+  xpos 6382
+  ypos 1442
+ }
+push $Nd3534100
+ Switch {
+  inputs 3
+  which {{overlaystyle}}
+  name Switch3
+  xpos 6313
+  ypos 1506
+ }
+push $Nec9cf200
+push 0
+push $Nec9cf200
+ Dot {
+  name Dot15
+  xpos 4653
+  ypos 188
+ }
+set Nd36fab00 [stack 0]
+push $Nec9cf200
+ Dot {
+  name Dot13
+  xpos 2161
+  ypos 76
+ }
+set Nd36fa400 [stack 0]
+ Dot {
+  name Dot11
+  xpos 2161
+  ypos 1658
+ }
+ Wireframe {
+  inputs 0
+  operation over
+  name Wireframe1
+  xpos -454
+  ypos -373
+ }
+push $Nd390eb00
+ ApplyMaterial {
+  inputs 2
+  name ApplyMaterial2
+  xpos -454
+  ypos -253
+ }
+ Dot {
+  name Dot9
+  xpos 2285
+  ypos -183
+ }
+ Reformat {
+  inputs 0
+  type "to box"
+  box_width {{input0.width}}
+  box_height {{input0.height}}
+  box_fixed true
+  name Reformat2
+  xpos 2380
+  ypos 1547
+ }
+ ScanlineRender {
+  inputs 3
+  conservative_shader_sampling false
+  motion_vectors_type distance
+  name ScanlineRender2
+  xpos 2271
+  ypos 1890
+ }
+set Nd36db200 [stack 0]
+ Dot {
+  name Dot27
+  xpos 4447
+  ypos 617
+ }
+set Nd36da400 [stack 0]
+ Dot {
+  name Dot30
+  xpos 4550
+  ypos 454
+ }
+push $Nec9ceb00
+ Dot {
+  name Dot26
+  xpos 4759
+  ypos 314
+ }
+ Merge2 {
+  inputs 2
+  operation screen
+  mix {{wfmix}}
+  name Merge11
+  xpos 4839
+  ypos 354
+ }
+ Dot {
+  name Dot16
+  xpos 5143
+  ypos 519
+ }
+set Nd36d8800 [stack 0]
+ Project3D2 {
+  inputs 2
+  name Project3D3
+  xpos 4851
+  ypos 740
+ }
+push $Nd36fab00
+push $Nd36d8800
+ Project3D2 {
+  inputs 2
+  name Project3D4
+  xpos 4619
+  ypos 557
+ }
+ Card2 {
+  image_aspect false
+  rows 1
+  columns 1
+  uniform_scale 1.7
+  control_points {3 3 3 6 
+
+1 {-0.5 -0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0 0 0} 
+1 {0 -0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {0.5 0 0} 
+1 {0.5 -0.5 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666865 0} 0 {0 0 0} 0 {1 0 0} 
+1 {-0.5 0 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0 0.5 0} 
+1 {0 0 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {0.5 0.5 0} 
+1 {0.5 0 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0.1666666716 0} 0 {0 -0.1666666716 0} 0 {1 0.5 0} 
+1 {-0.5 0.5 0} 0 {0.1666666865 0 0} 0 {0 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0 1 0} 
+1 {0 0.5 0} 0 {0.1666666716 0 0} 0 {-0.1666666716 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {0.5 1 0} 
+1 {0.5 0.5 0} 0 {0 0 0} 0 {-0.1666666865 0 0} 0 {0 0 0} 0 {0 -0.1666666865 0} 0 {1 1 0} }
+  name Card1
+  xpos 4619
+  ypos 898
+ }
+ ApplyMaterial {
+  inputs 2
+  name ApplyMaterial5
+  xpos 4851
+  ypos 898
+ }
+ TransformGeo {
+  inputs 3
+  translate {0 0 0.8}
+  name TransformGeo3
+  xpos 4851
+  ypos 1092
+ }
+ Reformat {
+  inputs 0
+  format "1024 1024 0 0 1024 1024 1 square_1K"
+  name Reformat4
+  xpos 5132
+  ypos 1140
+ }
+ Reformat {
+  type scale
+  scale {{overlayscale}}
+  name Reformat5
+  xpos 5132
+  ypos 1230
+ }
+ ScanlineRender {
+  inputs 2
+  conservative_shader_sampling false
+  projection_mode uv
+  motion_vectors_type distance
+  name ScanlineRender5
+  xpos 4851
+  ypos 1230
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 white -1 -1 rgba.alpha 0 3"
+  name Shuffle3
+  xpos 4851
+  ypos 1309
+ }
+ BlackOutside {
+  name BlackOutside2
+  xpos 4851
+  ypos 1370
+ }
+ Transform {
+  center {512 512}
+  name Transform1
+  xpos 4851
+  ypos 1444
+ }
+set Nd3666b00 [stack 0]
+ Position {
+  translate {{root.width-1024*overlayscale} {root.height-(1024*overlayscale)}}
+  name Position3
+  xpos 4961
+  ypos 1444
+ }
+push $Nd3666b00
+push $Nd3666b00
+ Switch {
+  inputs 3
+  which {{overlaystyle}}
+  name Switch2
+  xpos 4851
+  ypos 1532
+ }
+push $Nd36da400
+ EdgeDetectWrapper {
+  channels alpha
+  threshold 0.6
+  erodesize 1
+  blursize 2
+  name EdgeDetect1
+  xpos 4413
+  ypos 689
+ }
+ Constant {
+  inputs 0
+  color {{(parent.CurveTool1.intensitydata)/2.5} {(-(parent.CurveTool1.intensitydata)/10)+1} 0 1}
+  color_panelDropped true
+  name Constant5
+  xpos 4461
+  ypos 864
+ }
+ Grade {
+  multiply 2
+  black_clamp false
+  name Grade3
+  xpos 4237
+  ypos 830
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy2
+  xpos 4436
+  ypos 763
+ }
+ Premult {
+  name Premult2
+  xpos 4449
+  ypos 820
+ }
+set Nd3630100 [stack 0]
+push $Nd36da400
+ Merge2 {
+  inputs 2
+  name Merge17
+  xpos 4552
+  ypos 668
+ }
+push $Nd36da400
+push $Nd36da400
+push $Nd36da400
+push $Nd36da400
+ Switch {
+  inputs 5
+  which {{output_style}}
+  name Switch5
+  xpos 4502
+  ypos 559
+ }
+push $Nec9cc800
+ Dot {
+  name Dot3
+  xpos 3251
+  ypos -1080
+ }
+ Merge2 {
+  inputs 2
+  operation screen
+  mix {{wfmix}}
+  name Merge19
+  xpos 3218
+  ypos 495
+ }
+ Dot {
+  name Dot24
+  xpos 3251
+  ypos 892
+ }
+ Dot {
+  name Dot20
+  xpos 3251
+  ypos 1018
+ }
+set Nd381d600 [stack 0]
+ Merge2 {
+  inputs 2
+  mix {{corneroverlay}}
+  name Merge9
+  xpos 3217
+  ypos 1097
+ }
+ Merge2 {
+  inputs 2
+  mix {{corneroverlay}}
+  name Merge12
+  xpos 3217
+  ypos 1145
+ }
+ Merge2 {
+  inputs 2
+  name Merge16
+  xpos 3217
+  ypos 1492
+ }
+ Merge2 {
+  inputs 2
+  name Merge3
+  xpos 3217
+  ypos 1572
+ }
+set Nd37ef900 [stack 0]
+ Dot {
+  name Dot23
+  xpos 2676
+  ypos 2075
+ }
+ Merge2 {
+  inputs 2
+  mix {{wfmix}}
+  name Merge6
+  xpos 2118
+  ypos 2427
+ }
+set Nd37eeb00 [stack 0]
+ Dot {
+  name Dot21
+  xpos 2595
+  ypos 2588
+ }
+push $Nd36db200
+push $Nd37eeb00
+ Merge2 {
+  inputs 2
+  operation screen
+  mix {{wfmix}}
+  name Merge7
+  xpos 2271
+  ypos 2394
+ }
+push $Nd390d600
+ Text2 {
+  font_size_toolbar 30
+  font_width_toolbar 100
+  font_height_toolbar 100
+  message "shot score \[format \"%.2f\" \[value tracking_score]]        "
+  old_message {{115 104 111 116 32 115 99 111 114 101 32 91 102 111 114 109 97 116 32 34 37 46 50 102 34 32 91 118 97 108 117 101 32 116 114 97 99 107 105 110 103 95 115 99 111 114 101 93 93 32 32 32 32 32 32 32 32}
+    }
+  box {8 8 1024 1024}
+  xjustify right
+  yjustify bottom
+  transforms {{0 2}
+    }
+  font_size_values {{0 30 1 30 2 30 3 30 4 30 5 30 6 30 7 30 8 30 9 30 10 30 11 30 12 30 13 30 14 30 15 30 16 30 17 30 18 30 19 30 20 30 21 30 22 30 23 30 24 30 25 30 26 30 27 30 28 30 29 30 30 30 31 30 32 30 33 30 34 30 35 30 36 30 37 30 38 30 39 30 40 30 41 30 42 30 43 30 44 30 45 30 46 30 47 30 48 30 49 30 50 30 51 30 52 30 53 30 54 30 55 60 56 60 0 40 1 40 2 40 3 40 4 40 5 40 6 40 7 40 8 40 9 40 10 40 11 40 12 40 13 40 14 40}
+    }
+  font {{ WenQuanYi Zen Hei : Regular : wqy-zenhei/wqy-zenhei.ttc : 0 }}
+  font_size 30
+  center {1920 1080}
+  cursor_initialised true
+  autofit_bbox false
+  group_animations {{0} imported: 0 selected: items: "root transform/"}
+  animation_layers {{1 11 1920 1080 0 0 1 1 0 0 0 0}
+    }
+  enable_background true
+  name Text4
+  xpos 1726
+  ypos 1521
+  disable true
+ }
+push $Nd36db200
+push $Nd37ef900
+ Merge2 {
+  inputs 2
+  operation screen
+  mix {{wfmix}}
+  name Merge2
+  xpos 3217
+  ypos 1890
+ }
+push $Nd383d600
+push $Nd37ef900
+ Merge2 {
+  inputs 2
+  name Merge5
+  xpos 2766
+  ypos 2205
+ }
+ Switch {
+  inputs 5
+  which {{output_style}}
+  name Switch1
+  xpos 2766
+  ypos 2447
+ }
+ Crop {
+  box {0 0 {root.width} {root.height}}
+  name Crop2
+  xpos 2766
+  ypos 2567
+ }
+ Output {
+  name Output1
+  xpos 2766
+  ypos 3433
+ }
+push $Nd36db200
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 rgba.red 0 0 rgba.alpha 0 3"
+  name Shuffle8
+  xpos 2362
+  ypos 1922
+ }
+ Dot {
+  name Dot22
+  xpos 2440
+  ypos 1949
+ }
+push $Nd381d600
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy1
+  xpos 2454
+  ypos 1978
+ }
+ Premult {
+  name Premult1
+  xpos 2454
+  ypos 2033
+ }
+push $Nd36fa400
+ Phong {
+  inputs 0
+  name Phong1
+  xpos 3967
+  ypos -1035
+ }
+push $Nd390eb00
+ ApplyMaterial {
+  inputs 2
+  name ApplyMaterial7
+  xpos 3958
+  ypos -961
+ }
+push $Nd36fa400
+ Light3 {
+  depthmap_slope_bias 0.01
+  name Light1
+  xpos 3892
+  ypos -1203
+ }
+ Scene {
+  inputs 2
+  name Scene2
+  xpos 4113
+  ypos -953
+ }
+ Reformat {
+  inputs 0
+  type "to box"
+  box_width {{input0.width}}
+  box_height {{input0.height}}
+  box_fixed true
+  name Reformat8
+  xpos 4163
+  ypos -1021
+ }
+ ScanlineRender {
+  inputs 3
+  conservative_shader_sampling false
+  ambient 0.16
+  motion_vectors_type distance
+  name ScanlineRender7
+  xpos 4214
+  ypos -859
+ }
+push $Nd3630100
+ Dot {
+  name Dot17
+  xpos 4519
+  ypos 690
+ }
+push $Nd3871d00
+ CurveTool {
+  channels {rgba.red -rgba.green -rgba.blue none}
+  ROI {0 0 {width} {height}}
+  autocropdata {480 270 1440 810}
+  name CurveTool1
+  xpos 268
+  ypos 1952
+ }
+end_group
+push $cut_paste_input
+Group {
+ name ExcludeFrames_flw1
+ help "Copyright 2022 Flawless"
+ tile_color 0xff5555ff
+ selected true
+ xpos -933
+ ypos 1288
+ addUserKnob {20 ExcludeFrames}
+ addUserKnob {6 excluded_trainig l "exclude frame from training" t "Animate this tick-box to exclude frames from training" +STARTLINE}
+ addUserKnob {6 excluded_vubbing l "exclude frame from vubbing" t "animate this tick-box to exclude trains from vubbing" +STARTLINE}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos 339
+  ypos 230
+ }
+ NoOp {
+  name NoOp1
+  label "we'll add node here later\nif we want to do something\nabout vubbin, e.g. like making\nthe mask black"
+  xpos 339
+  ypos 278
+ }
+ Output {
+  name Output1
+  selected true
+  xpos 339
+  ypos 374
+ }
+end_group

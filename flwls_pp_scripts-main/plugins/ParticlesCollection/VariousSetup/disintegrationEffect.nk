@@ -1,0 +1,149 @@
+set cut_paste_input [stack 0]
+version 13.1 v2
+StickyNote {
+ inputs 0
+ name StickyNote1
+ label "<b>Region is animated        ."
+ note_font_size 20
+ selected true
+ xpos -5661
+ ypos -9466
+}
+Camera2 {
+ inputs 0
+ translate {9.74874952 26.54834843 107.5456772}
+ rotate {-9.32186059 1.399960182 0}
+ focal 35
+ name Camera1
+ selected true
+ xpos -5951
+ ypos -9298
+}
+push $cut_paste_input
+ApplyMaterial {
+ name ApplyMaterial1
+ selected true
+ xpos -5780
+ ypos -9680
+}
+push 0
+ParticleEmitter {
+ inputs 2
+ start_frame -50
+ emit_from faces
+ rate {{curve x1 900 x20 900 x21 0}}
+ lifetime 250
+ velocity 0
+ mass 0.395
+ color {1 0 0 1}
+ color_from_texture true
+ name ParticleEmitter1
+ selected true
+ xpos -5780
+ ypos -9562
+}
+ParticleGravity {
+ to {0.75 -0.9 0}
+ probability 0.34
+ region box
+ translate {50 7 0}
+ scaling {{curve x20 4 x100 8} 3 3}
+ uniform_scale 17
+ name ParticleGravity1
+ selected true
+ xpos -5780
+ ypos -9481
+}
+ParticleTurbulence {
+ strength {{strength.z} {strength.z} 0.6}
+ scale {{scale.z} {scale.z} 500}
+ probability 0.465
+ region box
+ translate {50 7 0}
+ scaling {{parent.ParticleGravity1.scaling} {parent.ParticleGravity1.scaling} {parent.ParticleGravity1.scaling}}
+ uniform_scale 17
+ name ParticleTurbulence1
+ selected true
+ xpos -5780
+ ypos -9445
+}
+ParticleBounce {
+ out_bounce 0.825
+ out_friction 0.285
+ in_bounce 0.76
+ in_friction 0.385
+ bounceaxis_uniform_scale 600
+ name ParticleBounce1
+ selected true
+ xpos -5780
+ ypos -9344
+}
+push 0
+ScanlineRender {
+ inputs 3
+ conservative_shader_sampling false
+ motion_vectors_type distance
+ name ScanlineRender1
+ selected true
+ xpos -5780
+ ypos -9277
+}
+Dot {
+ name Dot1
+ selected true
+ xpos -5746
+ ypos -9225
+}
+set N2c49c100 [stack 0]
+Dot {
+ name Dot2
+ selected true
+ xpos -5510
+ ypos -9225
+}
+TimeOffset {
+ time_offset 2
+ time ""
+ name TimeOffset1
+ label "\[value time_offset]"
+ selected true
+ xpos -5544
+ ypos -9143
+}
+Grade {
+ white 1.3
+ name Grade1
+ selected true
+ xpos -5544
+ ypos -9107
+}
+push $N2c49c100
+Merge2 {
+ inputs 2
+ operation max
+ name Merge1
+ label "\[ expr \{ \[value mix] == 1 ? \" \" : \[value mix] \}]"
+ selected true
+ xpos -5780
+ ypos -9107
+}
+StickyNote {
+ inputs 0
+ name StickyNote2
+ tile_color 0x969600ff
+ label "<b>https://www.youtube.com/watch?v=4ic_r9XVptI&ab_channel=TopicRoomsVfx        ."
+ note_font_size 20
+ selected true
+ xpos -5184
+ ypos -9221
+}
+StickyNote {
+ inputs 0
+ name StickyNote3
+ tile_color 0x335959ff
+ label "<b>author: Topic Rooms Vfx        ."
+ note_font_size 20
+ selected true
+ xpos -5190
+ ypos -9309
+}

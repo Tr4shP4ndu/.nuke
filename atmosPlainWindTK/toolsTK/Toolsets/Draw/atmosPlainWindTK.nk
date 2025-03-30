@@ -1,0 +1,198 @@
+set cut_paste_input [stack 0]
+Group {
+ inputs 0
+ name atmosPlainWindTK
+ addUserKnob {20 user l atmosPlainWindTK}
+ addUserKnob {26 toolName l "" +STARTLINE T "<font color=\"lightgreen\" size=\"6\">atmosPlainWind</font><font color=\"#FFCC66\" size=\"6\">TK</font>"}
+ addUserKnob {26 toolAuthor l "" +STARTLINE T "<font color=\"lightgreen\" size=\"2\">by Timur Khodzhaev</font>"}
+ addUserKnob {26 www l "" +STARTLINE T "<a href=\"vfxtim.com\"><font color=\"lightgreen\" size=\"2\">www.vfxtim.com</font></a>"}
+ addUserKnob {26 ""}
+ addUserKnob {26 label1 l "" +STARTLINE T "<font color=\"#FF9A22\" size=\"3\">Animation:</font>"}
+ addUserKnob {7 windspeedX l "wind speed x" t "How fast wind blows in horizontal direction" R 0 5}
+ windspeedX 3
+ addUserKnob {7 windspeedY l y t "How fast wind blows vertically" -STARTLINE R 0 5}
+ addUserKnob {7 speed_paralax l "speed paralax" t "Amount of paralax between layers of atmos. Difference in speed between multiple layers of atmos. Helps to define depth" R 0 5}
+ speed_paralax 3
+ addUserKnob {7 noise_speed l "noise speed" t "Speed of noise patterns change. " R 0 5}
+ noise_speed 0.4
+ addUserKnob {26 ""}
+ addUserKnob {26 label2 l "" +STARTLINE T "<font color=\"#FF9A22\" size=\"3\">Position and Size:</font>"}
+ addUserKnob {7 size t "Size of the first layer" R 0 1000}
+ size 250
+ addUserKnob {7 scaling_paralax l "scaling paralax" t "Amount of paralax relative to the first layer. Helps to create illusion of depth" R 0 5}
+ scaling_paralax 4
+ addUserKnob {41 translate t "Manual offset for the atmos texture" T position.translate}
+ addUserKnob {14 scale_size l "scale size" t "Global scale parameter" R 0 100}
+ scale_size {1 1}
+ addUserKnob {26 ""}
+ addUserKnob {26 label3 l "" +STARTLINE T "<font color=\"#FF9A22\" size=\"3\">Render:</font>"}
+ addUserKnob {41 format l "output format" t "Output resolution. Could be smaller for speed or could be set to you root output format to fill the frame. Starting with 512x512 usually good way to dial animation before making it render full frame" T Reformat1.format}
+ addUserKnob {4 noiseType l type t "Type of noise" M {fBm turbulence "" "" ""}}
+ addUserKnob {3 slices l "    layers:" t "Amount of layers. Two layers is bare minimum.\nThree layers usually give good enough result.\nAfter changing amount of layers press 'generate layers' button to refresh layers inside" -STARTLINE}
+ slices 3
+ addUserKnob {22 generate l "generate layers" t "After changing amount of layers press this button to generate layers internally." -STARTLINE T "n=nuke.thisNode()\n\ndef create_single_slice(n,i,ch_slices):\n    ch_n=nuke.createNode('Noise', inpanel=False)\n\n    ch_n\['name'].setValue('subSlice_Noise_%s' % i)\n    ch_nodeNum = nuke.Int_Knob('ch_nodeNum','Node Number',0)\n    ch_n.addKnob(ch_nodeNum)\n    ch_n.setInput(0, nuke.toNode('ResReformat'))\n    expr=\"\[python \{nuke.thisNode().name().split('_')\[2] \}]\"\n    ch_n\['ch_nodeNum'].setExpression(expr)\n    ch_n\['output'].setValue('alpha')\n    ch_n\['type'].setExpression('parent.noiseType')\n    \n    if i==0:\n      ch_n\['size'].setExpression('parent.size' )\n    else:\n      ch_n\['size'].setExpression('parent.size*parent.scaling_paralax*%s' % int(i))\n      \n    ch_n\['zoffset'].setExpression('parent.noise_speed*frame/150')\n    ch_n\['octaves'].setExpression('parent.octaves')\n    ch_n\['nyquist'].setExpression('parent.nyquist')\n    ch_n\['lacunarity'].setExpression('parent.lacunarity')\n    ch_n\['gain'].setExpression('parent.gain')\n    ch_n\['gamma'].setExpression('parent.gamma')\n    ch_n\['translate'].setValue(1,1)\n    \n    if i == 0 :\n      ch_n\['translate'].setExpression('position.translate+frame*parent.windspeedX',0)\n      ch_n\['translate'].setExpression('position.translate+parent.seed*123+frame*parent.windspeedY',1)\n    else:\n      ch_n\['translate'].setExpression('position.translate+frame*parent.windspeedX*parent.speed_paralax*%s' % int(i),0)\n      ch_n\['translate'].setExpression('position.translate+parent.seed*123+frame*parent.windspeedY*parent.speed_paralax*%s' % int(i),1)\n    \n    ch_n\['rotate'].setExpression('0')\n    ch_n\['scale'].setValue(1,1)\n    ch_n\['scale'].setExpression('parent.scale_size',0)\n    ch_n\['scale'].setExpression('parent.scale_size',1)\n\n    ch_n\['xrotate'].setExpression('30')\n    ch_n\['yrotate'].setExpression('30')\n    ch_n\['xpos'].setValue(100*i)\n    ch_n\['ypos'].setValue(0)\n\n    ch_k=nuke.createNode('Multiply', inpanel=False)\n    ch_k\['name'].setValue('subSlice_Mult_%s' % i)\n    ch_k\['ypos'].setValue(100)\n    ch_k.setInput(0,ch_n)\n    ch_k\['value'].setValue(1/(i+1))\n    ch_k\['disable'].setExpression('!parent.depthOpacity')\n    \n    nd=ch_k\n    \n    if i > 0 :\n      ch_m=nuke.createNode('Merge', inpanel=False)\n      ch_m\['name'].setValue('subSlice_Merge_%s' % i)\n      ch_m\['xpos'].setValue(100*i)\n      ch_m\['ypos'].setValue(105)\n      ch_m.setInput(1, nd)\n      \n      if i == 1 :\n        ch_m.setInput(0, nuke.toNode('subSlice_Mult_%s' % (int(i)-1)) )\n      else:\n        ch_m.setInput(0, nuke.toNode('subSlice_Merge_%s' % (int(i)-1)) )\n      nd=ch_m\n  \n    return nd\n\n\ndef generateAtmos():\n\n# Creating task\t\n\n    task = nuke.ProgressTask(\"Generating atmos\")\n\n    # Clean old slices first\n    all_nodes=nuke.allNodes()\n    for nd in all_nodes:\n            if nd.name().split('_')\[0] == 'subSlice' :\n                    nuke.delete(nd)\n    \n    # Create new set of slices\n    ch_merge=nuke.toNode('MultiplyOpacity')\n    ch_slices=int(nuke.thisNode()\['slices'].getValue())\n\n    if ch_slices<2:\n      ch_slices=2\n      nuke.thisNode()\['slices'].setValue(2)\n\n    for i in range(0,ch_slices):\n\n        if task.isCancelled():\n            \n            if task:\n                task.setProgress(100)\n            nuke.message( \"Generation of fake volume canceled\" )\n            break;\n\n        task.setProgress(int(100*i/ch_slices))\n\n        task.setMessage(\"Generating slice :%s\"% i)\n\n\n        ch_c=create_single_slice(n,i,ch_slices)\n    \n        # connect all to merge and output\n        \n        \n\n    if task:\n        task.setProgress(100)\n        \n    ch_merge.setInput(0,ch_c)\n\ngenerateAtmos()\n"}
+ addUserKnob {3 octaves t "Number of perlin noise functions"}
+ octaves 6
+ addUserKnob {6 nyquist l "Clip at Nquist limit" t "Limits octaves so the highest frequency is larger than a pixel" -STARTLINE}
+ nyquist true
+ addUserKnob {7 lacunarity t "Each octave multiplies frequency by this amount" R 0 3}
+ lacunarity 2
+ addUserKnob {7 gain t "Each octave multiplies amplitude by this amount"}
+ gain 0.5
+ addUserKnob {7 gamma}
+ gamma 0.5
+ addUserKnob {7 opacity t "Overall opacity of layers"}
+ opacity 0.5
+ addUserKnob {6 depthOpacity l "Natural density progression" t "Closer to camera layer become more faint and distant layers are more dense." +STARTLINE}
+ depthOpacity true
+ addUserKnob {3 seed t "Seed parameter offsets noise and makes it unique."}
+ seed 1557
+ addUserKnob {22 randomize t "Generates random seed number" -STARTLINE T "import random\nn=nuke.thisNode()\nknb=n\['seed'].setValue(int(random.random()*random.random()*100000))\n"}
+ addUserKnob {20 version}
+ addUserKnob {26 nodeClass l Class: T atmosPlainWindTK}
+ addUserKnob {26 nodeVersion l Version: T v2.0}
+}
+ Transform {
+  inputs 0
+  filter Mitchell
+  name position
+  xpos -185
+  ypos 4
+ }
+ Reformat {
+  inputs 0
+  format "512 512 0 0 512 512 1 square_512"
+  name Reformat1
+  xpos 0
+  ypos -352
+ }
+ Dot {
+  name ResReformat
+  xpos 34
+  ypos -250
+ }
+set Nc8af6400 [stack 0]
+ Noise {
+  output alpha
+  type {{parent.noiseType}}
+  size {{parent.size*parent.scaling_paralax*2}}
+  zoffset {{parent.noise_speed*frame/150}}
+  octaves {{parent.octaves}}
+  nyquist {{parent.nyquist}}
+  lacunarity {{parent.lacunarity}}
+  gain {{parent.gain}}
+  gamma {{parent.gamma}}
+  translate {{position.translate+frame*parent.windspeedX*parent.speed_paralax*2} {position.translate+parent.seed*123+frame*parent.windspeedY*parent.speed_paralax*2}}
+  rotate {{0}}
+  scale {{parent.scale_size} {parent.scale_size}}
+  center {256 256}
+  xrotate {{30}}
+  yrotate {{30}}
+  name subSlice_Noise_2
+  xpos 200
+  addUserKnob {20 User}
+  addUserKnob {3 ch_nodeNum l "Node Number"}
+  ch_nodeNum {{"\[python \{nuke.thisNode().name().split('_')\[2] \}]"}}
+ }
+ Multiply {
+  value 0.3333333333
+  name subSlice_Mult_2
+  xpos 200
+  ypos 24
+  disable {{!parent.depthOpacity}}
+ }
+push $Nc8af6400
+ Noise {
+  output alpha
+  type {{parent.noiseType}}
+  size {{parent.size*parent.scaling_paralax*1}}
+  zoffset {{parent.noise_speed*frame/150}}
+  octaves {{parent.octaves}}
+  nyquist {{parent.nyquist}}
+  lacunarity {{parent.lacunarity}}
+  gain {{parent.gain}}
+  gamma {{parent.gamma}}
+  translate {{position.translate+frame*parent.windspeedX*parent.speed_paralax*1} {position.translate+parent.seed*123+frame*parent.windspeedY*parent.speed_paralax*1}}
+  rotate {{0}}
+  scale {{parent.scale_size} {parent.scale_size}}
+  center {256 256}
+  xrotate {{30}}
+  yrotate {{30}}
+  name subSlice_Noise_1
+  xpos 100
+  addUserKnob {20 User}
+  addUserKnob {3 ch_nodeNum l "Node Number"}
+  ch_nodeNum {{"\[python \{nuke.thisNode().name().split('_')\[2] \}]"}}
+ }
+ Multiply {
+  value 0.5
+  name subSlice_Mult_1
+  xpos 100
+  ypos 24
+  disable {{!parent.depthOpacity}}
+ }
+push $Nc8af6400
+ Noise {
+  output alpha
+  type {{parent.noiseType}}
+  size {{parent.size}}
+  zoffset {{parent.noise_speed*frame/150}}
+  octaves {{parent.octaves}}
+  nyquist {{parent.nyquist}}
+  lacunarity {{parent.lacunarity}}
+  gain {{parent.gain}}
+  gamma {{parent.gamma}}
+  translate {{position.translate+frame*parent.windspeedX} {position.translate+parent.seed*123+frame*parent.windspeedY}}
+  rotate {{0}}
+  scale {{parent.scale_size} {parent.scale_size}}
+  center {1024 778}
+  xrotate {{30}}
+  yrotate {{30}}
+  name subSlice_Noise_0
+  xpos 0
+  addUserKnob {20 User}
+  addUserKnob {3 ch_nodeNum l "Node Number"}
+  ch_nodeNum {{"\[python \{nuke.thisNode().name().split('_')\[2] \}]"}}
+ }
+ Multiply {
+  name subSlice_Mult_0
+  xpos 0
+  ypos 24
+  disable {{!parent.depthOpacity}}
+ }
+ Merge {
+  inputs 2
+  name subSlice_Merge_1
+  xpos 100
+  ypos 105
+ }
+ Merge {
+  inputs 2
+  name subSlice_Merge_2
+  selected true
+  xpos 200
+  ypos 105
+ }
+ Multiply {
+  channels alpha
+  value {{parent.opacity}}
+  name MultiplyOpacity
+  xpos 2
+  ypos 346
+ }
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name ShuffleAlpha
+  tile_color 0x8b8b8bff
+  label "\[value in]"
+  xpos 2
+  ypos 395
+ }
+ Output {
+  name Output1
+  xpos 2
+  ypos 473
+ }
+end_group
