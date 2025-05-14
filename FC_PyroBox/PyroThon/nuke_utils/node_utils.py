@@ -1,317 +1,237 @@
-from __future__ import annotations
+import nuke
+import logging
 import os
 import re
 import tempfile
 import time
+from threading import Thread
 from pathlib import Path
-from typing import List, Optional, Union
-
-import nuke
-
-# Local imports
-from PyroPython.nuke_utils.node_update import nodeUpdate
-from PyroPython.nuke_utils.typedefs import (
-    MetadataReturnType,
-    NukeKnobVal,
-)
-
-
-__all__ = [
-    "find_node_by_name",
-    "get_node_knob_value",
-    "set_node_knob_value",
-    "set_node_knob_value_keyframe",
-    "set_node_knob_animated",
-    "set_node_filepath",
-    "get_node_frame_count",
-    "get_node_metadata",
-    "execute_node_knob",
-    "select_node",
-    "deselect_node",
-    "deselect_all_nodes",
-    "duplicate_nodes",
-    "connect_two_nodes",
-]
-
-
-def find_node_by_name(name: str) -> Optional[Node]:  # type: ignore # noqa
-    """Find a node in a Nuke script using its name
-
-    Args:
-        name: The name of the node to search for
-
-    Returns:
-        An object of type `Node` if a node with the specified name is found, `None` otherwise
-    """
-
-    return nuke.toNode(name)
-
-
-def get_node_knob_value(node: Node, knob_name: str) -> NukeKnobVal:  # type: ignore # noqa
-    """Get the value of a node's knob given the knob's name
-
-    Args:
-        node: The Node object that has the knob
-        knob_name: The name of the knob
-
-    Returns:
-        The knob's value which could be a `str`, `int`, `float` or `bool` object
-
-    Raises:
-        AttributeError: When the node is not a valid node or if it doesn't have a knob with the specified name
-    """
-
-    return node.knob(knob_name).value()
-
-
-def set_node_knob_value(node: Node, knob_name: str, new_value: NukeKnobVal) -> bool:  # type: ignore # noqa
-    """Update the value of a node's knob given the knob's name
-
-    Args:
-        node: The Node object that has the knob
-        knob_name: The name of the knob
-        new_value: The new value (`str`, `int`, `float` or `bool`) that will be used to update the knob
-
-    Returns:
-        boolean: `True` if the knob's value has been updated, `False` otherwise
-
-    Raises:
-        AttributeError: When the node is not a valid node or if it doesn't have a knob with the specified name
-    """
-
-    return node.knob(knob_name).setValue(new_value)
-
-
-def set_node_knob_value_keyframe(node: Node, knob_name: str, new_value: NukeKnobVal, frame: int, index: int = 0) -> bool:  # type: ignore # noqa
-    """Update the value of a node's knob given the knob's name at a specific
-    frame, setting a keyframe on that frame. The knob has to be animated for
-    a keyframe to be added. Otherwise, the value will be updated for all
-    frames
-
-    Args:
-        node: The Node object that has the knob
-        knob_name: The name of the knob
-        new_value: The new value (str, int, float or bool) that will be used to update the knob
-        frame: The frame number
-        index: (Optional) If the knob has multiple fields, the index specifies which field will be updated
-
-    Returns:
-        boolean: `True` if the knob's value has been updated, `False` otherwise
-
-    Raises:
-        AttributeError: When the node is not a valid node or if it doesn't have a knob with the specified name
-    """
-
-    return node.knob(knob_name).setValueAt(new_value, frame, index)
-
-
-def set_node_knob_animated(node: Node, knob_name: str) -> bool:  # type: ignore # noqa
-    """Set a node's knob to be animated
-
-    Args:
-        node: The Node object that has the knob
-        knob_name: The name of the knob
-
-    Returns:
-        boolean: `True` if the knob's value has been updated, `False` otherwise
-
-    Raises:
-        AttributeError: When the node is not a valid node or if it doesn't have a knob with the specified name
-    """
-
-    return node.knob(knob_name).setAnimated()
-
-
-def set_node_filepath(node: Node, filepath: Union[Path, str]) -> None:  # type: ignore # noqa
-    """Specialised function that works on nodes that have a "file" knob
-    (e.g. Read and Write nodes)
-
-    Args:
-        node: The Node object that has the knob
-        filepath: The filepath that will be used to set the file knob's value
-
-    Raises:
-        AttributeError: When the node is not a valid node or if it doesn't have a knob with the specified name
-    """
-
-    node.knob("file").fromUserText(str(filepath))
-
-
-def setup_read_node(
-    node: Node,
-    filepath: Union[Path, str],
-    frame_start: int,
-    frame_end: int,
-    start_at: Optional[int] = None,
-) -> None:  # type: ignore # noqa
-    if not node:
-        return
-
-    set_node_filepath(node, filepath)
-    __set_read_node_start_and_end(node, frame_start, frame_end, start_at)
-
-
-def get_node_frame_count(node: Node) -> int:  # type: ignore # noqa
-    """Get the frame count of the specified node
-
-    Args:
-        node: The node object to query
-
-    Returns:
-        int: The number of frames in the specified node
-
-    Raises:
-        RuntimeError: When node is not a valid node
-    """
-
-    return node.frameRange().frames()
-
-
-def get_node_metadata(
-    node: Node, key: Optional[str]  # type: ignore # noqa
-) -> Optional[MetadataReturnType]:
-    """Get the metadata dictionary of a node or the value of a specific metadata key
-
-    Args:
-        node: The node object to query
-        key: (Optional) A specific key to check for
-
-    Returns:
-        MetadataReturnType | None
-
-    Raises:
-        RuntimeError: When node is not a valid node
-    """
-
-    return node.metadata() if not key else node.metadata().get(key)
-
-
-def execute_node_knob(node: Node, knob_name: str) -> None:  # type: ignore # noqa
-    # TODO (AS): Check if the execute method returns a boolean
-    """Execute a node's knob (e.g. a button that does something when clicked)
-
-    Args:
-        node: The Node object that has the knob
-        knob_name: The name of the knob
-
-    Returns:
-        boolean: `True` if the knob's value has been updated, `False` otherwise
-
-    Raises:
-        AttributeError: When the node is not a valid node or if it doesn't have a knob with the specified name
-    """
-
-    node.knob(knob_name).execute()
-
-
-def select_node(node: Node):  # type: ignore # noqa
-    node.setSelected(True)
-
-
-def deselect_node(node: Node):  # type: ignore # noqa
-    node.setSelected(False)
-
-
-def deselect_all_nodes() -> List[Node]:  # type: ignore # noqa
-    """Deselects all currently selected nodes and returns a list with the nodes
-    that have been deselected"""
-
-    nodes = nuke.selectedNodes()
-
-    for node in nodes:
-        deselect_node(node)
-
-    return nodes
-
-
-def duplicate_nodes(
-    nodes: List[Node],  # type: ignore # noqa
-    x_offset: int = 100,
-    y_offset: int = 0,
-) -> List[Node]:  # type: ignore # noqa
-    deselect_all_nodes()
-
-    for node in nodes:
-        select_node(node)
-
-    # NOTE (AS): Nuke can't duplicate or copy nodes to system clipboard in headless
-    # mode. This is the only reliable way I found of duplicating nodes
-    clipboard = (
-        Path(tempfile.gettempdir()) / f"clipboard_{time.strftime('%y%m%d_%H%M%s')}"
+from typing import Any, Callable, Dict, Set, Tuple, List
+from datetime import datetime
+
+class NukeHelper:
+    def __init__(self):
+        self.logger = logging.getLogger("NukeHelper")
+        self.logger.setLevel(logging.INFO)
+        handler = logging.StreamHandler()
+        handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
+        self.logger.addHandler(handler)
+
+    def delete_all_nodes(self):
+        for node in nuke.allNodes():
+            nuke.delete(node)
+
+    def unselect_all(self):
+        for node in nuke.allNodes():
+            node.setSelected(False)
+
+    def make_node(self, node_type: str, name: str) -> nuke.Node:
+        node = nuke.createNode(node_type, inpanel=False)
+        node.setName(name)
+        self.unselect_all()
+        return node
+
+    def delete_node(self, name: str):
+        nuke.delete(nuke.toNode(name))
+
+    def put_node_here(self, node_name: str, x: int, y: int):
+        nuke.toNode(node_name).setXYpos(int(x),int(y))
+
+    def get_node_position(self, node: nuke.Node) -> Tuple[int, int]:
+        return (node.xpos(), node.ypos())
+
+    def is_video(self, path: str) -> bool:
+        return path.split(".")[-1].lower() in ["mov", "mp4"]
+
+    def add_video_to_this_node(node : nuke.Node, path_to_video : str):
+        node.knobs()["file"].fromUserText(path_to_video)
+
+    def make_tmp_nuke_script(self):
+        if nuke.root().name() == "Root":
+            tmp_path = Path(tempfile.gettempdir()) / f"temp_nuke_script_{self.get_current_user()}.nk"
+            nuke.scriptSaveAs(str(tmp_path), overwrite=True)
+
+    def run_headless_script(self, nuke_script_path: str, python_script_path: str):
+        nuke_exe = os.environ.get("NUKE_EXE_PATH", "nuke")
+        os.system(f"{nuke_exe} -t {python_script_path} {nuke_script_path}")
+
+    def get_current_user(self) -> str:
+        return os.environ.get("USER", "unknown")
+
+    def get_current_nuke_version(self) -> str:
+        return nuke.NUKE_VERSION_STRING
+
+    def get_current_date(self) -> str:
+        return datetime.today().strftime('%Y-%m-%d')
+
+    def get_project_framerange(self) -> nuke.FrameRange:
+        root = nuke.root()
+        return nuke.FrameRange(int(root['first_frame'].value()), int(root['last_frame'].value()), 1)
+
+    def get_any_write_node(self):
+        return [node for node in nuke.allNodes() if node.Class() == "Write"][0]
+
+    def get_nodes_by_name_substring(self, substring: str) -> List[nuke.Node]:
+        return [node for node in nuke.allNodes() if substring in node.name()]
+
+    def print_to_console(self, message: str):
+        self.logger.info(message)
+
+
+
+def make_read_from_write(Type : str, name : str, parent_node : nuke.Node, folderpath : str, start_frame : int):
+    with nuke.root():
+        parent_node_position = get_node_position(parent_node)
+        offset = [-75,75]
+        read_node = make_node(Type, name)
+        if len(os.listdir(folderpath)) > 1:
+            add_image_sequence_to_this_node(read_node, folderpath)
+        else:
+            single_element = os.path.join(folderpath, os.listdir(folderpath)[0])
+            read_node.knobs()["file"].setValue(single_element)
+        read_node.knobs()["frame_mode"].setValue("start_at")
+        read_node.knobs()["frame"].setValue(str(start_frame))
+        put_node_here(read_node.knobs()["name"].value(), parent_node_position[0]+offset[0], parent_node_position[1]+offset[1])
+        read_node_new_name = parent_node.knobs()["filename_flwls"].value()
+        if read_node_new_name == "":
+            read_node_new_name = parent_node.knobs()["datatype_flwls"].value()
+        read_node.knobs()["name"].setValue(read_node_new_name)
+
+def add_image_sequence_to_this_node(node : nuke.Node, path_to_image_sequence : str):
+        shot_length = len(os.listdir(path_to_image_sequence))
+        file_format = "." + os.listdir(path_to_image_sequence)[0].split(".")[-1]
+        file_name_of_first_frame = sorted(os.listdir(path_to_image_sequence))[0]
+        file_name_of_first_frame_without_frame_number = file_name_of_first_frame[:-10]
+        first_frame = 0
+        last_frame = 0
+        frame_as_string = ""
+        try:
+            frame_as_string = sorted(os.listdir(path_to_image_sequence))[0].split(".")[-2]
+            first_frame = str(int(sorted(os.listdir(path_to_image_sequence))[0].split(".")[-2]))
+            last_frame = str(int(sorted(os.listdir(path_to_image_sequence))[-1].split(".")[-2]))
+        except ValueError:
+            frame_as_string = sorted(os.listdir(path_to_image_sequence))[0].split(".")[-2].split("_")[-1]
+            first_frame = str(int(sorted(os.listdir(path_to_image_sequence))[0].split(".")[-2].split("_")[-1]))
+            last_frame = str(int(sorted(os.listdir(path_to_image_sequence))[-1].split(".")[-2].split("_")[-1]))
+        pound_signs = "#" * len(frame_as_string)
+        ending = pound_signs + file_format + " "
+        shot_end = shot_length
+        first_frame_hashed = str(path_to_image_sequence) + "/" + (file_name_of_first_frame_without_frame_number + ending + first_frame + "-" + last_frame)
+        node.knobs()["file"].fromUserText(first_frame_hashed)
+        node.knobs()["first"].setValue(int(first_frame))
+        node.knobs()["last"].setValue(int(last_frame))
+        node.knobs()["origfirst"].setValue(int(first_frame))
+        node.knobs()["origlast"].setValue(int(last_frame))
+        node.knobs()["on_error"].setValue("black")
+
+
+def make_tmp_nuke_script_then_open(script_path : str) -> None:
+    make_tmp_nuke_script()
+    nuke.scriptOpen(script_path)
+def run_headless_script(nuke_script_location : str, python_script_location : str) -> None:
+    os.system(os.environ["NUKE_EXE_PATH"] + f" -t {python_script_location} {nuke_script_location}")
+def nuke_user_path_from_dir(frames_dir: Path, regex : re.Pattern) -> str:
+    frame_nums = []
+    matched_name = None
+    for frame_path in frames_dir.iterdir():
+        frame_file_match = regex.search(frame_path.name)
+        if frame_file_match is None:
+            continue
+
+        file_name, delimiter, frame_num, file_ext = frame_file_match.groups()
+        frame_nums.append(frame_num)
+
+        if matched_name is None:
+            matched_name = file_name
+        if file_name != matched_name:
+            continue
+
+    if matched_name is None:
+        raise Exception("No sequence found in directory")
+
+    nuke_frame_padding = "#" * len(frame_nums[0])
+    return (
+        f"{file_name}{delimiter}{nuke_frame_padding}"
+        f"{file_ext} {min(frame_nums)}-{max(frame_nums)}"
     )
-
-    nuke.nodeCopy(str(clipboard))
-
-    deselect_all_nodes()
-
-    nuke.nodePaste(str(clipboard))
-
-    os.remove(clipboard)
-
-    duplicate_nodes = nuke.selectedNodes()
-
-    for node in duplicate_nodes:
-        node.setXpos(node.xpos() + x_offset)
-        node.setYpos(node.ypos() + y_offset)
-
-    return duplicate_nodes
-
-
-def connect_two_nodes(sending_node: Node, receiving_node: Node, input: int = 0):  # type: ignore # noqa
-    receiving_node.connectInput(input, sending_node)
-
-
-def __set_read_node_start_and_end(node: Node, frame_start: int, frame_end: int, start_at: Optional[int] = None) -> None:  # type: ignore # noqa
-    set_node_knob_value(node, "frame_mode", "start at")
-    set_node_knob_value(
-        node, "frame", f"{start_at if start_at is not None else frame_start}"
-    )
-    set_node_knob_value(node, "first", frame_start)
-    set_node_knob_value(node, "origfirst", frame_start)
-    set_node_knob_value(node, "last", frame_end)
-    set_node_knob_value(node, "origlast", frame_end)
-
-
-def delete_node(node: Node):
-    nuke.delete(node)
-
-
-def get_node_position(node: nuke.Node) -> Tuple[int, int]:
-    return [node.xpos(), node.ypos()]
-
-
-def put_node_here(node: Node, x: int, y: int):
-    node.setXYpos(x, y)
-
-
-def put_backdrop_next_to_node(
-    target_node: Node,
-    message_text: str,
-    offset: Tuple[int],
-    colour: int = 0,
-    z_order: int = 2,
-    bdwidth: int = 150,
-) -> Node:
-    node = nuke.createNode("BackdropNode")
-    node.knobs()["name"].setValue(target_node.knobs()["name"].value() + "_BACKDROP")
+def open(file : str) -> None:
+    nuke.scriptOpen(file)
+def save(file : str) -> None:
+    nuke.scriptSaveAs(filename=file, overwrite=True)
+def run_these_tasks_with_progress_bar(tasks : List[Callable]) -> List[str]:
+    def how_much_left(done_tasks, number_of_tasks):
+        return int(done_tasks*100/number_of_tasks)
+    results = ["No tasks run yet."]
+    number_of_tasks = len(tasks)
+    if not number_of_tasks:
+        return results
+    done_tasks = 0
+    progress_node = nuke.ProgressTask(f"Tasks: {number_of_tasks}")
+    progress_node.setProgress(0)
+    for task in tasks:
+        results.append(task())
+        done_tasks +=1
+        progress_node.setProgress(how_much_left(done_tasks,number_of_tasks))
+    return results
+def run_these_tasks_parallel_with_progress_bar(tasks: List[Callable]) -> List[str]:
+    number_of_tasks = len(tasks)
+    if not number_of_tasks:
+        return results
+    finished_tasks = {}
+    progress_node = nuke.ProgressTask(f"Tasks: {number_of_tasks}")
+    progress_node.setProgress(0)
+    waiting = "Waiting"
+    def do_task(task):
+        finished_tasks[str(task)] = waiting
+        finished_tasks[str(task)] = task()
+    results = ["No tasks run yet."]
+    threads = [Thread(target=do_task, args=(task,)) for task in tasks]
+    for thread in threads:
+        thread.start()
+    while waiting in finished_tasks.values():
+        time.sleep(1)
+        number_of_finished_tasks = len([task for task in finished_tasks.values() if task != waiting])
+        progress_node.setProgress(int(number_of_finished_tasks*100/number_of_tasks))
+    return list(finished_tasks.values())
+def format_text(open : str, content: str, close : str) -> str:
+    return open + content + close
+def get_coloured_text(content : str, colour : str):
+    return format_text("<font color = '{}'>".format(colour),content, "</font>")
+def print_to_console(message : str) -> None:
+    """print() statements in nuke don't show in console, use logging."""
+    logging.getLogger().handlers.clear()
+    logger_handler = logging.StreamHandler()
+    logger_handler.setFormatter(logging.Formatter(str(message)))
+    logging.getLogger().addHandler(logger_handler)
+    logging.getLogger().error(" ")
+def copy_camera_animation(copy_from_node_name : str, copy_to_node_name : str):
+    original_camera = nuke.toNode(copy_from_node_name)
+    new_camera = nuke.toNode(copy_to_node_name)
+    new_camera.knob("read_from_file").setValue(False)
+    for knob_name in [knob for knob in original_camera.knobs() if original_camera.knobs()[knob].isAnimated() and "copyAnimations" in dir(original_camera.knobs()[knob])]:
+        new_camera.knobs()[knob_name].setAnimated(True)
+        new_camera.knobs()[knob_name].copyAnimations(original_camera.knobs()[knob_name].animations())
+def add_backdrop_next_to_node(target_node : str, node_name: str, message_text : str, offset : Tuple[int], colour: int = 0):
+    node = make_node("BackdropNode", node_name)
     node.knobs()["tile_color"].setValue(colour)
     node.knobs()["label"].setValue(message_text)
-    existing_location = get_node_position(target_node)
-    target_location = [existing_location[x] + offset[x] for x in [0, 1]]
-    put_node_here(node, target_location[0], target_location[1])
-    node.knobs()["z_order"].setValue(z_order)
-    node.knobs()["bdwidth"].setValue(bdwidth)
-    deselect_all_nodes()
-    return node
-
-
-def get_frames_based_on_input(folder: str) -> List[int]:
-    return [
-        int(re.search(r"[0-9]{6}", file).group(0))
-        for file in sorted(os.listdir(folder))
-    ]
-
-
+    existing_location = get_node_position(nuke.toNode(target_node))
+    target_location = [existing_location[x] + offset[x] for x in [0,1]]
+    put_node_here(node.name(), target_location[0], target_location[1])
+    node.knobs()["z_order"].setValue(2)
+    node.knobs()["bdwidth"].setValue(150)
+def convert_nuke_frame_range_to_string(ranges : List[List[int]]) -> str:
+    if not ranges:
+        return "None"
+    results_as_string = ""
+    for r in ranges:
+        if len(r) == 1:
+            results_as_string+=(f"{r[0]},")
+        else:
+            results_as_string+=(f"{r[0]}-{r[-1]},")
+    return results_as_string[:-1]
+def get_frames_based_on_input(folder : str) -> List[int]:
+    return [int(re.search(r"[0-9]{6}", file).group(0)) for file in sorted(os.listdir(folder))]
 def get_nuke_frame_ranges_based_on_input(frames: List[int]) -> List[List[int]]:
     if not frames:
         return []
@@ -320,45 +240,24 @@ def get_nuke_frame_ranges_based_on_input(frames: List[int]) -> List[List[int]]:
     ranges = []
     current = 0
     while counter < len(frames):
-        if frames[counter] == current + 1:
+        if frames[counter] == current+1:
             current_range.append(frames[counter])
         else:
             if current_range:
                 ranges.append(current_range)
             current_range = [frames[counter]]
         current = frames[counter]
-        counter += 1
+        counter +=1
     ranges.append(current_range)
     return ranges
 
-
-def get_project_framerange() -> nuke.FrameRange:
-    all_frames = [
-        int(nuke.root().knobs()[key].value()) for key in ["first_frame", "last_frame"]
-    ]
-    return nuke.FrameRange(all_frames[0], all_frames[-1], 1)
-
-
-def get_missing_frames_based_on_file_input(
-    image_sequence_folder_path: str,
-) -> List[int]:
+def get_missing_frames_based_on_file_input(image_sequence_folder_path : str) -> List[int]:
     r = get_frames_based_on_input(image_sequence_folder_path)
     all_frames = get_project_framerange()
     return [frame for frame in all_frames if frame not in r]
-
-
-def convert_nuke_frame_range_to_string(ranges: List[List[int]]) -> str:
-    if not ranges:
-        return "None"
-    results_as_string = ""
-    for r in ranges:
-        if len(r) == 1:
-            results_as_string += f"{r[0]},"
-        else:
-            results_as_string += f"{r[0]}-{r[-1]},"
-    return results_as_string[:-1]
-
-
-def update_script_with_these_modifications(updates : List[node_update]) -> None:
-    for update in updates:
-        set_node_knob_value(find_node_by_name(update.node_name),update.knob_name,update.value)
+def load_camera_from_abc(node_name : str, filepath : str):
+    camera = nuke.toNode(node_name)
+    camera.knob("frame_rate").setValue(nuke.root().knobs()['fps'].value())
+    camera.knob("use_frame_rate").setValue(True)
+    camera.knob("read_from_file").setValue(True)
+    camera.knob("file").fromUserText(filepath)
